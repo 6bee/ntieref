@@ -1,0 +1,830 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>C1.Silverlight.DateTimeEditors</name>
+    </assembly>
+    <members>
+        <member name="T:C1.Silverlight.DateTimeEditors.C1DateTimePicker">
+            <summary>
+            The <see cref="T:C1.Silverlight.DateTimeEditors.C1DateTimePicker"/> controls allows editing <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.DateTime"/> values.
+            </summary>
+            <summary>
+            Allows editing DateTime values.
+            </summary>	
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.DateTimeProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.DateTime"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.MinDateProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.MinDate"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.MaxDateProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.MaxDate"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.CaretBrushProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.CaretBrush"/> dependency property. 
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DateTimeEditors.C1DateTimePicker.FinalizeEditing">
+            <summary>
+            Forces the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.DateTime"/> property value update.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DateTimeEditors.C1DateTimePicker.OnDateTimeChanged(C1.Silverlight.DateTimeEditors.NullablePropertyChangedEventArgs{System.DateTime})">
+            <summary>
+            Raises the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.DateTime"/> event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:C1.Silverlight.DateTimeEditors.C1DateTimePicker.ChangeVisualStateCommon(System.Boolean)">
+            <summary>
+            Updates the current visual state of the Common visual state group to match the object's properties.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DateTimeEditors.C1DateTimePicker.ChangeVisualStateFocus(System.Boolean)">
+            <summary>
+            Updates the current visual state of the Focus visual state group to match the object's properties.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.IsReadOnlyProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.IsReadOnly"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.AllowNullProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.AllowNull"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.DateFormatProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.DateFormat"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.FirstDayOfWeekProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.FirstDayOfWeek"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.EditModeProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.EditMode"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.TimeFormatProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.TimeFormat"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.TimeIncrementProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.TimeIncrement"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.SeparatorWidthProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.SeparatorWidth"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.FocusCuesVisibilityProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.FocusCuesVisibility"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.DisabledCuesVisibilityProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.DisabledCuesVisibility"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.IsMouseOverProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.IsMouseOver"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.ForceMouseOverProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.ForceMouseOver"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.IsFocusedProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.IsFocused"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.ValidationDecoratorStyleProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.ValidationDecoratorStyle"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.MouseOverBrushProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.MouseOverBrush"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.PressedBrushProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.PressedBrush"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.FocusBrushProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.FocusBrush"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.ButtonBackgroundProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.ButtonBackground"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.ButtonForegroundProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.ButtonForeground"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.SelectionBackgroundProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.SelectionBackground"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePicker.SelectionForegroundProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.SelectionForeground"/> dependency property. 
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DateTimeEditors.C1DateTimePicker.#ctor">
+            <summary>
+            Initializes a new instance of a <see cref="T:C1.Silverlight.DateTimeEditors.C1DateTimePicker"/>.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DateTimeEditors.C1DateTimePicker.OnApplyTemplate">
+            <summary>
+            Builds the visual tree for the <see cref="T:C1.Silverlight.DateTimeEditors.C1DateTimePicker"/> control when a new template is applied.
+            </summary>
+            <remarks>
+            This method is invoked whenever application code or an internal process, such as a rebuilding layout pass, calls the <see cref="M:ApplyTemplate"/> method.
+            </remarks>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.DateTime">
+            <summary>
+            Gets or sets a DateTime that is selected in the control.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.MinDate">
+            <summary>
+            Gets or sets the minimum DateTime value allowed for the <see cref="T:C1.Silverlight.DateTimeEditors.C1DateTimePicker"/>.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.MaxDate">
+            <summary>
+            Gets or sets the maximum DateTime allowed for the <see cref="T:C1.Silverlight.DateTimeEditors.C1DateTimePicker"/>.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.CaretBrush">
+            <summary>
+            Gets or sets the <see cref="T:System.Windows.Media.Brush"/> of the blinking cursor of an input control.
+            </summary>
+        </member>
+        <member name="E:C1.Silverlight.DateTimeEditors.C1DateTimePicker.DateValidationError">
+            <summary>
+            Occurs when text entered into the DatePicker cannot be parsed or the Date is not valid to be selected.
+            </summary>
+        </member>
+        <member name="E:C1.Silverlight.DateTimeEditors.C1DateTimePicker.DateTimeChanged">
+            <summary>
+            Fires when the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.DateTime"/> property changes.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.BlackoutDates">
+            <summary>
+            Gets the days that are not selectable.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.IsReadOnly">
+            <summary>
+            Gets or sets the value that determines if the <see cref="T:C1.Silverlight.DateTimeEditors.C1DateTimePicker"/> is read-only.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.AllowNull">
+            <summary>
+            Gets or sets whether the user can enter null values.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.DateFormat">
+            <summary>
+            Specifies the DatePickerFormat format that is used to display the selected date.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.FirstDayOfWeek">
+            <summary>
+            Gets or sets the day that is considered the beginning of the week.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.EditMode">
+            <summary>
+            Defines edit mode.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.TimeFormat">
+            <summary>
+            Specifies the C1TimeEditorFormat  format that is used to display the selected time.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.TimeIncrement">
+            <summary>
+            Gets or sets the increment applied when the user pressed the up/down arrow keys in a time part.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.SeparatorWidth">
+            <summary>
+            Gets or sets the width of space between Date and Time parts.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.FocusCuesVisibility">
+            <summary>
+            Gets or sets a value indicating whether the focus visuals of the control are visible.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.DisabledCuesVisibility">
+            <summary>
+            Gets or sets a value indicating whether the disabled visuals of the control are visible.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.IsMouseOver">
+            <summary>
+            Returns true if the mouse is over the control.
+            </summary>
+        </member>
+        <member name="E:C1.Silverlight.DateTimeEditors.C1DateTimePicker.IsMouseOverChanged">
+            <summary> 
+            Event raised when the <see cref="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.IsMouseOver"/> property has changed.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.ForceMouseOver">
+            <summary>
+            Set to true to force the mouse over visual state.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.IsFocused">
+            <summary>
+            Returns true if the control has the focus.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.ValidationDecoratorStyle">
+            <summary>
+            Gets or sets the style that is applied to the inner <see cref="T:C1.Silverlight.C1ValidationDecorator"/>.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.MouseOverBrush">
+            <summary>
+            Gets or sets the <see cref="T:System.Windows.Media.Brush"/> used to highlight the control when it has the mouse over.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.PressedBrush">
+            <summary>
+            Gets or sets the <see cref="T:System.Windows.Media.Brush"/> used to paint a button when it is pressed.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.FocusBrush">
+            <summary>
+            Gets or sets the <see cref="T:System.Windows.Media.Brush"/> used to highlight the focused control.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.ButtonBackground">
+            <summary>
+            Gets or sets the <see cref="T:System.Windows.Media.Brush"/> that will be assigned to the Background of the buttons inside the control.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.ButtonForeground">
+            <summary>
+            Gets or sets the <see cref="T:System.Windows.Media.Brush"/> that will be assigned to the Foreground of the buttons inside the control.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.SelectionBackground">
+            <summary>
+            Gets or sets the <see cref="T:System.Windows.Media.Brush"/> that fills the background of the selected text.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1DateTimePicker.SelectionForeground">
+            <summary>
+            Gets or sets the <see cref="T:System.Windows.Media.Brush"/> used as foreground of the selected text.
+            </summary>
+        </member>
+        <member name="T:C1.Silverlight.DateTimeEditors.C1DateTimePickerEditMode">
+            <summary>
+            Determines the <see cref="T:C1.Silverlight.DateTimeEditors.C1DateTimePicker"/> edit mode.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePickerEditMode.Date">
+            <summary>
+            The <see cref="T:C1.Silverlight.DateTimeEditors.C1DateTimePicker"/> control shows date part only.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePickerEditMode.Time">
+            <summary>
+            The <see cref="T:C1.Silverlight.DateTimeEditors.C1DateTimePicker"/> control shows time part only.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1DateTimePickerEditMode.DateTime">
+            <summary>
+            The <see cref="T:C1.Silverlight.DateTimeEditors.C1DateTimePicker"/> control shows date and time parts.
+            </summary>
+        </member>
+        <member name="T:C1.Silverlight.DateTimeEditors.NullableDateTimeConverter">
+            <summary>
+            Converts to and from the Nullable{T} type (using the DateTime type constraint on the generic). 
+            </summary>
+        </member>
+        <member name="T:C1.Silverlight.DateTimeEditors.DateTimeConverter">
+            <summary>
+            Converts to and from the DateTime type. 
+            </summary>
+        </member>
+        <member name="T:C1.Silverlight.DateTimeEditors.C1TimeEditor">
+            <summary>
+            The <see cref="T:C1.Silverlight.DateTimeEditors.C1TimeEditor"/> control allows editing of <see cref="T:System.TimeSpan"/> values in different formats.
+            </summary>
+            <summary>
+            Allows editing TimeSpan values.
+            </summary>	
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.ValueProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Value"/> dependency property. 
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DateTimeEditors.C1TimeEditor.OnTextValidationError(C1.Silverlight.DateTimeEditors.TextValidationErrorEventArgs)">
+            <summary>
+            Raises the TextValidationError event.
+            </summary>
+            <param name="e">A DatePickerDateValidationErrorEventArgs that contains the event data.</param>
+        </member>
+        <member name="M:C1.Silverlight.DateTimeEditors.C1TimeEditor.OnValueChanged(C1.Silverlight.DateTimeEditors.NullablePropertyChangedEventArgs{System.TimeSpan})">
+            <summary>
+            Raises the <see cref="E:C1.Silverlight.DateTimeEditors.C1TimeEditor.ValueChanged"/> event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:C1.Silverlight.DateTimeEditors.C1TimeEditor.OnValueChanged(System.Nullable{System.TimeSpan})">
+            Value property setter
+        </member>
+        <member name="M:C1.Silverlight.DateTimeEditors.C1TimeEditor.GetCurrentDateTimeFormat">
+            <summary>
+            Gets the current date time format.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:C1.Silverlight.DateTimeEditors.C1TimeEditor.ChangeVisualStateButtonsVisibility(System.Boolean)">
+            <summary>
+            Updates the current visual state of the ButtonsVisibility visual state group to match the object's properties.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DateTimeEditors.C1TimeEditor.ChangeVisualStateCommon(System.Boolean)">
+            <summary>
+            Updates the current visual state of the Common visual state group to match the object's properties.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DateTimeEditors.C1TimeEditor.ChangeVisualStateFocus(System.Boolean)">
+            <summary>
+            Updates the current visual state of the Focus visual state group to match the object's properties.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.IncrementProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Increment"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.ShowButtonsProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.ShowButtons"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.IsReadOnlyProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.IsReadOnly"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.AllowNullProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.AllowNull"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.DelayProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Delay"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.IntervalProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Interval"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.HandleUpDownKeysProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.HandleUpDownKeys"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.FormatProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Format"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.MinimumProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Minimum"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.MaximumProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Maximum"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.MaskProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Mask"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.PromptProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Prompt"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.CustomFormatProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.CustomFormat"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.WatermarkProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Watermark"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.CycleChangesOnBoundariesProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.CycleChangesOnBoundaries"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.FocusCuesVisibilityProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.FocusCuesVisibility"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.DisabledCuesVisibilityProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.DisabledCuesVisibility"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.IsMouseOverProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.IsMouseOver"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.ForceMouseOverProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.ForceMouseOver"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.IsFocusedProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.IsFocused"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.ValidationDecoratorStyleProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.ValidationDecoratorStyle"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.MouseOverBrushProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.MouseOverBrush"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.PressedBrushProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.PressedBrush"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.FocusBrushProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.FocusBrush"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.ButtonBackgroundProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.ButtonBackground"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.ButtonForegroundProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.ButtonForeground"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.SelectionBackgroundProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.SelectionBackground"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.SelectionForegroundProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.SelectionForeground"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditor.CaretBrushProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.CaretBrush"/> dependency property. 
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DateTimeEditors.C1TimeEditor.#ctor">
+            <summary>
+            Initializes a new instance of a <see cref="T:C1.Silverlight.DateTimeEditors.C1TimeEditor"/>.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DateTimeEditors.C1TimeEditor.OnApplyTemplate">
+            <summary>
+            Builds the visual tree for the <see cref="T:C1.Silverlight.DateTimeEditors.C1TimeEditor"/> control when a new template is applied.
+            </summary>
+            <remarks>
+            This method is invoked whenever application code or an internal process, such as a rebuilding layout pass, calls the <see cref="M:ApplyTemplate"/> method.
+            </remarks>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Value">
+            <summary>
+            Gets or sets the TimeSpan value in the <see cref="T:C1.Silverlight.DateTimeEditors.C1TimeEditor" />.
+            </summary>
+        </member>
+        <member name="E:C1.Silverlight.DateTimeEditors.C1TimeEditor.TextValidationError">
+            <summary>
+            Occurs when the cannot be parsed or TimeSpan is not valid to be selected.
+            </summary>
+        </member>
+        <member name="E:C1.Silverlight.DateTimeEditors.C1TimeEditor.ValueChanged">
+            <summary>
+            Fires when the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Value"/> property changes.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Increment">
+            <summary>
+            Gets or sets the increment applied when the user pressed the up/down arrow keys.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.ShowButtons">
+            <summary>
+            Shows or hides the buttons for Increment or Decrement.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.IsReadOnly">
+            <summary>
+            Gets or sets the value that determines if the <see cref="T:C1.Silverlight.DateTimeEditors.C1TimeEditor"/> is read-only.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.AllowNull">
+            <summary>
+            Gets or sets whether the user can enter null values.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Delay">
+            <summary>
+            Gets or sets the delay for the Increase and Decrease buttons.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Interval">
+            <summary>
+            Gets or sets the time, in milliseconds, between repetitions of the click action, as soon as repeating starts, applied to the Increase and Decrease buttons.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.HandleUpDownKeys">
+            <summary>
+            Gets or sets If the control handles the Up / Down / PageUp / PageDown keys.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Format">
+            <summary>
+            Specifies the TimeSpan format the <see cref="T:C1.Silverlight.DateTimeEditors.C1TimeEditor"/> control displays.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Minimum">
+            <summary>
+            Gets or sets the minimum value allowed for the <see cref="T:C1.Silverlight.DateTimeEditors.C1TimeEditor"/>.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Maximum">
+            <summary>
+            Gets or sets the maximum value allowed for the <see cref="T:C1.Silverlight.DateTimeEditors.C1TimeEditor"/>.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Mask">
+            <summary>
+            Gets or sets the input mask.
+            </summary>
+            <remarks>
+            <para>The mask consists of a string that determines what class of character is acceptable
+            at each input position.</para>
+            <para>Valid mask characters are:</para>
+            <para>
+            <b>0</b>    Digit (0-9)</para>
+            <para>
+            <b>9</b>    Digit or space</para>
+            <para>
+            <b>#</b>    Digit, space, or sign (+/-)</para>
+            <para>
+            <b>L</b>    Letter</para>
+            <para>
+            <b>?</b>    Letter or space</para>
+            <para>
+            <b>A</b>    Letter or digit</para>
+            <para>
+            <b>a</b>    Letter, digit, or space</para>
+            <para>
+            <b>&amp;</b>    Any character</para>
+            <para>
+            <b>.</b>    Localized decimal symbol</para>
+            <para>
+            <b>,</b>    Localized thousand separator</para>
+            <para>
+            <b>:</b>    Localized time separator</para>
+            <para>
+            <b>/</b>    Localized date separator</para>
+            <para>Other characters are treated as literals. They are displayed in the control but cannot
+            be edited.</para>
+            <para>For example, the mask "000-0000" causes the control to accept only digits at every
+            position except the third, which always contains a dash.</para>
+            
+            </remarks>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Prompt">
+            <summary>
+            Gets or sets the character used to show spaces where user is supposed to type.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.CustomFormat">
+            <summary>
+            Gets or sets the custom date/time format string.
+            </summary>
+            <remarks>
+            The default is null.
+            </remarks>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.Watermark">
+            <summary>
+            Gets or sets the content of the watermark.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.CycleChangesOnBoundaries">
+            <summary>
+            Determines the C1TimeEditor behavior at changing its value by up/down buttons or arrow keys when Value property is equal to Minimum or Maximum property value. The default is true.
+            </summary>
+            <remarks>
+            By default, if C1TimeEditor.Value property reaches C1TimeEditor.Maximum property value, the next click on Up button will cause changing C1TimeEditor.Value property to C1TimeEditor.Minimum property value. If CycleChangesOnBoundaries property value is false and C1TimeEditor.Value property equals to C1TimeEditor.Maximum property value, all clicks on Up button will be ignored. The same behavior is true for the Down button and Minimum property.
+            </remarks>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.FocusCuesVisibility">
+            <summary>
+            Gets or sets a value indicating whether the focus visuals of the control are visible.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.DisabledCuesVisibility">
+            <summary>
+            Gets or sets a value indicating whether the disabled visuals of the control are visible.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.IsMouseOver">
+            <summary>
+            Returns true if the mouse is over the control.
+            </summary>
+        </member>
+        <member name="E:C1.Silverlight.DateTimeEditors.C1TimeEditor.IsMouseOverChanged">
+            <summary> 
+            Event raised when the <see cref="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.IsMouseOver"/> property has changed.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.ForceMouseOver">
+            <summary>
+            Set to true to force the mouse over visual state.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.IsFocused">
+            <summary>
+            Returns true if the control has the focus.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.ValidationDecoratorStyle">
+            <summary>
+            Gets or sets the style that is applied to the inner <see cref="T:C1.Silverlight.C1ValidationDecorator"/>.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.MouseOverBrush">
+            <summary>
+            Gets or sets the <see cref="T:System.Windows.Media.Brush"/> used to highlight the control when it has the mouse over.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.PressedBrush">
+            <summary>
+            Gets or sets the <see cref="T:System.Windows.Media.Brush"/> used to paint a button when it is pressed.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.FocusBrush">
+            <summary>
+            Gets or sets the <see cref="T:System.Windows.Media.Brush"/> used to highlight the focused control.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.ButtonBackground">
+            <summary>
+            Gets or sets the <see cref="T:System.Windows.Media.Brush"/> that will be assigned to the Background of the buttons inside the control.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.ButtonForeground">
+            <summary>
+            Gets or sets the <see cref="T:System.Windows.Media.Brush"/> that will be assigned to the Foreground of the buttons inside the control.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.SelectionBackground">
+            <summary>
+            Gets or sets the <see cref="T:System.Windows.Media.Brush"/> that fills the background of the selected text.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.SelectionForeground">
+            <summary>
+            Gets or sets the <see cref="T:System.Windows.Media.Brush"/> used as foreground of the selected text.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.C1TimeEditor.CaretBrush">
+            <summary>
+            Gets or sets the <see cref="T:System.Windows.Media.Brush"/> of the blinking cursor of an input control.
+            </summary>
+        </member>
+        <member name="T:C1.Silverlight.DateTimeEditors.C1TimeEditorFormat">
+            <summary>
+            Specifies the TimeSpan format the <see cref="T:C1.Silverlight.DateTimeEditors.C1TimeEditor"/> control displays.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditorFormat.ShortTime">
+            <summary>
+            The <see cref="T:C1.Silverlight.DateTimeEditors.C1TimeEditor"/> control displays short time values.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditorFormat.LongTime">
+            <summary>
+            The <see cref="T:C1.Silverlight.DateTimeEditors.C1TimeEditor"/> control displays long time values.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditorFormat.TimeSpan">
+            <summary>
+            The <see cref="T:C1.Silverlight.DateTimeEditors.C1TimeEditor"/> control displays time span (doesn't show am/pm designators).
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DateTimeEditors.C1TimeEditorFormat.Custom">
+            <summary>
+            The <see cref="T:C1.Silverlight.DateTimeEditors.C1TimeEditor"/> control displays the time value in a custom format.
+            </summary>
+        </member>
+        <member name="T:C1.Silverlight.DateTimeEditors.TextValidationErrorEventArgs">
+            <summary>
+            Provides data for the DateValidationError event.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DateTimeEditors.TextValidationErrorEventArgs.#ctor(System.Exception,System.String)">
+            <summary>
+            Initializes a new instance of the TextValidationErrorEventArgs class. 
+            </summary>
+            <param name="exception">The exception that initially triggered the TextValidationError event.</param>
+            <param name="text">The text being parsed.</param>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.TextValidationErrorEventArgs.Exception">
+            <summary>
+            Gets the exception that initially triggered the TextValidationError event.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.TextValidationErrorEventArgs.Text">
+            <summary>
+            Gets the text being parsed when the TextValidationError event was raised.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DateTimeEditors.TextValidationErrorEventArgs.ThrowException">
+            <summary>
+            Gets or sets a value that indicates whether Exception should be thrown.
+            </summary>
+        </member>
+        <member name="T:C1.Silverlight.DateTimeEditors.NullablePropertyChangedEventArgs`1">
+            <summary>
+            Wrapper class for the <see cref="T:C1.Silverlight.PropertyChangedEventArgs`1"/> class for case when T 
+            is <see cref="T:System.Nullable`1"/>.
+            </summary>
+            <typeparam name="T">structure</typeparam>
+            <remarks>
+            This class is required for design-time, as VS 2010 can't work with nested generic attributes 
+            directly when adding event handlers in xaml.
+            </remarks>
+        </member>
+        <member name="T:C1.Silverlight.DateTimeEditors.NullableTimeSpanConverter">
+            <summary>
+            Converts to and from the Nullable{T} type (using the TimeSpan type constraint on the generic). 
+            </summary>
+        </member>
+    </members>
+</doc>

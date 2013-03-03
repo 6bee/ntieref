@@ -1,0 +1,19 @@
+﻿<#@ template language="C#" hostspecific="true" debug="true" #>
+<#@ output extension="txt" #>
+<#@ include file="NTierEF.SL.NTierEntityGenerator.CS.ttinclude" #>
+<#
+    // <copyright file="$safeitemname$.tt" company="Trivadis">
+    //  Copyright © Trivadis. All Rights Reserved.
+    // </copyright>
+    
+    // Specify project files in case projects do not use default project names.
+    //NTierEntityGenerator.ClientLibraryProject = @"..\<project folder>\<project name>.csproj";
+    //NTierEntityGenerator.DataModelProject = @"..\<project folder>\<project name>.csproj";
+    //NTierEntityGenerator.DataServiceContractProject = @"..\<project folder>\<project name>.csproj";
+    //NTierEntityGenerator.EdmxProject = @"..\<project folder>\<project name>.csproj";
+    
+    //var generator = new NTierEntityGenerator(this, @"..\<project folder>\<entity model>.edmx");
+    var generator = new NTierEntityGenerator(this);
+    generator.Run();
+#>
+See $safeitemname$.tt.log for list of generated files.

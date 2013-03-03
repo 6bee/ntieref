@@ -1,0 +1,177 @@
+﻿<#+
+// <copyright file="NTierEF.SL.ComplexTypeTT.CS.ttinclude" company="Trivadis">
+//     Copyright © Trivadis. All Rights Reserved.
+// </copyright>
+public class ComplexTypeTemplate : Template
+{
+    public GenerationUtils GenerationUtils { get; set; }
+    public string Namespace { get; set; }
+    public string ClassName { get; set; }
+    private string file = null;
+    public string File
+    {
+        get { return file != null ? file : string.Format(@"Common{2}Domain{2}Model{2}{0}{2}{1}.g.cs", GenerationUtils.ModelName, ClassName, System.IO.Path.DirectorySeparatorChar); }
+        set { file = value; }
+    }
+
+    public ComplexTypeTemplate(GenerationUtils generationUtils = null, string defaultNameSpace = null, string className = null)
+    {
+        this.GenerationUtils = generationUtils;
+        this.Namespace = defaultNameSpace;
+        this.ClassName = className;
+    }
+
+    /// <summary>
+    /// Directs output of the template to a separate file by default. User can override
+    /// default behavior by assigning <see cref="Rendering"/> event handler.
+    /// </summary>
+    protected override void OnRendering(System.EventArgs e)
+    {
+        if (GenerationUtils == null)
+        {
+            throw new Exception("Missing property GenerationUtils");
+        }
+        if (string.IsNullOrWhiteSpace(Namespace))
+        {
+            throw new Exception("Missing property Namespace");
+        }
+        if (string.IsNullOrWhiteSpace(ClassName))
+        {
+            throw new Exception("Missing property ClassName");
+        }
+
+        this.Output.File = this.File;
+        base.OnRendering(e);
+    }
+
+    public override string TransformText()
+    {
+        ComplexType complex = GenerationUtils.ItemCollection.GetItems<ComplexType>().Single(e => e.Name == ClassName);
+
+        WriteHeader();
+#>
+namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
+{
+    [DataContract(IsReference = true)]
+    <#=Accessibility.ForType(complex)#> partial class <#=GenerationUtils.Code.Escape(complex)#> : global::NTier.Common.Domain.Model.ValueObject, INotifyPropertyChanging, INotifyPropertyChanged
+    {
+        #region Primitive Properties
+<#+
+        foreach(EdmProperty edmProperty in complex.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == complex))
+        {
+#>
+
+        [DataMember]
+        <#=Accessibility.ForProperty(edmProperty)#> <#=GenerationUtils.Code.Escape(edmProperty.TypeUsage)#> <#=GenerationUtils.Code.Escape(edmProperty)#>
+        {
+            <#=GenerationUtils.Code.SpaceAfter(Accessibility.ForGetter(edmProperty))#>get { return <#=GenerationUtils.Code.FieldName(edmProperty)#>; }
+            <#=GenerationUtils.Code.SpaceAfter(Accessibility.ForSetter(edmProperty))#>set
+            {
+                if (<#=GenerationUtils.Code.FieldName(edmProperty)#> != value)
+                {
+                    var previousValue = <#=GenerationUtils.Code.FieldName(edmProperty)#>;
+                    OnPropertyChanging("<#=edmProperty.Name#>", previousValue, value);
+                    <#=GenerationUtils.Code.FieldName(edmProperty)#> = value;
+                    OnPropertyChanged("<#=edmProperty.Name#>", previousValue, value);
+                }
+            }
+        }
+        private <#=GenerationUtils.Code.Escape(edmProperty.TypeUsage)#> <#=GenerationUtils.Code.FieldName(edmProperty)#>;
+<#+
+        }
+
+#>
+
+        #endregion Primitive Properties
+
+        #region Complex Properties
+<#+
+
+        foreach(EdmProperty edmProperty in complex.Properties.Where(p => p.TypeUsage.EdmType is ComplexType && p.DeclaringType == complex))
+        {
+#>
+
+        [DataMember]
+        <#=Accessibility.ForProperty(edmProperty)#> <#=GenerationUtils.Code.Escape(edmProperty.TypeUsage)#> <#=GenerationUtils.Code.Escape(edmProperty)#>
+        {
+            <#=GenerationUtils.Code.SpaceAfter(Accessibility.ForGetter(edmProperty))#>get
+            {
+                if (!<#=InitializedTrackingField(edmProperty)#> && <#=GenerationUtils.Code.FieldName(edmProperty)#> == null)
+                {
+                    <#=GenerationUtils.Code.FieldName(edmProperty)#> = new <#=GenerationUtils.Code.Escape(edmProperty.TypeUsage)#>();
+                    ((INotifyComplexPropertyChanging)<#=GenerationUtils.Code.FieldName(edmProperty)#>).ComplexPropertyChanging += HandleComplexPropertyChanging;
+                }
+                <#=InitializedTrackingField(edmProperty)#> = true;
+                return <#=GenerationUtils.Code.FieldName(edmProperty)#>;
+            }
+            <#=GenerationUtils.Code.SpaceAfter(Accessibility.ForSetter(edmProperty))#>set
+            {
+                <#=InitializedTrackingField(edmProperty)#> = true;
+                if (!Equals(<#=GenerationUtils.Code.FieldName(edmProperty)#>, value))
+                {
+                    if (<#=GenerationUtils.Code.FieldName(edmProperty)#> != null)
+                    {
+                        ((INotifyComplexPropertyChanging)<#=GenerationUtils.Code.FieldName(edmProperty)#>).ComplexPropertyChanging -= HandleComplexPropertyChanging;
+                    }
+
+                    OnPropertyChanging("<#=edmProperty.Name#>", value);
+                    var previousValue = <#=GenerationUtils.Code.FieldName(edmProperty)#>;
+                    <#=GenerationUtils.Code.FieldName(edmProperty)#> = value;
+                    OnPropertyChanged("<#=edmProperty.Name#>", previousValue, value);
+
+                    if (value != null)
+                    {
+                        ((INotifyComplexPropertyChanging)value).ComplexPropertyChanging += HandleComplexPropertyChanging;
+                    }
+                }
+            }
+        }
+        private <#=GenerationUtils.Code.Escape(edmProperty.TypeUsage)#> <#=GenerationUtils.Code.FieldName(edmProperty)#>;
+        private bool <#=InitializedTrackingField(edmProperty)#>;
+<#+
+        }
+#>
+
+        #endregion Complex Properties
+    }
+}
+<#+
+        return this.GenerationEnvironment.ToString();
+    }
+
+    private void WriteHeader(params string[] extraUsings)
+    {
+#>
+//------------------------------------------------------------------------------
+// <autogenerated>
+//   This file was generated by T4 code generator <#= System.IO.Path.GetFileName(TransformationContext.Host.TemplateFile) #>.
+//   Any changes made to this file manually may cause incorrect behavior
+//   and will be lost next time the file is regenerated.
+// </autogenerated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Globalization;
+using System.Reflection;
+using System.Runtime.Serialization;
+<#=String.Join(String.Empty, extraUsings.OrderBy(u => u).Select(u => "using " + u + ";" + Environment.NewLine).ToArray())#>
+<#+
+    }
+
+    private string InitializedTrackingField(EdmProperty property)
+    {
+        string namePart = property.Name + "Initialized";
+        if (GenerationUtils.Code.CamelCaseFields)
+        {
+            namePart = GenerationUtils.Code.CamelCase(namePart);
+        }
+        return "_" + namePart;
+    }
+}
+#>

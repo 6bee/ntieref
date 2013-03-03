@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Remote.Linq.Expressions" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Remote.Linq.Expressions" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:5000/ProductManagerDataService.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/System.Reflection" />
+  <xs:import schemaLocation="http://localhost:5000/ProductManagerDataService.svc?xsd=xsd5" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:complexType name="ArrayOfExpression">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Expression" nillable="true" type="tns:Expression" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfExpression" nillable="true" type="tns:ArrayOfExpression" />
+  <xs:complexType name="Expression">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:element name="Expression" nillable="true" type="tns:Expression" />
+  <xs:complexType name="MethodCallExpression">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Expression">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Arguments" nillable="true" type="tns:ArrayOfExpression">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/System.Reflection" minOccurs="0" name="BindingFlags" type="q1:BindingFlags">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="DeclaringType" nillable="true" type="xs:string">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Instance" nillable="true" type="tns:Expression">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="MethodName" nillable="true" type="xs:string">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="ParameterTypes" nillable="true" type="q2:ArrayOfstring">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MethodCallExpression" nillable="true" type="tns:MethodCallExpression" />
+  <xs:complexType name="UnaryExpression">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Expression">
+        <xs:sequence>
+          <xs:element name="Operand" nillable="true" type="tns:Expression">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Operator" type="tns:UnaryOperator" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="UnaryExpression" nillable="true" type="tns:UnaryExpression" />
+  <xs:simpleType name="UnaryOperator">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Not" />
+      <xs:enumeration value="IsNull" />
+      <xs:enumeration value="IsNotNull" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="UnaryOperator" nillable="true" type="tns:UnaryOperator" />
+  <xs:complexType name="CollectionExpression">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Expression">
+        <xs:sequence>
+          <xs:element name="ElementType" nillable="true" type="xs:string">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="List" nillable="true" type="tns:ArrayOfConstantValueExpression">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="CollectionExpression" nillable="true" type="tns:CollectionExpression" />
+  <xs:complexType name="ArrayOfConstantValueExpression">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ConstantValueExpression" nillable="true" type="tns:ConstantValueExpression" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfConstantValueExpression" nillable="true" type="tns:ArrayOfConstantValueExpression" />
+  <xs:complexType name="ConstantValueExpression">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Expression">
+        <xs:sequence>
+          <xs:element name="Value" nillable="true" type="xs:anyType">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ConstantValueExpression" nillable="true" type="tns:ConstantValueExpression" />
+  <xs:simpleType name="BinaryOperator">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Add" />
+      <xs:enumeration value="Subtract" />
+      <xs:enumeration value="Multiply" />
+      <xs:enumeration value="Divide" />
+      <xs:enumeration value="Modulo" />
+      <xs:enumeration value="BitwiseAnd" />
+      <xs:enumeration value="BitwiseOr" />
+      <xs:enumeration value="ExclusiveOr" />
+      <xs:enumeration value="Coalesce" />
+      <xs:enumeration value="In" />
+      <xs:enumeration value="Contains" />
+      <xs:enumeration value="StartsWith" />
+      <xs:enumeration value="EndsWith" />
+      <xs:enumeration value="And" />
+      <xs:enumeration value="Or" />
+      <xs:enumeration value="LessThan" />
+      <xs:enumeration value="LessThanOrEqual" />
+      <xs:enumeration value="GreaterThan" />
+      <xs:enumeration value="GreaterThanOrEqual" />
+      <xs:enumeration value="Equal" />
+      <xs:enumeration value="NotEqual" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="BinaryOperator" nillable="true" type="tns:BinaryOperator" />
+  <xs:complexType name="PropertyAccessExpression">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Expression">
+        <xs:sequence>
+          <xs:element name="DeclaringType" nillable="true" type="xs:string">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Instance" nillable="true" type="tns:Expression">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="PropertyName" nillable="true" type="xs:string">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="PropertyType" nillable="true" type="xs:string">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="PropertyAccessExpression" nillable="true" type="tns:PropertyAccessExpression" />
+  <xs:complexType name="ParameterExpression">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Expression">
+        <xs:sequence>
+          <xs:element name="ParameterName" nillable="true" type="xs:string">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="ParameterType" nillable="true" type="xs:string">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ParameterExpression" nillable="true" type="tns:ParameterExpression" />
+  <xs:complexType name="ConversionExpression">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Expression">
+        <xs:sequence>
+          <xs:element name="Operand" nillable="true" type="tns:Expression">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Type" nillable="true" type="xs:string">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ConversionExpression" nillable="true" type="tns:ConversionExpression" />
+  <xs:complexType name="BinaryExpression">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Expression">
+        <xs:sequence>
+          <xs:element name="LeftOperand" nillable="true" type="tns:Expression">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Operator" type="tns:BinaryOperator" />
+          <xs:element name="RightOperand" nillable="true" type="tns:Expression">
+            <xs:annotation>
+              <xs:appinfo>
+                <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="BinaryExpression" nillable="true" type="tns:BinaryExpression" />
+  <xs:complexType name="ArrayOfSortExpression">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SortExpression" nillable="true" type="tns:SortExpression" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSortExpression" nillable="true" type="tns:ArrayOfSortExpression" />
+  <xs:complexType name="SortExpression">
+    <xs:sequence>
+      <xs:element name="Operand" nillable="true" type="tns:Expression">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SortDirection" type="tns:SortDirection" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SortExpression" nillable="true" type="tns:SortExpression" />
+  <xs:simpleType name="SortDirection">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Ascending" />
+      <xs:enumeration value="Descending" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="SortDirection" nillable="true" type="tns:SortDirection" />
+</xs:schema>

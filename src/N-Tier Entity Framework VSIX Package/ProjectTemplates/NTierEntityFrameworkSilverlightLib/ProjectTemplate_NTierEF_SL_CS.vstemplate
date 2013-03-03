@@ -1,0 +1,32 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>N-Tier Entity Framework Silverlight Library</Name>
+    <Description>N-Tier Entity Framework Silverlight Library</Description>
+    <ProjectType>CSharp</ProjectType>
+    <ProjectSubType>
+    </ProjectSubType>
+    <SortOrder>1000</SortOrder>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+    <DefaultName>Company.Project.Silverlight.Domain.Library</DefaultName>
+    <CreateNewFolder>true</CreateNewFolder>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <Icon>Icon.ico</Icon>
+    <PreviewImage>preview.png</PreviewImage>
+    <TemplateID>NTierEF_ProjectTemplate_NTierEF_SL_CS</TemplateID>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="NTier.Silverlight.Domain.Library.csproj" File="NTier.Silverlight.Domain.Library.csproj" ReplaceParameters="true">
+      <Folder Name="Properties" TargetFolderName="Properties">
+        <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
+      </Folder>
+      <ProjectItem ReplaceParameters="true" TargetFileName="EntityModel.tt">EntityModel.tt</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="ServiceReferences.ClientConfig">ServiceReferences.ClientConfig</ProjectItem>
+    </Project>
+  </TemplateContent>  
+  <WizardExtension>
+    <Assembly>ProjectTemplateWizard, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7d8b4e5866a6acd8</Assembly>
+    <FullClassName>ProjectTemplateWizard.NTierEntityFrameworkSilverlightLibWizard</FullClassName>
+  </WizardExtension>
+</VSTemplate>

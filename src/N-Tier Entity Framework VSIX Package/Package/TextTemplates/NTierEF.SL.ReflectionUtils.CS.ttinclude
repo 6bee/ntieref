@@ -1,0 +1,395 @@
+﻿<#@ assembly name="System.ComponentModel.DataAnnotations" #>
+<#@ assembly name="System.ServiceModel.DomainServices.Server" #>
+<#@ VolatileAssembly processor="T4Toolbox.VolatileAssemblyProcessor" name="..\..\Lib\NTier.Common.Domain.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Collections.ObjectModel" #>
+<#@ import namespace="System.ComponentModel.DataAnnotations" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#+
+// <copyright file="NTierEF.SL.ReflectionUtils.CS.ttinclude" company="Trivadis">
+//     Copyright © Trivadis. All Rights Reserved.
+// </copyright>
+public class ReflectionUtils
+{
+    private readonly Assembly Assembly;
+
+    public ReflectionUtils(string assemblyPath)
+    {
+        if (string.IsNullOrEmpty(assemblyPath))
+        {
+            throw new ArgumentNullException("assemblyPath");
+        }
+
+        if (!System.IO.Path.IsPathRooted(assemblyPath))
+        {
+            var dir = System.IO.Path.GetDirectoryName(TransformationContext.Project.FileName);
+            assemblyPath = System.IO.Path.Combine(dir, assemblyPath);
+        }
+
+        byte[] rawAssembly = System.IO.File.ReadAllBytes(assemblyPath);
+        this.Assembly = Assembly.Load(rawAssembly);
+    }
+
+    public IEnumerable<string> GetPropertyAttributeDefinitions(string typeName, string propertyName)
+    {
+        var list = new List<string>();
+
+        var type = Assembly.GetType(typeName, true, true);
+        var obj = Activator.CreateInstance(type);
+        PropertyInfo metadataProperty = type.GetProperty("PropertyInfos", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+        var propertyInfoList = metadataProperty.GetValue(obj, null) as System.Collections.IEnumerable;
+        if (propertyInfoList != null)
+        {
+            foreach(object propertyInfo in propertyInfoList)
+            {
+                string name = propertyInfo.GetType().GetField("Name").GetValue(propertyInfo) as string;
+                if (name == propertyName)
+                {
+                    var attributes = propertyInfo.GetType().GetProperty("Attributes").GetValue(propertyInfo, null) as IEnumerable<Attribute>;
+                    if(attributes != null)
+                    {
+                        foreach (var attr in attributes)
+                        {
+                            var str = GetAttributeDefinition(attr);
+                            if (!string.IsNullOrEmpty(str))
+                            {
+                                list.Add(str);
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
+        return list;
+    }
+
+    private static string GetAttributeDefinition(Attribute attribute)
+    {
+        if (attribute is RangeAttribute)
+        {
+            return GetAttributeDefinition(attribute as RangeAttribute);
+        }
+        if (attribute is StringLengthAttribute)
+        {
+            return GetAttributeDefinition(attribute as StringLengthAttribute);
+        }
+        if (attribute is RegularExpressionAttribute)
+        {
+            return GetAttributeDefinition(attribute as RegularExpressionAttribute);
+        }
+        if (attribute is CustomValidationAttribute)
+        {
+            return GetAttributeDefinition(attribute as CustomValidationAttribute);
+        }
+        if (attribute is EnumDataTypeAttribute)
+        {
+            return GetAttributeDefinition(attribute as EnumDataTypeAttribute);
+        }
+        if (attribute is DataTypeAttribute)
+        {
+            return GetAttributeDefinition(attribute as DataTypeAttribute);
+        }
+        if (attribute is AssociationAttribute)
+        {
+            return GetAttributeDefinition(attribute as AssociationAttribute);
+        }
+        if (attribute is DisplayAttribute)
+        {
+            return GetAttributeDefinition(attribute as DisplayAttribute);
+        }
+        if (attribute is DisplayColumnAttribute)
+        {
+            return GetAttributeDefinition(attribute as DisplayColumnAttribute);
+        }
+        if (attribute is DisplayFormatAttribute)
+        {
+            return GetAttributeDefinition(attribute as DisplayFormatAttribute);
+        }
+        if (attribute is EditableAttribute)
+        {
+            return GetAttributeDefinition(attribute as EditableAttribute);
+        }
+        if (attribute is FilterUIHintAttribute)
+        {
+            return GetAttributeDefinition(attribute as FilterUIHintAttribute);
+        }
+        if (attribute is UIHintAttribute)
+        {
+            return GetAttributeDefinition(attribute as UIHintAttribute);
+        }
+        if (attribute is RequiredAttribute)
+        {
+            return GetAttributeDefinition(attribute as RequiredAttribute);
+        }
+        //if (attribute is ValidationAttribute)
+        //{
+        //    // skip if unknown validation attribute
+        //    return GetAttributeDefinition(attribute as ValidationAttribute);
+        //}
+        if (attribute is RoundtripOriginalAttribute)
+        {
+            return null;
+        }
+        if (attribute is System.ServiceModel.DomainServices.Server.IncludeAttribute)
+        {
+            return null;
+        }
+        if (attribute is ScaffoldColumnAttribute)
+        {
+            return null;
+        }
+        if (attribute is ScaffoldTableAttribute)
+        {
+            return null;
+        }
+        // KeyAttribute
+        // TimestampAttribute
+        return attribute.ToString();
+    }
+
+    private static string GetAttributeDefinition(RangeAttribute attribute)
+    {
+        if (attribute.OperandType == typeof(int) || attribute.OperandType == typeof(double))
+        {
+            // "{0}({1}, {2}, {3})"
+            return GetAttributeDefinition(
+                attribute,
+                ToParameterString(attribute.Minimum),
+                ToParameterString(attribute.Maximum),
+                GetValidationAttributeParameters(attribute));
+        }
+        else
+        {
+            // @"{0}(typeof({1}), ""{2}"", ""{3}"", {4})"
+            return GetAttributeDefinition(
+                attribute,
+                ToParameterString(attribute.OperandType),
+                ToParameterString(attribute.Minimum),
+                ToParameterString(attribute.Maximum),
+                GetValidationAttributeParameters(attribute));
+        }
+    }
+
+    private static string GetAttributeDefinition(StringLengthAttribute attribute)
+    {
+        // @"{0}({1}, MinimumLength = {2}, {3})"
+        return GetAttributeDefinition(
+            attribute,
+            ToParameterString(attribute.MaximumLength),
+            ToOptionalParameterString("MinimumLength", attribute.MinimumLength),
+            GetValidationAttributeParameters(attribute));
+    }
+
+    private static string GetAttributeDefinition(DataTypeAttribute attribute)
+    {
+        if (attribute.DataType == DataType.Custom)
+        {
+            // @"{0}(""{1}"", {2})"
+            return GetAttributeDefinition(
+                attribute,
+                ToParameterString(attribute.CustomDataType),
+                GetValidationAttributeParameters(attribute));
+        }
+        else
+        {
+            // @"{0}({1}.{2}, {3})"
+            return GetAttributeDefinition(
+                attribute,
+                string.Format("{0}.{1}", typeof(DataType).FullName, attribute.DataType),
+                GetValidationAttributeParameters(attribute));
+        }
+    }
+
+    private static string GetAttributeDefinition(EnumDataTypeAttribute attribute)
+    {
+        // @"{0}({1}, {2})"
+        return GetAttributeDefinition(
+            attribute,
+            ToParameterString(attribute.EnumType),
+            GetValidationAttributeParameters(attribute));
+    }
+
+    private static string GetAttributeDefinition(RegularExpressionAttribute attribute)
+    {
+        // @"{0}(@""{1}"", {2})"
+        return GetAttributeDefinition(
+            attribute,
+            ToParameterString(attribute.Pattern),
+            GetValidationAttributeParameters(attribute));
+    }
+
+    private static string GetAttributeDefinition(CustomValidationAttribute attribute)
+    {
+        // @"{0}(typeof({1}), ""{2}"", {3})"
+        return GetAttributeDefinition(
+            attribute,
+            ToParameterString(attribute.ValidatorType),
+            ToParameterString(attribute.Method),
+            GetValidationAttributeParameters(attribute));
+    }
+
+    private static string GetAttributeDefinition(RequiredAttribute attribute)
+    {
+        // @"{0}(AllowEmptyStrings = {1}, {2})"
+        return GetAttributeDefinition(
+            attribute,
+            ToOptionalParameterString("AllowEmptyStrings", attribute.AllowEmptyStrings),
+            GetValidationAttributeParameters(attribute));
+    }
+
+    private static string GetAttributeDefinition(ValidationAttribute attribute)
+    {
+        // @"{0}({1})"
+        return GetAttributeDefinition(
+            attribute,
+            GetValidationAttributeParameters(attribute));
+    }
+
+    private static string GetValidationAttributeParameters(ValidationAttribute attribute)
+    {
+        // "ErrorMessage = {0}, ErrorMessageResourceName = {1}, ErrorMessageResourceType = {2}"
+        return JoinParameters(
+            ToOptionalParameterString("ErrorMessage", attribute.ErrorMessage),
+            ToOptionalParameterString("ErrorMessageResourceName", attribute.ErrorMessageResourceName),
+            ToOptionalParameterString("ErrorMessageResourceType", attribute.ErrorMessageResourceType));
+    }
+
+    private static string GetAttributeDefinition(AssociationAttribute attribute)
+    {
+        // @"{0}(""{1}"", ""{2}"", ""{3}"", IsForeignKey = {4})"
+        return GetAttributeDefinition(
+            attribute,
+            ToParameterString(attribute.Name),
+            ToParameterString(attribute.ThisKey),
+            ToParameterString(attribute.OtherKey),
+            ToOptionalParameterString("IsForeignKey", attribute.IsForeignKey));
+    }
+
+    private static string GetAttributeDefinition(DisplayAttribute attribute)
+    {
+        // @"{0}(AutoGenerateField = {1}, AutoGenerateFilter = {2}, Description = {3}, GroupName = {4}, Name = {5}, Order = {6}, Prompt = {7}, ResourceType = {8}, ShortName = {9})"
+        return GetAttributeDefinition(
+            attribute,
+            ToOptionalParameterString("AutoGenerateField", attribute.GetAutoGenerateField()),
+            ToOptionalParameterString("AutoGenerateFilter", attribute.GetAutoGenerateFilter()),
+            ToOptionalParameterString("Description", attribute.Description),
+            ToOptionalParameterString("GroupName", attribute.GroupName),
+            ToOptionalParameterString("Name", attribute.Name),
+            ToOptionalParameterString("Order", attribute.GetOrder()),
+            ToOptionalParameterString("Prompt", attribute.Prompt),
+            ToOptionalParameterString("ResourceType", attribute.ResourceType),
+            ToOptionalParameterString("ShortName", attribute.ShortName));
+    }
+
+    private static string GetAttributeDefinition(DisplayColumnAttribute attribute)
+    {
+        // @"{0}(""{1}"", ""{2}"", {3})"
+        return GetAttributeDefinition(
+            attribute,
+            ToParameterString(attribute.DisplayColumn),
+            ToParameterString(attribute.SortColumn),
+            ToParameterString(attribute.SortDescending));
+    }
+
+    private static string GetAttributeDefinition(DisplayFormatAttribute attribute)
+    {
+        // no silverlight:   @"{0}(ApplyFormatInEditMode = {1}, ConvertEmptyStringToNull = {2}, DataFormatString = {3}, HtmlEncode = {4}, NullDisplayText = {5})"
+        //                   @"{0}(ApplyFormatInEditMode = {1}, ConvertEmptyStringToNull = {2}, DataFormatString = {3}, NullDisplayText = {4})",
+        return GetAttributeDefinition(
+            attribute,
+            ToOptionalParameterString("ApplyFormatInEditMode", attribute.ApplyFormatInEditMode),
+            ToOptionalParameterString("ConvertEmptyStringToNull", attribute.ConvertEmptyStringToNull),
+            ToOptionalParameterString("DataFormatString", attribute.DataFormatString),
+            //ToOptionalParameterString("HtmlEncode", attribute.HtmlEncode),
+            ToOptionalParameterString("NullDisplayText", attribute.NullDisplayText));
+    }
+
+    private static string GetAttributeDefinition(EditableAttribute attribute)
+    {
+        // @"{0}({1}, AllowInitialValue = {2})"
+        return GetAttributeDefinition(
+            attribute,
+            ToParameterString(attribute.AllowEdit),
+            ToOptionalParameterString("AllowInitialValue", attribute.AllowInitialValue));
+    }
+
+    private static string GetAttributeDefinition(FilterUIHintAttribute attribute)
+    {
+        // @"{0}({1}, {2}, {3})"
+        return GetAttributeDefinition(
+            attribute,
+            ToParameterString(attribute.FilterUIHint),
+            ToParameterString(attribute.PresentationLayer),
+            ControlParametersToString(attribute.ControlParameters));
+    }
+
+    private static string GetAttributeDefinition(UIHintAttribute attribute)
+    {
+        // @"{0}({1}, {2}, {3})"
+        return GetAttributeDefinition(
+            attribute,
+            ToParameterString(attribute.UIHint),
+            ToParameterString(attribute.PresentationLayer),
+            ControlParametersToString(attribute.ControlParameters));
+    }
+
+
+
+    private static string GetAttributeDefinition(Attribute attribute, params string[] args)
+    {
+        var parameters = JoinParameters(args);
+        return string.Format("{0}{1}", attribute, parameters == null ? null : string.Format("({0})", parameters));
+    }
+
+    private static string JoinParameters(params string[] args)
+    {
+        var parameters = args.Where(e => e != null);
+        return parameters.Any() ? string.Join(", ", parameters) : null;
+    }
+
+    private static string ToOptionalParameterString(string name, object value)
+    {
+        if (value == null) return null;
+        return string.Format("{0} = {1}", name, ToParameterString(value));
+    }
+
+    private static string ToOptionalParameterString<T>(string name, Nullable<T> value) where T : struct
+    {
+        if (!value.HasValue) return null;
+        return string.Format("{0} = {1}", name, ToParameterString(value.Value));
+    }
+
+    private static string ControlParametersToString(IDictionary<string, object> dict)
+    {
+        if (dict != null && dict.Count > 0)
+        {
+            return string.Join(", ", dict.Select(e => string.Format(@"""{0}"", {1}", e.Key, ToParameterString(e.Value))));
+        }
+        return null;
+    }
+
+    private static string ToParameterString(object obj)
+    {
+        if (obj == null) return "null";
+        if (obj is bool) return ((bool)obj) ? "true" : "false";
+        if (obj is string) return string.Format(@"@""{0}""", obj);
+        if (obj is Type) return string.Format("typeof(global::{0})", obj);
+        return obj.ToString();
+    }
+
+    private static string ToParameterString<T>(string separator, params T[] parameters)
+    {
+        return ToParameterString(separator, parameters.AsEnumerable());
+    }
+
+    private static string ToParameterString<T>(string separator, IEnumerable<T> parameters)
+    {
+        if (parameters == null) return "null";
+        return string.Join(separator, parameters.Select(e => ToParameterString(e)));
+    }
+}
+#>

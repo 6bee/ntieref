@@ -1,0 +1,827 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>C1.Silverlight.DataGrid.Ria</name>
+    </assembly>
+    <members>
+        <member name="T:C1.Silverlight.DataGrid.Ria.C1DataPager">
+            <summary>
+            Handles paging for an <see cref="T:System.ComponentModel.IPagedCollectionView" />. 
+            </summary>
+            <QualityBand>Preview</QualityBand>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager.AutoEllipsisProperty">
+            <summary>
+            Identifies the AutoEllipsis dependency property.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager.CanChangePageProperty">
+            <summary>
+            Identifies the CanChangePage dependency property.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager.CanMoveToFirstPageProperty">
+            <summary>
+            Identifies the CanMoveToFirstPage dependency property.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager.CanMoveToLastPageProperty">
+            <summary>
+            Identifies the CanMoveToLastPage dependency property.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager.CanMoveToNextPageProperty">
+            <summary>
+            Identifies the CanMoveToNextPage dependency property.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager.CanMoveToPreviousPageProperty">
+            <summary>
+            Identifies the CanMoveToPreviousPage dependency property.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager.DisplayModeProperty">
+            <summary>
+            Identifies the DisplayMode dependency property.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager.IsTotalItemCountFixedProperty">
+            <summary>
+            Identifies the IsTotalItemCountFixed dependency property.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager.ItemCountProperty">
+            <summary>
+            Identifies the ItemCount dependency property.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager.NumericButtonCountProperty">
+            <summary>
+            Identifies the NumericButtonCount dependency property.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager.NumericButtonStyleProperty">
+            <summary>
+            Identifies the NumericButtonStyle dependency property.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager.PageCountProperty">
+            <summary>
+            Identifies the PageCount dependency property.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager.PageIndexProperty">
+            <summary>
+            Identifies the PageIndex dependency property.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager.PageSizeProperty">
+            <summary>
+            Identifies the PageSize dependency property.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager.PrivateForegroundProperty">
+            <summary>
+            Identifies the PrivateForeground dependency property. This dependency property is bound to 
+            DataPager.Foreground to be aware of its changes. It is used to update the foreground of the
+            numeric toggle buttons.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager.SourceProperty">
+            <summary>
+            Identifies the Source dependency property.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager._currentPagePrefixTextBlock">
+            <summary>
+            Private accessor for the text block appearing before the current page text box.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager._currentPageSuffixTextBlock">
+            <summary>
+            Private accessor for the text block appearing after the current page text box.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager._currentPageTextBox">
+            <summary>
+            Private accessor for the current page text box.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager._firstPageButtonBase">
+            <summary>
+            Private accessor for the first page ButtonBase.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager._focusedToggleButtonIndex">
+            <summary>
+            Page index corresponding to the ToggleButton that has keyboard focus
+            -1 if no ToggleButton has focus.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager._ignoreToggleButtonCheckedNotification">
+            <summary>
+            Set to True when the ToggleButton_Checked notification needs to be ignored.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager._ignoreToggleButtonFocusNotification">
+            <summary>
+            Set to True when the ToggleButton_GotFocus and ToggleButton_LostFocus 
+            notifications need to be ignored.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager._ignoreToggleButtonUncheckedNotification">
+            <summary>
+            Set to True when a ToggleButton_Unchecked notification needs to be ignored.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager._lastPageButtonBase">
+            <summary>
+            Private accessor for the last page ButtonBase.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager._needPageChangingNotification">
+            <summary>
+            Set to True when a PageChanging notification is expected to be raised
+            before the next PagedChanged notification.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager._nextPageButtonBase">
+            <summary>
+            Private accessor for the next page ButtonBase.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager._numericButtonPanel">
+            <summary>
+            Private accessor for the panel hosting the buttons.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager._previousPageButtonBase">
+            <summary>
+            Private accessor for the previous page ButtonBase.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager._requestedPageIndex">
+            <summary>
+            The new index of the current page, used to change the
+            current page when a user enters something into the
+            current page text box.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1DataPager._weakEventListenerPropertyChanged">
+            <summary>
+            Holds the weak event listener for the INotifyPropertyChanged.PropertyChanged event.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.#ctor">
+            <summary>
+            Initializes a new instance of the DataPager class.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.OnApplyTemplate">
+            <summary>
+            Applies the control's template, retrieves the elements
+            within it, and sets up events.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.OnAutoEllipsisPropertyChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            AutoEllipsis property changed handler.
+            </summary>
+            <param name="d">NumericButton that changed its AutoEllipsis.</param>
+            <param name="e">The DependencyPropertyChangedEventArgs for this event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.OnDisplayModePropertyChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            DisplayMode property changed handler.
+            </summary>
+            <param name="d">DataPager that changed its DisplayMode.</param>
+            <param name="e">The DependencyPropertyChangedEventArgs for this event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.OnIsTotalItemCountFixedPropertyChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            IsTotalItemCountFixed property changed handler.
+            </summary>
+            <param name="d">DataPager that changed IsTotalItemCountFixed.</param>
+            <param name="e">The DependencyPropertyChangedEventArgs for this event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.OnNumericButtonCountPropertyChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            NumericButtonCount property changed handler.
+            </summary>
+            <param name="d">DataPager that changed its NumericButtonCount.</param>
+            <param name="e">The DependencyPropertyChangedEventArgs for this event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.OnNumericButtonStylePropertyChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            NumericButtonStyle property changed handler.
+            </summary>
+            <param name="d">DataPager that changed its NumericButtonStyle.</param>
+            <param name="e">The DependencyPropertyChangedEventArgs for this event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.OnPageIndexPropertyChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            PageIndex property changed handler.
+            </summary>
+            <param name="d">DataPager that changed its PageIndex.</param>
+            <param name="e">The DependencyPropertyChangedEventArgs for this event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.OnPageSizePropertyChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            PageSize property changed handler.
+            </summary>
+            <param name="d">DataPager that changed its PageSize.</param>
+            <param name="e">The DependencyPropertyChangedEventArgs for this event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.OnPrivateForegroundPropertyChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            PrivateForeground property changed handler.
+            </summary>
+            <param name="d">DataPager that changed its Foreground property</param>
+            <param name="e">The DependencyPropertyChangedEventArgs for this event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.OnReadOnlyPropertyChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Called when a Read-Only dependency property is changed
+            </summary>
+            <param name="d">DataPager that changed its read-only property.</param>
+            <param name="e">The DependencyPropertyChangedEventArgs for this event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.OnSourcePropertyChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            SourceProperty property changed handler.
+            </summary>
+            <param name="d">DataPager that changed its Source.</param>
+            <param name="e">The DependencyPropertyChangedEventArgs for this event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.GetButtonStartIndex">
+            <summary>
+            Gets the starting index that our buttons should be labeled with.
+            </summary>
+            <returns>Starting index for our buttons</returns>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.MoveCurrentPageToTextboxValue">
+            <summary>
+            Attempts to move the current page index to the value
+            in the current page textbox.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.MoveToRequestedPage">
+            <summary>
+            Given the new value of _requestedPageIndex, this method will attempt a page move 
+            and set the _currentPageIndex variable accordingly.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.OnCurrentPageTextBoxKeyDown(System.Object,System.Windows.Input.KeyEventArgs)">
+            <summary>
+            Handles the KeyDown event on the current page text box.
+            </summary>
+            <param name="sender">The object firing this event.</param>
+            <param name="e">The event args for this event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.OnCurrentPageTextBoxLostFocus(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Handles the loss of focus for the current page text box.
+            </summary>
+            <param name="sender">The object firing this event.</param>
+            <param name="e">The event args for this event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.OnDataPagerIsEnabledChanged(System.Object,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Handles the notifications for the DataPager.IsEnabled changes
+            </summary>
+            <param name="sender">DataPager that changed its IsEnabled property</param>
+            <param name="e">The DependencyPropertyChangedEventArgs for this event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.OnFirstPageButtonBaseClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Handles the click of the first page ButtonBase.
+            </summary>
+            <param name="sender">The object firing this event.</param>
+            <param name="e">The event args for this event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.OnLastPageButtonBaseClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Handles the click of the last page ButtonBase.
+            </summary>
+            <param name="sender">The object firing this event.</param>
+            <param name="e">The event args for this event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.OnNextPageButtonBaseClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Handles the click of the next page ButtonBase.
+            </summary>
+            <param name="sender">The object firing this event.</param>
+            <param name="e">The event args for this event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.OnPreviousPageButtonBaseClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Handles the click of the previous page ButtonBase.
+            </summary>
+            <param name="sender">The object firing this event.</param>
+            <param name="e">The event args for this event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.PageMoveHandler(System.Int32,System.Int32,C1.Silverlight.DataGrid.Ria.C1DataPager.PageMoveOperationDelegate)">
+            <summary>
+            This helper method will take care of calling the specified page move
+            operation on the source collection, or MoveToPage if left null, while 
+            also firing the PageIndexChanging and PageIndexChanged events.
+            </summary>
+            <param name="oldPageIndex">The oldPageIndex value before we change pages</param>
+            <param name="newPageIndex">The page index to use with MoveToPage. This argument is ignored otherwise</param>
+            <param name="pageMoveOperation">The delegate to call, or null when MoveToPage must be called</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.OnSourcePropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Handles a property change within the Source.
+            </summary>
+            <param name="sender">The object firing this event.</param>
+            <param name="e">The event args for this event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.RaisePageIndexChangeEvents(System.Boolean)">
+            <summary>
+            Raises a non-cancellable PageIndexChanging and optional PageIndexChanged events.
+            </summary>
+            <param name="raisePageChanged">True when the PageChanged event needs to be raised</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.RaisePageIndexChanged">
+            <summary>
+            Raises the PageIndexChanged event.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.RaisePageIndexChanging(C1.Silverlight.CancelEventArgs)">
+            <summary>
+            Raises the PageIndexChanging event.
+            </summary>
+            <param name="e">The event args to use for the event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.SetCannotChangePage(System.Boolean)">
+            <summary>
+            Update DataPager UI for paging enabled.
+            </summary>
+            <param name="needPage">Boolean that specifies if a page is needed</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.SetCanChangePage">
+            <summary>
+            Update DataPager UI for paging disabled.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.ToggleButton_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Notification raised when a numeric toggle button gets checked
+            </summary>
+            <param name="sender">The numeric toggle button</param>
+            <param name="e">Routed event for the notification</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.ToggleButton_GotFocus(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Notification raised when a numeric toggle button gets focus
+            </summary>
+            <param name="sender">The numeric toggle button</param>
+            <param name="e">Routed event for the notification</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.ToggleButton_LostFocus(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Notification raised when a numeric toggle button loses focus
+            </summary>
+            <param name="sender">The numeric toggle button</param>
+            <param name="e">Routed event for the notification</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.ToggleButton_Unchecked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Notification raised when a numeric toggle button gets unchecked
+            </summary>
+            <param name="sender">The numeric toggle button</param>
+            <param name="e">Routed event for the notification</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.TryParseTextBoxPage">
+            <summary>
+            Attempts to put the integer value of the string in _currentPageTextBox into _requestedPageIndex.
+            </summary>
+            <returns>Whether or not the parsing of the string succeeded.</returns>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.UpdateButtonCount">
+            <summary>
+            Updates the visual display of the number of buttons that we display.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.UpdateButtonDisplay">
+            <summary>
+            Updates the visual content and style of the buttons that we display.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.UpdateCommonState">
+            <summary>
+            Updates the state related to the IsEnabled property
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.UpdateControl">
+            <summary>
+            Updates the current page, the total pages, and the
+            state of the control.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.UpdateCanPageFirstAndPrevious">
+            <summary>
+            Updates the states of whether the pager can page to the first
+            and to the previous page.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.UpdateCanPageNextAndLast">
+            <summary>
+            Updates the states of whether the pager can page to the next
+            and to the last page.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.UpdateCurrentPagePrefixAndSuffix(System.Boolean)">
+            <summary>
+            Goes into the TotalPageCountKnown or TotalPageCountUnknown state according to Source.TotalItemCount
+            and updates the captions of the text blocks surrounding the current page text box.
+            </summary>
+            <param name="needPage">True when a Source is set and PageSize > 0</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.UpdateNumericButtonsForeground">
+            <summary>
+            Pushes this DataPager's Foreground into the numeric buttons when that property isn't set
+            in their style.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.UpdatePageModeDisplay">
+            <summary>
+            Updates the visual display to show the current page mode
+            we have selected.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.C1DataPager.UpdatePageCount">
+            <summary>
+            Updates the page count based on the number of items and the page size.
+            </summary>
+        </member>
+        <member name="E:C1.Silverlight.DataGrid.Ria.C1DataPager.PageIndexChanging">
+            <summary>
+            EventHandler for when PageIndex is changing.
+            </summary>
+        </member>
+        <member name="E:C1.Silverlight.DataGrid.Ria.C1DataPager.PageIndexChanged">
+            <summary>
+            EventHandler for when PageIndex has changed.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1DataPager.AutoEllipsis">
+            <summary>
+            Gets or sets a value that indicates whether or not to use an ellipsis as the last button.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1DataPager.CanChangePage">
+            <summary>
+            Gets a value that indicates whether or not the user is allowed to move to another page
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1DataPager.CanMoveToFirstPage">
+            <summary>
+            Gets a value that indicates whether or not the <see cref="T:System.Windows.Controls.DataPager" /> will 
+            allow the user to attempt to move to the first page if <see cref="P:System.Windows.Controls.DataPager.CanChangePage" /> is true. 
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1DataPager.CanMoveToLastPage">
+            <summary>
+            Gets a value that indicates whether or not the <see cref="T:System.Windows.Controls.DataPager" /> 
+            will allow the user to attempt to move to the last page if <see cref="P:System.Windows.Controls.DataPager.CanChangePage" /> is true. 
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1DataPager.CanMoveToNextPage">
+            <summary>
+            Gets a value that indicates whether or not the <see cref="T:System.Windows.Controls.DataPager" /> 
+            will allow the user to attempt to move to the next page if<see cref="P:System.Windows.Controls.DataPager.CanChangePage" /> is true. 
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1DataPager.CanMoveToPreviousPage">
+            <summary>
+            Gets a value that indicates whether or not the <see cref="T:System.Windows.Controls.DataPager" /> 
+            will allow the user to attempt to move to the previous page if <see cref="P:System.Windows.Controls.DataPager.CanChangePage" /> is true.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1DataPager.DisplayMode">
+            <summary>
+            Gets or sets a value that indicates how the 
+            <see cref="T:System.Windows.Controls.DataPager" /> user interface is displayed
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1DataPager.IsTotalItemCountFixed">
+            <summary>
+            Gets or sets a value that indicates whether or not the total number of items in the collection is fixed.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1DataPager.ItemCount">
+            <summary>
+            Gets the current number of known items in the <see cref="T:System.ComponentModel.IPagedCollectionView" /> . 
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1DataPager.Source">
+            <summary>
+            Gets or sets the <see cref="T:System.ComponentModel.IPagedCollectionView" /> . 
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1DataPager.NumericButtonCount">
+            <summary>
+            Gets or sets a value that indicates the number of page buttons shown 
+            on the <see cref="T:System.Windows.Controls.DataPager" /> user interface. 
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1DataPager.NumericButtonStyle">
+            <summary>
+            Gets or sets the style that will be used for the numeric buttons.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1DataPager.PageCount">
+            <summary>
+            Gets the current number of known pages in the <see cref="T:System.ComponentModel.IPagedCollectionView" /> . 
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1DataPager.PageIndex">
+            <summary>
+            Gets or sets the current <see cref="P:System.ComponentModel.IPagedCollectionView.PageIndex" /> 
+            in the <see cref="T:System.ComponentModel.IPagedCollectionView" /> . 
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1DataPager.PageSize">
+            <summary>
+            Gets or sets the current <see cref="P:System.ComponentModel.IPagedCollectionView.PageSize" /> in the <see cref="T:System.ComponentModel.IPagedCollectionView" /> .
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1DataPager.CurrentPageTextBox">
+            <summary>
+            Gets the TextBox holding the current PageIndex value, if any.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1DataPager.PagedSource">
+            <summary>
+            Gets the Source as an IPagedCollectionView
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1DataPager.PrivateForeground">
+            <summary>
+            Gets or sets the items to page through.
+            </summary>
+        </member>
+        <member name="T:C1.Silverlight.DataGrid.Ria.C1DataPager.PageMoveOperationDelegate">
+            <summary>
+            Delegate for calling page move operations
+            </summary>
+            <returns>Boolean value for whether the operation succeeded</returns>
+        </member>
+        <member name="T:C1.Silverlight.DataGrid.Ria.WeakEventListener`3">
+            <summary>
+            Implements a weak event listener that allows the owner to be garbage
+            collected if its only remaining link is an event handler.
+            </summary>
+            <typeparam name="TInstance">Type of instance listening for the event.</typeparam>
+            <typeparam name="TSource">Type of source for the event.</typeparam>
+            <typeparam name="TEventArgs">Type of event arguments for the event.</typeparam>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.WeakEventListener`3._weakInstance">
+            <summary>
+            WeakReference to the instance listening for the event.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.WeakEventListener`3.#ctor(`0)">
+            <summary>
+            Initializes a new instances of the WeakEventListener class.
+            </summary>
+            <param name="instance">Instance subscribing to the event.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.WeakEventListener`3.OnEvent(`1,`2)">
+            <summary>
+            Handler for the subscribed event calls OnEventAction to handle it.
+            </summary>
+            <param name="source">Event source.</param>
+            <param name="eventArgs">Event arguments.</param>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.WeakEventListener`3.Detach">
+            <summary>
+            Detaches from the subscribed event.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.WeakEventListener`3.OnEventAction">
+            <summary>
+            Gets or sets the method to call when the event fires.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.WeakEventListener`3.OnDetachAction">
+            <summary>
+            Gets or sets the method to call when detaching from the event.
+            </summary>
+        </member>
+        <member name="T:C1.Silverlight.DataGrid.Ria.PagerDisplayMode">
+            <summary>
+            Specifies how the page controls are displayed on a <see cref="!:C1DataPagerQQ"/> control.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.PagerDisplayMode.FirstLastNumeric">
+            <summary>
+            Shows the First and Last buttons, and the numeric display.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.PagerDisplayMode.FirstLastPreviousNext">
+            <summary>
+            Shows the First, Last, Previous, and Next buttons.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.PagerDisplayMode.FirstLastPreviousNextNumeric">
+            <summary>
+            Shows the First, Last, Previous, and Next buttons, and the numeric display.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.PagerDisplayMode.Numeric">
+            <summary>
+            Shows the numeric display.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.PagerDisplayMode.PreviousNext">
+            <summary>
+            Shows the Previous and Next buttons.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.PagerDisplayMode.PreviousNextNumeric">
+            <summary>
+            Shows the Previous and Next buttons, and the numeric display.
+            </summary>
+        </member>
+        <member name="T:C1.Silverlight.DataGrid.Ria.InteractionMode">
+            <summary>
+            Represents the valid interaction modes for the C1RiaAdapter when modified data
+            needs to be committed in order to sort, filter or group the C1DataGrid data.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.InteractionMode.Preventive">
+            <summary>
+            This mode disables the features that are not allowed when there
+            are uncommitted changes.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.InteractionMode.Prompt">
+            <summary>
+            This mode asks the user to commit changes before it continues to
+            perform operations.
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.InteractionMode.None">
+            <summary>
+            This mode does not provide any special handling for uncommitted changes
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1RiaAdapter.InteractionModeProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DataGrid.Ria.C1RiaAdapter.InteractionMode"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1RiaAdapter.DataGridProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DataGrid.Ria.C1RiaAdapter.DataGrid"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1RiaAdapter.DataProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DataGrid.Ria.C1RiaAdapter.Data"/> dependency property. 
+            </summary>
+        </member>
+        <member name="F:C1.Silverlight.DataGrid.Ria.C1RiaAdapter.FilterOperatorProperty">
+            <summary>
+            Identifies the <see cref="P:C1.Silverlight.DataGrid.Ria.C1RiaAdapter.FilterOperator"/> dependency property. 
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1RiaAdapter.InteractionMode">
+            <summary>
+            If a set of pending changes exists in the client application, the DomainDataSource will
+            not be able to perform a Load operation, this affects filtering, sorting and grouping.
+            The InteractionMode determines the way the C1RiaAdapter will handle this scenarios.
+            Preventive: the C1RiaAdapter will disable the features that are not allowed while
+            there are pending changes.
+            Prompt: the C1RiaAdapter will ask the user to commit changes before continuing.
+            None: no special handling.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1RiaAdapter.DataGrid">
+            <summary>
+            Gets or sets the data grid to which the adapter control is associated.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1RiaAdapter.Data">
+            <summary>
+            Gets the underlying ICollectionView which can be used
+            as ItemsSource for the C1DataGrid.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1RiaAdapter.FilterOperator">
+            <summary>
+            Gets or sets the logical operator used for combining FilterDescriptors
+            in the filters collection.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1RiaAdapter.DomainDataSource">
+            <summary>
+            Gets the underlying RIA DomainDataSource.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.C1RiaAdapter.UseDefaultFilters">
+            <summary>
+            Gets or sets a value indicating whether the numeric filters for the C1DataGrid will
+            be the default ones or will be overridden with RIA Services compliant filters.
+            </summary>
+        </member>
+        <member name="M:C1.Silverlight.DataGrid.Ria.Extensions.GetIsReadOnly(System.Reflection.MemberInfo)">
+            <summary>
+            Checks a MemberInfo object (e.g. a Type or PropertyInfo) for the ReadOnly attribute
+            and returns the value of IsReadOnly if it exists.
+            </summary>
+            <param name="memberInfo">MemberInfo to check</param>
+            <returns>true if MemberInfo is read-only, false otherwise</returns>
+        </member>
+        <member name="T:C1.Silverlight.DataGrid.Ria.Resources.C1_Silverlight_DataGrid_Ria">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.Resources.C1_Silverlight_DataGrid_Ria.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.Resources.C1_Silverlight_DataGrid_Ria.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.Resources.C1_Silverlight_DataGrid_Ria.AutoEllipsisString">
+            <summary>
+              Looks up a localized string similar to ....
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.Resources.C1_Silverlight_DataGrid_Ria.AutomationPeerName_TotalPageCountKnown">
+            <summary>
+              Looks up a localized string similar to Page {0} of {1}.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.Resources.C1_Silverlight_DataGrid_Ria.AutomationPeerName_TotalPageCountUnknown">
+            <summary>
+              Looks up a localized string similar to Page {0}.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.Resources.C1_Silverlight_DataGrid_Ria.CurrentPagePrefix_TotalPageCountKnown">
+            <summary>
+              Looks up a localized string similar to Page.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.Resources.C1_Silverlight_DataGrid_Ria.CurrentPagePrefix_TotalPageCountUnknown">
+            <summary>
+              Looks up a localized string similar to Page.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.Resources.C1_Silverlight_DataGrid_Ria.CurrentPageSuffix_TotalPageCountKnown">
+            <summary>
+              Looks up a localized string similar to of {0}.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.Resources.C1_Silverlight_DataGrid_Ria.CurrentPageSuffix_TotalPageCountUnknown">
+            <summary>
+              Looks up a localized string similar to .
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.Resources.C1_Silverlight_DataGrid_Ria.InvalidButtonPanelContent">
+            <summary>
+              Looks up a localized string similar to The NumericButtonPanel contains invalid children..
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.Resources.C1_Silverlight_DataGrid_Ria.InvalidEnumArgumentException_InvalidEnumArgument">
+            <summary>
+              Looks up a localized string similar to The value of argument {0} ({1}) is invalid for Enum type {2}.
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.Resources.C1_Silverlight_DataGrid_Ria.InvalidTimeSpan">
+            <summary>
+              Looks up a localized string similar to The {0} time span must be strictly positive..
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.Resources.C1_Silverlight_DataGrid_Ria.PageIndexMustBeNegativeOne">
+            <summary>
+              Looks up a localized string similar to The PageIndex property can only be set to -1 when the Source property is null or the PageSize property is 0..
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.Resources.C1_Silverlight_DataGrid_Ria.SubmitChanges">
+             <summary>
+               Looks up a localized string similar to You must submit changes before continuing.
+            Submit changes?.
+             </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.Resources.C1_Silverlight_DataGrid_Ria.UnderlyingPropertyIsReadOnly">
+            <summary>
+              Looks up a localized string similar to {0} cannot be set because the underlying property is read only..
+            </summary>
+        </member>
+        <member name="P:C1.Silverlight.DataGrid.Ria.Resources.C1_Silverlight_DataGrid_Ria.ValueMustBeGreaterThanOrEqualTo">
+            <summary>
+              Looks up a localized string similar to {0} must be greater than or equal to {1}..
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,13 @@
+﻿<vm:ProductViewModel 
+    xmlns:vm="clr-namespace:ProductManager.WPF.Applications.ViewModels;assembly=ProductManager.WPF.Applications"
+    xmlns:bo="clr-namespace:ProductManager.Common.Domain.Model.ProductManager;assembly=ProductManager.Common.Domain.Model">
+
+    <vm:ProductViewModel.Product>
+        <bo:Product 
+            ProductID="1"
+            Name="Product 1"
+            Color="Silver"
+            SellEndDate="02.17.1999 00:00:00"
+        />
+    </vm:ProductViewModel.Product>
+</vm:ProductViewModel>

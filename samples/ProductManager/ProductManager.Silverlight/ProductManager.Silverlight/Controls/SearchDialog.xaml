@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="ProductManager.Silverlight.Controls.SearchDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
+             xmlns:c1="http://schemas.componentone.com/winfx/2006/xaml"
+             xmlns:appControls="clr-namespace:ProductManager.Silverlight.Controls"
+             mc:Ignorable="d"
+             d:DesignHeight="400" d:DesignWidth="500" 
+             Loaded="UserControl_Loaded">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <appControls:SearchBox x:Name="filterBox" Grid.Row="0" Margin="0 10" c1:C1NagScreen.Nag="True" />
+        
+        <c1:C1DataGrid ItemsSource="{Binding}" Grid.Row="1" c1:C1NagScreen.Nag="True" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
+            <c1:C1DataGrid.TopRows>
+                <appControls:DataGridFilterRow Height="30" />
+            </c1:C1DataGrid.TopRows>
+        </c1:C1DataGrid>
+        
+        <c1:C1DataPager Source="{Binding}" Grid.Row="2" PageSize="10" />
+        
+        <sdk:Label x:Name="statusLabel" Content="Total Count: " Grid.Row="2" Margin="5 0 0 0" />
+        
+    </Grid>
+</UserControl>

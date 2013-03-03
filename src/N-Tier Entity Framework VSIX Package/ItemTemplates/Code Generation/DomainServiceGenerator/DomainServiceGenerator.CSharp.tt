@@ -1,0 +1,23 @@
+﻿<#@ template language="C#" hostspecific="true" debug="true" #>
+<#@ output extension="txt" #>
+<#@ include file="NTierEF.DomainServiceGenerator.CS.ttinclude" #>
+<#
+    // <copyright file="$safeitemname$.tt" company="Trivadis">
+    //  Copyright © Trivadis. All Rights Reserved.
+    // </copyright>
+    
+    // Specify project files in case projects do not use default project names.
+    //DomainServiceGenerator.ClientLibraryProject = @"..\<folder>\<project>.csproj";
+    //DomainServiceGenerator.DataModelProject = @"..\<folder>\<project>.csproj";
+    //DomainServiceGenerator.EdmxProject = @"..\<folder>\<project>.csproj";
+    
+    //var generator = new DomainServiceGenerator(this, @"..\<folder>\<entity model>.edmx");
+    var generator = new DomainServiceGenerator(this);
+    //generator.DomainServiceTemplate.GenerateModificationMethods = false; //default: true
+    generator.Run();
+#>
+Generates domain service.
+
+Note: 
+  By default generated domain service is created only in case the code file does not exist. 
+  In order to regenerate the corresponding file need to be renamed or removed manually.

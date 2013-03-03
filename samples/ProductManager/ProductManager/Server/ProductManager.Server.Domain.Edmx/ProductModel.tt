@@ -1,0 +1,24 @@
+﻿<#@ template language="C#" hostspecific="true" debug="true" #>
+<#@ output extension="txt" #>
+<#@ include file="NTierEF.NTierEntityGenerator.CS.ttinclude" #>
+<#
+    // <copyright file="ProductModel.tt" company="Trivadis">
+    //  Copyright © Trivadis. All Rights Reserved.
+    // </copyright>
+    
+    // Specify project files in case projects do not use default project names.
+    //NTierEntityGenerator.DataModelProject = @"..\<project folder>\<project name>.csproj";
+    //NTierEntityGenerator.RepositoryProject = @"..\<project folder>\<project name>.csproj";
+    //NTierEntityGenerator.DataServiceContractProject = @"..\<project folder>\<project name>.csproj";
+    //NTierEntityGenerator.DataServiceProject = @"..\<project folder>\<project name>.csproj";
+    //NTierEntityGenerator.DataServiceHostProject = @"..\<project folder>\<project name>.csproj";
+    //NTierEntityGenerator.ClientLibraryProject = @"..\<project folder>\<project name>.csproj";
+    //NTierEntityGenerator.ChannelFactoryProject = @"..\<project folder>\<project name>.csproj";
+    //NTierEntityGenerator.RemoteChannelFactoryProject = @"..\<project folder>\<project name>.csproj";
+    //NTierEntityGenerator.InProcessChannelFactoryProject = @"..\<project folder>\<project name>.csproj";
+    
+    //var generator = new NTierEntityGenerator(this, @"ProductModel.edmx");
+    var generator = new NTierEntityGenerator(this);
+    generator.Run();
+#>
+Generates code in different projects. See ProductModel.tt.log for list of generated files.

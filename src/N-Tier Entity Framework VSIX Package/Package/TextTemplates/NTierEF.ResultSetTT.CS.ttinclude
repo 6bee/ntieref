@@ -1,0 +1,192 @@
+﻿<#+
+// <copyright file="NTierEF.ResultSetTT.CS.ttinclude" company="Trivadis">
+//     Copyright © Trivadis. All Rights Reserved.
+// </copyright>
+public class ResultSetTemplate : Template
+{
+    public GenerationUtils GenerationUtils { get; set; }
+    public string Namespace { get; set; }
+    public string ModelBaseNamespace { get; set; }
+    private string file = null;
+    public string File
+    {
+        get { return file != null ? file : string.Format(@"{0}\{0}ResultSet.g.cs", GenerationUtils.ModelName); }
+        set { file = value; }
+    }
+
+    public ResultSetTemplate(string project = null, GenerationUtils generationUtils = null, string defaultNameSpace = null)
+    {
+        if (!string.IsNullOrWhiteSpace(project))
+        {
+            base.Output.Project = project;
+        }
+        this.GenerationUtils = generationUtils;
+        this.Namespace = defaultNameSpace;
+        this.ModelBaseNamespace = "NTier.Common.Domain.Model";
+    }
+
+    /// <summary>
+    /// Directs output of the template to a separate file by default. User can override
+    /// default behavior by assigning <see cref="Rendering"/> event handler.
+    /// </summary>
+    protected override void OnRendering(System.EventArgs e)
+    {
+        if (GenerationUtils == null)
+        {
+            throw new Exception("Missing property GenerationUtils");
+        }
+        if (string.IsNullOrWhiteSpace(Namespace))
+        {
+            throw new Exception("Missing property Namespace");
+        }
+        if (string.IsNullOrWhiteSpace(ModelBaseNamespace))
+        {
+            throw new Exception("Missing property ModelBaseNamespace");
+        }
+
+        this.Output.File = this.File;
+        base.OnRendering(e);
+    }
+
+    public override string TransformText()
+    {
+        WriteHeader(ModelBaseNamespace);
+#>
+namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
+{
+    [DataContract(IsReference = true)]
+    public sealed partial class <#= GenerationUtils.ModelName #>ResultSet : <#= GenerationUtils.ModelName #>ChangeSet, IResultSet
+    {
+        #region ctor
+        public <#=GenerationUtils.ModelName#>ResultSet(<#= GenerationUtils.ModelName #>ChangeSet changeSet)
+            : base(changeSet)
+        {
+        }
+        #endregion
+
+        #region DataMember
+
+<#+
+    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    {
+#>
+        [DataMember]
+        public IList<<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>> <#=GenerationUtils.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts { get; private set; }
+
+<#+
+    }
+#>
+        #endregion
+
+        #region AddConcurrencyConflicts
+
+        public void AddConcurrencyConflicts(IEnumerable<Entity> entities)
+        {
+            foreach (var entity in entities)
+            {
+<#+
+    bool isElse = false;
+    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    {
+#>
+                <#=isElse ? "else " : ""#>if (entity is <#=GenerationUtils.Code.Escape(entitySet.ElementType)#>)
+                {
+                    AddConcurrencyConflict((<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>)entity);
+                }
+<#+
+        isElse = true;
+    }
+
+#>
+                else
+                {
+                    throw new Exception(string.Format("Unknown type {0}", entity.GetType().Name));
+                }
+            }
+        }
+
+<#+
+    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    {
+#>
+        private void AddConcurrencyConflict(<#=GenerationUtils.Code.Escape(entitySet.ElementType)#> entity)
+        {
+            if (<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts == null)
+            {
+                <#=GenerationUtils.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts = new List<<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>>();
+            }
+            <#=GenerationUtils.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts.Add(entity);
+        }
+
+<#+
+    }
+#>
+        #endregion
+
+        #region IsConcurrencyConflict
+
+<#+
+    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    {
+#>
+        public bool IsConcurrencyConflict(<#=GenerationUtils.Code.Escape(entitySet.ElementType)#> e)
+        {
+            return <#=GenerationUtils.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts != null && <#=GenerationUtils.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts.Count > 0 && <#=GenerationUtils.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts.Contains(e);
+        }
+
+<#+
+    }
+#>
+        #endregion
+
+        #region HasConcurrencyConflicts
+        public bool HasConcurrencyConflicts
+        {
+            get
+            {
+                return <#=string.Join(" ||" + Environment.NewLine + "                    ", GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>().Select(e => GenerationUtils.Code.Escape(e.ElementType) + "ConcurrencyConflicts != null").ToArray())#>;
+            }
+        }
+        #endregion
+    }
+}
+<#+
+        return this.GenerationEnvironment.ToString();
+    }
+
+    private void WriteHeader(params string[] extraUsings)
+    {
+#>
+//------------------------------------------------------------------------------
+// <autogenerated>
+//   This file was generated by T4 code generator <#= System.IO.Path.GetFileName(TransformationContext.Host.TemplateFile) #>.
+//   Any changes made to this file manually may cause incorrect behavior
+//   and will be lost next time the file is regenerated.
+// </autogenerated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Globalization;
+using System.Reflection;
+using System.Runtime.Serialization;
+<#=String.Join(String.Empty, extraUsings.OrderBy(u => u).Select(u => "using " + u + ";" + Environment.NewLine).ToArray())#>
+<#+
+    }
+
+    private string FirstCaseLow(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return value;
+        }
+
+        return value.Substring(0, 1).ToLower() + value.Substring(1, value.Length - 1);
+    }
+}
+#>

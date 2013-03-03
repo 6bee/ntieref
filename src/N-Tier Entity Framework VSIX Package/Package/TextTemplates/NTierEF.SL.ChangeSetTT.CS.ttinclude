@@ -1,0 +1,211 @@
+﻿<#+
+// <copyright file="NTierEF.SL.ChangeSetTT.CS.ttinclude" company="Trivadis">
+//     Copyright © Trivadis. All Rights Reserved.
+// </copyright>
+public class ChangeSetTemplate : Template
+{
+    public GenerationUtils GenerationUtils { get; set; }
+    public string Namespace { get; set; }
+    public string ModelBaseNamespace { get; set; }
+    private string file = null;
+    public string File
+    {
+        get { return file != null ? file : string.Format(@"Common{1}Domain{1}Model{1}{0}{1}{0}ChangeSet.g.cs", GenerationUtils.ModelName, System.IO.Path.DirectorySeparatorChar); }
+        set { file = value; }
+    }
+
+    public ChangeSetTemplate(GenerationUtils generationUtils = null, string defaultNameSpace = null)
+    {
+        this.GenerationUtils = generationUtils;
+        this.Namespace = defaultNameSpace;
+        this.ModelBaseNamespace = "NTier.Common.Domain.Model";
+    }
+
+    /// <summary>
+    /// Directs output of the template to a separate file by default. User can override
+    /// default behavior by assigning <see cref="Rendering"/> event handler.
+    /// </summary>
+    protected override void OnRendering(System.EventArgs e)
+    {
+        if (GenerationUtils == null)
+        {
+            throw new Exception("Missing property GenerationUtils");
+        }
+        if (string.IsNullOrWhiteSpace(Namespace))
+        {
+            throw new Exception("Missing property Namespace");
+        }
+        if (string.IsNullOrWhiteSpace(ModelBaseNamespace))
+        {
+            throw new Exception("Missing property ModelBaseNamespace");
+        }
+
+        this.Output.File = this.File;
+        base.OnRendering(e);
+    }
+
+    public override string TransformText()
+    {
+        WriteHeader(ModelBaseNamespace);
+#>
+namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
+{
+    [DataContract(IsReference = true)]
+    public partial class <#= GenerationUtils.ModelName #>ChangeSet : IChangeSet
+    {
+        #region Constructor
+
+        public <#=GenerationUtils.ModelName#>ChangeSet(<#=string.Join(", ", GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>().Select(e => "IEnumerable<" + GenerationUtils.Code.Escape(e.ElementType) + "> " + FirstCaseLow(GenerationUtils.Code.Escape(e))).ToArray())#>)
+        {
+            // retrieve changes sets (modified entities)
+<#+
+    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    {
+#>
+            var <#=FirstCaseLow(GenerationUtils.Code.Escape(entitySet.ElementType))#>ChangeSet = <#=FirstCaseLow(GenerationUtils.Code.Escape(entitySet))#>.GetChangeSet();
+<#+
+    }
+#>
+
+            // reduce entities (copy changed values)
+<#+
+    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    {
+#>
+            var <#=FirstCaseLow(GenerationUtils.Code.Escape(entitySet))#>Map = <#=FirstCaseLow(GenerationUtils.Code.Escape(entitySet.ElementType))#>ChangeSet.ReduceToModifications();
+<#+
+    }
+
+    if (GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>().Count() > 1)
+    {
+#>
+
+            // fixup relations (replaces related entities with reduced entites)
+            this.FixupRelations(
+                this.Union(<#=string.Join(", ", GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>().Select(e => FirstCaseLow(GenerationUtils.Code.Escape(e)) + "Map.CastToEntityTuple()").ToArray())#>),
+                this.Union(<#=string.Join(", ", GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>().Select(e => FirstCaseLow(GenerationUtils.Code.Escape(e.ElementType)) + "ChangeSet.Cast<Entity>()").ToArray())#>)
+            );
+<#+
+    }
+#>
+
+<#+
+    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    {
+#>
+            if (<#=FirstCaseLow(GenerationUtils.Code.Escape(entitySet))#>Map.Count > 0) this.<#=GenerationUtils.Code.Escape(entitySet)#> = <#=FirstCaseLow(GenerationUtils.Code.Escape(entitySet))#>Map.Select(e => e.Item2).ToList();
+<#+
+    }
+#>
+        }
+
+        protected <#=GenerationUtils.ModelName#>ChangeSet(<#=GenerationUtils.ModelName#>ChangeSet changeSet)
+        {
+<#+
+    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    {
+#>
+            this.<#=GenerationUtils.Code.Escape(entitySet)#> = changeSet.<#=GenerationUtils.Code.Escape(entitySet)#>;
+<#+
+    }
+#>
+        }
+
+        #endregion Constructor
+
+        #region DataMember
+
+<#+
+    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    {
+#>
+        [DataMember]
+        public List<<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>> <#=GenerationUtils.Code.Escape(entitySet)#> { get; /*private (must be public in silverlight)*/ set; }
+
+<#+
+    }
+#>
+
+        #endregion DataMember
+
+        #region IsEmpty
+
+        public bool IsEmpty
+        {
+            get
+            {
+                return <#=string.Join(" &&" + Environment.NewLine + "                    ", GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>().Select(e => GenerationUtils.Code.Escape(e) + " == null").ToArray())#>;
+            }
+        }
+
+        #endregion IsEmpty
+
+        #region IEnumerable
+
+        public IEnumerator<Entity> GetEnumerator()
+        {
+<#+
+    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    {
+#>
+            if (<#=GenerationUtils.Code.Escape(entitySet)#> != null && <#=GenerationUtils.Code.Escape(entitySet)#>.Count > 0)
+            {
+                foreach (var item in <#=GenerationUtils.Code.Escape(entitySet)#>)
+                {
+                    yield return item;
+                }
+            }
+
+<#+
+    }
+#>
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        #endregion IEnumerable
+    }
+}
+<#+
+        return this.GenerationEnvironment.ToString();
+    }
+
+    private void WriteHeader(params string[] extraUsings)
+    {
+#>
+//------------------------------------------------------------------------------
+// <autogenerated>
+//   This file was generated by T4 code generator <#= System.IO.Path.GetFileName(TransformationContext.Host.TemplateFile) #>.
+//   Any changes made to this file manually may cause incorrect behavior
+//   and will be lost next time the file is regenerated.
+// </autogenerated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Globalization;
+using System.Reflection;
+using System.Runtime.Serialization;
+<#=String.Join(String.Empty, extraUsings.OrderBy(u => u).Select(u => "using " + u + ";" + Environment.NewLine).ToArray())#>
+<#+
+    }
+
+    private string FirstCaseLow(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return value;
+        }
+
+        return value.Substring(0, 1).ToLower() + value.Substring(1, value.Length - 1);
+    }
+}
+#>

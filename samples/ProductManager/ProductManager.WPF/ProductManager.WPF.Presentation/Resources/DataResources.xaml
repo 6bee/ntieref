@@ -1,0 +1,15 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:model="clr-namespace:ProductManager.Common.Domain.Model.ProductManager;assembly=ProductManager.Common.Domain.Model"
+    xmlns:app="clr-namespace:ProductManager.WPF.Applications;assembly=ProductManager.WPF.Applications"
+    xmlns:appmodel="clr-namespace:ProductManager.Common.Domain.Model.ProductManager;assembly=ProductManager.WPF.Applications">
+
+    <ObjectDataProvider x:Key="ProductColorFilterValues" ObjectType="sys:Enum" MethodName="GetValues">
+        <ObjectDataProvider.MethodParameters>
+            <x:Type Type="appmodel:ProductColorFilter" />
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+
+</ResourceDictionary>

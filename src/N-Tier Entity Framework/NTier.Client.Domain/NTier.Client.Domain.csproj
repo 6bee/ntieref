@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FFF90DB7-044A-4505-AD09-07D25C9BA63D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NTier.Client.Domain</RootNamespace>
+    <AssemblyName>NTier.Client.Domain</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Remote.Linq">
+      <HintPath>..\lib\Remote.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="FilterDescriptionExtensions.cs" />
+    <Compile Include="IOrderedDataServiceQueryableExtensions.cs" />
+    <Compile Include="IDataServiceQueryableExtensions.cs" />
+    <Compile Include="Deployment.cs" />
+    <Compile Include="EntitySet.NET.cs" />
+    <Compile Include="IDataServiceQueryable.NET.cs" />
+    <Compile Include="IInternalEntitySet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IOrderedDataServiceQueryable.NET.cs" />
+    <Compile Include="OrderedDataServiceQueryable.NET.cs" />
+    <Compile Include="DataContext.NET.cs" />
+    <Compile Include="DataServiceQueryableImp.NET.cs" />
+    <Compile Include="DataServiceQueryable.NET.cs" />
+    <Compile Include="IOrderedDataServiceQueryable.cs" />
+    <Compile Include="IDataServiceQueryable.cs" />
+    <Compile Include="DataLoader.cs" />
+    <Compile Include="EditableEntityCollectionView.cs" />
+    <Compile Include="EntityCollectionView.cs" />
+    <Compile Include="ExceptionEventArgs.cs" />
+    <Compile Include="FilterDescription.cs" />
+    <Compile Include="FilterDescriptionCollection.cs" />
+    <Compile Include="FilterOperation.cs" />
+    <Compile Include="IDataContext.cs" />
+    <Compile Include="IDataLoader.cs" />
+    <Compile Include="IEntityCollectionView.cs" />
+    <Compile Include="IFilteredCollectionView.cs" />
+    <Compile Include="InternalEntitySet.cs" />
+    <Compile Include="IPagedCollectionView.cs" />
+    <Compile Include="IRemoteCollectionView.cs" />
+    <Compile Include="PrimeNumbers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RefreshEventArgs.cs" />
+    <Compile Include="RemoteDataLoader.cs" />
+    <Compile Include="ServerValidationException.cs" />
+    <Compile Include="Service\ChannelFactory\IChannelFactory.cs" />
+    <Compile Include="DataContext.cs" />
+    <Compile Include="DataServiceQueryableImp.cs" />
+    <Compile Include="DataServiceQueryable.cs" />
+    <Compile Include="ICallbackResult.cs" />
+    <Compile Include="MergeOption.cs" />
+    <Compile Include="ObservableEntityCollection.cs" />
+    <Compile Include="EntitySetExtensions.cs" />
+    <Compile Include="IEntitySet.cs" />
+    <Compile Include="EntitySet.cs" />
+    <Compile Include="OptimisticConcurrencyException.cs" />
+    <Compile Include="OrderedDataServiceQueryable.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryProvider.cs" />
+    <Compile Include="AcceptOption.cs" />
+    <Compile Include="Service\ChannelFactory\RemoteChannelFactory.cs" />
+    <Compile Include="SortDescriptionExtensions.cs" />
+    <Compile Include="StateEntry.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NTier.Common.Domain\NTier.Common.Domain.csproj">
+      <Project>{DD75940E-E398-4EC5-A9B9-49EF7190C910}</Project>
+      <Name>NTier.Common.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

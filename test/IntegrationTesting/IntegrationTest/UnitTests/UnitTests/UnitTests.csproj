@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0645EE6C-7C48-4A31-96AD-64F778A70AEF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitTests</RootNamespace>
+    <AssemblyName>UnitTests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\..\Lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="NTier.Client.Domain">
+      <HintPath>..\..\..\lib\NTier.Client.Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="NTier.Common.Domain">
+      <HintPath>..\..\..\lib\NTier.Common.Domain.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ChangeTrackerStateTests.cs" />
+    <Compile Include="ClientInfoTests.cs" />
+    <Compile Include="ComplexPropertyValidationTests.cs" />
+    <Compile Include="ComplexPropertyTests.cs" />
+    <Compile Include="AcceptRevertTests.cs" />
+    <Compile Include="Constraints\ContainConstraint.cs" />
+    <Compile Include="EditableEntityTests.cs" />
+    <Compile Include="RevertReferenceCollectionTest.cs" />
+    <Compile Include="RevertDirectedReferenceCollectionTest.cs" />
+    <Compile Include="RevertDirectedReferenceTest.cs" />
+    <Compile Include="DirectedReferenceCollectionTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ReferenceCollectionTests.cs" />
+    <Compile Include="DirectedReferencePropertyTests.cs" />
+    <Compile Include="DynamicPropertyValidationTests.cs" />
+    <Compile Include="ServerValidationTests.cs" />
+    <Compile Include="DynamicPropertyTests.cs" />
+    <Compile Include="ManyToManyRelationTests.cs" />
+    <Compile Include="SimplePropertyValidationTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\To.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Client\IntegrationTest.Client.Domain\IntegrationTest.Client.Domain.csproj">
+      <Project>{3FCB9817-B9C1-42B4-86B0-1DA5B0018DD8}</Project>
+      <Name>IntegrationTest.Client.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\IntegrationTest.Common.Domain.Model\IntegrationTest.Common.Domain.Model.csproj">
+      <Project>{1E23447A-1850-4692-BD0E-291F5FF16B40}</Project>
+      <Name>IntegrationTest.Common.Domain.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\IntegrationTest.Common.Domain.Service\IntegrationTest.Common.Domain.Service.csproj">
+      <Project>{79E49CE6-F698-4D99-A2FE-139DBF4A3A47}</Project>
+      <Name>IntegrationTest.Common.Domain.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestChannelFactory\TestChannelFactory.csproj">
+      <Project>{11BB8049-EF52-4540-944B-3EEF4558800D}</Project>
+      <Name>TestChannelFactory</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
