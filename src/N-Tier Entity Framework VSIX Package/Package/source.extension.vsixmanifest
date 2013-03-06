@@ -23,5 +23,7 @@
     <Assembly AssemblyName="ProjectTemplateWizard, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7d8b4e5866a6acd8">ProjectTemplateWizard.dll</Assembly>
     <VsPackage>Additional.pkgdef</VsPackage>
     <MefComponent>|EDMToolsExtensions|</MefComponent>
+    <ProjectTemplate>ProjectT</ProjectTemplate>
+    <ItemTemplate>ItemT</ItemTemplate>
   </Content>
 </Vsix>
