@@ -11,12 +11,15 @@ namespace ProjectTemplateWizard
     public class NTierEntityFrameworkSilverlightLibWizard : IWizard
     {
         private static readonly Regex UnsafeCharRegex = new Regex(@"[^a-zA-Z0-9_\-\.]");
-        //private static readonly string[] Resources = { "Microsoft.CSharp.dll",
-        //                                               "Remote.Linq.SL.dll", 
-        //                                               "Remote.Linq.SL.pdb", 
-        //                                               "NTier.Silverlight.Domain.dll", 
-        //                                               "NTier.Silverlight.Domain.pdb", 
-        //                                             };
+        //private static readonly string[] Resources = 
+        //{
+        //    "Microsoft.CSharp.dll",
+        //    "Microsoft.CSharp.xml",
+        //    "Remote.Linq.SL.dll", 
+        //    "Remote.Linq.SL.pdb", 
+        //    "NTier.Silverlight.Domain.dll", 
+        //    "NTier.Silverlight.Domain.pdb", 
+        //};
         private static readonly string[] ResourceArchives = 
         {
             "Lib_SL.zip", 
@@ -44,7 +47,7 @@ namespace ProjectTemplateWizard
                     directory = solutiondirectory;
                 }
 
-                //directory.CreateLib(Resources);
+                //directory.CreateLib(Resources, true);
                 directory.UnpackZipToLib(ResourceArchives);
             }
             catch { }

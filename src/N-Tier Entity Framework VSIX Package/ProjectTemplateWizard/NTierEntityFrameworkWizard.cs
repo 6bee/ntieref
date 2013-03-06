@@ -13,15 +13,17 @@ namespace ProjectTemplateWizard
     public class NTierEntityFrameworkWizard : IWizard
     {
         private static readonly string[] ProjectFolder = { "Client", "Common", "Server", "Silverlight" };
-        //private static readonly string[] Resources = { "Remote.Linq.dll", 
-        //                                               "Remote.Linq.pdb", 
-        //                                               "NTier.Client.Domain.dll", 
-        //                                               "NTier.Client.Domain.pdb", 
-        //                                               "NTier.Common.Domain.dll", 
-        //                                               "NTier.Common.Domain.pdb",
-        //                                               "NTier.Server.Domain.dll", 
-        //                                               "NTier.Server.Domain.pdb", 
-        //                                             };
+        //private static readonly string[] Resources = 
+        //{
+        //    "Remote.Linq.dll", 
+        //    "Remote.Linq.pdb", 
+        //    "NTier.Client.Domain.dll", 
+        //    "NTier.Client.Domain.pdb", 
+        //    "NTier.Common.Domain.dll", 
+        //    "NTier.Common.Domain.pdb",
+        //    "NTier.Server.Domain.dll", 
+        //    "NTier.Server.Domain.pdb", 
+        //};
         private static readonly string[] ResourceArchives = 
         {
             "Lib_NET.zip", 
