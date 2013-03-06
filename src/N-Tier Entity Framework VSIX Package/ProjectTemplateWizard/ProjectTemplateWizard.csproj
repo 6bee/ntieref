@@ -88,48 +88,48 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\Lib\NTier.Client.Domain.dll">
+    <None Include="..\Lib\NTier.Client.Domain.dll">
       <Link>Resources\NTier.Client.Domain.dll</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\Lib\NTier.Client.Domain.pdb">
+    </None>
+    <None Include="..\Lib\NTier.Client.Domain.pdb">
       <Link>Resources\NTier.Client.Domain.pdb</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\Lib\NTier.Common.Domain.dll">
+    </None>
+    <None Include="..\Lib\NTier.Common.Domain.dll">
       <Link>Resources\NTier.Common.Domain.dll</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\Lib\NTier.Common.Domain.pdb">
+    </None>
+    <None Include="..\Lib\NTier.Common.Domain.pdb">
       <Link>Resources\NTier.Common.Domain.pdb</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\Lib\NTier.Server.Domain.dll">
+    </None>
+    <None Include="..\Lib\NTier.Server.Domain.dll">
       <Link>Resources\NTier.Server.Domain.dll</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\Lib\NTier.Server.Domain.pdb">
+    </None>
+    <None Include="..\Lib\NTier.Server.Domain.pdb">
       <Link>Resources\NTier.Server.Domain.pdb</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\Lib\NTier.Silverlight.Domain.dll">
+    </None>
+    <None Include="..\Lib\NTier.Silverlight.Domain.dll">
       <Link>Resources\NTier.Silverlight.Domain.dll</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\Lib\NTier.Silverlight.Domain.pdb">
+    </None>
+    <None Include="..\Lib\NTier.Silverlight.Domain.pdb">
       <Link>Resources\NTier.Silverlight.Domain.pdb</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\Lib\Microsoft.CSharp.dll">
+    </None>
+    <None Include="..\Lib\Microsoft.CSharp.dll">
       <Link>Resources\Microsoft.CSharp.dll</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\lib\Remote.Linq.SL.dll">
+    </None>
+    <None Include="..\lib\Remote.Linq.SL.dll">
       <Link>Resources\Remote.Linq.SL.dll</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\lib\Remote.Linq.SL.pdb">
+    </None>
+    <None Include="..\lib\Remote.Linq.SL.pdb">
       <Link>Resources\Remote.Linq.SL.pdb</Link>
-    </EmbeddedResource>
+    </None>
     <None Include="..\Lib\Remote.Linq.dll">
       <Link>Resources\Remote.Linq.dll</Link>
     </None>
     <None Include="..\Lib\Remote.Linq.pdb">
       <Link>Resources\Remote.Linq.pdb</Link>
     </None>
-    <Content Include="..\lib\Microsoft.CSharp.xml">
+    <None Include="..\lib\Microsoft.CSharp.xml">
       <Link>Resources\Microsoft.CSharp.xml</Link>
-    </Content>
+    </None>
     <Content Include="N-Tier Entity Framework.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -141,7 +141,7 @@ del "$(SolutionDir)lib\Lib_NET.zip"
 
 "$(SolutionDir)..\..\tools\7zip\7za.exe" a "$(SolutionDir)lib\Lib_SL.zip" "$(SolutionDir)lib\Microsoft.CSharp.dll" "$(SolutionDir)lib\Microsoft.CSharp.xml" "$(SolutionDir)lib\Remote.Linq.SL.dll" "$(SolutionDir)lib\Remote.Linq.SL.pdb" "$(SolutionDir)lib\NTier.Silverlight.Domain.dll" "$(SolutionDir)lib\NTier.Silverlight.Domain.pdb"
 
-"$(SolutionDir)..\..\tools\7zip\7za.exe" a "$(SolutionDir)lib\Lib_NET.zip" "$(SolutionDir)lib\Remote.Linq.dll" "$(SolutionDir)lib\Remote.Linq.pdb" "$(SolutionDir)lib\NTier.Client.Domain.dll" "$(SolutionDir)lib\NTier.Client.Domain.pdb" "$(SolutionDir)lib\NTier.Common.Domain.dll" "$(SolutionDir)lib\NTier.Common.Domain.pdb" "$(SolutionDir)lib\NTier.Server.Domain.dll" "$(SolutionDir)lib\NTier.Server.Domain.pdb"</PreBuildEvent>
+"$(SolutionDir)..\..\tools\7zip\7za.exe" a "$(SolutionDir)lib\Lib_NET.zip" "$(SolutionDir)lib\Remote.Linq.dll" "$(SolutionDir)lib\Remote.Linq.pdb" "$(SolutionDir)lib\NTier.Client.Domain.dll" "$(SolutionDir)lib\NTier.Client.Domain.pdb" "$(SolutionDir)lib\NTier.Common.Domain.dll" "$(SolutionDir)lib\NTier.Common.Domain.pdb" "$(SolutionDir)lib\NTier.Server.Domain.dll" "$(SolutionDir)lib\NTier.Server.Domain.pdb" "$(SolutionDir)lib\T4Toolbox\"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
