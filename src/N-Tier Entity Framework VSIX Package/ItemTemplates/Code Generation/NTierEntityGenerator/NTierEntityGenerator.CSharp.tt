@@ -17,8 +17,8 @@
     //NTierEntityGenerator.RemoteChannelFactoryProject = @"..\<project folder>\<project name>.csproj";
     //NTierEntityGenerator.InProcessChannelFactoryProject = @"..\<project folder>\<project name>.csproj";
     
-    //var generator = new NTierEntityGenerator(this, @"$edmxInputFile$");
-    var generator = new NTierEntityGenerator(this);
+    //var generator = new NTierEntityGenerator(this);
+    var generator = new NTierEntityGenerator(this, @"$edmxInputFile$");
     generator.Run();
 #>
 Generates code in different projects. See $safeitemname$.tt.log for list of generated files.

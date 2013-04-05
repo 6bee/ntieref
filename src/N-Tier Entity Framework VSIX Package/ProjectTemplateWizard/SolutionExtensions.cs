@@ -80,7 +80,7 @@ namespace ProjectTemplateWizard
 
         public static void CollapseAll(this DTE2 dte, IEnumerable<string> exlusionList = null)
         {
-            UIHierarchy solutionExplorer = dte.Windows.Item(EnvDTEConstants.vsext_wk_SProjectWindow).Object;
+            UIHierarchy solutionExplorer = dte.ToolWindows.SolutionExplorer;
 
             // Check if there is any open solution        
             if (solutionExplorer.UIHierarchyItems.Count == 0)

@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSIX Package (VS2010)", "VSIX Package (VS2010)\VSIX Package (VS2010).csproj", "{4701D9AB-2A86-4DB4-A8BC-F31B908A00CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectTemplateWizard", "ProjectTemplateWizard\ProjectTemplateWizard.csproj", "{8E6451B9-FB03-4D60-A9DB-F25A870ACF72}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DD75940E-E398-4EC5-A9B9-49EF7190C910} = {DD75940E-E398-4EC5-A9B9-49EF7190C910}
+		{EAD50F34-E02A-4F91-B4AB-990D4D7207B8} = {EAD50F34-E02A-4F91-B4AB-990D4D7207B8}
+		{414F9767-0D5B-435C-84F1-E63430410BA0} = {414F9767-0D5B-435C-84F1-E63430410BA0}
+		{FFF90DB7-044A-4505-AD09-07D25C9BA63D} = {FFF90DB7-044A-4505-AD09-07D25C9BA63D}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityDataModelToolsExtensions", "EntityDataModelToolsExtensions\EntityDataModelToolsExtensions.csproj", "{F825E60E-4CC2-4666-AA9F-BA6DAB6013D7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Externals", "Externals", "{BAE00B8D-1AA2-4034-953E-D7336310F302}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTier.Client.Domain", "..\N-Tier Entity Framework\NTier.Client.Domain\NTier.Client.Domain.csproj", "{FFF90DB7-044A-4505-AD09-07D25C9BA63D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTier.Common.Domain", "..\N-Tier Entity Framework\NTier.Common.Domain\NTier.Common.Domain.csproj", "{DD75940E-E398-4EC5-A9B9-49EF7190C910}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTier.Server.Domain", "..\N-Tier Entity Framework\NTier.Server.Domain\NTier.Server.Domain.csproj", "{414F9767-0D5B-435C-84F1-E63430410BA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTier.Silverlight.Domain", "..\N-Tier Entity Framework\NTier.Silverlight.Domain\NTier.Silverlight.Domain.csproj", "{EAD50F34-E02A-4F91-B4AB-990D4D7207B8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4701D9AB-2A86-4DB4-A8BC-F31B908A00CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4701D9AB-2A86-4DB4-A8BC-F31B908A00CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E6451B9-FB03-4D60-A9DB-F25A870ACF72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E6451B9-FB03-4D60-A9DB-F25A870ACF72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F825E60E-4CC2-4666-AA9F-BA6DAB6013D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F825E60E-4CC2-4666-AA9F-BA6DAB6013D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFF90DB7-044A-4505-AD09-07D25C9BA63D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFF90DB7-044A-4505-AD09-07D25C9BA63D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD75940E-E398-4EC5-A9B9-49EF7190C910}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD75940E-E398-4EC5-A9B9-49EF7190C910}.Release|Any CPU.Build.0 = Release|Any CPU
+		{414F9767-0D5B-435C-84F1-E63430410BA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{414F9767-0D5B-435C-84F1-E63430410BA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAD50F34-E02A-4F91-B4AB-990D4D7207B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAD50F34-E02A-4F91-B4AB-990D4D7207B8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FFF90DB7-044A-4505-AD09-07D25C9BA63D} = {BAE00B8D-1AA2-4034-953E-D7336310F302}
+		{DD75940E-E398-4EC5-A9B9-49EF7190C910} = {BAE00B8D-1AA2-4034-953E-D7336310F302}
+		{414F9767-0D5B-435C-84F1-E63430410BA0} = {BAE00B8D-1AA2-4034-953E-D7336310F302}
+		{EAD50F34-E02A-4F91-B4AB-990D4D7207B8} = {BAE00B8D-1AA2-4034-953E-D7336310F302}
+	EndGlobalSection
+EndGlobal

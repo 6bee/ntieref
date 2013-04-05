@@ -1,0 +1,2 @@
+﻿<#@ assembly name="..\..\Lib\NTier.Common.Domain.dll" #>
+<#@ VolatileAssembly processor="T4Toolbox.VolatileAssemblyProcessor" name="..\..\Lib\NTier.Common.Domain.dll" #>

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ProjectTemplateWizard
 {
-    public static class EnvDTEConstants
+    internal static class EnvDTEConstants
     {
         //[TypeLibVar(64)]
         public const string dsCPP = "C/C++";

@@ -1,4 +1,5 @@
-﻿<#@ template language="C#" hostspecific="true" debug="true" #>
+﻿<#@ assembly name="$(ProjectDir)..\..\Lib\NTier.Common.Domain.dll" #>
+<#@ template language="C#" hostspecific="true" debug="true" #>
 <#@ output extension="txt" #>
 <#@ include file="NTierEF.SL.NTierEntityGenerator.CS.ttinclude" #>
 <#
