@@ -57,7 +57,7 @@
     <None Include="Service References\ProductManagerDataService\ProductManager.WebServiceClient.ProductManagerDataService.ProductManagerResultSet.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ProductManagerDataService\ProductManager.WebServiceClient.ProductManagerDataService.QueryResultOfProductuBe26X0k.datasource">
+    <None Include="Service References\ProductManagerDataService\ProductManager.WebServiceClient.ProductManagerDataService.QueryResultOfProductob0iX2ma.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ProductManagerDataService\ProductManagerDataService.wsdl" />

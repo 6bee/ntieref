@@ -45,15 +45,17 @@ namespace NTier.Client.Domain
             return _numericTypes.Contains(type);
         }
 
-        public static RLinq.Expression ToExpression<T>(this FilterDescription filterDescription) where T : Entity<T>
+        public static RLinq.LambdaExpression ToExpression<T>(this FilterDescription filterDescription) where T : Entity<T>
         {
             var propertyName = filterDescription.PropertyName;
             var entityType = typeof(T);
             var filterExpression = CreateFilterExpression(filterDescription, propertyName, entityType);
-            return filterExpression ?? RLinq.Expression.ConstantValue(false);
+            var exp = filterExpression ?? RLinq.Expression.ConstantValue(false);
+            var parameterExpression = RLinq.Expression.Parameter("i", typeof(T));
+            return RLinq.Expression.Lambda(exp, parameterExpression);
         }
 
-        public static RLinq.Expression ToGlobalExpression<T>(this FilterDescription filterDescription, IEnumerable<string> propertyNames) where T : Entity<T>
+        public static RLinq.LambdaExpression ToGlobalExpression<T>(this FilterDescription filterDescription, IEnumerable<string> propertyNames) where T : Entity<T>
         {
             var entityType = typeof(T);
             RLinq.Expression expression = null;
@@ -71,7 +73,9 @@ namespace NTier.Client.Domain
                     expression = RLinq.Expression.Binary(expression, filterExpression, RLinq.BinaryOperator.Or);
                 }
             }
-            return expression ?? RLinq.Expression.ConstantValue(false);
+            var exp = expression ?? RLinq.Expression.ConstantValue(false);
+            var parameterExpression = RLinq.Expression.Parameter("i", typeof(T));
+            return RLinq.Expression.Lambda(exp, parameterExpression);
         }
 
         private static RLinq.Expression CreateFilterExpression(FilterDescription filterDescription, string propertyName, Type entityType)
@@ -94,7 +98,7 @@ namespace NTier.Client.Domain
                     {
                         if (propertyInfo.PropertyType.IsNumericType())
                         {
-                            expression = RLinq.Expression.MethodCall(expression, "ToString", typeof(object), BindingFlags.Public | BindingFlags.Instance, new Type[0], new RLinq.Expression[0]);
+                            expression = RLinq.Expression.MethodCall(expression, "ToString", typeof(object), BindingFlags.Public | BindingFlags.Instance, new Type[0], new Type[0], new RLinq.Expression[0]);
                             value = value == null ? null : value.ToString();
                         }
                         else

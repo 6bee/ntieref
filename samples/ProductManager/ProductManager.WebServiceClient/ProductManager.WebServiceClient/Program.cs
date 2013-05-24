@@ -39,9 +39,14 @@ namespace ProductManager.WebServiceClient
                     Operator = BinaryOperator.Equal,
                     RightOperand = idExpression,
                 };
+                var lambdaExpression = new LambdaExpression
+                {
+                    Expression = filterExpression,
+                    Parameters = new[] { parameterExpression },
+                };
                 var query = new Query
                 {
-                    FilterExpressionList = new[] { filterExpression },
+                    FilterExpressionList = new[] { lambdaExpression },
                     IncludeData = true,
                     IncludeTotalCount = true,
                 };

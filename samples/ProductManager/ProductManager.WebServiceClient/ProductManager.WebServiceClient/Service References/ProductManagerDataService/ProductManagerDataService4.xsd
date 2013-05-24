@@ -10,7 +10,7 @@
   <xs:element name="ArrayOfProduct" nillable="true" type="tns:ArrayOfProduct" />
   <xs:complexType name="Product">
     <xs:complexContent mixed="false">
-      <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/NTier.Common.Domain.Model" base="q1:EntityOfProductuBe26X0k">
+      <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/NTier.Common.Domain.Model" base="q1:EntityOfProductob0iX2ma">
         <xs:sequence>
           <xs:element minOccurs="0" name="Color" nillable="true" type="xs:string" />
           <xs:element minOccurs="0" name="DiscontinuedDate" nillable="true" type="xs:dateTime" />
@@ -36,7 +36,7 @@
   <xs:element name="Product" nillable="true" type="tns:Product" />
   <xs:complexType name="ProductCategory">
     <xs:complexContent mixed="false">
-      <xs:extension xmlns:q2="http://schemas.datacontract.org/2004/07/NTier.Common.Domain.Model" base="q2:EntityOfProductCategoryuBe26X0k">
+      <xs:extension xmlns:q2="http://schemas.datacontract.org/2004/07/NTier.Common.Domain.Model" base="q2:EntityOfProductCategoryob0iX2ma">
         <xs:sequence>
           <xs:element minOccurs="0" name="ChildCategories" nillable="true" type="tns:ArrayOfProductCategory" />
           <xs:element minOccurs="0" name="ModifiedDate" type="xs:dateTime" />

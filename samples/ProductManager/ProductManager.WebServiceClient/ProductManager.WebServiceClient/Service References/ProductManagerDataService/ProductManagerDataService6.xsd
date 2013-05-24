@@ -13,7 +13,7 @@
   <xs:element name="GetProductsResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/NTier.Common.Domain.Model" minOccurs="0" name="GetProductsResult" nillable="true" type="q3:QueryResultOfProductuBe26X0k" />
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/NTier.Common.Domain.Model" minOccurs="0" name="GetProductsResult" nillable="true" type="q3:QueryResultOfProductob0iX2ma" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -28,7 +28,7 @@
   <xs:element name="GetProductCategoriesResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/NTier.Common.Domain.Model" minOccurs="0" name="GetProductCategoriesResult" nillable="true" type="q6:QueryResultOfProductCategoryuBe26X0k" />
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/NTier.Common.Domain.Model" minOccurs="0" name="GetProductCategoriesResult" nillable="true" type="q6:QueryResultOfProductCategoryob0iX2ma" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

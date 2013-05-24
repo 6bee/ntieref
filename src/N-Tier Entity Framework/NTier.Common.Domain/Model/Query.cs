@@ -35,7 +35,7 @@ namespace NTier.Common.Domain.Model
         private IList<string> _include = null;
 
         [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public IList<RLinq.Expression> FilterExpressionList
+        public IList<RLinq.LambdaExpression> FilterExpressionList
         {
             get { return _filterExpressionList; }
             set
@@ -50,7 +50,7 @@ namespace NTier.Common.Domain.Model
                 }
             }
         }
-        private IList<RLinq.Expression> _filterExpressionList;
+        private IList<RLinq.LambdaExpression> _filterExpressionList;
 
         [DataMember(IsRequired = false, EmitDefaultValue = false)]
         public IList<RLinq.SortExpression> SortExpressionList

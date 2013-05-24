@@ -17,7 +17,7 @@ namespace NTier.Client.Domain
         internal sealed class Filter
         {
             private readonly LambdaExpression _lambdaExpression;
-            private readonly RLinq.Expression _queryExpression;
+            private readonly RLinq.LambdaExpression _queryExpression;
 
             public Filter(LambdaExpression exp)
             {
@@ -25,13 +25,13 @@ namespace NTier.Client.Domain
                 _queryExpression = null;
             }
 
-            public Filter(RLinq.Expression exp)
+            public Filter(RLinq.LambdaExpression exp)
             {
                 _queryExpression = exp;
                 _lambdaExpression = null;
             }
 
-            public RLinq.Expression Expression
+            public RLinq.LambdaExpression Expression
             {
                 get { return _queryExpression ?? _lambdaExpression.ToQueryExpression(); }
             }
@@ -41,7 +41,7 @@ namespace NTier.Client.Domain
         {
             private readonly LambdaExpression _lambdaExpression;
             private readonly RLinq.SortDirection _orderingDirection;
-            private readonly RLinq.Expression _queryExpression;
+            private readonly RLinq.LambdaExpression _queryExpression;
 
             public Sort(LambdaExpression exp, RLinq.SortDirection orderingDirection)
             {
@@ -50,7 +50,7 @@ namespace NTier.Client.Domain
                 _queryExpression = null;
             }
 
-            public Sort(RLinq.Expression exp, RLinq.SortDirection orderingDirection)
+            public Sort(RLinq.LambdaExpression exp, RLinq.SortDirection orderingDirection)
             {
                 _queryExpression = exp;
                 _orderingDirection = orderingDirection;
@@ -201,7 +201,7 @@ namespace NTier.Client.Domain
         }
 
         internal abstract IList<Filter> Filters { get; }
-        protected IEnumerable<RLinq.Expression> ParentFilters
+        protected IEnumerable<RLinq.LambdaExpression> ParentFilters
         {
             get
             {

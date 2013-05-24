@@ -32,7 +32,7 @@
   <xs:element name="ExtendedPropertiesDictionary" nillable="true" type="tns:ExtendedPropertiesDictionary" />
   <xs:complexType name="Query">
     <xs:sequence>
-      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Remote.Linq.Expressions" minOccurs="0" name="FilterExpressionList" nillable="true" type="q1:ArrayOfExpression">
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Remote.Linq.Expressions" minOccurs="0" name="FilterExpressionList" nillable="true" type="q1:ArrayOfLambdaExpression">
         <xs:annotation>
           <xs:appinfo>
             <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
@@ -84,7 +84,7 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Query" nillable="true" type="tns:Query" />
-  <xs:complexType name="QueryResultOfProductuBe26X0k">
+  <xs:complexType name="QueryResultOfProductob0iX2ma">
     <xs:annotation>
       <xs:appinfo>
         <GenericType Name="QueryResultOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/NTier.Common.Domain.Model" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
@@ -99,8 +99,8 @@
     <xs:attribute ref="ser:Id" />
     <xs:attribute ref="ser:Ref" />
   </xs:complexType>
-  <xs:element name="QueryResultOfProductuBe26X0k" nillable="true" type="tns:QueryResultOfProductuBe26X0k" />
-  <xs:complexType name="EntityOfProductuBe26X0k">
+  <xs:element name="QueryResultOfProductob0iX2ma" nillable="true" type="tns:QueryResultOfProductob0iX2ma" />
+  <xs:complexType name="EntityOfProductob0iX2ma">
     <xs:annotation>
       <xs:appinfo>
         <GenericType Name="EntityOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/NTier.Common.Domain.Model" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
@@ -114,7 +114,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  <xs:element name="EntityOfProductuBe26X0k" nillable="true" type="tns:EntityOfProductuBe26X0k" />
+  <xs:element name="EntityOfProductob0iX2ma" nillable="true" type="tns:EntityOfProductob0iX2ma" />
   <xs:complexType name="Entity">
     <xs:sequence>
       <xs:element minOccurs="0" name="ChangeTracker" nillable="true" type="tns:ObjectChangeTracker" />
@@ -235,7 +235,7 @@
     </xs:restriction>
   </xs:simpleType>
   <xs:element name="ErrorType" nillable="true" type="tns:ErrorType" />
-  <xs:complexType name="EntityOfProductCategoryuBe26X0k">
+  <xs:complexType name="EntityOfProductCategoryob0iX2ma">
     <xs:annotation>
       <xs:appinfo>
         <GenericType Name="EntityOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/NTier.Common.Domain.Model" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
@@ -249,8 +249,8 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  <xs:element name="EntityOfProductCategoryuBe26X0k" nillable="true" type="tns:EntityOfProductCategoryuBe26X0k" />
-  <xs:complexType name="QueryResultOfProductCategoryuBe26X0k">
+  <xs:element name="EntityOfProductCategoryob0iX2ma" nillable="true" type="tns:EntityOfProductCategoryob0iX2ma" />
+  <xs:complexType name="QueryResultOfProductCategoryob0iX2ma">
     <xs:annotation>
       <xs:appinfo>
         <GenericType Name="QueryResultOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/NTier.Common.Domain.Model" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
@@ -265,5 +265,5 @@
     <xs:attribute ref="ser:Id" />
     <xs:attribute ref="ser:Ref" />
   </xs:complexType>
-  <xs:element name="QueryResultOfProductCategoryuBe26X0k" nillable="true" type="tns:QueryResultOfProductCategoryuBe26X0k" />
+  <xs:element name="QueryResultOfProductCategoryob0iX2ma" nillable="true" type="tns:QueryResultOfProductCategoryob0iX2ma" />
 </xs:schema>

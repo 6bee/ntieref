@@ -53,7 +53,7 @@ namespace NTier.Server.Domain.Repositories
             return queriable;
         }
 
-        private static IDomainQueryable<TEntity> ApplyFilters<TEntity>(this IDomainQueryable<TEntity> queriable, IEnumerable<RLinq.Expression> filterList) where TEntity : Entity
+        private static IDomainQueryable<TEntity> ApplyFilters<TEntity>(this IDomainQueryable<TEntity> queriable, IEnumerable<RLinq.LambdaExpression> filterList) where TEntity : Entity
         {
             if (!ReferenceEquals(filterList, null))
             {
@@ -74,7 +74,7 @@ namespace NTier.Server.Domain.Repositories
             {
                 foreach (var sort in sortList)
                 {
-                    var exp = sort.Operand.ToLinqExpression<TEntity>();
+                    var exp = sort.Operand.ToLinqExpression();
                     if (ReferenceEquals(orderedQueriable, null))
                     {
                         switch (sort.SortDirection)
