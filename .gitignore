@@ -1,6 +1,7 @@
 _ReSharper*
 bin
 Bin
+ClientBin
 obj
 tmp
 App_Data

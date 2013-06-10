@@ -3,6 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{5C9792DB-1F7C-4472-AE0F-47C4D4D1A144}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{6AB81CD4-0765-4756-A682-F22A65FD899B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{EB2CB878-9433-444A-8FE9-3101BB42C4AB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Silverlight", "Silverlight", "{B27BCB3C-3B55-45F1-8E42-D014C0CC3EC1}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Client.Domain.Test", "Client\ProductManager.Client.Domain.Test\ProductManager.Client.Domain.Test.csproj", "{BD953997-52F9-4C57-A2CE-7B5BD54CFE21}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Client.Domain", "Client\ProductManager.Client.Domain\ProductManager.Client.Domain.csproj", "{EB2D8387-9107-4766-96AD-402633800CE6}"
@@ -11,13 +17,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Client.Domai
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Client.Domain.Service.RemoteChannelFactory", "Client\ProductManager.Client.Domain.Service.RemoteChannelFactory\ProductManager.Client.Domain.Service.RemoteChannelFactory.csproj", "{8E44CD18-FA3F-495F-BB74-3CFC680A008C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{6AB81CD4-0765-4756-A682-F22A65FD899B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Common.Domain.Model", "Common\ProductManager.Common.Domain.Model\ProductManager.Common.Domain.Model.csproj", "{E805C879-C712-4F43-8E9E-8C4439C9CCAF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Common.Domain.Service", "Common\ProductManager.Common.Domain.Service\ProductManager.Common.Domain.Service.csproj", "{32AE4264-D0A8-4901-B392-C344D24CE00C}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{EB2CB878-9433-444A-8FE9-3101BB42C4AB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Server.Domain.Edmx", "Server\ProductManager.Server.Domain.Edmx\ProductManager.Server.Domain.Edmx.csproj", "{6BED8512-128B-479B-BA8A-1804DC47F5C9}"
 EndProject
@@ -26,8 +28,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Server.Domain.Repositories", "Server\ProductManager.Server.Domain.Repositories\ProductManager.Server.Domain.Repositories.csproj", "{0181168D-34C9-4437-AC06-B1A4605F031E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Server.Domain.Service", "Server\ProductManager.Server.Domain.Service\ProductManager.Server.Domain.Service.csproj", "{489D4E5E-EE2C-411F-AACA-CDBCFA8F2217}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Silverlight", "Silverlight", "{B27BCB3C-3B55-45F1-8E42-D014C0CC3EC1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Silverlight.Domain.Library", "Silverlight\ProductManager.Silverlight.Domain.Library\ProductManager.Silverlight.Domain.Library.csproj", "{80D1161A-3EAA-4555-87D1-DA9A7F5476CA}"
 EndProject

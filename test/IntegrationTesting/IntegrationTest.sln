@@ -3,6 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{4E89191C-F9B8-4EA3-88A6-50CF9733EB2E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{F457D218-5041-421E-BCC6-E01FA7218FCC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{892C8170-8D34-46CF-9375-2556E8C1B136}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{1CB7EB62-A5C4-4E0F-BD37-FAF4F754DE36}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Externals", "Externals", "{38D5EDF0-B8EC-4419-ADBF-7392C3C7C058}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "IntegrationTest\UnitTests\UnitTests\UnitTests.csproj", "{0645EE6C-7C48-4A31-96AD-64F778A70AEF}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest.Client.Domain.Test", "IntegrationTest\Client\IntegrationTest.Client.Domain.Test\IntegrationTest.Client.Domain.Test.csproj", "{53208A12-EFFA-405D-B8A8-6B32A33500F3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest.Client.Domain", "IntegrationTest\Client\IntegrationTest.Client.Domain\IntegrationTest.Client.Domain.csproj", "{3FCB9817-B9C1-42B4-86B0-1DA5B0018DD8}"
@@ -23,8 +33,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest.Client.Doma
 		{FFF90DB7-044A-4505-AD09-07D25C9BA63D} = {FFF90DB7-044A-4505-AD09-07D25C9BA63D}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{F457D218-5041-421E-BCC6-E01FA7218FCC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest.Common.Domain.Model", "IntegrationTest\Common\IntegrationTest.Common.Domain.Model\IntegrationTest.Common.Domain.Model.csproj", "{1E23447A-1850-4692-BD0E-291F5FF16B40}"
 	ProjectSection(ProjectDependencies) = postProject
 		{DD75940E-E398-4EC5-A9B9-49EF7190C910} = {DD75940E-E398-4EC5-A9B9-49EF7190C910}
@@ -34,8 +42,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest.Common.Doma
 	ProjectSection(ProjectDependencies) = postProject
 		{DD75940E-E398-4EC5-A9B9-49EF7190C910} = {DD75940E-E398-4EC5-A9B9-49EF7190C910}
 	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{892C8170-8D34-46CF-9375-2556E8C1B136}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest.Server.Domain.Edmx", "IntegrationTest\Server\IntegrationTest.Server.Domain.Edmx\IntegrationTest.Server.Domain.Edmx.csproj", "{D7753C9F-817D-43AF-AEB5-8B6A61CBBC6A}"
 EndProject
@@ -53,8 +59,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest.Server.Doma
 		{414F9767-0D5B-435C-84F1-E63430410BA0} = {414F9767-0D5B-435C-84F1-E63430410BA0}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{1CB7EB62-A5C4-4E0F-BD37-FAF4F754DE36}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestChannelFactory", "IntegrationTest\UnitTests\TestChannelFactory\TestChannelFactory.csproj", "{11BB8049-EF52-4540-944B-3EEF4558800D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{FFF90DB7-044A-4505-AD09-07D25C9BA63D} = {FFF90DB7-044A-4505-AD09-07D25C9BA63D}
@@ -62,11 +66,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestChannelFactory", "Integ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTest", "IntegrationTest\UnitTests\ConsoleTest\ConsoleTest.csproj", "{404E1AD4-C166-4682-9319-284B5AC98C84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "IntegrationTest\UnitTests\UnitTests\UnitTests.csproj", "{0645EE6C-7C48-4A31-96AD-64F778A70AEF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformaceTests", "IntegrationTest\UnitTests\PerformaceTests\PerformaceTests.csproj", "{5C88DCF5-F572-40B0-807B-7E2CE98AF2F9}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Externals", "Externals", "{38D5EDF0-B8EC-4419-ADBF-7392C3C7C058}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTier.Client.Domain", "..\..\src\N-Tier Entity Framework\NTier.Client.Domain\NTier.Client.Domain.csproj", "{FFF90DB7-044A-4505-AD09-07D25C9BA63D}"
 EndProject
