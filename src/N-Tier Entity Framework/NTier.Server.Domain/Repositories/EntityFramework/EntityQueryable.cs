@@ -4,8 +4,9 @@ using System;
 using System.Data.Objects;
 using System.Linq.Expressions;
 using NTier.Common.Domain.Model;
+using NTier.Server.Domain.Repositories.Linq;
 
-namespace NTier.Server.Domain.Repositories.Linq
+namespace NTier.Server.Domain.Repositories.EntityFramework
 {
     internal sealed class EntityQueryable<TEntity> : DomainQueryable<TEntity>, IEntityQueryable<TEntity>
         where TEntity : Entity

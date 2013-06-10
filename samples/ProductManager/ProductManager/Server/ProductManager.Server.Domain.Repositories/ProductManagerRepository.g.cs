@@ -23,7 +23,7 @@ using ProductManager.Common.Domain.Model.ProductManager;
 
 namespace ProductManager.Server.Domain.Repositories
 {
-    public partial class ProductManagerRepository : Repository, IProductManagerRepository
+    public partial class ProductManagerRepository : NTier.Server.Domain.Repositories.EntityFramework.Repository, IProductManagerRepository
     {
         #region Constructors
 

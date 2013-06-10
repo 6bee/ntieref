@@ -9,6 +9,7 @@ public class RepositoryTemplate : Template
     public string ModelNamespace { get; set; }
     public string ModelBaseNamespace { get; set; }
     public string RepositoryBaseNamespace { get; set; }
+    public string RepositoryBaseClass { get; set; }
     private string file = null;
     public string File
     {
@@ -27,6 +28,7 @@ public class RepositoryTemplate : Template
         this.ModelNamespace = modelNamespace;
         this.ModelBaseNamespace = "NTier.Common.Domain.Model";
         this.RepositoryBaseNamespace = "NTier.Server.Domain.Repositories";
+        this.RepositoryBaseClass = "NTier.Server.Domain.Repositories.EntityFramework.Repository";
     }
 
     /// <summary>
@@ -66,7 +68,7 @@ public class RepositoryTemplate : Template
 #>
 namespace <#=Namespace#>
 {
-    <#=Accessibility.ForType(GenerationUtils.Container)#> partial class <#=GenerationUtils.ModelName#>Repository : Repository, I<#=GenerationUtils.ModelName#>Repository
+    <#=Accessibility.ForType(GenerationUtils.Container)#> partial class <#=GenerationUtils.ModelName#>Repository : <#=RepositoryBaseClass#>, I<#=GenerationUtils.ModelName#>Repository
     {
         #region Constructors
 

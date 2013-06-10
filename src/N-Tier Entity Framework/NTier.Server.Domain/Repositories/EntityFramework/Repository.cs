@@ -4,11 +4,26 @@ using System.Collections.Generic;
 using System.Data.EntityClient;
 using System.Data.Objects;
 using NTier.Common.Domain.Model;
-using NTier.Server.Domain.Repositories.EntityFramework;
 
 namespace NTier.Server.Domain.Repositories
 {
-    // TODO: move this class into subnamespace EntityFramework (change T4 templates accordingly)
+    [System.Obsolete("This class was moved to a different namespace: NTier.Server.Domain.Repositories.EntityFramework", true)]
+    public abstract class Repository : NTier.Server.Domain.Repositories.EntityFramework.Repository
+    {
+        protected Repository(string connectionString, string containerName)
+            : base(connectionString, containerName)
+        {
+        }
+
+        protected Repository(EntityConnection connection, string containerName)
+            : base(connection, containerName)
+        {
+        }
+    }
+}
+
+namespace NTier.Server.Domain.Repositories.EntityFramework
+{
     public abstract class Repository : ObjectContext, IRepository
     {
         #region Constructors
