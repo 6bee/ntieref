@@ -38,11 +38,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Data.Services" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
-    <Reference Include="System.Web" />
     <Reference Include="NTier.Common.Domain">
       <HintPath>..\..\Lib\NTier.Common.Domain.dll</HintPath>
     </Reference>

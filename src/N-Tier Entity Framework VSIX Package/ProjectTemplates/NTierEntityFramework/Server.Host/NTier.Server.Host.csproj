@@ -50,12 +50,6 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="NTier.Common.Domain">
-      <HintPath>..\..\Lib\NTier.Common.Domain.dll</HintPath>
-    </Reference>
-    <Reference Include="NTier.Server.Domain">
-      <HintPath>..\..\Lib\NTier.Server.Domain.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="clientaccesspolicy.xml" />

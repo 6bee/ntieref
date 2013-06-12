@@ -41,7 +41,6 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
-    <Reference Include="System.Web" />
     <Reference Include="NTier.Common.Domain">
       <HintPath>..\..\Lib\NTier.Common.Domain.dll</HintPath>
     </Reference>
