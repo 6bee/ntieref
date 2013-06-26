@@ -94,6 +94,32 @@
     <None Include="NorthwindModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>NorthwindModel.txt</LastGenOutput>
+      <LastOutputs>
+..\..\Client\IntegrationTest.Client.Domain.Service.InProcessChannelFactory\NorthwindInProcessChannelFactory.g.cs
+..\..\Client\IntegrationTest.Client.Domain.Service.RemoteChannelFactory\NorthwindRemoteChannelFactory.g.cs
+..\..\Client\IntegrationTest.Client.Domain\INorthwindDataContext.g.cs
+..\..\Client\IntegrationTest.Client.Domain\NorthwindDataContext.g.cs
+..\..\Common\IntegrationTest.Common.Domain.Model\Northwind\Category.g.cs
+..\..\Common\IntegrationTest.Common.Domain.Model\Northwind\Contact.g.cs
+..\..\Common\IntegrationTest.Common.Domain.Model\Northwind\Customer.g.cs
+..\..\Common\IntegrationTest.Common.Domain.Model\Northwind\DemographicGroup.g.cs
+..\..\Common\IntegrationTest.Common.Domain.Model\Northwind\DynamicContentEntity.g.cs
+..\..\Common\IntegrationTest.Common.Domain.Model\Northwind\Employee.g.cs
+..\..\Common\IntegrationTest.Common.Domain.Model\Northwind\NorthwindChangeSet.g.cs
+..\..\Common\IntegrationTest.Common.Domain.Model\Northwind\NorthwindResultSet.g.cs
+..\..\Common\IntegrationTest.Common.Domain.Model\Northwind\Order.g.cs
+..\..\Common\IntegrationTest.Common.Domain.Model\Northwind\OrderDetail.g.cs
+..\..\Common\IntegrationTest.Common.Domain.Model\Northwind\Product.g.cs
+..\..\Common\IntegrationTest.Common.Domain.Model\Northwind\Region.g.cs
+..\..\Common\IntegrationTest.Common.Domain.Model\Northwind\Shipper.g.cs
+..\..\Common\IntegrationTest.Common.Domain.Model\Northwind\Supplier.g.cs
+..\..\Common\IntegrationTest.Common.Domain.Model\Northwind\Territory.g.cs
+..\..\Common\IntegrationTest.Common.Domain.Service\Contracts\INorthwindDataService.g.cs
+..\IntegrationTest.Server.Domain.Repositories\INorthwindRepository.g.cs
+..\IntegrationTest.Server.Domain.Repositories\NorthwindRepository.g.cs
+..\IntegrationTest.Server.Domain.Service\NorthwindDataService.g.cs
+..\IntegrationTest.Server.Host\NorthwindDataService.svc
+</LastOutputs>
     </None>
     <None Include="NorthwindModel.tt.log">
       <DependentUpon>NorthwindModel.tt</DependentUpon>
