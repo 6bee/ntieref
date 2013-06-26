@@ -17,8 +17,20 @@
         <InstallationTarget Version="[11.0,12.0)" Id="Microsoft.VisualStudio.Ultimate" />
     </Installation>
     <Dependencies>
-        <!--<Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="4.5" />-->
+        <!--<Dependency d:Source="Installed" Id="T4Toolbox" DisplayName="T4 Toolbox" Version="[11.4,12.0)" d:InstallSource="Download" Location="http://visualstudiogallery.msdn.microsoft.com/7f9bd62f-2505-4aa4-9378-ee7830371684" CanAutoDownload="true" IsRequired="true" />
+        <Dependency d:Source="Installed" Id="NuPackToolsVsix.Microsoft.67e54e40-0ae3-42c5-a949-fddf5739e7a5" DisplayName="NuGet Package Manager" Version="[1.7.30402.9028,3.0)" d:InstallSource="Download" Location="http://visualstudiogallery.msdn.microsoft.com/27077b70-9dad-4c64-adcf-c7cf6bc9970c" CanAutoDownload="true" IsRequired="true" />
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="4.5" />-->
     </Dependencies>
+    <References>
+        <Reference Id="NuPackToolsVsix.Microsoft.67e54e40-0ae3-42c5-a949-fddf5739e7a5" MinVersion="1.7.30402.9028">
+            <Name>NuGet Package Manager</Name>
+            <MoreInfoUrl>http://docs.nuget.org/</MoreInfoUrl>
+        </Reference>
+        <Reference Id="T4Toolbox" MinVersion="11.4">
+            <Name>T4 Toolbox</Name>
+            <MoreInfoUrl>http://visualstudiogallery.msdn.microsoft.com/7f9bd62f-2505-4aa4-9378-ee7830371684</MoreInfoUrl>
+        </Reference>
+    </References>
     <Assets>
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="ProjectTemplateWizard" Path="|ProjectTemplateWizard|" AssemblyName="|ProjectTemplateWizard;AssemblyName|" />
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="File" Path="Additional.pkgdef" />
