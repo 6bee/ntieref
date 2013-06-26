@@ -377,7 +377,7 @@ namespace NTier.Client.Domain
                     this.QueryTypeMapper = queryTypeMapper;
                 }
 
-                public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
+                public IQueryable<TQueryElement> CreateQuery<TQueryElement>(Expression expression)
                 {
                     throw new NotImplementedException();
                 }
