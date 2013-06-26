@@ -43,12 +43,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="NTier.Client.Domain">
-      <HintPath>..\..\..\lib\NTier.Client.Domain.dll</HintPath>
-    </Reference>
-    <Reference Include="NTier.Common.Domain">
-      <HintPath>..\..\..\lib\NTier.Common.Domain.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChangeTrackerStateTests.cs" />
@@ -75,6 +69,14 @@
     <Compile Include="Utils\To.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\src\N-Tier Entity Framework\NTier.Client.Domain\NTier.Client.Domain.csproj">
+      <Project>{fff90db7-044a-4505-ad09-07d25c9ba63d}</Project>
+      <Name>NTier.Client.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\src\N-Tier Entity Framework\NTier.Common.Domain\NTier.Common.Domain.csproj">
+      <Project>{dd75940e-e398-4ec5-a9b9-49ef7190c910}</Project>
+      <Name>NTier.Common.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Client\IntegrationTest.Client.Domain\IntegrationTest.Client.Domain.csproj">
       <Project>{3FCB9817-B9C1-42B4-86B0-1DA5B0018DD8}</Project>
       <Name>IntegrationTest.Client.Domain</Name>

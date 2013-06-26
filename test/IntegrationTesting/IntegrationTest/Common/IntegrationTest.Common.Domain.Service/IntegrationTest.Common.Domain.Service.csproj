@@ -37,15 +37,16 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Data" />
-    <Reference Include="NTier.Common.Domain">
-      <HintPath>..\..\..\lib\NTier.Common.Domain.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\INorthwindDataService.g.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\src\N-Tier Entity Framework\NTier.Common.Domain\NTier.Common.Domain.csproj">
+      <Project>{dd75940e-e398-4ec5-a9b9-49ef7190c910}</Project>
+      <Name>NTier.Common.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\IntegrationTest.Common.Domain.Model\IntegrationTest.Common.Domain.Model.csproj">
       <Name>IntegrationTest.Common.Domain.Model</Name>
     </ProjectReference>

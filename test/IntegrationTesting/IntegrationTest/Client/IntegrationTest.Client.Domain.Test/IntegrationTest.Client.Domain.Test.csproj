@@ -40,12 +40,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="NTier.Client.Domain">
-      <HintPath>..\..\..\lib\NTier.Client.Domain.dll</HintPath>
-    </Reference>
-    <Reference Include="NTier.Common.Domain">
-      <HintPath>..\..\..\lib\NTier.Common.Domain.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -55,6 +49,14 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\src\N-Tier Entity Framework\NTier.Client.Domain\NTier.Client.Domain.csproj">
+      <Project>{fff90db7-044a-4505-ad09-07d25c9ba63d}</Project>
+      <Name>NTier.Client.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\src\N-Tier Entity Framework\NTier.Common.Domain\NTier.Common.Domain.csproj">
+      <Project>{dd75940e-e398-4ec5-a9b9-49ef7190c910}</Project>
+      <Name>NTier.Common.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\IntegrationTest.Client.Domain.Service.RemoteChannelFactory\IntegrationTest.Client.Domain.Service.RemoteChannelFactory.csproj">
       <Name>IntegrationTest.Client.Domain.Service.RemoteChannelFactory</Name>
     </ProjectReference>
@@ -67,7 +69,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>xcopy /y /d "$(SolutionDir)..\..\src\N-Tier Entity Framework\$(OutDir)*" "$(SolutionDir)lib\"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

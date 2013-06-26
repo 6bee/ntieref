@@ -36,12 +36,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
-    <Reference Include="NTier.Common.Domain">
-      <HintPath>..\..\..\lib\NTier.Common.Domain.dll</HintPath>
-    </Reference>
-    <Reference Include="NTier.Server.Domain">
-      <HintPath>..\..\..\lib\NTier.Server.Domain.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="INorthwindRepository.g.cs" />
@@ -52,6 +46,14 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\src\N-Tier Entity Framework\NTier.Common.Domain\NTier.Common.Domain.csproj">
+      <Project>{dd75940e-e398-4ec5-a9b9-49ef7190c910}</Project>
+      <Name>NTier.Common.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\src\N-Tier Entity Framework\NTier.Server.Domain\NTier.Server.Domain.csproj">
+      <Project>{414f9767-0d5b-435c-84f1-e63430410ba0}</Project>
+      <Name>NTier.Server.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Common\IntegrationTest.Common.Domain.Model\IntegrationTest.Common.Domain.Model.csproj">
       <Name>IntegrationTest.Common.Domain.Model</Name>
     </ProjectReference>

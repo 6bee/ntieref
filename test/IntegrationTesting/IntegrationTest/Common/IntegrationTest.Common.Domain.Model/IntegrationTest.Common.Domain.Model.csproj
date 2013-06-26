@@ -44,9 +44,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="NTier.Common.Domain">
-      <HintPath>..\..\..\lib\NTier.Common.Domain.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Northwind\Category.g.cs" />
@@ -86,10 +83,16 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\src\N-Tier Entity Framework\NTier.Common.Domain\NTier.Common.Domain.csproj">
+      <Project>{dd75940e-e398-4ec5-a9b9-49ef7190c910}</Project>
+      <Name>NTier.Common.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>xcopy /y /d "$(SolutionDir)..\..\src\N-Tier Entity Framework\$(OutDir)*" "$(SolutionDir)lib\"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

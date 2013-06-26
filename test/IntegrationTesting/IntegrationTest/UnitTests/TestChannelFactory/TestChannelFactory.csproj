@@ -40,9 +40,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="NTier.Client.Domain">
-      <HintPath>..\..\..\lib\NTier.Client.Domain.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OfflineChannelFactory.cs" />
@@ -50,6 +47,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\src\N-Tier Entity Framework\NTier.Client.Domain\NTier.Client.Domain.csproj">
+      <Project>{fff90db7-044a-4505-ad09-07d25c9ba63d}</Project>
+      <Name>NTier.Client.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Common\IntegrationTest.Common.Domain.Service\IntegrationTest.Common.Domain.Service.csproj">
       <Project>{79E49CE6-F698-4D99-A2FE-139DBF4A3A47}</Project>
       <Name>IntegrationTest.Common.Domain.Service</Name>
