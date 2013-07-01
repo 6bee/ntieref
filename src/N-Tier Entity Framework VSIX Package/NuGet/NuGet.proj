@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="RebuildPackages" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+        <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildThisFileDirectory)\..\</SolutionDir>
+        <OutputPath Condition=" '$(OutputPath)' == '' ">$(SolutionDir)\bin\$(Configuration)\</OutputPath>
+        <PackagesPath Condition=" '$(PackagesPath)' == '' ">$(SolutionDir)\lib\Packages\</PackagesPath>
+        <NuGetExePath>$(SolutionDir)\..\..\tools\NuGet\NuGet.exe</NuGetExePath>
+        <FrameworkDir>$(SolutionDir)\..\N-Tier Entity Framework\</FrameworkDir>
+        <FrameworkBinDir>$(FrameworkDir)\bin\$(Configuration)\</FrameworkBinDir>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <ClientDomain        Include="$(FrameworkBinDir)**\NTier.Client.Domain.*" />
+        <CommonDomain        Include="$(FrameworkBinDir)**\NTier.Common.Domain.*" />
+        <ServerDomain        Include="$(FrameworkBinDir)**\NTier.Server.Domain.*" />
+        <SilverlihtDomain    Include="$(FrameworkBinDir)**\NTier.Silverlight.Domain.*" />
+        <T4Include           Include="$(SolutionDir)\TextTemplates\NTierEF.*.ttinclude" Exclude="$(SolutionDir)\TextTemplates\NTierEF.SL.*.ttinclude;$(SolutionDir)\TextTemplates\NTierEF.DomainService*.ttinclude" />
+        <SilverlihtT4Dll     Include="$(FrameworkBinDir)**\NTier.Common.Domain.dll" />
+        <SilverlihtT4Include Include="$(SolutionDir)\TextTemplates\NTierEF.SL.*.ttinclude" />
+        <SilverlihtT4Include Include="$(SolutionDir)\TextTemplates\NTierEF.*Utils.ttinclude" />
+        <SilverlihtT4Include Include="$(SolutionDir)\TextTemplates\NTierEF.T4Context.ttinclude" />
+        <WcfRiaT4Include     Include="$(SolutionDir)\TextTemplates\NTierEF.DomainService*.ttinclude" />
+        <WcfRiaT4Include     Include="$(SolutionDir)\TextTemplates\NTierEF.*Utils.ttinclude" />
+        <WcfRiaT4Include     Include="$(SolutionDir)\TextTemplates\NTierEF.T4Context.ttinclude" />
+    </ItemGroup>
+
+    <Target Name="Clean">
+        <ItemGroup>
+            <NuGetPackages Include="$(PackagesPath)\*.nupkg" />
+            <NuGetPackages Include="$(OutputPath)\*.nupkg" />
+        </ItemGroup>
+        
+		<RemoveDir Directories="$(MSBuildThisFileDirectory)\Client\lib\" />
+		<RemoveDir Directories="$(MSBuildThisFileDirectory)\Common\lib\" />
+		<RemoveDir Directories="$(MSBuildThisFileDirectory)\Server\lib\" />
+		<RemoveDir Directories="$(MSBuildThisFileDirectory)\Silverlight\lib\" />
+		<RemoveDir Directories="$(MSBuildThisFileDirectory)\Silverlight\content\" />
+		<RemoveDir Directories="$(MSBuildThisFileDirectory)\T4\content\" />
+		<RemoveDir Directories="$(MSBuildThisFileDirectory)\WcfRia\content\" />
+
+        <Delete Files="@(NuGetPackages)" />
+    </Target>
+    
+    
+    <Target Name="RebuildPackages" DependsOnTargets="Clean;Build">
+    </Target>
+    
+    <Target Name="Prepare">
+        <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Client\lib\net4-client" SourceFiles="@(ClientDomain)" />
+        <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Common\lib\net4-client" SourceFiles="@(CommonDomain)" />
+        <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Server\lib\net4-client" SourceFiles="@(ServerDomain)" />
+        <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\lib\sl4" SourceFiles="@(SilverlihtDomain)" />
+        <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\content\T4" SourceFiles="@(SilverlihtT4Dll)" />
+        <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\content\T4" SourceFiles="@(SilverlihtT4Include)" />
+        <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4\content\T4" SourceFiles="@(T4Include)" />
+        <Copy DestinationFolder="$(MSBuildThisFileDirectory)\WcfRia\content\T4" SourceFiles="@(WcfRiaT4Include)" />
+    </Target>
+    
+    <Target Name="Build" DependsOnTargets="Prepare">
+        <MakeDir Directories="$(PackagesPath)" Condition=" !Exists('$(PackagesPath)') " />
+        
+        <Exec Command="&quot;$(NuGetExePath)&quot; pack &quot;$(MSBuildThisFileDirectory)\Client\NTierEntityFramework.Client.nuspec&quot; -OutputDirectory &quot;$(PackagesPath).&quot; -NoPackageAnalysis" />
+        <Exec Command="&quot;$(NuGetExePath)&quot; pack &quot;$(MSBuildThisFileDirectory)\Common\NTierEntityFramework.Common.nuspec&quot; -OutputDirectory &quot;$(PackagesPath).&quot; -NoPackageAnalysis" />
+        <Exec Command="&quot;$(NuGetExePath)&quot; pack &quot;$(MSBuildThisFileDirectory)\Server\NTierEntityFramework.Server.nuspec&quot; -OutputDirectory &quot;$(PackagesPath).&quot; -NoPackageAnalysis" />
+        <Exec Command="&quot;$(NuGetExePath)&quot; pack &quot;$(MSBuildThisFileDirectory)\Silverlight\NTierEntityFramework.Silverlight.nuspec&quot; -OutputDirectory &quot;$(PackagesPath).&quot; -NoPackageAnalysis" />
+        <Exec Command="&quot;$(NuGetExePath)&quot; pack &quot;$(MSBuildThisFileDirectory)\T4\NTierEntityFramework.T4.nuspec&quot; -OutputDirectory &quot;$(PackagesPath).&quot; -NoPackageAnalysis" />
+        <Exec Command="&quot;$(NuGetExePath)&quot; pack &quot;$(MSBuildThisFileDirectory)\WcfRia\NTierEntityFramework.WcfRia.nuspec&quot; -OutputDirectory &quot;$(PackagesPath).&quot; -NoPackageAnalysis" />
+        
+        <CallTarget Targets="CopyFrameworkPackages"/>
+        <!--<CallTarget Targets="CopyPackagesToOutputPath"/>-->
+    </Target>
+	
+    <Target Name="CopyFrameworkPackages">
+        <ItemGroup>
+            <FrameworkNuGetPackages Include="$(FrameworkDir)packages\**\*.nupkg" />
+        </ItemGroup>		
+        <Copy DestinationFolder="$(PackagesPath)" SourceFiles="@(FrameworkNuGetPackages)" />
+    </Target>
+    
+    <Target Name="CopyPackagesToOutputPath">
+        <ItemGroup>
+            <VsixNuGetPackages Include="$(PackagesPath)\*.nupkg" />
+        </ItemGroup>
+        <MakeDir Directories="$(OutputPath)" Condition=" !Exists('$(OutputPath)') " />
+        <Copy DestinationFolder="$(OutputPath)" SourceFiles="@(VsixNuGetPackages)" />
+    </Target>
+    
+</Project>

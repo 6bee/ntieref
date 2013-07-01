@@ -45,192 +45,56 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Additional.pkgdef">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="license.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="ItemT\Code Generation\DomainServiceGen.zip">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="..\lib\ProjectTemplates\NTierEF.zip">
+      <Link>ProjectT\Windows\NTierEF.zip</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="ItemT\Code Generation\NTierEntityGen.zip">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="..\lib\ItemTemplates\DomainServiceGenerator.zip">
+      <Link>ItemT\Silverlight\DomainServiceGenerator.zip</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="ItemT\Silverlight\SilverlightGen.zip">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="..\lib\ItemTemplates\NTierEntityGenerator.zip">
+      <Link>ItemT\Data\NTierEntityGenerator.zip</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="ProjectT\Silverlight\NTierEFSL.zip">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="..\lib\ItemTemplates\SilverlightGenerator.zip">
+      <Link>ItemT\Silverlight\SilverlightGenerator.zip</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="ProjectT\Windows\NTierEF.zip">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="..\lib\ProjectTemplates\NTierEF_SL.zip">
+      <Link>ProjectT\Silverlight\NTierEF_SL.zip</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\TextTemplates\NTierEF.ChangeSetTT.CS.ttinclude">
-      <Link>TT\NTierEF.ChangeSetTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Client.0.0.1.nupkg">
+      <Link>packages\NTierEntityFramework.Client.0.0.1.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\TextTemplates\NTierEF.ClientDataContextInterfaceTT.CS.ttinclude">
-      <Link>TT\NTierEF.ClientDataContextInterfaceTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Common.0.0.1.nupkg">
+      <Link>packages\NTierEntityFramework.Common.0.0.1.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\TextTemplates\NTierEF.ClientDataContextTT.CS.ttinclude">
-      <Link>TT\NTierEF.ClientDataContextTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Server.0.0.1.nupkg">
+      <Link>packages\NTierEntityFramework.Server.0.0.1.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\TextTemplates\NTierEF.ComplexTypeMetadataTT.CS.ttinclude">
-      <Link>TT\NTierEF.ComplexTypeMetadataTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Silverlight.0.0.1.nupkg">
+      <Link>packages\NTierEntityFramework.Silverlight.0.0.1.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\TextTemplates\NTierEF.ComplexTypeTT.CS.ttinclude">
-      <Link>TT\NTierEF.ComplexTypeTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="..\lib\Packages\NTierEntityFramework.T4.0.0.1.nupkg">
+      <Link>packages\NTierEntityFramework.T4.0.0.1.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\TextTemplates\NTierEF.DataModelCodeGenerator.CS.ttinclude">
-      <Link>TT\NTierEF.DataModelCodeGenerator.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="..\lib\Packages\NTierEntityFramework.WcfRia.0.0.1.nupkg">
+      <Link>packages\NTierEntityFramework.WcfRia.0.0.1.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\TextTemplates\NTierEF.DataServiceContractTT.CS.ttinclude">
-      <Link>TT\NTierEF.DataServiceContractTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.DataServiceHostTT.CS.ttinclude">
-      <Link>TT\NTierEF.DataServiceHostTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.DataServiceTT.CS.ttinclude">
-      <Link>TT\NTierEF.DataServiceTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.DomainServiceGenerator.CS.ttinclude">
-      <Link>TT\NTierEF.DomainServiceGenerator.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.DomainServiceTT.CS.ttinclude">
-      <Link>TT\NTierEF.DomainServiceTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.EntityMetadataTT.CS.ttinclude">
-      <Link>TT\NTierEF.EntityMetadataTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.EntityTT.CS.ttinclude">
-      <Link>TT\NTierEF.EntityTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.GenerationUtils.ttinclude">
-      <Link>TT\NTierEF.GenerationUtils.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.InProcessChannelFactoryTT.CS.ttinclude">
-      <Link>TT\NTierEF.InProcessChannelFactoryTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.NTierEntityGenerator.CS.ttinclude">
-      <Link>TT\NTierEF.NTierEntityGenerator.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.ProjectUtils.ttinclude">
-      <Link>TT\NTierEF.ProjectUtils.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.RemoteChannelFactoryTT.CS.ttinclude">
-      <Link>TT\NTierEF.RemoteChannelFactoryTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.RepositoryInterfaceTT.CS.ttinclude">
-      <Link>TT\NTierEF.RepositoryInterfaceTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.RepositoryTT.CS.ttinclude">
-      <Link>TT\NTierEF.RepositoryTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.ResultSetTT.CS.ttinclude">
-      <Link>TT\NTierEF.ResultSetTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.SL.ChangeSetTT.CS.ttinclude">
-      <Link>TT\NTierEF.SL.ChangeSetTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.SL.ClientDataContextInterfaceTT.CS.ttinclude">
-      <Link>TT\NTierEF.SL.ClientDataContextInterfaceTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.SL.ClientDataContextTT.CS.ttinclude">
-      <Link>TT\NTierEF.SL.ClientDataContextTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.SL.ComplexTypeTT.CS.ttinclude">
-      <Link>TT\NTierEF.SL.ComplexTypeTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.SL.DataModelCodeGenerator.CS.ttinclude">
-      <Link>TT\NTierEF.SL.DataModelCodeGenerator.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.SL.DataServiceContractTT.CS.ttinclude">
-      <Link>TT\NTierEF.SL.DataServiceContractTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.SL.EntityTT.CS.ttinclude">
-      <Link>TT\NTierEF.SL.EntityTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.SL.NTierEntityGenerator.CS.ttinclude">
-      <Link>TT\NTierEF.SL.NTierEntityGenerator.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.SL.ReflectionUtils.CS.ttinclude">
-      <Link>TT\NTierEF.SL.ReflectionUtils.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.SL.ReflectionUtils.Directives.CS.ttinclude">
-      <Link>TT\NTierEF.SL.ReflectionUtils.Directives.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\TextTemplates\NTierEF.SL.ResultSetTT.CS.ttinclude">
-      <Link>TT\NTierEF.SL.ResultSetTT.CS.ttinclude</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="..\lib\Packages\Remote.Linq.1.0.nupkg">
+      <Link>packages\Remote.Linq.1.0.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="source.extension.vsixmanifest">
@@ -241,10 +105,6 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="preview.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="TT\NTierEF.T4Context.ttinclude">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -267,29 +127,14 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\VSSDK\Microsoft.VsSDK.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y /d "$(TargetDir)*.vsix" "$(SolutionDir)$(OutDir)"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>del "$(ProjectDir)ProjectT\Windows\NTierEF.zip"
-del "$(ProjectDir)ProjectT\Silverlight\NTierEFSL.zip"
-
-del "$(ProjectDir)ItemT\Code Generation\DomainServiceGen.zip"
-del "$(ProjectDir)ItemT\Code Generation\NTierEntityGen.zip"
-del "$(ProjectDir)ItemT\Silverlight\SilverlightGen.zip"
-
-"$(SolutionDir)..\..\tools\7zip\7za.exe" a "$(ProjectDir)ProjectT\Windows\NTierEF.zip" "$(SolutionDir)ProjectTemplates\NTierEntityFramework\*"
-
-"$(SolutionDir)..\..\tools\7zip\7za.exe" a "$(ProjectDir)ProjectT\Silverlight\NTierEFSL.zip" "$(SolutionDir)ProjectTemplates\NTierEntityFrameworkSilverlightLib\*"
-
-"$(SolutionDir)..\..\tools\7zip\7za.exe" a "$(ProjectDir)ItemT\Code Generation\DomainServiceGen.zip" "$(SolutionDir)ItemTemplates\Code Generation\DomainServiceGenerator\*"
-
-"$(SolutionDir)..\..\tools\7zip\7za.exe" a "$(ProjectDir)ItemT\Code Generation\NTierEntityGen.zip" "$(SolutionDir)ItemTemplates\Code Generation\NTierEntityGenerator\*"
-
-"$(SolutionDir)..\..\tools\7zip\7za.exe" a "$(ProjectDir)ItemT\Silverlight\SilverlightGen.zip" "$(SolutionDir)ItemTemplates\Code Generation\SilverlightGenerator\*"
-</PreBuildEvent>
+    <PreBuildEvent></PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -298,4 +143,11 @@ del "$(ProjectDir)ItemT\Silverlight\SilverlightGen.zip"
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="BeforeBuild">
+    <ItemGroup>
+      <ProjectToBuild Include="$(SolutionDir)\ProjectTemplates\ProjectTemplates.proj" />
+      <ProjectToBuild Include="$(SolutionDir)\ItemTemplates\ItemTemplates.proj" />
+    </ItemGroup>
+    <MSBuild Projects="@(ProjectToBuild)" Targets="Clean;Build" />
+  </Target>
 </Project>

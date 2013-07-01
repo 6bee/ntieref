@@ -12,7 +12,12 @@ namespace ProjectTemplateWizard
 {
     public class NTierEntityFrameworkWizard : IWizard
     {
+        private static readonly IWizard NuGetWizard = (IWizard)Assembly
+            .Load("NuGet.VisualStudio.Interop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
+            .CreateInstance("NuGet.VisualStudio.TemplateWizard");
+
         private static readonly string[] ProjectFolder = { "Client", "Common", "Server", "Silverlight" };
+
         //private static readonly string[] Resources = 
         //{
         //    "Remote.Linq.dll", 
@@ -24,10 +29,10 @@ namespace ProjectTemplateWizard
         //    "NTier.Server.Domain.dll", 
         //    "NTier.Server.Domain.pdb", 
         //};
-        private static readonly string[] ResourceArchives = 
-        {
-            "Lib_NET.zip", 
-        };
+        //private static readonly string[] ResourceArchives = 
+        //{
+        //    "Lib_NET.zip", 
+        //};
 
         private static string solutionname = "";
         private static string safesolutionname = "";
@@ -37,20 +42,25 @@ namespace ProjectTemplateWizard
         // This method is called before opening any item that has the OpenInEditor attribute.
         public void BeforeOpeningFile(ProjectItem projectItem)
         {
+            if (dte == null) NuGetWizard.BeforeOpeningFile(projectItem);
         }
 
         public void ProjectFinishedGenerating(Project project)
         {
+            if (dte == null) NuGetWizard.ProjectFinishedGenerating(project);
         }
 
         // This method is only called for item templates, not for project templates.
         public void ProjectItemFinishedGenerating(ProjectItem projectItem)
         {
+            if (dte == null) NuGetWizard.ProjectItemFinishedGenerating(projectItem);
         }
 
         // This method is called after the project is created.
         public void RunFinished()
         {
+            if (dte == null) NuGetWizard.RunFinished();
+
             // if solution
             if (dte != null)
             {
@@ -79,7 +89,7 @@ namespace ProjectTemplateWizard
                     var directory = Path.GetDirectoryName(dte.GetProjects().First().FullName);
                     directory = Path.Combine(directory, @"..\..");
                     //directory.CreateLib(Resources, true);
-                    directory.UnpackZipToLib(ResourceArchives);
+                    //directory.UnpackZipToLib(ResourceArchives);
                 }
                 catch { }
             }
@@ -87,6 +97,11 @@ namespace ProjectTemplateWizard
 
         public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
         {
+            if (runKind == WizardRunKind.AsNewItem || runKind == WizardRunKind.AsNewProject)
+            {
+                NuGetWizard.RunStarted(automationObject, replacementsDictionary, runKind, customParams);
+            }
+
             // run for multi project
             if (runKind == WizardRunKind.AsMultiProject)
             {
@@ -105,6 +120,7 @@ namespace ProjectTemplateWizard
         // This method is only called for item templates, not for project templates.
         public bool ShouldAddProjectItem(string filePath)
         {
+            //NuGetWizard.ShouldAddProjectItem(filePath);
             return true;
         }
     }

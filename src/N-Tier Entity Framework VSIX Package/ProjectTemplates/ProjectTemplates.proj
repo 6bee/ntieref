@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Clean;Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    
+    <PropertyGroup>
+        <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildThisFileDirectory)\..\</SolutionDir>
+        <OutputPath Condition=" '$(OutputPath)' == '' ">$(SolutionDir)\lib\ProjectTemplates\</OutputPath>
+        <ZipExePath>$(SolutionDir)\..\..\tools\7zip\7za.exe</ZipExePath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Folders Include="$([System.IO.Directory]::GetDirectories(&quot;$(MSBuildThisFileDirectory)&quot;))" />
+    </ItemGroup>
+	
+    <Target Name="Clean">
+		<RemoveDir Directories="$(OutputPath)" />
+    </Target>
+    
+    <Target Name="Build">
+        <MakeDir Directories="$(OutputPath)" Condition=" !Exists('$(OutputPath)') " />        
+		<Exec Command="&quot;$(ZipExePath)&quot; a &quot;$(OutputPath)%(Folders.Filename).zip&quot; &quot;%(Folders.Identity)\*&quot;" />
+		<!--<Exec Command="echo &quot;$(OutputPath)%(Folders.Filename).zip&quot; &quot;%(Folders.Identity)\*&quot;" />-->
+    </Target>
+    
+</Project>

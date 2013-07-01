@@ -52,11 +52,15 @@ public class DomainServiceGenerator : Generator
         {
             var proj = T4Context.Project.FileName;
             string projectFileName = System.IO.Path.GetFileNameWithoutExtension(T4Context.Project.FileName);
-            if (!projectFileName.ToLower().Contains(".riaserviceslibrary.web"))
+            if (projectFileName.ToLower().Contains(".riaserviceslibrary.web"))
             {
-                throw new Exception("Projects do not use default names. Projects need to be specified for NTierEntityGenerator. (" + projectFileName + ")");
+                return projectFileName.Substring(0, projectFileName.ToLower().IndexOf(".riaserviceslibrary.web"));
             }
-            return projectFileName.Substring(0, projectFileName.ToLower().IndexOf(".riaserviceslibrary.web"));
+            if (projectFileName.ToLower().Contains(".wcfriaserviceslibrary.web"))
+            {
+                return projectFileName.Substring(0, projectFileName.ToLower().IndexOf(".wcfriaserviceslibrary.web"));
+            }
+            throw new Exception("Projects do not use default names. Projects need to be specified for NTierEntityGenerator. (" + projectFileName + ")");
         }
     }
 
