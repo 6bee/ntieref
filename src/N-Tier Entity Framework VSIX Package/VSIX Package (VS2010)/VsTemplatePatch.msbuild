@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SolutionDir Condition=" '$(SolutionDir)' == '' ">$(MSBuildProjectDirectory)\..\</SolutionDir>
+    <BuildPath Condition=" '$(BuildPath)' == '' ">$(MSBuildProjectDirectory)</BuildPath>
+    <ExtensionTasksPath Condition="Exists('$(SolutionDir)\..\..\tools\build\ExtensionPack\MSBuild.ExtensionPack.dll')">$(SolutionDir)\..\..\tools\build\ExtensionPack\</ExtensionTasksPath>
+  </PropertyGroup>
+
+  <Import Project="$(ExtensionTasksPath)\MSBuild.ExtensionPack.tasks" />
+
+  <ItemGroup>
+    <Namespaces Include="Mynamespace">
+      <Prefix>x</Prefix>
+      <Uri>http://schemas.microsoft.com/developer/vstemplate/2005</Uri>
+    </Namespaces>  
+    <VsTemplates Include="$(SolutionDir)\ProjectTemplates\**\*.vstemplate" />
+    <VsTemplates Include="$(SolutionDir)\ItemTemplates\**\*.vstemplate" />
+  </ItemGroup>
+  
+  <Target Name="PatchVsixId">
+    <Message Text="-----------------------------------------------------------------------" />
+    <Exec Command="echo patch vsix id in VSTemplate/WizardData/packages/@repositoryId" />
+    <Exec Command="echo vsix guid:   &quot;$(VsixGuid)&quot;" />
+    <Exec Command="echo vs template: &quot;%(VsTemplates.Identity)&quot;" />
+    <MSBuild.ExtensionPack.Xml.XmlFile 
+      Condition=" '$(VsixGuid)' != '' And '@(VsTemplates)' != '' "
+      TaskAction="UpdateElement" 
+      File="%(VsTemplates.Identity)" 
+      XPath="/x:VSTemplate/x:WizardData/x:packages[starts-with(@repositoryId, 'NTierEntityFramework.Trivadis')]/@repositoryId"
+      InnerText="NTierEntityFramework.Trivadis.$(VsixGuid)" 
+      Namespaces="@(Namespaces)"/>
+  </Target>
+</Project>

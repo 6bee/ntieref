@@ -144,10 +144,14 @@
   </Target>
   -->
   <Target Name="BeforeBuild">
+	<MSBuild Projects="$(ProjectDir)\VsTemplatePatch.msbuild" Targets="PatchVsixId" Properties="VsixGuid=511fbfbd-0acc-4ee5-ab92-62b02544c118" />
+	
     <ItemGroup>
-      <ProjectToBuild Include="$(SolutionDir)\ProjectTemplates\ProjectTemplates.proj" />
+      <ProjectToBuild Include="$(SolutionDir)\ProjectTemplates\ProjectTemplates.proj"  />
       <ProjectToBuild Include="$(SolutionDir)\ItemTemplates\ItemTemplates.proj" />
     </ItemGroup>
-    <MSBuild Projects="@(ProjectToBuild)" Targets="Clean;Build" />
+    <MSBuild Projects="@(ProjectToBuild)" />
+	
+    <MSBuild Projects="$(ProjectDir)\VsTemplatePatch.msbuild" Targets="PatchVsixId" Properties="VsixGuid=168a8207-278d-4137-b65c-481ca94fc8f8" />
   </Target>
 </Project>

@@ -20,7 +20,7 @@
         <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
       </Folder>
     </Project>
-  </TemplateContent>  
+  </TemplateContent>
   <WizardExtension>
     <Assembly>ProjectTemplateWizard, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7d8b4e5866a6acd8</Assembly>
     <FullClassName>ProjectTemplateWizard.NTierEntityFrameworkWizard</FullClassName>
