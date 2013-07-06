@@ -3,5 +3,8 @@
   <metadata>
     <id xdt:Transform="Insert">NTierEntityFramework.Silverlight</id>
     <description xdt:Transform="Insert">The N-Tier Entity Framework extends Microsoft's Entity Framework (EF) to provide support for n-tier software solutions while keeping its simplicity.</description>
+    <dependencies xdt:Transform="Insert">
+      <dependency id="Remote.Linq" version="1.0" />
+    </dependencies>
   </metadata>
 </package>

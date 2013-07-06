@@ -93,8 +93,8 @@
       <Link>packages\NTierEntityFramework.WcfRia.0.0.1.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\Packages\Remote.Linq.1.0.nupkg">
-      <Link>packages\Remote.Linq.1.0.nupkg</Link>
+    <Content Include="..\lib\Packages\Remote.Linq.1.0.1.nupkg">
+      <Link>packages\Remote.Linq.1.0.1.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="source.extension.vsixmanifest">
@@ -134,7 +134,8 @@
     <PostBuildEvent>xcopy /y /d "$(TargetDir)*.vsix" "$(SolutionDir)$(OutDir)"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent></PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -144,14 +145,12 @@
   </Target>
   -->
   <Target Name="BeforeBuild">
-	<MSBuild Projects="$(ProjectDir)\VsTemplatePatch.msbuild" Targets="PatchVsixId" Properties="VsixGuid=511fbfbd-0acc-4ee5-ab92-62b02544c118" />
-	
+    <MSBuild Projects="$(ProjectDir)\VsTemplatePatch.msbuild" Targets="PatchVsixId" Properties="VsixGuid=511fbfbd-0acc-4ee5-ab92-62b02544c118" />
     <ItemGroup>
-      <ProjectToBuild Include="$(SolutionDir)\ProjectTemplates\ProjectTemplates.proj"  />
+      <ProjectToBuild Include="$(SolutionDir)\ProjectTemplates\ProjectTemplates.proj" />
       <ProjectToBuild Include="$(SolutionDir)\ItemTemplates\ItemTemplates.proj" />
     </ItemGroup>
     <MSBuild Projects="@(ProjectToBuild)" />
-	
     <MSBuild Projects="$(ProjectDir)\VsTemplatePatch.msbuild" Targets="PatchVsixId" Properties="VsixGuid=168a8207-278d-4137-b65c-481ca94fc8f8" />
   </Target>
 </Project>
