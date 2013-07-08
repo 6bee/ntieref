@@ -13,38 +13,46 @@
 public static class T4Context
 {
     private static readonly Lazy<Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost> _host = new Lazy<Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost>(() =>
-	{
-		Type type = typeof(T4Toolbox.TransformationContext);
-		try
-		{
-			// VS2012: TransformationContext.Current.Host
-			T4Toolbox.TransformationContext current = (T4Toolbox.TransformationContext)type.GetProperty("Current", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null, null);
-			return (Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost)type.GetProperty("Host", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public).GetValue(current, null);
-		}
-		catch
-		{
-			// VS2010: TransformationContext.Host
-			return (Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost)type.GetProperty("Host", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null, null);
-		}
-	});
-	
+    {
+        try
+        {
+            // VS2012: TransformationContext.Current.Host
+            Type type = typeof(T4Toolbox.TransformationContext);
+            T4Toolbox.TransformationContext current = (T4Toolbox.TransformationContext)type.GetProperty("Current", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null, null);
+            return (Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost)type.GetProperty("Host", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public).GetValue(current, null);
+        }
+        catch { }
+        try
+        {
+            // VS2010: TransformationContext.Host
+            Type type = typeof(T4Toolbox.TransformationContext);
+            return (Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost)type.GetProperty("Host", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null, null);
+        }
+        catch { }
+        throw new Exception("Make sure T4 Toolbox is installed");
+    });
+
     private static readonly Lazy<DTE2> _dte = new Lazy<DTE2>(() =>
-	{
-		Type type = typeof(T4Toolbox.TransformationContext);
-		try
-		{
-			// VS2012: (DTE2)TransformationContext.Current.GetService(typeof(DTE))
-			T4Toolbox.TransformationContext current = (T4Toolbox.TransformationContext)type.GetProperty("Current", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null, null);
-			return (DTE2)type.GetMethod("GetService", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public).Invoke(current, new object[]{ typeof(DTE) });
-		}
-		catch
-		{
-			// VS2010: (DTE2)TransformationContext.DTE
-			return (DTE2)type.GetProperty("DTE", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null, null);
-		}
-	});
-    
-	public static Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost Host
+    {
+        try
+        {
+            // VS2012: (DTE2)TransformationContext.Current.GetService(typeof(DTE))
+            Type type = typeof(T4Toolbox.TransformationContext);
+            T4Toolbox.TransformationContext current = (T4Toolbox.TransformationContext)type.GetProperty("Current", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null, null);
+            return (DTE2)type.GetMethod("GetService", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public).Invoke(current, new object[]{ typeof(DTE) });
+        }
+        catch { }
+        try
+        {
+            // VS2010: (DTE2)TransformationContext.DTE
+            Type type = typeof(T4Toolbox.TransformationContext);
+            return (DTE2)type.GetProperty("DTE", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null, null);
+        }
+        catch { }
+        throw new Exception("Make sure T4 Toolbox is installed");
+    });
+
+    public static Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost Host
     {
         get
         {
