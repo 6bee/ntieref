@@ -13,7 +13,11 @@
     <ProjectTypeGuids>{3D9AD99F-2412-4246-B90B-4EAA41C64699};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <StartArguments>/client:"WcfTestClient.exe"</StartArguments>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    $if$ ($targetframeworkversion$ == 4.0)
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    $else$
+    <TargetFrameworkProfile></TargetFrameworkProfile>
+    $endif$
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

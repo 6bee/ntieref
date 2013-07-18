@@ -12,7 +12,11 @@
     <AssemblyName>$safeprojectname$</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    $if$ ($targetframeworkversion$ == 4.0)
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    $else$
+    <TargetFrameworkProfile></TargetFrameworkProfile>
+    $endif$
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
