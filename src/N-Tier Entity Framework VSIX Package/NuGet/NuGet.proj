@@ -24,6 +24,7 @@
     <ServerDomain        Include="$(FrameworkBinDir)**\NTier.Server.Domain.*" />
     <SilverlihtDomain    Include="$(FrameworkBinDir)**\NTier.Silverlight.Domain.*" />
     <T4Include           Include="$(SolutionDir)\TextTemplates\NTierEF.*.ttinclude" Exclude="$(SolutionDir)\TextTemplates\NTierEF.SL.*.ttinclude;$(SolutionDir)\TextTemplates\NTierEF.DomainService*.ttinclude" />
+    <T4IncludeWithTarget Include="$(SolutionDir)\TextTemplates\*\NTierEF.*.ttinclude" Exclude="$(SolutionDir)\TextTemplates\*\NTierEF.SL.*.ttinclude;$(SolutionDir)\TextTemplates\*\NTierEF.DomainService*.ttinclude" />
     <SilverlihtT4Dll     Include="$(FrameworkBinDir)**\NTier.Common.Domain.dll" />
     <SilverlihtT4Include Include="$(SolutionDir)\TextTemplates\NTierEF.SL.*.ttinclude" />
     <SilverlihtT4Include Include="$(SolutionDir)\TextTemplates\NTierEF.*Utils.ttinclude" />
@@ -112,6 +113,7 @@
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\content\T4" SourceFiles="@(SilverlihtT4Dll)" />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\content\T4" SourceFiles="@(SilverlihtT4Include)" />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4\content\T4" SourceFiles="@(T4Include)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4\content\$([System.IO.Directory]::GetParent(%(T4IncludeWithTarget.Identity)).Name)\T4" SourceFiles="@(T4Include);%(T4IncludeWithTarget.Identity)" Condition=" %(T4IncludeWithTarget.Identity) != '' " />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\WcfRia\content\T4" SourceFiles="@(WcfRiaT4Include)" />
   </Target>
 
