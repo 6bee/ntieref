@@ -1,4 +1,5 @@
-﻿<#@ include file="NTierEF.EntityTT.CS.ttinclude" #>
+﻿<#@ include file="NTierEF.EnumTT.CS.ttinclude" #>
+<#@ include file="NTierEF.EntityTT.CS.ttinclude" #>
 <#@ include file="NTierEF.EntityMetadataTT.CS.ttinclude" #>
 <#@ include file="NTierEF.ComplexTypeTT.CS.ttinclude" #>
 <#@ include file="NTierEF.ComplexTypeMetadataTT.CS.ttinclude" #>
@@ -18,6 +19,7 @@ public class DataModelCodeGenerator : Generator
         this.GenerationUtils = generationUtils;
         this.DataModelProject = dataModelProject;
 
+        this.EnumTemplate = new EnumTemplate(DataModelProject, GenerationUtils, modelNamespace);
         this.EntityTemplate = new EntityTemplate(DataModelProject, GenerationUtils, modelNamespace);
         this.EntityMetadataTemplate = new EntityMetadataTemplate(DataModelProject, GenerationUtils, modelNamespace);
         this.ComplexTypeTemplate = new ComplexTypeTemplate(DataModelProject, GenerationUtils, modelNamespace);
@@ -25,6 +27,15 @@ public class DataModelCodeGenerator : Generator
         this.ChangeSetTemplate = new ChangeSetTemplate(DataModelProject, GenerationUtils, modelNamespace);
         this.ResultSetTemplate = new ResultSetTemplate(DataModelProject, GenerationUtils, modelNamespace);
     }
+
+    /// <summary>
+    /// Gets or sets the template that generates the enum types of the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="EnumTemplate"/>.
+    /// </remarks>
+    public EnumTemplate EnumTemplate;
 
     /// <summary>
     /// Gets or sets the template that generates the entity types of the entity model.
@@ -85,12 +96,25 @@ public class DataModelCodeGenerator : Generator
     /// </summary>
     protected override void RunCore()
     {
+        CreateEnums();
         CreateEntities();
         CreateEntityMetadata();
         CreateComplexTypes();
         CreateComplexTypesMetadata();
         CreateChangeSet();
         CreateResultSet();
+    }
+
+    private void CreateEnums()
+    {
+        if (EnumTemplate != null)
+        {
+            foreach (EdmType item in GenerationUtils.TypeMapper.GetEnumItemsToGenerate(GenerationUtils.ItemCollection))
+            {
+                EnumTemplate.EnumName = item.Name;
+                EnumTemplate.Render();
+            }
+        }
     }
 
     private void CreateEntities()

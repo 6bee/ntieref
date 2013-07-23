@@ -114,7 +114,7 @@ namespace <#=Namespace#>
         #region Contructor
 
         partial void Initialize();
-        
+
         private <#=GenerationUtils.ModelName#>DataContext(bool dummyParameter)
         {
 <#+
@@ -155,7 +155,7 @@ namespace <#=Namespace#>
             container.ComposeParts(this);
 
             #endregion
-            
+
             Initialize();
         }
 <#+
@@ -165,7 +165,7 @@ namespace <#=Namespace#>
         public <#=GenerationUtils.ModelName#>DataContext(IChannelFactory<I<#=GenerationUtils.ModelName#>DataService> channelFactory)
             : this(true)
         {
-            this.ChannelFactory = channelFactory; 
+            this.ChannelFactory = channelFactory;
             Initialize();
         }
 
@@ -305,7 +305,7 @@ namespace <#=Namespace#>
                 default:
                     throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
             }
-            
+
             if (((object)existingEntity) != null && object.ReferenceEquals(existingEntity, entity))
             {
                 return existingEntity;
@@ -571,7 +571,7 @@ namespace <#=Namespace#>
                 return new <#=GenerationUtils.ModelName#>ResultSet(changeSet);
             }
         }
-        
+
         private <#=GenerationUtils.ModelName#>ChangeSet GetChangeSet()
         {
 <#+

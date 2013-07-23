@@ -83,7 +83,7 @@ namespace <#=Namespace + "." + GenerationUtils.ModelName#>
 
 #pragma warning disable 0169
 
-        #region Primitive Properties
+        #region Simple Properties
 <#+
         foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
         {
@@ -94,7 +94,7 @@ namespace <#=Namespace + "." + GenerationUtils.ModelName#>
         }
 #>
 
-        #endregion Primitive Properties
+        #endregion Simple Properties
 
         #region Complex Properties
 <#+

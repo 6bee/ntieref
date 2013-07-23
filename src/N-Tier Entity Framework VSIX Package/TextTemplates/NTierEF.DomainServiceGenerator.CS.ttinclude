@@ -1,5 +1,4 @@
-﻿<#@ include file="EF.Utility.CS.ttinclude"#>
-<#@ include file="T4Toolbox.tt" #>
+﻿<#@ include file="T4Toolbox.tt" #>
 <#@ include file="NTierEF.T4Context.ttinclude" #>
 <#@ include file="NTierEF.ProjectUtils.ttinclude" #>
 <#@ include file="NTierEF.GenerationUtils.ttinclude" #>

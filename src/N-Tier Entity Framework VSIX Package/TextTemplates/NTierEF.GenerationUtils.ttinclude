@@ -1,4 +1,5 @@
-﻿<#+
+﻿<#@ include file="NTierEF.EFGenerationUtils.ttinclude" #>
+<#+
 // <copyright file="NTierEF.GenerationUtils.ttinclude" company="Trivadis">
 //     Copyright © Trivadis. All Rights Reserved.
 // </copyright>
@@ -13,6 +14,12 @@ public class GenerationUtils
         this.Loader = new MetadataLoader(textTransformation);
         this.Region = new CodeRegion(textTransformation);
         this.EF = new MetadataTools(textTransformation);
+
+        //textTransform = DynamicTextTransformation.Create(textTransformation);
+        //var code = new CodeGenerationTools(textTransformation);
+        //var ef = new MetadataTools(textTransformation);
+        this.TypeMapper = new TypeMapper(this.Code, this.EF, /*textTransform.Errors*/ new System.Collections.Generic.List<object>());
+        //this.CodeStringGenerator = new CodeStringGenerator(this.Code, typeMapper, this.EF);
 
         this.AllMetadataLoaded = this.Loader.TryLoadAllMetadata(modelFile, out this.MetadataWorkspace);
         this.ItemCollection = (EdmItemCollection)this.MetadataWorkspace.GetItemCollection(DataSpace.CSpace);
@@ -45,6 +52,7 @@ public class GenerationUtils
     public readonly MetadataLoader Loader;
     public readonly CodeRegion Region;
     public readonly MetadataTools EF;
+    public readonly TypeMapper TypeMapper;
 
     public readonly bool AllMetadataLoaded;
     public readonly MetadataWorkspace MetadataWorkspace;

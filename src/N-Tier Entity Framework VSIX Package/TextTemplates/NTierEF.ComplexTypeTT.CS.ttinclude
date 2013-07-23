@@ -65,7 +65,7 @@ namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
     [DataContract(IsReference = true)]
     <#=Accessibility.ForType(complex)#> partial class <#=GenerationUtils.Code.Escape(complex)#> : global::NTier.Common.Domain.Model.ValueObject, INotifyPropertyChanging, INotifyPropertyChanged
     {
-        #region Primitive Properties
+        #region Simple Properties
 <#+
         foreach(EdmProperty edmProperty in complex.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == complex))
         {
@@ -92,7 +92,7 @@ namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
 
 #>
 
-        #endregion Primitive Properties
+        #endregion Simple Properties
 
         #region Complex Properties
 <#+

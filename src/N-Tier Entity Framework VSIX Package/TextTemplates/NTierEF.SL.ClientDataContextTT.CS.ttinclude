@@ -93,7 +93,7 @@ namespace <#=Namespace#>
         #region Contructor
 
         partial void Initialize();
-        
+
         private <#=GenerationUtils.ModelName#>DataContext(bool dummyParameter)
         {
 <#+
@@ -105,7 +105,7 @@ namespace <#=Namespace#>
         }
 #>
         }
-        
+
         public <#=GenerationUtils.ModelName#>DataContext(string endpointConfigurationName = "<#=GenerationUtils.ModelName#>DataService", string relativeUri = null)
             : this(true)
         {
@@ -115,14 +115,14 @@ namespace <#=Namespace#>
             {
                 this.ChannelFactory.Endpoint.Address = new EndpointAddress(new Uri(System.Windows.Application.Current.Host.Source, relativeUri));
             }
-            
+
             Initialize();
         }
 
         public <#=GenerationUtils.ModelName#>DataContext(Binding binding, EndpointAddress remoteAddress)
             : this(true)
         {
-            this.ChannelFactory = new ChannelFactory<I<#=GenerationUtils.ModelName#>DataService>(binding, remoteAddress);            
+            this.ChannelFactory = new ChannelFactory<I<#=GenerationUtils.ModelName#>DataService>(binding, remoteAddress);
             Initialize();
         }
 
@@ -270,7 +270,7 @@ namespace <#=Namespace#>
                 default:
                     throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
             }
-            
+
             if (((object)existingEntity) != null && object.ReferenceEquals(existingEntity, entity))
             {
                 return existingEntity;
@@ -545,7 +545,7 @@ namespace <#=Namespace#>
                 callback(new <#=GenerationUtils.ModelName#>ResultSet(changeSet));
             }
         }
-        
+
         private <#=GenerationUtils.ModelName#>ChangeSet GetChangeSet()
         {
 <#+

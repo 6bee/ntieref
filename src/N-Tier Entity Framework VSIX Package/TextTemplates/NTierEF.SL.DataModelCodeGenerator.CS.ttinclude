@@ -1,4 +1,5 @@
 ﻿<#@ include file="NTierEF.SL.ReflectionUtils.CS.ttinclude" #>
+<#@ include file="NTierEF.SL.EnumTT.CS.ttinclude" #>
 <#@ include file="NTierEF.SL.EntityTT.CS.ttinclude" #>
 <#@ include file="NTierEF.SL.ComplexTypeTT.CS.ttinclude" #>
 <#@ include file="NTierEF.SL.ChangeSetTT.CS.ttinclude" #>
@@ -19,11 +20,21 @@ public class DataModelCodeGenerator : Generator
         var dataModelProjectUtils = new ProjectUtils(dataModelProject);
         this.ReflectionUtils = new ReflectionUtils(dataModelProjectUtils.GetAssemblyPath());
 
+        this.EnumTemplate = new EnumTemplate(this.GenerationUtils, modelNamespace);
         this.EntityTemplate = new EntityTemplate(this.GenerationUtils, this.ReflectionUtils, modelNamespace);
         this.ComplexTypeTemplate = new ComplexTypeTemplate(this.GenerationUtils, modelNamespace);
         this.ChangeSetTemplate = new ChangeSetTemplate(this.GenerationUtils, modelNamespace);
         this.ResultSetTemplate = new ResultSetTemplate(this.GenerationUtils, modelNamespace);
     }
+
+    /// <summary>
+    /// Gets or sets the template that generates the enum types of the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="EnumTemplate"/>.
+    /// </remarks>
+    public EnumTemplate EnumTemplate;
 
     /// <summary>
     /// Gets or sets the template that generates the entity types of the entity model.
@@ -66,10 +77,23 @@ public class DataModelCodeGenerator : Generator
     /// </summary>
     protected override void RunCore()
     {
+        CreateEnums();
         CreateEntities();
         CreateComplexTypes();
         CreateChangeSet();
         CreateResultSet();
+    }
+
+    private void CreateEnums()
+    {
+        if (EnumTemplate != null)
+        {
+            foreach (EdmType item in GenerationUtils.TypeMapper.GetEnumItemsToGenerate(GenerationUtils.ItemCollection))
+            {
+                EnumTemplate.EnumName = item.Name;
+                EnumTemplate.Render();
+            }
+        }
     }
 
     private void CreateEntities()

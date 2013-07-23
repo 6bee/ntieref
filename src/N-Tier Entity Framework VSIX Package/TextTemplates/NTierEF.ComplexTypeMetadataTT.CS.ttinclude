@@ -83,19 +83,19 @@ namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
 
 #pragma warning disable 0169
 
-        #region Primitive Properties
+        #region Simple Properties
 <#+
         foreach(EdmProperty edmProperty in complex.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == complex))
         {
 #>
 
-        public <#=GenerationUtils.Code.Escape(edmProperty.TypeUsage)#> <#=GenerationUtils.Code.Escape(edmProperty)#>;    
+        public <#=GenerationUtils.Code.Escape(edmProperty.TypeUsage)#> <#=GenerationUtils.Code.Escape(edmProperty)#>;
 <#+
         }
 
 #>
 
-        #endregion Primitive Properties
+        #endregion Simple Properties
 
         #region Complex Properties
 <#+
@@ -105,13 +105,13 @@ namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
 #>
 
         public <#=GenerationUtils.Code.Escape(edmProperty.TypeUsage)#> <#=GenerationUtils.Code.Escape(edmProperty)#>;
-        
+
 <#+
         }
 #>
 
         #endregion Complex Properties
-        
+
 #pragma warning restore 0169
     }
 }

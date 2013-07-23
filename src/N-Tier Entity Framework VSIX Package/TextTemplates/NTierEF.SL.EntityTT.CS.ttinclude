@@ -58,6 +58,7 @@ public class EntityTemplate : Template
 
     public override string TransformText()
     {
+        var typeMapper = GenerationUtils.TypeMapper;
         var originalValueMembers = new OriginalValueMembers(GenerationUtils.AllMetadataLoaded, GenerationUtils.MetadataWorkspace, GenerationUtils.EF);
         EntityType entity = GenerationUtils.ItemCollection.GetItems<EntityType>().Single(e => e.Name == EntityName);
 
@@ -85,9 +86,9 @@ namespace <#=Namespace + "." + GenerationUtils.ModelName#>
 
         #endregion Constructor and Initialization
 
-        #region Primitive Properties
+        #region Simple Properties
 <#+
-    foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+    foreach (EdmProperty edmProperty in typeMapper.GetSimpleProperties(entity))
     {
 #>
 <#= "" #>
@@ -112,7 +113,8 @@ namespace <#=Namespace + "." + GenerationUtils.ModelName#>
             set
             {
 <#+
-        if (((PrimitiveType)edmProperty.TypeUsage.EdmType).PrimitiveTypeKind == PrimitiveTypeKind.Binary &&
+        if (edmProperty.TypeUsage.EdmType is PrimitiveType &&
+            ((PrimitiveType)edmProperty.TypeUsage.EdmType).PrimitiveTypeKind == PrimitiveTypeKind.Binary &&
             (GenerationUtils.EF.IsKey(edmProperty) || entity.NavigationProperties.Where(np=>np.GetDependentProperties().Contains(edmProperty)).Any()))
         {
 #>
@@ -212,14 +214,14 @@ namespace <#=Namespace + "." + GenerationUtils.ModelName#>
             }
         }
         private <#=GenerationUtils.Code.Escape(edmProperty.TypeUsage)#> <#=GenerationUtils.Code.FieldName(edmProperty)#><#=GenerationUtils.Code.StringBefore(" = ", GenerationUtils.Code.CreateLiteral(edmProperty.DefaultValue))#>;
-        
+
         partial void <#=GenerationUtils.Code.Escape(edmProperty)#>Changing(<#=GenerationUtils.Code.Escape(edmProperty.TypeUsage)#> newValue);
         partial void <#=GenerationUtils.Code.Escape(edmProperty)#>Changed(<#=GenerationUtils.Code.Escape(edmProperty.TypeUsage)#> previousValue);
 <#+
     }
 #>
 
-        #endregion Primitive Properties
+        #endregion Simple Properties
 
         #region Complex Properties
 <#+
@@ -262,7 +264,7 @@ namespace <#=Namespace + "." + GenerationUtils.ModelName#>
                 {
                     <#=GenerationUtils.Code.Escape(edmProperty)#>Changing(value);
                     OnPropertyChanging("<#=edmProperty.Name#>", value);
-                    
+
                     if (<#=GenerationUtils.Code.FieldName(edmProperty)#> != null)
                     {
                         <#=GenerationUtils.Code.FieldName(edmProperty)#>.PropertyChanging -= Handle<#=edmProperty.Name#>Changing;
@@ -278,14 +280,14 @@ namespace <#=Namespace + "." + GenerationUtils.ModelName#>
                         <#=GenerationUtils.Code.FieldName(edmProperty)#>.PropertyChanging += Handle<#=edmProperty.Name#>Changing;
                         <#=GenerationUtils.Code.FieldName(edmProperty)#>.PropertyChanged += Handle<#=edmProperty.Name#>Changed;
                     }
-                    
+
                     <#=GenerationUtils.Code.Escape(edmProperty)#>Changed(previousValue);
                 }
             }
         }
         private <#=GenerationUtils.Code.Escape(edmProperty.TypeUsage)#> <#=GenerationUtils.Code.FieldName(edmProperty)#>;
         private bool <#=InitializedTrackingField(edmProperty)#>;
-        
+
         partial void <#=GenerationUtils.Code.Escape(edmProperty)#>Changing(<#=GenerationUtils.Code.Escape(edmProperty.TypeUsage)#> newValue);
         partial void <#=GenerationUtils.Code.Escape(edmProperty)#>Changed(<#=GenerationUtils.Code.Escape(edmProperty.TypeUsage)#> previousValue);
 <#+
@@ -455,7 +457,7 @@ namespace <#=Namespace + "." + GenerationUtils.ModelName#>
             }
         }
         private <#=GenerationUtils.Code.Escape(navProperty.ToEndMember.GetEntityType())#> <#=GenerationUtils.Code.FieldName(navProperty)#>;
-        
+
         partial void <#=GenerationUtils.Code.Escape(navProperty)#>Changing(<#=GenerationUtils.Code.Escape(navProperty.ToEndMember.GetEntityType())#> newValue);
         partial void <#=GenerationUtils.Code.Escape(navProperty)#>Changed(<#=GenerationUtils.Code.Escape(navProperty.ToEndMember.GetEntityType())#> previousValue);
 <#+
