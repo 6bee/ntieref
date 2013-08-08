@@ -23,7 +23,8 @@ namespace TestChannelFactory
             {
                 MaxReceivedMessageSize = 67108864,
                 MaxBufferPoolSize = 524288,
-                ReceiveTimeout=TimeSpan.MaxValue // for server debugging
+                ReceiveTimeout=TimeSpan.MaxValue, // for server debugging
+                TransactionFlow = true,
             };
 
             // address

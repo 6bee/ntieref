@@ -153,33 +153,9 @@ namespace NTier.Server.Domain.Service
 
         #region transaction management
 
-        private TransactionScope _transactionScope = null;
-
-        protected virtual void OnTransactionInit()
+        protected virtual TransactionScope CreateSavingTransactionScope()
         {
-            // if not transaction scope defined
-            if (Transaction.Current == null)
-            {
-                // create default transaction scope
-                _transactionScope = new TransactionScope();
-            }
-        }
-
-        protected virtual void OnTransactionEnd()
-        {
-            // if transaction scope has been created by service (in OnTransactionInit method) and transaction is still active
-            if (_transactionScope != null)
-            {
-                if (Transaction.Current.TransactionInformation.Status == TransactionStatus.Active)
-                {
-                    // comple transaction
-                    _transactionScope.Complete();
-                }
-
-                // end transaction
-                _transactionScope.Dispose();
-                _transactionScope = null;
-            }
+            return new TransactionScope();
         }
 
         #endregion transaction management

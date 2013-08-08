@@ -121,9 +121,28 @@
 ..\IntegrationTest.Server.Host\NorthwindDataService.svc
 </LastOutputs>
     </None>
-    <None Include="NorthwindModel.tt.log">
-      <DependentUpon>NorthwindModel.tt</DependentUpon>
-    </None>
+    <None Include="T4\NTierEF.ChangeSetTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.ClientDataContextInterfaceTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.ClientDataContextTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.ComplexTypeMetadataTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.ComplexTypeTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.DataModelCodeGenerator.CS.ttinclude" />
+    <None Include="T4\NTierEF.DataServiceContractTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.DataServiceHostTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.DataServiceTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.EFGenerationUtils.ttinclude" />
+    <None Include="T4\NTierEF.EntityMetadataTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.EntityTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.EnumTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.GenerationUtils.ttinclude" />
+    <None Include="T4\NTierEF.InProcessChannelFactoryTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.NTierEntityGenerator.CS.ttinclude" />
+    <None Include="T4\NTierEF.ProjectUtils.ttinclude" />
+    <None Include="T4\NTierEF.RemoteChannelFactoryTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.RepositoryInterfaceTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.RepositoryTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.ResultSetTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.T4Context.ttinclude" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
