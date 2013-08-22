@@ -56,6 +56,7 @@ public class ComplexTypeTemplate : Template
 
     public override string TransformText()
     {
+        var typeMapper = GenerationUtils.TypeMapper;
         ComplexType complex = GenerationUtils.ItemCollection.GetItems<ComplexType>().Single(e => e.Name == ClassName);
 
         WriteHeader(ModelBaseNamespace);
@@ -67,7 +68,7 @@ namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
     {
         #region Simple Properties
 <#+
-        foreach(EdmProperty edmProperty in complex.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == complex))
+        foreach (EdmProperty edmProperty in typeMapper.GetSimpleProperties(complex))
         {
 #>
 
