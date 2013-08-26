@@ -216,7 +216,7 @@ namespace NTier.Common.Domain.Model
             {
                 ChangeTracker.IsChangeTrackingEnabled = trackChanges;
 
-                var properties = PropertyInfos.Where(p => p.IsPhysical && p.Attributes.Any(attribute => attribute is PrimitivePropertyAttribute || attribute is ComplexPropertyAttribute));
+                var properties = PropertyInfos.Where(p => p.IsPhysical && p.Attributes.Any(attribute => attribute is SimplePropertyAttribute || attribute is ComplexPropertyAttribute));
 
                 if (type != ServerGenerationTypes.None)
                 {
@@ -972,7 +972,7 @@ namespace NTier.Common.Domain.Model
                 string errorMessage = null;
 
                 var errors = PropertyInfos
-                    .Where(p => p.Attributes.Any(a => a is PrimitivePropertyAttribute || a is ComplexPropertyAttribute || a is NavigationPropertyAttribute))
+                    .Where(p => p.Attributes.Any(a => a is SimplePropertyAttribute || a is ComplexPropertyAttribute || a is NavigationPropertyAttribute))
                     .Select(p => ((IDataErrorInfo)this)[p.Name])
                     .Where(err => err != null)
                     .ToArray();

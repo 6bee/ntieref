@@ -41,7 +41,7 @@ namespace NTier.Client.Domain
                     _globalFilterColumnsDefined = true;
 
                     _globalFilterColumns = typeof(T).GetProperties()
-                        .Where(p => p.GetCustomAttributes(typeof(PrimitivePropertyAttribute), true).Length > 0)
+                        .Where(p => p.GetCustomAttributes(typeof(SimplePropertyAttribute), true).Length > 0)
                         .Where(p =>
                         {
                             var displayAttributes = p.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.DisplayAttribute), true);

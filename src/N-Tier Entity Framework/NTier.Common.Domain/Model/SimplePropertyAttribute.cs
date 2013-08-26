@@ -4,9 +4,9 @@ using System;
 
 namespace NTier.Common.Domain.Model
 {
-    [Obsolete("Use NTier.Common.Domain.Model.SimplePropertyAttribute instead.", false)]
+    // Note: class is currently not sealed to allow obsolete PrimitivePropertyAttribute to inherit from SimplePropertyAttribute
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class PrimitivePropertyAttribute : SimplePropertyAttribute
+    public /*sealed*/ class SimplePropertyAttribute : Attribute
     {
     }
 }

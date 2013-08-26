@@ -70,9 +70,9 @@ namespace NTier.Common.Domain.Model
             {
                 case ObjectState.Added:
                     {
-                        // copy all properties (primitive and complex properties only)
+                        // copy all properties (simple and complex properties only)
                         var properties = originalEntity.PropertyInfos
-                            .Where(p => p.Attributes.Any(attribute => attribute is PrimitivePropertyAttribute || attribute is ComplexPropertyAttribute))
+                            .Where(p => p.Attributes.Any(attribute => attribute is SimplePropertyAttribute || attribute is ComplexPropertyAttribute))
                             .Select(p => p.PropertyInfo);
 
                         foreach (var property in properties)
@@ -87,10 +87,10 @@ namespace NTier.Common.Domain.Model
                     {
                         reducedEntity.ChangeTracker.IsChangeTrackingEnabled = true;
 
-                        // copy changed properties (primitive and complex properties only)
+                        // copy changed properties (simple and complex properties only)
                         var properties = originalEntity.PropertyInfos
                             .Where(p => p.IsPhysical && 
-                                        p.Attributes.Any(attribute => attribute is PrimitivePropertyAttribute || attribute is ComplexPropertyAttribute) &&
+                                        p.Attributes.Any(attribute => attribute is SimplePropertyAttribute || attribute is ComplexPropertyAttribute) &&
                                         originalEntity.ChangeTracker.ModifiedProperties.Contains(p.Name))
                             .Select(p => p.PropertyInfo);
 

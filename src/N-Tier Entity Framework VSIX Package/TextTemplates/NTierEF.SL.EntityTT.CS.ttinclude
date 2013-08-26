@@ -497,14 +497,14 @@ namespace <#=Namespace + "." + GenerationUtils.ModelName#>
     {
 #>
         // <#=String.Format(CultureInfo.CurrentCulture, "Records the original values for the complex property {0}", edmProperty.Name)#>
-        private void Handle<#=edmProperty.Name#>Changing(object sender, EventArgs args)
+        private void Handle<#=edmProperty.Name#>Changing(object sender, PropertyChangingEventArgs args)
         {
             var propertyArgs = (PropertyChangingWithValuesEventArgs)args;
             OnComplexPropertyMemberChanging("<#=edmProperty.Name#>", args.PropertyName, propertyArgs.OldValue, propertyArgs.NewValue);
         }
 
         // <#=String.Format(CultureInfo.CurrentCulture, "Performs validation of the members for the complex property {0}", edmProperty.Name)#>
-        private void Handle<#=edmProperty.Name#>Changing(object sender, PropertyChangingEventArgs args)
+        private void Handle<#=edmProperty.Name#>Changed(object sender, PropertyChangedEventArgs args)
         {
 <#+
         if (originalValueMembers.IsOriginalValueMember(edmProperty))

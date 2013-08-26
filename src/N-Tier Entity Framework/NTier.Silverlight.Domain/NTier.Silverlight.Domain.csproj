@@ -76,6 +76,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\NTier.Common.Domain\Model\SimplePropertyAttribute.cs">
+      <Link>Common\Model\SimplePropertyAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>

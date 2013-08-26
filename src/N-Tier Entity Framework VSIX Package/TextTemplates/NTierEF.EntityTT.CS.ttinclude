@@ -109,7 +109,7 @@ namespace <#=Namespace + "." + GenerationUtils.ModelName#>
 <#+if(edmProperty.TypeUsage.Facets.Any(f => f.Name == "ConcurrencyMode" && f.Value.ToString() == "Fixed")){#>
         [ConcurrencyProperty]
 <#+}#>
-        [PrimitiveProperty]
+        [SimpleProperty]
         <#=Accessibility.ForProperty(edmProperty)#> <#=GenerationUtils.Code.Escape(edmProperty.TypeUsage)#> <#=GenerationUtils.Code.Escape(edmProperty)#>
         {
             <#=GenerationUtils.Code.SpaceAfter(Accessibility.ForGetter(edmProperty))#>get { return <#=GenerationUtils.Code.FieldName(edmProperty)#>; }
