@@ -48,7 +48,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
         [RoundtripOriginal]
 #endif
         [ServerGeneration(ServerGenerationTypes.Insert)]
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.Int32 OrderID
         {
             get { return _orderID; }
@@ -79,7 +79,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String CustomerID
         {
             get { return _customerID; }
@@ -113,7 +113,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public Nullable<global::System.Int32> EmployeeID
         {
             get { return _employeeID; }
@@ -147,7 +147,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public Nullable<global::System.DateTime> OrderDate
         {
             get { return _orderDate; }
@@ -173,7 +173,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public Nullable<global::System.DateTime> RequiredDate
         {
             get { return _requiredDate; }
@@ -199,7 +199,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public Nullable<global::System.DateTime> ShippedDate
         {
             get { return _shippedDate; }
@@ -225,7 +225,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public Nullable<global::System.Int32> ShipVia
         {
             get { return _shipVia; }
@@ -259,7 +259,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public Nullable<global::System.Decimal> Freight
         {
             get { return _freight; }
@@ -285,7 +285,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String ShipName
         {
             get { return _shipName; }
@@ -311,7 +311,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String ShipAddress
         {
             get { return _shipAddress; }
@@ -337,7 +337,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String ShipCity
         {
             get { return _shipCity; }
@@ -363,7 +363,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String ShipRegion
         {
             get { return _shipRegion; }
@@ -389,7 +389,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String ShipPostalCode
         {
             get { return _shipPostalCode; }
@@ -415,7 +415,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String ShipCountry
         {
             get { return _shipCountry; }

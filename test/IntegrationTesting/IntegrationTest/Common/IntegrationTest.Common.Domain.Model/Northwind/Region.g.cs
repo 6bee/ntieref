@@ -44,7 +44,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.Int32 RegionID
         {
             get { return _regionID; }
@@ -76,7 +76,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String RegionDescription
         {
             get { return _regionDescription; }

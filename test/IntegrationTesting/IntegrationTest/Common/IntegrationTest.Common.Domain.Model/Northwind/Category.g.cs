@@ -44,7 +44,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
         [RoundtripOriginal]
 #endif
         [ServerGeneration(ServerGenerationTypes.Insert)]
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.Int32 CategoryID
         {
             get { return _categoryID; }
@@ -76,7 +76,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String CategoryName
         {
             get { return _categoryName; }
@@ -102,7 +102,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String Description
         {
             get { return _description; }
@@ -128,7 +128,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.Byte[] Picture
         {
             get { return _picture; }

@@ -32,17 +32,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="NTier.Client.Domain">
-      <HintPath>..\..\Lib\NTier.Client.Domain.dll</HintPath>
+      <HintPath>..\..\packages\NTierEntityFramework.Client.0.0.1\lib\net4-client\NTier.Client.Domain.dll</HintPath>
     </Reference>
     <Reference Include="NTier.Common.Domain">
-      <HintPath>..\..\Lib\NTier.Common.Domain.dll</HintPath>
+      <HintPath>..\..\packages\NTierEntityFramework.Common.0.0.1\lib\net4-client\NTier.Common.Domain.dll</HintPath>
     </Reference>
     <Reference Include="NTier.Server.Domain">
-      <HintPath>..\..\Lib\NTier.Server.Domain.dll</HintPath>
+      <HintPath>..\..\packages\NTierEntityFramework.Server.0.0.1\lib\net4-client\NTier.Server.Domain.dll</HintPath>
     </Reference>
+    <Reference Include="Remote.Linq">
+      <HintPath>..\..\packages\Remote.Linq.1.0.1\lib\net35-client\Remote.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ProductManagerInProcessChannelFactory.g.cs" />
@@ -61,6 +64,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

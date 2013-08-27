@@ -45,7 +45,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
         [RoundtripOriginal]
 #endif
         [ServerGeneration(ServerGenerationTypes.Insert)]
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.Int32 SupplierID
         {
             get { return _supplierID; }
@@ -77,7 +77,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String CompanyName
         {
             get { return _companyName; }
@@ -103,7 +103,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String ContactName
         {
             get { return _contactName; }
@@ -129,7 +129,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String ContactTitle
         {
             get { return _contactTitle; }
@@ -155,7 +155,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String Address
         {
             get { return _address; }
@@ -181,7 +181,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String City
         {
             get { return _city; }
@@ -207,7 +207,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String Region
         {
             get { return _region; }
@@ -233,7 +233,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String PostalCode
         {
             get { return _postalCode; }
@@ -259,7 +259,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String Country
         {
             get { return _country; }
@@ -285,7 +285,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String Phone
         {
             get { return _phone; }
@@ -311,7 +311,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String Fax
         {
             get { return _fax; }
@@ -337,7 +337,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String HomePage
         {
             get { return _homePage; }

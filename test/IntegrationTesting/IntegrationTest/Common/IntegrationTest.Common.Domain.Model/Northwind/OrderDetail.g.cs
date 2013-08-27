@@ -45,7 +45,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.Int32 OrderID
         {
             get { return _orderID; }
@@ -85,7 +85,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.Int32 ProductID
         {
             get { return _productID; }
@@ -124,7 +124,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.Decimal UnitPrice
         {
             get { return _unitPrice; }
@@ -151,7 +151,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.Int16 Quantity
         {
             get { return _quantity; }
@@ -178,7 +178,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.Single Discount
         {
             get { return _discount; }

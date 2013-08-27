@@ -47,7 +47,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
         [RoundtripOriginal]
 #endif
         [ServerGeneration(ServerGenerationTypes.Insert)]
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.Int32 ProductID
         {
             get { return _productID; }
@@ -79,7 +79,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String ProductName
         {
             get { return _productName; }
@@ -105,7 +105,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public Nullable<global::System.Int32> SupplierID
         {
             get { return _supplierID; }
@@ -139,7 +139,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public Nullable<global::System.Int32> CategoryID
         {
             get { return _categoryID; }
@@ -173,7 +173,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.String QuantityPerUnit
         {
             get { return _quantityPerUnit; }
@@ -199,7 +199,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public Nullable<global::System.Decimal> UnitPrice
         {
             get { return _unitPrice; }
@@ -225,7 +225,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public Nullable<global::System.Int16> UnitsInStock
         {
             get { return _unitsInStock; }
@@ -251,7 +251,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public Nullable<global::System.Int16> UnitsOnOrder
         {
             get { return _unitsOnOrder; }
@@ -277,7 +277,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public Nullable<global::System.Int16> ReorderLevel
         {
             get { return _reorderLevel; }
@@ -304,7 +304,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [PrimitiveProperty]
+        [SimpleProperty]
         public global::System.Boolean Discontinued
         {
             get { return _discontinued; }

@@ -3,4 +3,6 @@
 
 
 
+
+
 Generates code in different projects. See ProductModel.tt.log for list of generated files.

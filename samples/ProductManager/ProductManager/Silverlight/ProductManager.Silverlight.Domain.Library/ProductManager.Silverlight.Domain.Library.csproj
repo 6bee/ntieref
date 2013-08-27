@@ -47,6 +47,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
+    <Reference Include="NTier.Silverlight.Domain, Version=1.1.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NTierEntityFramework.Silverlight.0.0.1\lib\sl4\NTier.Silverlight.Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="Remote.Linq">
+      <HintPath>..\..\packages\Remote.Linq.1.0.1\lib\sl4\Remote.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations, Version=2.0.5.0, Culture=neutral, PublicKeyToken=ddd0da4d3e678217, processorArchitecture=MSIL" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
@@ -57,9 +64,6 @@
     <Reference Include="System.Net" />
     <Reference Include="System.Windows.Browser" />
     <Reference Include="System.Windows.Data, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="NTier.Silverlight.Domain">
-      <HintPath>..\..\Lib\NTier.Silverlight.Domain.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client\Domain\IProductManagerDataContext.g.cs" />
@@ -73,9 +77,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="ProductModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ProductModel1.txt</LastGenOutput>
+      <LastOutputs>
+.\Client\Domain\IProductManagerDataContext.g.cs
+.\Client\Domain\ProductManagerDataContext.g.cs
+.\Common\Domain\Model\ProductManager\Product.g.cs
+.\Common\Domain\Model\ProductManager\ProductCategory.g.cs
+.\Common\Domain\Model\ProductManager\ProductManagerChangeSet.g.cs
+.\Common\Domain\Model\ProductManager\ProductManagerResultSet.g.cs
+.\Common\Domain\Service\Contracts\IProductManagerDataService.g.cs
+</LastOutputs>
     </None>
     <None Include="ProductModel.tt.log">
       <DependentUpon>ProductModel.tt</DependentUpon>
@@ -83,6 +97,21 @@
     <None Include="ServiceReferences.ClientConfig">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="T4\NTierEF.EFGenerationUtils.ttinclude" />
+    <None Include="T4\NTierEF.GenerationUtils.ttinclude" />
+    <None Include="T4\NTierEF.ProjectUtils.ttinclude" />
+    <None Include="T4\NTierEF.SL.ChangeSetTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.SL.ClientDataContextInterfaceTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.SL.ClientDataContextTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.SL.ComplexTypeTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.SL.DataModelCodeGenerator.CS.ttinclude" />
+    <None Include="T4\NTierEF.SL.DataServiceContractTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.SL.EntityTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.SL.EnumTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.SL.NTierEntityGenerator.CS.ttinclude" />
+    <None Include="T4\NTierEF.SL.ReflectionUtils.CS.ttinclude" />
+    <None Include="T4\NTierEF.SL.ResultSetTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.T4Context.ttinclude" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -93,6 +122,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ProductModel.tt</DependentUpon>
     </Content>
+    <Content Include="T4\NTier.Common.Domain.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>

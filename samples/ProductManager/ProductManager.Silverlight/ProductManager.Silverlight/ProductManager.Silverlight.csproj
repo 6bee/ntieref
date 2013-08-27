@@ -76,6 +76,9 @@
       <HintPath>..\..\ProductManager\Lib\Microsoft.CSharp.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
+    <Reference Include="NTier.Silverlight.Domain">
+      <HintPath>..\..\ProductManager\Silverlight\ProductManager.Silverlight.Domain.Library\Bin\Debug\NTier.Silverlight.Domain.dll</HintPath>
+    </Reference>
     <Reference Include="ProductManager.Silverlight.Domain.Library, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\ProductManager\Silverlight\ProductManager.Silverlight.Domain.Library\Bin\Debug\ProductManager.Silverlight.Domain.Library.dll</HintPath>
     </Reference>
@@ -96,10 +99,6 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Windows.Browser" />
-    <Reference Include="NTier.Silverlight.Domain, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\ProductManager\Lib\NTier.Silverlight.Domain.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">

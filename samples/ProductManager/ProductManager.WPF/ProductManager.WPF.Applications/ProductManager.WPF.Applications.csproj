@@ -57,10 +57,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="NTier.Client.Domain">
-      <HintPath>..\..\ProductManager\Lib\NTier.Client.Domain.dll</HintPath>
+      <HintPath>..\..\ProductManager\Client\ProductManager.Client.Domain\bin\Debug\NTier.Client.Domain.dll</HintPath>
     </Reference>
     <Reference Include="NTier.Common.Domain">
-      <HintPath>..\..\ProductManager\Lib\NTier.Common.Domain.dll</HintPath>
+      <HintPath>..\..\ProductManager\Client\ProductManager.Client.Domain\bin\Debug\NTier.Common.Domain.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="WpfApplicationFramework, Version=1.0.0.400, Culture=neutral, processorArchitecture=MSIL">

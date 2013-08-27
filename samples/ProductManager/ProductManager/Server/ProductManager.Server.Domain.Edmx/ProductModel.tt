@@ -1,6 +1,6 @@
 ﻿<#@ template language="C#" hostspecific="true" debug="true" #>
 <#@ output extension="txt" #>
-<#@ include file="NTierEF.NTierEntityGenerator.CS.ttinclude" #>
+<#@ include file="$(ProjectDir)\T4\NTierEF.NTierEntityGenerator.CS.ttinclude" #>
 <#
     // <copyright file="ProductModel.tt" company="Trivadis">
     //  Copyright © Trivadis. All Rights Reserved.

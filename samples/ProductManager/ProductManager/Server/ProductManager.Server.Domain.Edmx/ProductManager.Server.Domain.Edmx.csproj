@@ -92,13 +92,51 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>ProductModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="packages.config" />
     <None Include="ProductModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ProductModel.txt</LastGenOutput>
+      <LastOutputs>
+..\..\Client\ProductManager.Client.Domain.Service.InProcessChannelFactory\ProductManagerInProcessChannelFactory.g.cs
+..\..\Client\ProductManager.Client.Domain.Service.RemoteChannelFactory\ProductManagerRemoteChannelFactory.g.cs
+..\..\Client\ProductManager.Client.Domain\IProductManagerDataContext.g.cs
+..\..\Client\ProductManager.Client.Domain\ProductManagerDataContext.g.cs
+..\..\Common\ProductManager.Common.Domain.Model\ProductManager\Product.g.cs
+..\..\Common\ProductManager.Common.Domain.Model\ProductManager\ProductCategory.g.cs
+..\..\Common\ProductManager.Common.Domain.Model\ProductManager\ProductManagerChangeSet.g.cs
+..\..\Common\ProductManager.Common.Domain.Model\ProductManager\ProductManagerResultSet.g.cs
+..\..\Common\ProductManager.Common.Domain.Service\Contracts\IProductManagerDataService.g.cs
+..\ProductManager.Server.Domain.Repositories\IProductManagerRepository.g.cs
+..\ProductManager.Server.Domain.Repositories\ProductManagerRepository.g.cs
+..\ProductManager.Server.Domain.Service\ProductManagerDataService.g.cs
+..\ProductManager.Server.Host\ProductManagerDataService.svc
+</LastOutputs>
     </None>
     <None Include="ProductModel.tt.log">
       <DependentUpon>ProductModel.tt</DependentUpon>
     </None>
+    <None Include="T4\NTierEF.ChangeSetTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.ClientDataContextInterfaceTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.ClientDataContextTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.ComplexTypeMetadataTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.ComplexTypeTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.DataModelCodeGenerator.CS.ttinclude" />
+    <None Include="T4\NTierEF.DataServiceContractTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.DataServiceHostTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.DataServiceTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.EFGenerationUtils.ttinclude" />
+    <None Include="T4\NTierEF.EntityMetadataTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.EntityTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.EnumTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.GenerationUtils.ttinclude" />
+    <None Include="T4\NTierEF.InProcessChannelFactoryTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.NTierEntityGenerator.CS.ttinclude" />
+    <None Include="T4\NTierEF.ProjectUtils.ttinclude" />
+    <None Include="T4\NTierEF.RemoteChannelFactoryTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.RepositoryInterfaceTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.RepositoryTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.ResultSetTT.CS.ttinclude" />
+    <None Include="T4\NTierEF.T4Context.ttinclude" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

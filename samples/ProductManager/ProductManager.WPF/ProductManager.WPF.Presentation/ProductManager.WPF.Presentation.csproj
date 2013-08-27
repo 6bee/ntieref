@@ -60,7 +60,7 @@
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="NTier.Common.Domain">
-      <HintPath>..\..\ProductManager\Lib\NTier.Common.Domain.dll</HintPath>
+      <HintPath>..\..\ProductManager\Client\ProductManager.Client.Domain\bin\Debug\NTier.Common.Domain.dll</HintPath>
     </Reference>
     <Reference Include="UIAutomationProvider" />
     <Reference Include="WindowsBase" />

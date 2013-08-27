@@ -41,6 +41,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NTier.Client.Domain">
+      <HintPath>..\..\ProductManager\Client\ProductManager.Client.Domain\bin\Debug\NTier.Client.Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="NTier.Common.Domain">
+      <HintPath>..\..\ProductManager\Client\ProductManager.Client.Domain\bin\Debug\NTier.Common.Domain.dll</HintPath>
+    </Reference>
     <Reference Include="ProductManager.Client.Domain">
       <HintPath>..\..\ProductManager\Client\ProductManager.Client.Domain\bin\Debug\ProductManager.Client.Domain.dll</HintPath>
     </Reference>
@@ -82,12 +88,6 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="NTier.Client.Domain">
-      <HintPath>..\..\ProductManager\Lib\NTier.Client.Domain.dll</HintPath>
-    </Reference>
-    <Reference Include="NTier.Common.Domain">
-      <HintPath>..\..\ProductManager\Lib\NTier.Common.Domain.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
@@ -152,7 +152,8 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>57250</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl></IISUrl>
+          <IISUrl>
+          </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
