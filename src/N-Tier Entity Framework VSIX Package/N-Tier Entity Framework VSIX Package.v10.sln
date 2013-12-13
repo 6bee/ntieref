@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSIX Package (VS2010)", "VSIX Package (VS2010)\VSIX Package (VS2010).csproj", "{4701D9AB-2A86-4DB4-A8BC-F31B908A00CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSIX Package (VS2010)", "VSIX Package (VS2010)\VSIX Package.v10.csproj", "{4701D9AB-2A86-4DB4-A8BC-F31B908A00CA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectTemplateWizard", "ProjectTemplateWizard\ProjectTemplateWizard.csproj", "{8E6451B9-FB03-4D60-A9DB-F25A870ACF72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityDataModelToolsExtensions", "EntityDataModelToolsExtensions\EntityDataModelToolsExtensions.csproj", "{F825E60E-4CC2-4666-AA9F-BA6DAB6013D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityDataModelToolsExtensions", "EntityDataModelToolsExtensions\EntityDataModelToolsExtensions.v11.csproj", "{F825E60E-4CC2-4666-AA9F-BA6DAB6013D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

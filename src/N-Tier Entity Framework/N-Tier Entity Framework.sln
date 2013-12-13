@@ -1,6 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{55CE508B-E25D-4FC3-9BA1-FD17367A03A9}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTier.Common.Domain", "NTier.Common.Domain\NTier.Common.Domain.csproj", "{DD75940E-E398-4EC5-A9B9-49EF7190C910}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTier.Server.Domain", "NTier.Server.Domain\NTier.Server.Domain.csproj", "{414F9767-0D5B-435C-84F1-E63430410BA0}"
@@ -9,11 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTier.Client.Domain", "NTie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTier.Silverlight.Domain", "NTier.Silverlight.Domain\NTier.Silverlight.Domain.csproj", "{EAD50F34-E02A-4F91-B4AB-990D4D7207B8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{55CE508B-E25D-4FC3-9BA1-FD17367A03A9}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTier.Silverlight.Domain.SL4", "NTier.Silverlight.Domain\NTier.Silverlight.Domain.SL4.csproj", "{0958CC04-B377-47C0-818B-1F359F62D496}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +70,16 @@ Global
 		{EAD50F34-E02A-4F91-B4AB-990D4D7207B8}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{EAD50F34-E02A-4F91-B4AB-990D4D7207B8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{EAD50F34-E02A-4F91-B4AB-990D4D7207B8}.Release|x86.ActiveCfg = Release|Any CPU
+		{0958CC04-B377-47C0-818B-1F359F62D496}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0958CC04-B377-47C0-818B-1F359F62D496}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0958CC04-B377-47C0-818B-1F359F62D496}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{0958CC04-B377-47C0-818B-1F359F62D496}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{0958CC04-B377-47C0-818B-1F359F62D496}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0958CC04-B377-47C0-818B-1F359F62D496}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0958CC04-B377-47C0-818B-1F359F62D496}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0958CC04-B377-47C0-818B-1F359F62D496}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{0958CC04-B377-47C0-818B-1F359F62D496}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{0958CC04-B377-47C0-818B-1F359F62D496}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
