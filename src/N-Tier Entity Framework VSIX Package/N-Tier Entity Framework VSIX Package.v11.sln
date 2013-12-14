@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSIX Package (VS2012)", "VSIX Package (VS2012)\VSIX Package.v11.csproj", "{A27B949F-B7F3-4FB9-9C04-9305A498F20D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSIX Package.v11", "VSIX Package.v11\VSIX Package.v11.csproj", "{A27B949F-B7F3-4FB9-9C04-9305A498F20D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectTemplateWizard", "ProjectTemplateWizard\ProjectTemplateWizard.csproj", "{8E6451B9-FB03-4D60-A9DB-F25A870ACF72}"
 EndProject
