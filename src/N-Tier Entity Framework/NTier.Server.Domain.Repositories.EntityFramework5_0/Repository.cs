@@ -5,23 +5,6 @@ using System.Data.EntityClient;
 using System.Data.Objects;
 using NTier.Common.Domain.Model;
 
-namespace NTier.Server.Domain.Repositories
-{
-    [System.Obsolete("This class was moved to a different namespace: NTier.Server.Domain.Repositories.EntityFramework", true)]
-    public abstract class Repository : NTier.Server.Domain.Repositories.EntityFramework.Repository
-    {
-        protected Repository(string connectionString, string containerName)
-            : base(connectionString, containerName)
-        {
-        }
-
-        protected Repository(EntityConnection connection, string containerName)
-            : base(connection, containerName)
-        {
-        }
-    }
-}
-
 namespace NTier.Server.Domain.Repositories.EntityFramework
 {
     public abstract class Repository : ObjectContext, IRepository
@@ -76,16 +59,36 @@ namespace NTier.Server.Domain.Repositories.EntityFramework
 
         #endregion Initialize
 
+        #region SaveChanges
+
+        public override int SaveChanges(SaveOptions options)
+        {
+            try
+            {
+                return base.SaveChanges(options);
+            }
+            catch (System.Data.OptimisticConcurrencyException ex)
+            {
+                throw ex.Map();
+            }
+            catch (System.Data.UpdateException ex)
+            {
+                throw ex.Map();
+            }
+        }
+
+        #endregion SaveChanges
+
         #region Refresh
 
         public void Refresh(RefreshMode refreshMode, Entity entity)
         {
-            base.Refresh(refreshMode, entity);
+            base.Refresh(refreshMode.Map(), entity);
         }
 
         public void Refresh(RefreshMode refreshMode, IEnumerable<Entity> collection)
         {
-            base.Refresh(refreshMode, collection);
+            base.Refresh(refreshMode.Map(), collection);
         }
 
         #endregion Refresh

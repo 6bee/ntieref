@@ -102,7 +102,7 @@ namespace <#=GenerationUtils.Code.EscapeNamespace(Namespace)#>
         /// Creates a and returns a new instance of the repository
         /// </summary>
         /// <returns>A new instance of the repository</returns>
-        protected override I<#=GenerationUtils.ModelName#>Repository CreateRepository(ClientInfo clientInfo)
+        private I<#=GenerationUtils.ModelName#>Repository CreateRepository(ClientInfo clientInfo)
         {
             I<#=GenerationUtils.ModelName#>Repository repository = null;
 
@@ -215,7 +215,6 @@ namespace <#=GenerationUtils.Code.EscapeNamespace(Namespace)#>
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Objects;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;

@@ -2,11 +2,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -14,6 +12,7 @@ using System.Runtime.Serialization;
 namespace NTier.Common.Domain.Model
 {
     // generic abstract base class Entity
+    [Serializable]
     [DataContract(IsReference = true)]
     public abstract class Entity<T> : Entity where T : Entity<T>
     {
@@ -273,6 +272,7 @@ namespace NTier.Common.Domain.Model
     }
 
     // abstract base class Entity
+    [Serializable]
     [DataContract(IsReference = true)]
     public abstract class Entity : IObjectWithChangeTracker, IEditable, INotifyPropertyChanging, INotifyPropertyChanged, IDataErrorInfo
     {
@@ -1208,6 +1208,7 @@ namespace NTier.Common.Domain.Model
         #endregion INotifyPropertyChanging
     }
 
+    [Serializable]
     [DataContract(IsReference = true)]
     public sealed class Error
     {

@@ -29,6 +29,7 @@
     <packages repository="extension" repositoryId="NTierEntityFramework.Trivadis.x">
       <package id="NTierEntityFramework.Common" version="0.0.1" />
       <package id="NTierEntityFramework.Server" version="0.0.1" />
+      <package id="NTierEntityFramework.Server.EntityFramework5_0" version="0.0.1" />
       <package id="Remote.Linq" version="1.0.1" />
     </packages>
   </WizardData>

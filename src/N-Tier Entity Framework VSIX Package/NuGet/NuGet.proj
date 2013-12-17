@@ -21,7 +21,8 @@
   <ItemGroup>
     <ClientDomain         Include="$(FrameworkBinDir)**\NTier.Client.Domain.*" />
     <CommonDomain         Include="$(FrameworkBinDir)**\NTier.Common.Domain.*" />
-    <ServerDomain         Include="$(FrameworkBinDir)**\NTier.Server.Domain.*" />
+    <ServerDomain         Include="$(FrameworkBinDir)**\NTier.Server.Domain.*" Exclude="$(FrameworkBinDir)**\NTier.Server.Domain.Repositories.*" />
+    <ServerDomainEF5      Include="$(FrameworkBinDir)**\NTier.Server.Domain.Repositories.EntityFramework5_0.*" />
     <Silverlight4Domain   Include="$(FrameworkBinDir)**\SL4\NTier.Silverlight.Domain.*" />
     <Silverlight5Domain   Include="$(FrameworkBinDir)**\SL5\NTier.Silverlight.Domain.*" />
     <T4Include            Include="$(SolutionDir)\TextTemplates\NTierEF.*.ttinclude" Exclude="$(SolutionDir)\TextTemplates\NTierEF.SL.*.ttinclude;$(SolutionDir)\TextTemplates\NTierEF.DomainService*.ttinclude" />
@@ -110,6 +111,7 @@
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Client\lib\net4-client" SourceFiles="@(ClientDomain)" />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Common\lib\net4-client" SourceFiles="@(CommonDomain)" />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Server\lib\net4-client" SourceFiles="@(ServerDomain)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Server.EntityFramework5_0\lib\net4-client" SourceFiles="@(ServerDomainEF5)" />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\lib\sl4" SourceFiles="@(Silverlight4Domain)" />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\lib\sl5" SourceFiles="@(Silverlight5Domain)" />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\content\T4" SourceFiles="@(SilverlightT4Dll)" />

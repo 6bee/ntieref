@@ -2,8 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Objects;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -19,19 +17,6 @@ namespace NTier.Server.Domain.Service
     /// <typeparam name="TRepository">The repository type of the specific data service</typeparam>
     public abstract class DataService<TRepository> where TRepository : IRepository
     {
-        #region repository factory
-
-        /// <summary>
-        /// Creates a and returns a new instance of the repository
-        /// </summary>
-        /// <returns>A new instance of the repository</returns>
-        protected virtual TRepository CreateRepository(ClientInfo clientInfo)
-        {
-            return Activator.CreateInstance<TRepository>();
-        }
-
-        #endregion repository factory
-
         #region query
 
         /// <summary>
@@ -140,8 +125,7 @@ namespace NTier.Server.Domain.Service
                 }
                 catch (OptimisticConcurrencyException ex)
                 {
-                    //throw new FaultException<OptimisticConcurrencyException>(ex);
-                    var entities = ex.StateEntries.Select(e => e.Entity as Entity).ToArray();
+                    var entities = ex.Entities;
                     repository.Refresh(RefreshMode.StoreWins, entities);
 
                     resultSet.AddConcurrencyConflicts(entities);

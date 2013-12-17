@@ -92,6 +92,10 @@
       <Link>packages\NTierEntityFramework.Server.0.0.1.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Server.EntityFramework5_0.0.0.1.nupkg">
+      <Link>packages\NTierEntityFramework.Server.EntityFramework5_0.0.0.1.nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="..\lib\Packages\NTierEntityFramework.Silverlight.0.0.1.nupkg">
       <Link>packages\NTierEntityFramework.Silverlight.0.0.1.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>

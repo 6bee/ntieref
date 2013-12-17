@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
 using System;
-using NTier.Common.Domain.Model;
 using System.Collections.Generic;
-using System.Data.Objects;
+using NTier.Common.Domain.Model;
 
 namespace NTier.Server.Domain.Repositories
 {

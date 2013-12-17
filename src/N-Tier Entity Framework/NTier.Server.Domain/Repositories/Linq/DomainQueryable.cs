@@ -8,7 +8,7 @@ using NTier.Common.Domain.Model;
 
 namespace NTier.Server.Domain.Repositories.Linq
 {
-    internal class DomainQueryable<TEntity> : IDomainQueryable<TEntity> 
+    public class DomainQueryable<TEntity> : IDomainQueryable<TEntity> 
         where TEntity : Entity
     {
         #region Private fields
