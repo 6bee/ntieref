@@ -87,8 +87,8 @@
       <Link>packages\NTierEntityFramework.Server.0.0.1.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\Packages\NTierEntityFramework.Server.EntityFramework5_0.0.0.1.nupkg">
-      <Link>packages\NTierEntityFramework.Server.EntityFramework5_0.0.0.1.nupkg</Link>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Server.EntityFramework6_0.0.0.1.nupkg">
+      <Link>packages\NTierEntityFramework.Server.EntityFramework6_0.0.0.1.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="..\lib\Packages\NTierEntityFramework.Silverlight.0.0.1.nupkg">
@@ -97,6 +97,10 @@
     </Content>
     <Content Include="..\lib\Packages\NTierEntityFramework.T4.0.0.1.nupkg">
       <Link>packages\NTierEntityFramework.T4.0.0.1.nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\NTierEntityFramework.T4.EntityFramework6_0.0.0.1.nupkg">
+      <Link>packages\NTierEntityFramework.T4.EntityFramework6_0.0.0.1.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="..\lib\Packages\NTierEntityFramework.WcfRia.0.0.1.nupkg">
@@ -153,13 +157,19 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <EFVersion Condition=" '$(EFVersion)' == '' ">6.0.2</EFVersion>
+    <EFProviderVersion Condition=" '$(EFProviderVersion)' == '' ">6_0</EFProviderVersion>
+  </PropertyGroup>
   <Target Name="BeforeBuild">
     <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchVsixId" Properties="VsixGuid=168a8207-278d-4137-b65c-481ca94fc8f8" />
+    <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchEFPackageVersions" Properties="EFProviderVersion=$(EFProviderVersion);EFVersion=$(EFVersion)" />
     <ItemGroup>
       <ProjectToBuild Include="$(SolutionDir)\ProjectTemplates\ProjectTemplates.proj" />
       <ProjectToBuild Include="$(SolutionDir)\ItemTemplates\ItemTemplates.proj" />
     </ItemGroup>
     <MSBuild Projects="@(ProjectToBuild)" Targets="Clean;Build" />
+    <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchEFPackageVersions" Properties="ProviderVersion=X_Y;EFVersion=x.y.z" />
     <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchVsixId" Properties="VsixGuid=x" />
   </Target>
 </Project>

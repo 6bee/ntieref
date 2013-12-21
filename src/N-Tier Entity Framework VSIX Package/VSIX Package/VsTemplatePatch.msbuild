@@ -30,4 +30,39 @@
       InnerText="NTierEntityFramework.Trivadis.$(VsixGuid)" 
       Namespaces="@(Namespaces)"/>
   </Target>
+  
+  <Target Name="PatchEFPackageVersions">
+    <Message Text="-----------------------------------------------------------------------" />
+    <Exec Command="echo patch entity framework provider version in VSTemplate/WizardData/packages/package/@id" />
+    <Exec Command="echo EF provider version:  &quot;$(EFProviderVersion)&quot;" />
+    <Exec Command="echo EF version:  &quot;$(EFVersion)&quot;" />
+    <Exec Command="echo vs template: &quot;%(VsTemplates.Identity)&quot;" />
+
+    <!-- Patch EF repository version -->
+    <MSBuild.ExtensionPack.Xml.XmlFile 
+      Condition=" '$(EFProviderVersion)' != '' And '@(VsTemplates)' != '' "
+      TaskAction="UpdateElement" 
+      File="%(VsTemplates.Identity)" 
+      XPath="/x:VSTemplate/x:WizardData/x:packages/x:package[starts-with(@id, 'NTierEntityFramework.Server.EntityFramework')]/@id"
+      InnerText="NTierEntityFramework.Server.EntityFramework$(EFProviderVersion)" 
+      Namespaces="@(Namespaces)"/>
+
+    <!-- Patch EF T4 template version -->
+    <MSBuild.ExtensionPack.Xml.XmlFile 
+      Condition=" '$(EFProviderVersion)' != '' And '@(VsTemplates)' != '' "
+      TaskAction="UpdateElement" 
+      File="%(VsTemplates.Identity)" 
+      XPath="/x:VSTemplate/x:WizardData/x:packages/x:package[starts-with(@id, 'NTierEntityFramework.T4.EntityFramework')]/@id"
+      InnerText="NTierEntityFramework.T4.EntityFramework$(EFProviderVersion)" 
+      Namespaces="@(Namespaces)"/>
+
+    <!-- Patch EF version -->
+    <MSBuild.ExtensionPack.Xml.XmlFile 
+      Condition=" '$(EFVersion)' != '' And '@(VsTemplates)' != '' "
+      TaskAction="UpdateElement" 
+      File="%(VsTemplates.Identity)" 
+      XPath="/x:VSTemplate/x:WizardData/x:packages/x:package[starts-with(@id, 'EntityFramework')]/@version"
+      InnerText="$(EFVersion)" 
+      Namespaces="@(Namespaces)"/>
+  </Target>
 </Project>

@@ -1,0 +1,199 @@
+﻿<#+
+// <copyright file="NTierEF.RepositoryTT.CS.ttinclude" company="Trivadis">
+//     Copyright © Trivadis. All Rights Reserved.
+// </copyright>
+public class RepositoryTemplate : Template
+{
+    public GenerationUtils GenerationUtils { get; set; }
+    public string Namespace { get; set; }
+    public string ModelNamespace { get; set; }
+    public string ModelBaseNamespace { get; set; }
+    public string RepositoryBaseNamespace { get; set; }
+    public string RepositoryBaseClass { get; set; }
+    private string file = null;
+    public string File
+    {
+        get { return file != null ? file : string.Format(@"{0}Repository.g.cs", GenerationUtils.ModelName); }
+        set { file = value; }
+    }
+
+    public RepositoryTemplate(string project = null, GenerationUtils generationUtils = null, string defaultNameSpace = null, string modelNamespace = null)
+    {
+        if (!string.IsNullOrWhiteSpace(project))
+        {
+            base.Output.Project = project;
+        }
+        this.GenerationUtils = generationUtils;
+        this.Namespace = defaultNameSpace;
+        this.ModelNamespace = modelNamespace;
+        this.ModelBaseNamespace = "NTier.Common.Domain.Model";
+        this.RepositoryBaseNamespace = "NTier.Server.Domain.Repositories";
+        this.RepositoryBaseClass = "NTier.Server.Domain.Repositories.EntityFramework.Repository";
+    }
+
+    /// <summary>
+    /// Directs output of the template to a separate file by default. User can override
+    /// default behavior by assigning <see cref="Rendering"/> event handler.
+    /// </summary>
+    protected override void OnRendering(System.EventArgs e)
+    {
+        if (GenerationUtils == null)
+        {
+            throw new Exception("Missing property GenerationUtils");
+        }
+        if (string.IsNullOrWhiteSpace(Namespace))
+        {
+            throw new Exception("Missing property Namespace");
+        }
+        if (string.IsNullOrWhiteSpace(ModelNamespace))
+        {
+            throw new Exception("Missing property ModelNamespace");
+        }
+        if (string.IsNullOrWhiteSpace(ModelBaseNamespace))
+        {
+            throw new Exception("Missing property ModelBaseNamespace");
+        }
+        if (string.IsNullOrWhiteSpace(RepositoryBaseNamespace))
+        {
+            throw new Exception("Missing property RepositoryBaseNamespace");
+        }
+
+        this.Output.File = this.File;
+        base.OnRendering(e);
+    }
+
+    public override string TransformText()
+    {
+        WriteHeader(ModelBaseNamespace, ModelNamespace + "." + GenerationUtils.ModelName, RepositoryBaseNamespace);
+#>
+namespace <#=Namespace#>
+{
+    <#=Accessibility.ForType(GenerationUtils.Container)#> partial class <#=GenerationUtils.ModelName#>Repository : <#=RepositoryBaseClass#>, I<#=GenerationUtils.ModelName#>Repository
+    {
+        #region Constructors
+
+        public <#=GenerationUtils.ModelName#>Repository()
+            : base("name=<#=GenerationUtils.Container.Name#>", "<#=GenerationUtils.Container.Name#>")
+        {
+        }
+
+        public <#=GenerationUtils.ModelName#>Repository(string connectionString, string containerName = "<#=GenerationUtils.Container.Name#>")
+            : base(connectionString, containerName)
+        {
+        }
+
+        public <#=GenerationUtils.ModelName#>Repository(EntityConnection connection, string containerName = "<#=GenerationUtils.Container.Name#>")
+            : base(connection, containerName)
+        {
+        }
+
+        #endregion Constructors
+
+        #region EntitySets
+<#+
+        GenerationUtils.Region.Begin("ObjectSet Properties", 2);
+
+        foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+        {
+#>
+
+        <#=Accessibility.ForReadOnlyProperty(entitySet)#> IEntitySet<<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>> <#=GenerationUtils.Code.Escape(entitySet)#>
+        {
+            get { return <#=GenerationUtils.Code.FieldName(entitySet) #>  ?? (<#=GenerationUtils.Code.FieldName(entitySet)#> = CreateEntitySet<<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>>("<#=entitySet.Name#>")); }
+        }
+        private IEntitySet<<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>> <#=GenerationUtils.Code.FieldName(entitySet)#>;
+<#+
+        }
+
+        GenerationUtils.Region.End();
+
+        GenerationUtils.Region.Begin("Function Imports");
+
+        foreach (EdmFunction edmFunction in GenerationUtils.Container.FunctionImports)
+        {
+            var parameters = FunctionImportParameter.Create(edmFunction.Parameters, GenerationUtils.Code, GenerationUtils.EF);
+            string paramList = String.Join(", ", parameters.Select(p => p.FunctionParameterType + " " + p.FunctionParameterName).ToArray());
+            if (edmFunction.ReturnParameter == null)
+            {
+                continue;
+            }
+            string returnTypeElement = GenerationUtils.Code.Escape(GenerationUtils.EF.GetElementType(edmFunction.ReturnParameter.TypeUsage));
+
+#>
+        <#=AccessibilityAndVirtual(Accessibility.ForMethod(edmFunction))#> ObjectResult<<#=returnTypeElement#>> <#=GenerationUtils.Code.Escape(edmFunction)#>(<#=paramList#>)
+        {
+<#+
+            foreach (var parameter in parameters)
+            {
+                if (!parameter.NeedsLocalVariable)
+                {
+                    continue;
+                }
+#>
+
+            ObjectParameter <#=parameter.LocalVariableName#>;
+
+            if (<#=parameter.IsNullableOfT ? parameter.FunctionParameterName + ".HasValue" : parameter.FunctionParameterName + " != null"#>)
+            {
+                <#=parameter.LocalVariableName#> = new ObjectParameter("<#=parameter.EsqlParameterName#>", <#=parameter.FunctionParameterName#>);
+            }
+            else
+            {
+                <#=parameter.LocalVariableName#> = new ObjectParameter("<#=parameter.EsqlParameterName#>", typeof(<#=parameter.RawClrTypeName#>));
+            }
+<#+
+            }
+#>
+            return base.ExecuteFunction<<#=returnTypeElement#>>("<#=edmFunction.Name#>"<#=GenerationUtils.Code.StringBefore(", ", String.Join(", ", parameters.Select(p => p.ExecuteParameterName).ToArray()))#>);
+       }
+<#+
+        }
+        GenerationUtils.Region.End();
+#>
+
+        #endregion EntitySets
+    }
+}
+<#+
+        return this.GenerationEnvironment.ToString();
+    }
+
+
+
+    private void WriteHeader(params string[] extraUsings)
+    {
+#>
+//------------------------------------------------------------------------------
+// <autogenerated>
+//   This file was generated by T4 code generator <#= System.IO.Path.GetFileName(T4Context.Host.TemplateFile) #>.
+//   Any changes made to this file manually may cause incorrect behavior
+//   and will be lost next time the file is regenerated.
+// </autogenerated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.Common;
+using System.Data.Entity.Core.EntityClient;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Core.Objects.DataClasses;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+<#=String.Join(String.Empty, extraUsings.OrderBy(u => u).Select(u => "using " + u + ";" + Environment.NewLine).ToArray())#>
+<#+
+    }
+
+    string AccessibilityAndVirtual(string accessibility)
+    {
+        if (accessibility != "private")
+        {
+            return accessibility + " virtual";
+        }
+
+        return accessibility;
+    }
+}
+#>

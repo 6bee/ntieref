@@ -20,9 +20,9 @@
       <Reference>
         <Assembly>System.Data</Assembly>
       </Reference>
-      <Reference>
+      <!--<Reference>
         <Assembly>System.Data.Entity</Assembly>
-      </Reference>
+      </Reference>-->
       <Reference>
         <Assembly>System.Runtime.Serialization</Assembly>
       </Reference>
