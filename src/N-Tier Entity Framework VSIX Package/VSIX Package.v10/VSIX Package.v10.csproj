@@ -92,8 +92,16 @@
       <Link>packages\NTierEntityFramework.Server.0.0.1.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Server.EntityFramework4_0.0.0.1.nupkg">
+      <Link>packages\NTierEntityFramework.Server.EntityFramework4_0.0.0.1.nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="..\lib\Packages\NTierEntityFramework.Server.EntityFramework5_0.0.0.1.nupkg">
       <Link>packages\NTierEntityFramework.Server.EntityFramework5_0.0.0.1.nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Server.EntityFramework6_0.0.0.1.nupkg">
+      <Link>packages\NTierEntityFramework.Server.EntityFramework6_0.0.0.1.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="..\lib\Packages\NTierEntityFramework.Silverlight.0.0.1.nupkg">
@@ -104,8 +112,16 @@
       <Link>packages\NTierEntityFramework.T4.0.0.1.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="..\lib\Packages\NTierEntityFramework.T4.EntityFramework4_0.0.0.1.nupkg">
+      <Link>packages\NTierEntityFramework.T4.EntityFramework4_0.0.0.1.nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="..\lib\Packages\NTierEntityFramework.T4.EntityFramework5_0.0.0.1.nupkg">
       <Link>packages\NTierEntityFramework.T4.EntityFramework5_0.0.0.1.nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\NTierEntityFramework.T4.EntityFramework6_0.0.0.1.nupkg">
+      <Link>packages\NTierEntityFramework.T4.EntityFramework6_0.0.0.1.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="..\lib\Packages\NTierEntityFramework.WcfRia.0.0.1.nupkg">
@@ -114,6 +130,18 @@
     </Content>
     <Content Include="..\lib\Packages\Remote.Linq.1.0.1.nupkg">
       <Link>packages\Remote.Linq.1.0.1.nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\EntityFramework.4.3.1.nupkg">
+      <Link>packages\EntityFramework.4.3.1.nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\EntityFramework.5.0.0.nupkg">
+      <Link>packages\EntityFramework.5.0.0.nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\EntityFramework.6.0.2.nupkg">
+      <Link>packages\EntityFramework.6.0.2.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="source.extension.vsixmanifest">
@@ -167,7 +195,7 @@
       <ProjectToBuild Include="$(SolutionDir)\ItemTemplates\ItemTemplates.proj" />
     </ItemGroup>
     <MSBuild Projects="@(ProjectToBuild)" Targets="Clean;Build" />
-    <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchEFPackageVersions" Properties="ProviderVersion=X_Y;EFVersion=x.y.z" />
+    <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchEFPackageVersions" Properties="EFProviderVersion=X_Y;EFVersion=x.y.z" />
     <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchVsixId" Properties="VsixGuid=x" />
   </Target>
 </Project>

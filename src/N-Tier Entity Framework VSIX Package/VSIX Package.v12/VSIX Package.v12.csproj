@@ -197,7 +197,7 @@
       <ProjectToBuild Include="$(SolutionDir)\ItemTemplates\ItemTemplates.proj" />
     </ItemGroup>
     <MSBuild Projects="@(ProjectToBuild)" Targets="Clean;Build" />
-    <!--<MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchEFPackageVersions" Properties="EFProviderVersion=X_Y;EFVersion=x.y.z" />-->
+    <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchEFPackageVersions" Properties="EFProviderVersion=X_Y;EFVersion=x.y.z" />
     <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchVsixId" Properties="VsixGuid=x" />
   </Target>
 </Project>

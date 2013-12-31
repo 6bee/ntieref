@@ -61,7 +61,7 @@
       Condition=" '$(EFVersion)' != '' And '@(VsTemplates)' != '' "
       TaskAction="UpdateElement" 
       File="%(VsTemplates.Identity)" 
-      XPath="/x:VSTemplate/x:WizardData/x:packages/x:package[starts-with(@id, 'EntityFramework')]/@version"
+      XPath="/x:VSTemplate/x:WizardData/x:packages/x:package[@id='EntityFramework']/@version"
       InnerText="$(EFVersion)" 
       Namespaces="@(Namespaces)"/>
   </Target>
