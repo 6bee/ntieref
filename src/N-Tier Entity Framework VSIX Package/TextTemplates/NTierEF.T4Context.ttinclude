@@ -4,6 +4,8 @@
 <#@ import namespace="System.Diagnostics" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
 <#@ import namespace="EnvDTE" #>
 <#@ import namespace="EnvDTE80" #>
 <#+
@@ -12,21 +14,39 @@
 // </copyright>
 public static class T4Context
 {
+    private static readonly Lazy<double> _dteVersion = new Lazy<double>(() =>
+    {
+        var dteVersion = T4Context.DTE.Version;
+
+        var regex = new Regex(@"(?<version>\d+(\.[\d]+)?)( \(.*\))?");
+        var match = regex.Match(dteVersion);
+        if (match.Success)
+        {
+            var versionString = match.Groups["version"].Value;
+            double version;
+            if (double.TryParse(versionString, out version))
+            {
+                return version;
+            }
+        }
+        throw new Exception("Unable to parse dte version.");
+    });
+
     private static readonly Lazy<Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost> _host = new Lazy<Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost>(() =>
     {
         try
         {
-            // VS2012: TransformationContext.Current.Host
+            // VS2012 or later: TransformationContext.Current.Host
             Type type = typeof(T4Toolbox.TransformationContext);
-            T4Toolbox.TransformationContext current = (T4Toolbox.TransformationContext)type.GetProperty("Current", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null, null);
-            return (Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost)type.GetProperty("Host", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public).GetValue(current, null);
+            T4Toolbox.TransformationContext current = (T4Toolbox.TransformationContext)type.GetProperty("Current", BindingFlags.Static | BindingFlags.Public).GetValue(null, null);
+            return (Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost)type.GetProperty("Host", BindingFlags.Instance | BindingFlags.Public).GetValue(current, null);
         }
         catch { }
         try
         {
             // VS2010: TransformationContext.Host
             Type type = typeof(T4Toolbox.TransformationContext);
-            return (Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost)type.GetProperty("Host", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null, null);
+            return (Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost)type.GetProperty("Host", BindingFlags.Static | BindingFlags.Public).GetValue(null, null);
         }
         catch { }
         throw new Exception("Make sure T4 Toolbox is installed");
@@ -38,15 +58,15 @@ public static class T4Context
         {
             // VS2012: (DTE2)TransformationContext.Current.GetService(typeof(DTE))
             Type type = typeof(T4Toolbox.TransformationContext);
-            T4Toolbox.TransformationContext current = (T4Toolbox.TransformationContext)type.GetProperty("Current", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null, null);
-            return (DTE2)type.GetMethod("GetService", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public).Invoke(current, new object[]{ typeof(DTE) });
+            T4Toolbox.TransformationContext current = (T4Toolbox.TransformationContext)type.GetProperty("Current", BindingFlags.Static | BindingFlags.Public).GetValue(null, null);
+            return (DTE2)type.GetMethod("GetService", BindingFlags.Instance | BindingFlags.Public).Invoke(current, new object[]{ typeof(DTE) });
         }
         catch { }
         try
         {
             // VS2010: (DTE2)TransformationContext.DTE
             Type type = typeof(T4Toolbox.TransformationContext);
-            return (DTE2)type.GetProperty("DTE", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null, null);
+            return (DTE2)type.GetProperty("DTE", BindingFlags.Static | BindingFlags.Public).GetValue(null, null);
         }
         catch { }
         throw new Exception("Make sure T4 Toolbox is installed");
@@ -76,6 +96,43 @@ public static class T4Context
             Project project = projectItem.ContainingProject;
             return project;
         }
+    }
+    
+    public static double VisualStudioVersion
+    {
+        get { return _dteVersion.Value; }
+    }
+
+    public static void SetTemplateMetadata(string minimumEntityFrameworkVersion = "4.0")
+    {
+        //if (VisualStudioVersion < 11.0) return;
+
+        //TemplateMetadata[MetadataConstants.TT_TEMPLATE_NAME] = "CSharpDbContext.Types";
+        //TemplateMetadata[MetadataConstants.TT_TEMPLATE_VERSION] = "5.0";
+        //TemplateMetadata[MetadataConstants.TT_MINIMUM_ENTITY_FRAMEWORK_VERSION] = "5.0";
+
+        //const string templateName = "CSharpDbContext.Types";
+        const string templateVersion = "5.0";
+
+        string generatedTextTransformationClassName = typeof(T4Context).Namespace + ".GeneratedTextTransformation";
+        Assembly assembly = typeof(T4Context).Assembly;
+
+        Type generatedTextTransformationType = assembly.GetType(generatedTextTransformationClassName, false);
+        if (generatedTextTransformationType == null) return;
+
+        Type metadataConstantsType = assembly.GetType(generatedTextTransformationClassName + "+MetadataConstants");
+        if (metadataConstantsType == null)return;
+
+        //var ttTemplateName = (string)metadataConstantsType.GetField("TT_TEMPLATE_NAME", BindingFlags.Static | BindingFlags.Public).GetRawConstantValue();
+        var ttTemplateVersion = (string)metadataConstantsType.GetField("TT_TEMPLATE_VERSION", BindingFlags.Static | BindingFlags.Public).GetRawConstantValue();
+        var ttMinimumEntityFrameworkVersion = (string)metadataConstantsType.GetField("TT_MINIMUM_ENTITY_FRAMEWORK_VERSION", BindingFlags.Static | BindingFlags.Public).GetRawConstantValue();
+
+        FieldInfo templateMetadataFieldInfo = generatedTextTransformationType.GetField("TemplateMetadata", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+        IDictionary<string,string> templateMetadata = (IDictionary<string,string>)templateMetadataFieldInfo.GetValue(null);
+
+        //templateMetadata[ttTemplateName] = templateName;
+        templateMetadata[ttTemplateVersion] = templateVersion;
+        templateMetadata[ttMinimumEntityFrameworkVersion] = minimumEntityFrameworkVersion;
     }
 }
 #>

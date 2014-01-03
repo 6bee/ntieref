@@ -469,7 +469,9 @@ namespace <#=Namespace + "." + GenerationUtils.ModelName#>
 
         #region ChangeTracking
 <#+
-    if (false && entity.BaseType == null) // note: generation of HandleCascadeDelete is turned off as this method is provided by the entity base class
+    // note: generation of HandleCascadeDelete is turned off as this method is provided by the entity base class
+    /*
+    if (entity.BaseType == null) 
     {
         // If this entity type participates in any relationships where the other end has an OnDelete
         // cascade delete defined, or if it is the dependent in any identifying relationships, it needs
@@ -492,6 +494,7 @@ namespace <#=Namespace + "." + GenerationUtils.ModelName#>
 <#+
         }
     }
+    */
 
     foreach(EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is ComplexType && p.DeclaringType == entity))
     {
@@ -1444,7 +1447,8 @@ using System.Runtime.Serialization;
                             GetSubtypes(directSubTypeLookup, (EntityType)eSet.ElementType, subTypes);
                             foreach (EntityType eType in subTypes)
                             {
-                                foreach (EdmProperty member in metadataWorkspace.GetRequiredOriginalValueMembers(eSet, eType))
+                                //foreach (EdmProperty member in metadataWorkspace.GetRequiredOriginalValueMembers(eSet, eType)) // obsolete since .NET 4.5
+                                foreach (EdmProperty member in metadataWorkspace.GetRelevantMembersForUpdate(eSet, eType, partialUpdateSupported: true)) // available since
                                 {
                                     _concurrencyMembers.Add(member);
                                 }

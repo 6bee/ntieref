@@ -32,6 +32,7 @@
     <SilverlightT4Include Include="$(SolutionDir)\TextTemplates\NTierEF.SL.*.ttinclude" />
     <SilverlightT4Include Include="$(SolutionDir)\TextTemplates\NTierEF.*Utils.ttinclude" />
     <SilverlightT4Include Include="$(SolutionDir)\TextTemplates\NTierEF.T4Context.ttinclude" />
+    <T4EF4Include         Include="$(SolutionDir)\TextTemplates.EF4\*.ttinclude" />
     <T4EF5Include         Include="$(SolutionDir)\TextTemplates.EF5\*.ttinclude" />
     <T4EF6Include         Include="$(SolutionDir)\TextTemplates.EF6\*.ttinclude" />
     <WcfRiaT4Include      Include="$(SolutionDir)\TextTemplates\NTierEF.DomainService*.ttinclude" />
@@ -130,10 +131,10 @@
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\content\T4" SourceFiles="@(SilverlightT4Include)" />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4\content\T4" SourceFiles="@(T4Include)" />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4\content\$([System.IO.Directory]::GetParent(%(T4IncludeWithTarget.Identity)).Name)\T4" SourceFiles="@(T4Include);%(T4IncludeWithTarget.Identity)" Condition=" %(T4IncludeWithTarget.Identity) != '' " />
-    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4.EF4\content\T4" SourceFiles="@(T4EF5Include)" />
-	<Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4.EF5\content\T4" SourceFiles="@(T4EF5Include)" />
-	<Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4.EF6\content\T4" SourceFiles="@(T4EF6Include)" />
-	<Copy DestinationFolder="$(MSBuildThisFileDirectory)\WcfRia\content\T4" SourceFiles="@(WcfRiaT4Include)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4.EF4\content\T4" SourceFiles="@(T4EF4Include)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4.EF5\content\T4" SourceFiles="@(T4EF5Include)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4.EF6\content\T4" SourceFiles="@(T4EF6Include)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\WcfRia\content\T4" SourceFiles="@(WcfRiaT4Include)" />
   </Target>
 
   <Target Name="PrepareNuSpecs">
