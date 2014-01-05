@@ -1,4 +1,4 @@
-﻿<#@ include file="EF6.Utility.CS.ttinclude"#>
+﻿<#@ include file="EF.Utility.CS.ttinclude"#>
 <#
     T4Context.SetTemplateMetadata(minimumEntityFrameworkVersion: "6.0");
 #>

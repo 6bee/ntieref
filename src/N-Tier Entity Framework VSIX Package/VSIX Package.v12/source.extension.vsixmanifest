@@ -33,7 +33,7 @@
     </References>
     <Assets>
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="ProjectTemplateWizard" Path="|ProjectTemplateWizard|" AssemblyName="|ProjectTemplateWizard;AssemblyName|" />
-        <!--<Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="File" Path="..\VSIX Package\Additional.pkgdef" />-->
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="File" Path="Additional.pkgdef" />
         <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="EntityDataModelToolsExtensions" Path="|EntityDataModelToolsExtensions|" />
         <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="File" Path="ProjectTemplates" d:TargetPath="ProjectTemplates\Windows\NTierEF.zip" />
         <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="File" Path="ProjectTemplates" d:TargetPath="ProjectTemplates\Silverlight\NTierEFSL.zip" />

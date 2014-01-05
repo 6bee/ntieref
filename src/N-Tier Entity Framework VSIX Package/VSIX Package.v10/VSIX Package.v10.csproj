@@ -60,6 +60,22 @@
       <Link>preview.png</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="..\VSIX Package\Additional.pkgdef">
+      <Link>Additional.pkgdef</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="TextTemplates\NTierEF.EF4.Utility.CS.ttinclude">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="TextTemplates\NTierEF.EF5.Utility.CS.ttinclude">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="TextTemplates\NTierEF.EF6.Utility.CS.ttinclude">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="TextTemplates\NTierEF.T4Context.ttinclude">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="..\lib\ProjectTemplates\NTierEF.zip">
       <Link>ProjectT\Windows\NTierEF.zip</Link>
       <IncludeInVSIX>true</IncludeInVSIX>

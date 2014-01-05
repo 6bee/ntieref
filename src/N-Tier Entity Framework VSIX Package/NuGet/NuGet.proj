@@ -31,13 +31,13 @@
     <SilverlightT4Dll     Include="$(FrameworkBinDir)**\NTier.Common.Domain.dll" />
     <SilverlightT4Include Include="$(SolutionDir)\TextTemplates\NTierEF.SL.*.ttinclude" />
     <SilverlightT4Include Include="$(SolutionDir)\TextTemplates\NTierEF.*Utils.ttinclude" />
-    <SilverlightT4Include Include="$(SolutionDir)\TextTemplates\NTierEF.T4Context.ttinclude" />
+    <SilverlightT4Include Include="$(SolutionDir)\TextTemplates\NTierEF.EF.Utility.CS.ttinclude" />
     <T4EF4Include         Include="$(SolutionDir)\TextTemplates.EF4\*.ttinclude" />
     <T4EF5Include         Include="$(SolutionDir)\TextTemplates.EF5\*.ttinclude" />
     <T4EF6Include         Include="$(SolutionDir)\TextTemplates.EF6\*.ttinclude" />
     <WcfRiaT4Include      Include="$(SolutionDir)\TextTemplates\NTierEF.DomainService*.ttinclude" />
     <WcfRiaT4Include      Include="$(SolutionDir)\TextTemplates\NTierEF.*Utils.ttinclude" />
-    <WcfRiaT4Include      Include="$(SolutionDir)\TextTemplates\NTierEF.T4Context.ttinclude" />
+    <WcfRiaT4Include      Include="$(SolutionDir)\TextTemplates\NTierEF.EF.Utility.CS.ttinclude" />
   </ItemGroup>
 
   <ItemGroup>

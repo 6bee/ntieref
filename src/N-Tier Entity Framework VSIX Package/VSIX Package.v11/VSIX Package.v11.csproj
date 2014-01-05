@@ -63,6 +63,25 @@
       <Link>preview.png</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="..\VSIX Package\Additional.pkgdef">
+      <Link>Additional.pkgdef</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\VSIX Package.v10\TextTemplates\NTierEF.EF4.Utility.CS.ttinclude">
+      <Link>TextTemplates\NTierEF.EF4.Utility.CS.ttinclude</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\VSIX Package.v10\TextTemplates\NTierEF.EF5.Utility.CS.ttinclude">
+      <Link>TextTemplates\NTierEF.EF5.Utility.CS.ttinclude</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\VSIX Package.v10\TextTemplates\NTierEF.EF6.Utility.CS.ttinclude">
+      <Link>TextTemplates\NTierEF.EF6.Utility.CS.ttinclude</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="TextTemplates\NTierEF.T4Context.ttinclude">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="..\lib\ItemTemplates\DomainServiceGenerator.zip">
       <Link>ItemTemplates\Silverlight\DomainServiceGenerator.zip</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
