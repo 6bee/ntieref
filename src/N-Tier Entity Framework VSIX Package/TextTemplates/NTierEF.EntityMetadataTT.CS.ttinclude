@@ -4,25 +4,25 @@
 // </copyright>
 public class EntityMetadataTemplate : Template
 {
-    public GenerationUtils GenerationUtils { get; set; }
+    public EdmUtility EdmUtility { get; set; }
     public string Namespace { get; set; }
     public string ModelBaseNamespace { get; set; }
     public string EntityName { get; set; }
     private string file = null;
     public string File
     {
-        get { return file != null ? file : string.Format(@"{0}\{1}.metadata.cs", GenerationUtils.ModelName, EntityName); }
+        get { return file != null ? file : string.Format(@"{0}\{1}.metadata.cs", EdmUtility.ModelName, EntityName); }
         set { file = value; }
     }
 
-    public EntityMetadataTemplate(string project = null, GenerationUtils generationUtils = null, string defaultNameSpace = null, string entityName = null)
+    public EntityMetadataTemplate(string project = null, EdmUtility edmUtility = null, string defaultNameSpace = null, string entityName = null)
     {
         if (!string.IsNullOrWhiteSpace(project))
         {
             base.Output.Project = project;
         }
         base.Output.PreserveExistingFile = true;
-        this.GenerationUtils = generationUtils;
+        this.EdmUtility = edmUtility;
         this.Namespace = defaultNameSpace;
         this.ModelBaseNamespace = "NTier.Common.Domain.Model";
         this.EntityName = entityName;
@@ -34,9 +34,9 @@ public class EntityMetadataTemplate : Template
     /// </summary>
     protected override void OnRendering(System.EventArgs e)
     {
-        if (GenerationUtils == null)
+        if (EdmUtility == null)
         {
-            throw new Exception("Missing property GenerationUtils");
+            throw new Exception("Missing property EdmUtility");
         }
         if (string.IsNullOrWhiteSpace(EntityName))
         {
@@ -57,19 +57,19 @@ public class EntityMetadataTemplate : Template
 
     public override string TransformText()
     {
-        var typeMapper = GenerationUtils.TypeMapper;
-        EntityType entity = GenerationUtils.ItemCollection.GetItems<EntityType>().Single(e => e.Name == EntityName);
+        var typeMapper = EdmUtility.TypeMapper;
+        EntityType entity = EdmUtility.ItemCollection.GetItems<EntityType>().Single(e => e.Name == EntityName);
 
         WriteHeader(ModelBaseNamespace);
 #>
-namespace <#=Namespace + "." + GenerationUtils.ModelName#>
+namespace <#=Namespace + "." + EdmUtility.ModelName#>
 {
-    [MetadataType(typeof(<#=GenerationUtils.Code.Escape(entity)#>Metadata))]
-    partial class <#=GenerationUtils.Code.Escape(entity)#>
+    [MetadataType(typeof(<#=EdmUtility.Code.Escape(entity)#>Metadata))]
+    partial class <#=EdmUtility.Code.Escape(entity)#>
     {
     }
 
-    // This class allows you to attach custom attributes to properties of the <#=GenerationUtils.Code.Escape(entity)#> class.
+    // This class allows you to attach custom attributes to properties of the <#=EdmUtility.Code.Escape(entity)#> class.
     //
     // For example, the following marks the Xyz property as a
     // required property and specifies the format for valid values:
@@ -77,10 +77,10 @@ namespace <#=Namespace + "." + GenerationUtils.ModelName#>
     //    [RegularExpression("[A-Z][A-Za-z0-9]*")]
     //    [StringLength(32)]
     //    string Xyz;
-    <#=Accessibility.ForType(entity)#> sealed class <#=GenerationUtils.Code.Escape(entity)#>Metadata
+    <#=Accessibility.ForType(entity)#> sealed class <#=EdmUtility.Code.Escape(entity)#>Metadata
     {
         // this class is not meant to be instantiated by client code
-        private <#=GenerationUtils.Code.Escape(entity)#>Metadata() { }
+        private <#=EdmUtility.Code.Escape(entity)#>Metadata() { }
 
 #pragma warning disable 0169
 
@@ -90,7 +90,7 @@ namespace <#=Namespace + "." + GenerationUtils.ModelName#>
         {
 #>
 
-        public <#=GenerationUtils.Code.Escape(edmProperty.TypeUsage)#> <#=GenerationUtils.Code.Escape(edmProperty)#>;
+        public <#=EdmUtility.Code.Escape(edmProperty.TypeUsage)#> <#=EdmUtility.Code.Escape(edmProperty)#>;
 <#+
         }
 #>
@@ -103,7 +103,7 @@ namespace <#=Namespace + "." + GenerationUtils.ModelName#>
     {
 #>
 
-        public <#=GenerationUtils.Code.Escape(edmProperty.TypeUsage)#> <#=GenerationUtils.Code.Escape(edmProperty)#>;
+        public <#=EdmUtility.Code.Escape(edmProperty.TypeUsage)#> <#=EdmUtility.Code.Escape(edmProperty)#>;
 <#+
     }
 #>
@@ -121,14 +121,14 @@ namespace <#=Namespace + "." + GenerationUtils.ModelName#>
         {
 #>
 
-        public TrackableCollection<<#=GenerationUtils.Code.Escape(navProperty.ToEndMember.GetEntityType())#>> <#=GenerationUtils.Code.Escape(navProperty)#>;
+        public TrackableCollection<<#=EdmUtility.Code.Escape(navProperty.ToEndMember.GetEntityType())#>> <#=EdmUtility.Code.Escape(navProperty)#>;
 <#+
         }
         else
         {
 #>
 
-        public <#=GenerationUtils.Code.Escape(navProperty.ToEndMember.GetEntityType())#> <#=GenerationUtils.Code.Escape(navProperty)#>;
+        public <#=EdmUtility.Code.Escape(navProperty.ToEndMember.GetEntityType())#> <#=EdmUtility.Code.Escape(navProperty)#>;
 <#+
         }
     }

@@ -10,21 +10,21 @@
 // </copyright>
 public class DataModelCodeGenerator : Generator
 {
-    private readonly GenerationUtils GenerationUtils;
+    private readonly EdmUtility EdmUtility;
     private readonly ReflectionUtils ReflectionUtils;
 
-    public DataModelCodeGenerator(GenerationUtils generationUtils, string dataModelProject, string modelNamespace)
+    public DataModelCodeGenerator(EdmUtility edmUtility, string dataModelProject, string modelNamespace)
     {
-        this.GenerationUtils = generationUtils;
+        this.EdmUtility = edmUtility;
 
-        var dataModelProjectUtils = new ProjectUtils(dataModelProject);
-        this.ReflectionUtils = new ReflectionUtils(dataModelProjectUtils.GetAssemblyPath());
+        var dataModelProjectUtility = new ProjectUtility(dataModelProject);
+        this.ReflectionUtils = new ReflectionUtils(dataModelProjectUtility.GetAssemblyPath());
 
-        this.EnumTemplate = new EnumTemplate(this.GenerationUtils, modelNamespace);
-        this.EntityTemplate = new EntityTemplate(this.GenerationUtils, this.ReflectionUtils, modelNamespace);
-        this.ComplexTypeTemplate = new ComplexTypeTemplate(this.GenerationUtils, modelNamespace);
-        this.ChangeSetTemplate = new ChangeSetTemplate(this.GenerationUtils, modelNamespace);
-        this.ResultSetTemplate = new ResultSetTemplate(this.GenerationUtils, modelNamespace);
+        this.EnumTemplate = new EnumTemplate(this.EdmUtility, modelNamespace);
+        this.EntityTemplate = new EntityTemplate(this.EdmUtility, this.ReflectionUtils, modelNamespace);
+        this.ComplexTypeTemplate = new ComplexTypeTemplate(this.EdmUtility, modelNamespace);
+        this.ChangeSetTemplate = new ChangeSetTemplate(this.EdmUtility, modelNamespace);
+        this.ResultSetTemplate = new ResultSetTemplate(this.EdmUtility, modelNamespace);
     }
 
     /// <summary>
@@ -88,7 +88,7 @@ public class DataModelCodeGenerator : Generator
     {
         if (EnumTemplate != null)
         {
-            foreach (EdmType item in GenerationUtils.TypeMapper.GetEnumItemsToGenerate(GenerationUtils.ItemCollection))
+            foreach (EdmType item in EdmUtility.TypeMapper.GetEnumItemsToGenerate(EdmUtility.ItemCollection))
             {
                 EnumTemplate.EnumName = item.Name;
                 EnumTemplate.Render();
@@ -100,10 +100,10 @@ public class DataModelCodeGenerator : Generator
     {
         if (EntityTemplate != null)
         {
-            foreach (EntityType entity in GenerationUtils.ItemCollection.GetItems<EntityType>())
+            foreach (EntityType entity in EdmUtility.ItemCollection.GetItems<EntityType>())
             {
                 EntityTemplate.EntityName = entity.Name;
-                //EntityTemplate.File = string.Format(@"Common{2}Model{2}{0}{2}{1}.g.cs", GenerationUtils.ModelName, entity.Name, System.IO.Path.DirectorySeparatorChar);
+                //EntityTemplate.File = string.Format(@"Common{2}Model{2}{0}{2}{1}.g.cs", EdmUtility.ModelName, entity.Name, System.IO.Path.DirectorySeparatorChar);
                 EntityTemplate.Render();
             }
         }
@@ -113,10 +113,10 @@ public class DataModelCodeGenerator : Generator
     {
         if (ComplexTypeTemplate != null)
         {
-            foreach (ComplexType complex in GenerationUtils.ItemCollection.GetItems<ComplexType>())
+            foreach (ComplexType complex in EdmUtility.ItemCollection.GetItems<ComplexType>())
             {
                 ComplexTypeTemplate.ClassName = complex.Name;
-                //ComplexTypeTemplate.File = string.Format(@"Common{2}Model{2}{0}{2}{1}.g.cs", GenerationUtils.ModelName, complex.Name, System.IO.Path.DirectorySeparatorChar);
+                //ComplexTypeTemplate.File = string.Format(@"Common{2}Model{2}{0}{2}{1}.g.cs", EdmUtility.ModelName, complex.Name, System.IO.Path.DirectorySeparatorChar);
                 ComplexTypeTemplate.Render();
             }
         }
@@ -126,7 +126,7 @@ public class DataModelCodeGenerator : Generator
     {
         if (ChangeSetTemplate != null)
         {
-            //ChangeSetTemplate.File = string.Format(@"Common{1}Model{1}{0}{1}{0}ChangeSet.g.cs", GenerationUtils.ModelName, System.IO.Path.DirectorySeparatorChar);
+            //ChangeSetTemplate.File = string.Format(@"Common{1}Model{1}{0}{1}{0}ChangeSet.g.cs", EdmUtility.ModelName, System.IO.Path.DirectorySeparatorChar);
             ChangeSetTemplate.Render();
         }
     }
@@ -135,7 +135,7 @@ public class DataModelCodeGenerator : Generator
     {
         if (ResultSetTemplate != null)
         {
-            //ResultSetTemplate.File = string.Format(@"Common{1}Model{1}{0}{1}{0}ResultSet.g.cs", GenerationUtils.ModelName, System.IO.Path.DirectorySeparatorChar);
+            //ResultSetTemplate.File = string.Format(@"Common{1}Model{1}{0}{1}{0}ResultSet.g.cs", EdmUtility.ModelName, System.IO.Path.DirectorySeparatorChar);
             ResultSetTemplate.Render();
         }
     }

@@ -4,7 +4,7 @@
 // </copyright>
 public class InProcessChannelFactoryTemplate : Template
 {
-    public GenerationUtils GenerationUtils { get; set; }
+    public EdmUtility EdmUtility { get; set; }
     public string Namespace { get; set; }
     public string ChannelFactoryNamespace { get; set; }
     public string ServiceContractNamespace { get; set; }
@@ -12,17 +12,17 @@ public class InProcessChannelFactoryTemplate : Template
     private string file = null;
     public string File
     {
-        get { return file != null ? file : string.Format(@"{0}InProcessChannelFactory.g.cs", GenerationUtils.ModelName); }
+        get { return file != null ? file : string.Format(@"{0}InProcessChannelFactory.g.cs", EdmUtility.ModelName); }
         set { file = value; }
     }
 
-    public InProcessChannelFactoryTemplate(string project = null, GenerationUtils generationUtils = null, string defaultNameSpace = null, string serviceContractNamespace = null, string serviceNamespace = null)
+    public InProcessChannelFactoryTemplate(string project = null, EdmUtility edmUtility = null, string defaultNameSpace = null, string serviceContractNamespace = null, string serviceNamespace = null)
     {
         if (!string.IsNullOrWhiteSpace(project))
         {
             base.Output.Project = project;
         }
-        this.GenerationUtils = generationUtils;
+        this.EdmUtility = edmUtility;
         this.Namespace = defaultNameSpace;
         this.ChannelFactoryNamespace = "NTier.Client.Domain.Service.ChannelFactory";
         this.ServiceContractNamespace = serviceContractNamespace;
@@ -35,9 +35,9 @@ public class InProcessChannelFactoryTemplate : Template
     /// </summary>
     protected override void OnRendering(System.EventArgs e)
     {
-        if (GenerationUtils == null)
+        if (EdmUtility == null)
         {
-            throw new Exception("Missing property GenerationUtils");
+            throw new Exception("Missing property EdmUtility");
         }
         if (string.IsNullOrWhiteSpace(Namespace))
         {
@@ -66,12 +66,12 @@ public class InProcessChannelFactoryTemplate : Template
 #>
 namespace <#=Namespace#>
 {
-    [Export(typeof(IChannelFactory<I<#=GenerationUtils.ModelName#>DataService>))]
-    public sealed class <#=GenerationUtils.ModelName#>InProcessChannelFactory : IChannelFactory<I<#=GenerationUtils.ModelName#>DataService>
+    [Export(typeof(IChannelFactory<I<#=EdmUtility.ModelName#>DataService>))]
+    public sealed class <#=EdmUtility.ModelName#>InProcessChannelFactory : IChannelFactory<I<#=EdmUtility.ModelName#>DataService>
     {
-        public I<#=GenerationUtils.ModelName#>DataService CreateChannel()
+        public I<#=EdmUtility.ModelName#>DataService CreateChannel()
         {
-            return new <#=GenerationUtils.ModelName#>DataService();
+            return new <#=EdmUtility.ModelName#>DataService();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿<#@ include file="EF.Utility.CS.ttinclude"#>
+﻿<#@ include file="NTierEF.EdmUtility.CS.ttinclude" #>
 <#
     T4Context.SetTemplateMetadata(minimumEntityFrameworkVersion: "5.0");
 #>

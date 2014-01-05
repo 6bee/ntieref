@@ -30,14 +30,13 @@
     <T4IncludeWithTarget  Include="$(SolutionDir)\TextTemplates\*\NTierEF.*.ttinclude" Exclude="$(SolutionDir)\TextTemplates\*\NTierEF.SL.*.ttinclude;$(SolutionDir)\TextTemplates\*\NTierEF.DomainService*.ttinclude" />
     <SilverlightT4Dll     Include="$(FrameworkBinDir)**\NTier.Common.Domain.dll" />
     <SilverlightT4Include Include="$(SolutionDir)\TextTemplates\NTierEF.SL.*.ttinclude" />
-    <SilverlightT4Include Include="$(SolutionDir)\TextTemplates\NTierEF.*Utils.ttinclude" />
     <SilverlightT4Include Include="$(SolutionDir)\TextTemplates\NTierEF.EF.Utility.CS.ttinclude" />
     <T4EF4Include         Include="$(SolutionDir)\TextTemplates.EF4\*.ttinclude" />
     <T4EF5Include         Include="$(SolutionDir)\TextTemplates.EF5\*.ttinclude" />
     <T4EF6Include         Include="$(SolutionDir)\TextTemplates.EF6\*.ttinclude" />
     <WcfRiaT4Include      Include="$(SolutionDir)\TextTemplates\NTierEF.DomainService*.ttinclude" />
-    <WcfRiaT4Include      Include="$(SolutionDir)\TextTemplates\NTierEF.*Utils.ttinclude" />
     <WcfRiaT4Include      Include="$(SolutionDir)\TextTemplates\NTierEF.EF.Utility.CS.ttinclude" />
+    <T4Tools              Include="$(MSBuildThisFileDirectory)\tools\*" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,11 +48,17 @@
     <ResourceDirectories Include="$(MSBuildThisFileDirectory)\Server.EF6\lib\" />
     <ResourceDirectories Include="$(MSBuildThisFileDirectory)\Silverlight\lib\" />
     <ResourceDirectories Include="$(MSBuildThisFileDirectory)\Silverlight\content\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\Silverlight\tools\" />
     <ResourceDirectories Include="$(MSBuildThisFileDirectory)\T4\content\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\T4\tools\" />
     <ResourceDirectories Include="$(MSBuildThisFileDirectory)\T4.EF4\content\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\T4.EF4\tools\" />
     <ResourceDirectories Include="$(MSBuildThisFileDirectory)\T4.EF5\content\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\T4.EF5\tools\" />
     <ResourceDirectories Include="$(MSBuildThisFileDirectory)\T4.EF6\content\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\T4.EF6\tools\" />
     <ResourceDirectories Include="$(MSBuildThisFileDirectory)\WcfRia\content\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\WcfRia\tools\" />
   </ItemGroup>
 
   <Target Name="Clean">	
@@ -129,12 +134,18 @@
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\lib\sl5" SourceFiles="@(Silverlight5Domain)" />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\content\T4" SourceFiles="@(SilverlightT4Dll)" />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\content\T4" SourceFiles="@(SilverlightT4Include)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\tools" SourceFiles="@(T4Tools)" />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4\content\T4" SourceFiles="@(T4Include)" />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4\content\$([System.IO.Directory]::GetParent(%(T4IncludeWithTarget.Identity)).Name)\T4" SourceFiles="@(T4Include);%(T4IncludeWithTarget.Identity)" Condition=" %(T4IncludeWithTarget.Identity) != '' " />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4\tools" SourceFiles="@(T4Tools)" />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4.EF4\content\T4" SourceFiles="@(T4EF4Include)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4.EF4\tools" SourceFiles="@(T4Tools)" />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4.EF5\content\T4" SourceFiles="@(T4EF5Include)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4.EF5\tools" SourceFiles="@(T4Tools)" />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4.EF6\content\T4" SourceFiles="@(T4EF6Include)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4.EF6\tools" SourceFiles="@(T4Tools)" />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\WcfRia\content\T4" SourceFiles="@(WcfRiaT4Include)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\WcfRia\tools" SourceFiles="@(T4Tools)" />
   </Target>
 
   <Target Name="PrepareNuSpecs">

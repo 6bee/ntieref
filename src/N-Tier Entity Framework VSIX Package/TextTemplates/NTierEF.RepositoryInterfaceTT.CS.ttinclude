@@ -4,7 +4,7 @@
 // </copyright>
 public class RepositoryInterfaceTemplate : Template
 {
-    public GenerationUtils GenerationUtils { get; set; }
+    public EdmUtility EdmUtility { get; set; }
     public string Namespace { get; set; }
     public string ModelNamespace { get; set; }
     public string ModelBaseNamespace { get; set; }
@@ -12,17 +12,17 @@ public class RepositoryInterfaceTemplate : Template
     private string file = null;
     public string File
     {
-        get { return file != null ? file : string.Format(@"I{0}Repository.g.cs", GenerationUtils.ModelName); }
+        get { return file != null ? file : string.Format(@"I{0}Repository.g.cs", EdmUtility.ModelName); }
         set { file = value; }
     }
 
-    public RepositoryInterfaceTemplate(string project = null, GenerationUtils generationUtils = null, string defaultNameSpace = null, string modelNamespace = null)
+    public RepositoryInterfaceTemplate(string project = null, EdmUtility edmUtility = null, string defaultNameSpace = null, string modelNamespace = null)
     {
         if (!string.IsNullOrWhiteSpace(project))
         {
             base.Output.Project = project;
         }
-        this.GenerationUtils = generationUtils;
+        this.EdmUtility = edmUtility;
         this.Namespace = defaultNameSpace;
         this.ModelNamespace = modelNamespace;
         this.ModelBaseNamespace = "NTier.Common.Domain.Model";
@@ -35,9 +35,9 @@ public class RepositoryInterfaceTemplate : Template
     /// </summary>
     protected override void OnRendering(System.EventArgs e)
     {
-        if (GenerationUtils == null)
+        if (EdmUtility == null)
         {
-            throw new Exception("Missing property GenerationUtils");
+            throw new Exception("Missing property EdmUtility");
         }
         if (string.IsNullOrWhiteSpace(Namespace))
         {
@@ -62,49 +62,49 @@ public class RepositoryInterfaceTemplate : Template
 
     public override string TransformText()
     {
-        WriteHeader(ModelBaseNamespace, ModelNamespace + "." + GenerationUtils.ModelName, RepositoryBaseNamespace);
+        WriteHeader(ModelBaseNamespace, ModelNamespace + "." + EdmUtility.ModelName, RepositoryBaseNamespace);
 #>
 namespace <#=Namespace#>
 {
-    <#=Accessibility.ForType(GenerationUtils.Container)#> partial interface I<#=GenerationUtils.ModelName#>Repository : IRepository
+    <#=Accessibility.ForType(EdmUtility.Container)#> partial interface I<#=EdmUtility.ModelName#>Repository : IRepository
     {
         #region EntitySets
 <#+
-        GenerationUtils.Region.Begin("ObjectSet Properties", 2);
+        EdmUtility.Region.Begin("ObjectSet Properties", 2);
 
-        foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+        foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
         {
             if (Accessibility.ForReadOnlyProperty(entitySet) == "public")
             {
 #>
 
-        IEntitySet<<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>> <#=GenerationUtils.Code.Escape(entitySet)#> { get; }
+        IEntitySet<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> <#=EdmUtility.Code.Escape(entitySet)#> { get; }
 <#+
             }
         }
 
-        GenerationUtils.Region.End();
+        EdmUtility.Region.End();
 
-        GenerationUtils.Region.Begin("Function Imports");
+        EdmUtility.Region.Begin("Function Imports");
 
-        foreach (EdmFunction edmFunction in GenerationUtils.Container.FunctionImports)
+        foreach (EdmFunction edmFunction in EdmUtility.Container.FunctionImports)
         {
-            var parameters = FunctionImportParameter.Create(edmFunction.Parameters, GenerationUtils.Code, GenerationUtils.EF);
+            var parameters = FunctionImportParameter.Create(edmFunction.Parameters, EdmUtility.Code, EdmUtility.EF);
             string paramList = String.Join(", ", parameters.Select(p => p.FunctionParameterType + " " + p.FunctionParameterName).ToArray());
             if (edmFunction.ReturnParameter == null)
             {
                 continue;
             }
-            string returnTypeElement = GenerationUtils.Code.Escape(GenerationUtils.EF.GetElementType(edmFunction.ReturnParameter.TypeUsage));
+            string returnTypeElement = EdmUtility.Code.Escape(EdmUtility.EF.GetElementType(edmFunction.ReturnParameter.TypeUsage));
 
             if (AccessibilityAndVirtual(Accessibility.ForMethod(edmFunction)) == "public")
             {
 #>
-        ObjectResult<<#=returnTypeElement#>> <#=GenerationUtils.Code.Escape(edmFunction)#>(<#=paramList#>);
+        ObjectResult<<#=returnTypeElement#>> <#=EdmUtility.Code.Escape(edmFunction)#>(<#=paramList#>);
 <#+
             }
         }
-        GenerationUtils.Region.End();
+        EdmUtility.Region.End();
 #>
 
         #endregion EntitySets

@@ -1,7 +1,7 @@
 ﻿<#@ include file="T4Toolbox.tt" #>
 <#@ include file="NTierEF.T4Context.ttinclude" #>
-<#@ include file="NTierEF.ProjectUtils.ttinclude" #>
-<#@ include file="NTierEF.GenerationUtils.ttinclude" #>
+<#@ include file="NTierEF.ProjectUtility.ttinclude" #>
+<#@ include file="NTierEF.EF.Utility.CS.ttinclude" #>
 <#@ include file="NTierEF.DataModelCodeGenerator.CS.ttinclude" #>
 <#@ include file="NTierEF.RepositoryInterfaceTT.CS.ttinclude" #>
 <#@ include file="NTierEF.RepositoryTT.CS.ttinclude" #>
@@ -28,7 +28,7 @@ public class NTierEntityGenerator : Generator
     private const string DefaultRemoteChannelFactoryProject = @"..\..\Client\{0}.Client.Domain.Service.RemoteChannelFactory\{0}.Client.Domain.Service.RemoteChannelFactory.csproj";
     private const string DefaultInProcessChannelFactoryProject = @"..\..\Client\{0}.Client.Domain.Service.InProcessChannelFactory\{0}.Client.Domain.Service.InProcessChannelFactory.csproj";
 
-    private readonly GenerationUtils GenerationUtils;
+    private readonly EdmUtility EdmUtility;
 
     public NTierEntityGenerator(object textTransformation, string modelFile = null)
     {
@@ -42,30 +42,30 @@ public class NTierEntityGenerator : Generator
             modelFile = System.IO.Path.Combine(path, file);
         }
 
-        this.GenerationUtils = new GenerationUtils(textTransformation, modelFile);
+        this.EdmUtility = new EdmUtility(textTransformation, modelFile);
 
-        this.DataModelCodeGenerator = new DataModelCodeGenerator(DataModelProject, this.GenerationUtils, DataModelNamespace);
-        this.RepositoryInterfaceTemplate = new RepositoryInterfaceTemplate(RepositoryProject, this.GenerationUtils, RepositoryNamespace, DataModelNamespace);
-        this.RepositoryTemplate = new RepositoryTemplate(RepositoryProject, this.GenerationUtils, RepositoryNamespace, DataModelNamespace);
-        this.DataServiceContractTemplate = new DataServiceContractTemplate(DataServiceContractProject, this.GenerationUtils, DataServiceContractNamespace, DataModelNamespace);
-        this.DataServiceTemplate = new DataServiceTemplate(DataServiceProject, this.GenerationUtils, DataServiceNamespace, DataModelNamespace, DataServiceContractNamespace, RepositoryNamespace);
-        this.DataServiceHostTemplate = new DataServiceHostTemplate(DataServiceHostProject, this.GenerationUtils, DataServiceNamespace);
-        this.ClientDataContextInterfaceTemplate = new ClientDataContextInterfaceTemplate(ClientLibraryProject, this.GenerationUtils, ClientLibraryNamespace, DataModelNamespace);
-        this.ClientDataContextTemplate = new ClientDataContextTemplate(ClientLibraryProject, this.GenerationUtils, ClientLibraryNamespace, DataModelNamespace, DataServiceContractNamespace);
-        this.RemoteChannelFactoryTemplate = new RemoteChannelFactoryTemplate(RemoteChannelFactoryProject, this.GenerationUtils, RemoteChannelFactoryNamespace, DataServiceContractNamespace);
-        this.InProcessChannelFactoryTemplate = new InProcessChannelFactoryTemplate(InProcessChannelFactoryProject, this.GenerationUtils, InProcessChannelFactoryNamespace, DataServiceContractNamespace, DataServiceNamespace);
+        this.DataModelCodeGenerator = new DataModelCodeGenerator(DataModelProject, this.EdmUtility, DataModelNamespace);
+        this.RepositoryInterfaceTemplate = new RepositoryInterfaceTemplate(RepositoryProject, this.EdmUtility, RepositoryNamespace, DataModelNamespace);
+        this.RepositoryTemplate = new RepositoryTemplate(RepositoryProject, this.EdmUtility, RepositoryNamespace, DataModelNamespace);
+        this.DataServiceContractTemplate = new DataServiceContractTemplate(DataServiceContractProject, this.EdmUtility, DataServiceContractNamespace, DataModelNamespace);
+        this.DataServiceTemplate = new DataServiceTemplate(DataServiceProject, this.EdmUtility, DataServiceNamespace, DataModelNamespace, DataServiceContractNamespace, RepositoryNamespace);
+        this.DataServiceHostTemplate = new DataServiceHostTemplate(DataServiceHostProject, this.EdmUtility, DataServiceNamespace);
+        this.ClientDataContextInterfaceTemplate = new ClientDataContextInterfaceTemplate(ClientLibraryProject, this.EdmUtility, ClientLibraryNamespace, DataModelNamespace);
+        this.ClientDataContextTemplate = new ClientDataContextTemplate(ClientLibraryProject, this.EdmUtility, ClientLibraryNamespace, DataModelNamespace, DataServiceContractNamespace);
+        this.RemoteChannelFactoryTemplate = new RemoteChannelFactoryTemplate(RemoteChannelFactoryProject, this.EdmUtility, RemoteChannelFactoryNamespace, DataServiceContractNamespace);
+        this.InProcessChannelFactoryTemplate = new InProcessChannelFactoryTemplate(InProcessChannelFactoryProject, this.EdmUtility, InProcessChannelFactoryNamespace, DataServiceContractNamespace, DataServiceNamespace);
     }
 
     #region project default namespaces
-    private static string EntityModelNamespace { get { return GenerationUtils.GetDefaultNamespace(); } }
-    private static string DataModelNamespace { get { return GenerationUtils.GetDefaultNamespace(DataModelProject); } }
-    private static string RepositoryNamespace { get { return GenerationUtils.GetDefaultNamespace(RepositoryProject); } }
-    private static string DataServiceContractNamespace { get { return GenerationUtils.GetDefaultNamespace(DataServiceContractProject); } }
-    private static string DataServiceNamespace { get { return GenerationUtils.GetDefaultNamespace(DataServiceProject); } }
-    private static string DataServiceHostNamespace { get { return GenerationUtils.GetDefaultNamespace(DataServiceHostProject); } }
-    private static string ClientLibraryNamespace { get { return GenerationUtils.GetDefaultNamespace(ClientLibraryProject); } }
-    private static string RemoteChannelFactoryNamespace { get { return GenerationUtils.GetDefaultNamespace(RemoteChannelFactoryProject); } }
-    private static string InProcessChannelFactoryNamespace { get { return GenerationUtils.GetDefaultNamespace(InProcessChannelFactoryProject); } }
+    private static string EntityModelNamespace { get { return EdmUtility.GetDefaultNamespace(); } }
+    private static string DataModelNamespace { get { return EdmUtility.GetDefaultNamespace(DataModelProject); } }
+    private static string RepositoryNamespace { get { return EdmUtility.GetDefaultNamespace(RepositoryProject); } }
+    private static string DataServiceContractNamespace { get { return EdmUtility.GetDefaultNamespace(DataServiceContractProject); } }
+    private static string DataServiceNamespace { get { return EdmUtility.GetDefaultNamespace(DataServiceProject); } }
+    private static string DataServiceHostNamespace { get { return EdmUtility.GetDefaultNamespace(DataServiceHostProject); } }
+    private static string ClientLibraryNamespace { get { return EdmUtility.GetDefaultNamespace(ClientLibraryProject); } }
+    private static string RemoteChannelFactoryNamespace { get { return EdmUtility.GetDefaultNamespace(RemoteChannelFactoryProject); } }
+    private static string InProcessChannelFactoryNamespace { get { return EdmUtility.GetDefaultNamespace(InProcessChannelFactoryProject); } }
     #endregion
 
     #region project files
@@ -278,7 +278,7 @@ public class NTierEntityGenerator : Generator
     /// </summary>
     protected override void RunCore()
     {
-        if (GenerationUtils.Container == null)
+        if (EdmUtility.Container == null)
         {
             // No EntityContainer exists in the model, so no code may be generated
             return;

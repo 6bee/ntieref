@@ -4,20 +4,20 @@
 // </copyright>
 public class DataServiceContractTemplate : Template
 {
-    public GenerationUtils GenerationUtils = null;
+    public EdmUtility EdmUtility = null;
     public string Namespace = string.Empty;
     public string ModelNamespace { get; set; }
     public string ModelBaseNamespace { get; set; }
     private string file = null;
     public string File
     {
-        get { return file != null ? file : string.Format(@"Common{1}Domain{1}Service{1}Contracts{1}I{0}DataService.g.cs", GenerationUtils.ModelName, System.IO.Path.DirectorySeparatorChar); }
+        get { return file != null ? file : string.Format(@"Common{1}Domain{1}Service{1}Contracts{1}I{0}DataService.g.cs", EdmUtility.ModelName, System.IO.Path.DirectorySeparatorChar); }
         set { file = value; }
     }
 
-    public DataServiceContractTemplate(GenerationUtils generationUtils = null, string defaultNameSpace = null, string modelNamespace = null)
+    public DataServiceContractTemplate(EdmUtility edmUtility = null, string defaultNameSpace = null, string modelNamespace = null)
     {
-        this.GenerationUtils = generationUtils;
+        this.EdmUtility = edmUtility;
         this.Namespace = defaultNameSpace;
         this.ModelNamespace = modelNamespace;
         this.ModelBaseNamespace = "NTier.Common.Domain.Model";
@@ -29,9 +29,9 @@ public class DataServiceContractTemplate : Template
     /// </summary>
     protected override void OnRendering(System.EventArgs e)
     {
-        if (GenerationUtils == null)
+        if (EdmUtility == null)
         {
-            throw new Exception("Missing property GenerationUtils");
+            throw new Exception("Missing property EdmUtility");
         }
         if (string.IsNullOrWhiteSpace(Namespace))
         {
@@ -52,31 +52,31 @@ public class DataServiceContractTemplate : Template
 
     public override string TransformText()
     {
-        WriteHeader(ModelBaseNamespace, ModelNamespace + "." + GenerationUtils.ModelName);
+        WriteHeader(ModelBaseNamespace, ModelNamespace + "." + EdmUtility.ModelName);
 #>
 namespace <#=Namespace#>.Contracts
 {
     [ServiceContract]
-    public partial interface I<#=GenerationUtils.ModelName#>DataService
+    public partial interface I<#=EdmUtility.ModelName#>DataService
     {
 <#+
-    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
     {
         // skip entities which are marked as non-root
         var isAggregateRoot = !entitySet.ElementType.MetadataProperties.Any(p => p.Name.EndsWith("AggregateRoot") && !bool.Parse(p.Value as string));
         if (!isAggregateRoot) continue;
 #>
         [OperationContractAttribute(AsyncPattern = true)]
-        IAsyncResult BeginGet<#=GenerationUtils.Code.Escape(entitySet)#>(ClientInfo clientInfo, Query query, AsyncCallback callback, object asyncState);
-        QueryResult<<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>> EndGet<#=GenerationUtils.Code.Escape(entitySet)#>(IAsyncResult result);
+        IAsyncResult BeginGet<#=EdmUtility.Code.Escape(entitySet)#>(ClientInfo clientInfo, Query query, AsyncCallback callback, object asyncState);
+        QueryResult<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> EndGet<#=EdmUtility.Code.Escape(entitySet)#>(IAsyncResult result);
 
 <#+
     }
 #>
 
         [OperationContractAttribute(AsyncPattern = true)]
-        IAsyncResult BeginSubmitChanges(ClientInfo clientInfo, <#=GenerationUtils.ModelName#>ChangeSet changeSet, AsyncCallback callback, object asyncState);
-        <#=GenerationUtils.ModelName#>ResultSet EndSubmitChanges(IAsyncResult result);
+        IAsyncResult BeginSubmitChanges(ClientInfo clientInfo, <#=EdmUtility.ModelName#>ChangeSet changeSet, AsyncCallback callback, object asyncState);
+        <#=EdmUtility.ModelName#>ResultSet EndSubmitChanges(IAsyncResult result);
     }
 }
 <#+

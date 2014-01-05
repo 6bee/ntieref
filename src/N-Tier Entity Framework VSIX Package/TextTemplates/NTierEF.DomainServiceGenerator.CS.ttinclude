@@ -1,7 +1,7 @@
 ﻿<#@ include file="T4Toolbox.tt" #>
 <#@ include file="NTierEF.T4Context.ttinclude" #>
-<#@ include file="NTierEF.ProjectUtils.ttinclude" #>
-<#@ include file="NTierEF.GenerationUtils.ttinclude" #>
+<#@ include file="NTierEF.ProjectUtility.ttinclude" #>
+<#@ include file="NTierEF.EF.Utility.CS.ttinclude" #>
 <#@ include file="NTierEF.DomainServiceTT.CS.ttinclude" #>
 <#+
 // <copyright file="NTierEF.DomainServiceGenerator.CS.ttinclude" company="Trivadis">
@@ -13,7 +13,7 @@ public class DomainServiceGenerator : Generator
     private const string DefaultClientLibraryProject = @"..\..\Client\{0}.Client.Domain\{0}.Client.Domain.csproj";
     private const string DefaultEdmxProject = @"..\..\Server\{0}.Server.Domain.Edmx\{0}.Server.Domain.Edmx.csproj";
 
-    private readonly GenerationUtils GenerationUtils;
+    private readonly EdmUtility EdmUtility;
 
     public DomainServiceGenerator(object textTransformation, string modelFile = null)
     {
@@ -22,8 +22,8 @@ public class DomainServiceGenerator : Generator
 
         if (string.IsNullOrEmpty(modelFile))
         {
-            var projectUtils = new ProjectUtils(EdmxProject);
-            var path = projectUtils.GetProjectDirectory();
+            var projectUtility = new ProjectUtility(EdmxProject);
+            var path = projectUtility.GetProjectDirectory();
             var file = string.Format("{0}.edmx", System.IO.Path.GetFileNameWithoutExtension(T4Context.Host.TemplateFile));
 
             modelFile = System.IO.Path.Combine(path, file);
@@ -36,14 +36,14 @@ public class DomainServiceGenerator : Generator
             }
         }
 
-        this.GenerationUtils = new GenerationUtils(textTransformation, modelFile);
+        this.EdmUtility = new EdmUtility(textTransformation, modelFile);
 
-        this.DomainServiceTemplate = new DomainServiceTemplate(this.GenerationUtils, defaultNameSpace: DomainServiceNamespace, modelNamespace: DataModelNamespace, clientLibraryNamespace: ClientLibraryNamespace);
+        this.DomainServiceTemplate = new DomainServiceTemplate(this.EdmUtility, defaultNameSpace: DomainServiceNamespace, modelNamespace: DataModelNamespace, clientLibraryNamespace: ClientLibraryNamespace);
     }
 
-    private static string DomainServiceNamespace { get { return GenerationUtils.GetDefaultNamespace(); } }
-    private static string DataModelNamespace { get { return GenerationUtils.GetDefaultNamespace(DataModelProject); } }
-    private static string ClientLibraryNamespace { get { return GenerationUtils.GetDefaultNamespace(ClientLibraryProject); } }
+    private static string DomainServiceNamespace { get { return EdmUtility.GetDefaultNamespace(); } }
+    private static string DataModelNamespace { get { return EdmUtility.GetDefaultNamespace(DataModelProject); } }
+    private static string ClientLibraryNamespace { get { return EdmUtility.GetDefaultNamespace(ClientLibraryProject); } }
 
     private static string DefaultProjectBaseName
     {
@@ -117,7 +117,7 @@ public class DomainServiceGenerator : Generator
     /// </summary>
     protected override void RunCore()
     {
-        if (GenerationUtils.Container == null)
+        if (EdmUtility.Container == null)
         {
             // No EntityContainer exists in the model, so no code may be generated
             return;

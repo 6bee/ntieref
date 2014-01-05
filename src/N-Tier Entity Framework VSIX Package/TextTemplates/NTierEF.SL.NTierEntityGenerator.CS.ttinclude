@@ -1,7 +1,7 @@
 ﻿<#@ include file="T4Toolbox.tt" #>
 <#@ include file="NTierEF.T4Context.ttinclude" #>
-<#@ include file="NTierEF.ProjectUtils.ttinclude" #>
-<#@ include file="NTierEF.GenerationUtils.ttinclude" #>
+<#@ include file="NTierEF.ProjectUtility.ttinclude" #>
+<#@ include file="NTierEF.EF.Utility.CS.ttinclude" #>
 <#@ include file="NTierEF.SL.DataModelCodeGenerator.CS.ttinclude" #>
 <#@ include file="NTierEF.SL.DataServiceContractTT.CS.ttinclude" #>
 <#@ include file="NTierEF.SL.ClientDataContextInterfaceTT.CS.ttinclude" #>
@@ -19,7 +19,7 @@ public class NTierEntityGenerator : Generator
     private const string DefaultEdmxProject = @"..\..\Server\{0}.Server.Domain.Edmx\{0}.Server.Domain.Edmx.csproj";
 
     private readonly string BaseNamespace;
-    private readonly GenerationUtils GenerationUtils;
+    private readonly EdmUtility EdmUtility;
 
     public NTierEntityGenerator(object textTransformation, string modelFile = null, string baseNamespace = null)
     {
@@ -28,8 +28,8 @@ public class NTierEntityGenerator : Generator
 
         if (string.IsNullOrEmpty(modelFile))
         {
-            var projectUtils = new ProjectUtils(EdmxProject);
-            var path = projectUtils.GetProjectDirectory();
+            var projectUtility = new ProjectUtility(EdmxProject);
+            var path = projectUtility.GetProjectDirectory();
             var file = string.Format("{0}.edmx", System.IO.Path.GetFileNameWithoutExtension(T4Context.Host.TemplateFile));
             modelFile = System.IO.Path.Combine(path, file);
         }
@@ -42,19 +42,19 @@ public class NTierEntityGenerator : Generator
         {
             this.BaseNamespace = DefaultProjectBaseName;
         }
-        this.GenerationUtils = new GenerationUtils(textTransformation, modelFile);
+        this.EdmUtility = new EdmUtility(textTransformation, modelFile);
 
-        this.DataModelCodeGenerator = new DataModelCodeGenerator(this.GenerationUtils, DataModelProject, DataModelNamespace);
-        this.DataServiceContractTemplate = new DataServiceContractTemplate(this.GenerationUtils, DataServiceContractNamespace, DataModelNamespace);
-        this.ClientDataContextInterfaceTemplate = new ClientDataContextInterfaceTemplate(this.GenerationUtils, ClientLibraryNamespace, DataModelNamespace);
-        this.ClientDataContextTemplate = new ClientDataContextTemplate(this.GenerationUtils, ClientLibraryNamespace, DataModelNamespace, DataServiceContractNamespace);
+        this.DataModelCodeGenerator = new DataModelCodeGenerator(this.EdmUtility, DataModelProject, DataModelNamespace);
+        this.DataServiceContractTemplate = new DataServiceContractTemplate(this.EdmUtility, DataServiceContractNamespace, DataModelNamespace);
+        this.ClientDataContextInterfaceTemplate = new ClientDataContextInterfaceTemplate(this.EdmUtility, ClientLibraryNamespace, DataModelNamespace);
+        this.ClientDataContextTemplate = new ClientDataContextTemplate(this.EdmUtility, ClientLibraryNamespace, DataModelNamespace, DataServiceContractNamespace);
     }
 
     #region project default namespaces
-    private static string SilverlightLibraryNamespace { get { return GenerationUtils.GetDefaultNamespace(); } }
-    private static string DataModelNamespace { get { return GenerationUtils.GetDefaultNamespace(DataModelProject); } }
-    private static string DataServiceContractNamespace { get { return GenerationUtils.GetDefaultNamespace(DataServiceContractProject); } }
-    private static string ClientLibraryNamespace { get { return GenerationUtils.GetDefaultNamespace(ClientLibraryProject); } }
+    private static string SilverlightLibraryNamespace { get { return EdmUtility.GetDefaultNamespace(); } }
+    private static string DataModelNamespace { get { return EdmUtility.GetDefaultNamespace(DataModelProject); } }
+    private static string DataServiceContractNamespace { get { return EdmUtility.GetDefaultNamespace(DataServiceContractProject); } }
+    private static string ClientLibraryNamespace { get { return EdmUtility.GetDefaultNamespace(ClientLibraryProject); } }
     #endregion
 
     #region project files
@@ -165,7 +165,7 @@ public class NTierEntityGenerator : Generator
     /// </summary>
     protected override void RunCore()
     {
-        if (GenerationUtils.Container == null)
+        if (EdmUtility.Container == null)
         {
             // No EntityContainer exists in the model, so no code may be generated
             return;

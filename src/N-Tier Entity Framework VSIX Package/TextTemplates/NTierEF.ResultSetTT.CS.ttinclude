@@ -4,23 +4,23 @@
 // </copyright>
 public class ResultSetTemplate : Template
 {
-    public GenerationUtils GenerationUtils { get; set; }
+    public EdmUtility EdmUtility { get; set; }
     public string Namespace { get; set; }
     public string ModelBaseNamespace { get; set; }
     private string file = null;
     public string File
     {
-        get { return file != null ? file : string.Format(@"{0}\{0}ResultSet.g.cs", GenerationUtils.ModelName); }
+        get { return file != null ? file : string.Format(@"{0}\{0}ResultSet.g.cs", EdmUtility.ModelName); }
         set { file = value; }
     }
 
-    public ResultSetTemplate(string project = null, GenerationUtils generationUtils = null, string defaultNameSpace = null)
+    public ResultSetTemplate(string project = null, EdmUtility edmUtility = null, string defaultNameSpace = null)
     {
         if (!string.IsNullOrWhiteSpace(project))
         {
             base.Output.Project = project;
         }
-        this.GenerationUtils = generationUtils;
+        this.EdmUtility = edmUtility;
         this.Namespace = defaultNameSpace;
         this.ModelBaseNamespace = "NTier.Common.Domain.Model";
     }
@@ -31,9 +31,9 @@ public class ResultSetTemplate : Template
     /// </summary>
     protected override void OnRendering(System.EventArgs e)
     {
-        if (GenerationUtils == null)
+        if (EdmUtility == null)
         {
-            throw new Exception("Missing property GenerationUtils");
+            throw new Exception("Missing property EdmUtility");
         }
         if (string.IsNullOrWhiteSpace(Namespace))
         {
@@ -52,13 +52,13 @@ public class ResultSetTemplate : Template
     {
         WriteHeader(ModelBaseNamespace);
 #>
-namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
+namespace <#= this.Namespace + "." + EdmUtility.ModelName #>
 {
     [DataContract(IsReference = true)]
-    public sealed partial class <#= GenerationUtils.ModelName #>ResultSet : <#= GenerationUtils.ModelName #>ChangeSet, IResultSet
+    public sealed partial class <#= EdmUtility.ModelName #>ResultSet : <#= EdmUtility.ModelName #>ChangeSet, IResultSet
     {
         #region ctor
-        public <#=GenerationUtils.ModelName#>ResultSet(<#= GenerationUtils.ModelName #>ChangeSet changeSet)
+        public <#=EdmUtility.ModelName#>ResultSet(<#= EdmUtility.ModelName #>ChangeSet changeSet)
             : base(changeSet)
         {
         }
@@ -67,11 +67,11 @@ namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
         #region DataMember
 
 <#+
-    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
     {
 #>
         [DataMember]
-        public IList<<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>> <#=GenerationUtils.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts { get; private set; }
+        public IList<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> <#=EdmUtility.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts { get; private set; }
 
 <#+
     }
@@ -86,12 +86,12 @@ namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
             {
 <#+
     bool isElse = false;
-    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
     {
 #>
-                <#=isElse ? "else " : ""#>if (entity is <#=GenerationUtils.Code.Escape(entitySet.ElementType)#>)
+                <#=isElse ? "else " : ""#>if (entity is <#=EdmUtility.Code.Escape(entitySet.ElementType)#>)
                 {
-                    AddConcurrencyConflict((<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>)entity);
+                    AddConcurrencyConflict((<#=EdmUtility.Code.Escape(entitySet.ElementType)#>)entity);
                 }
 <#+
         isElse = true;
@@ -106,16 +106,16 @@ namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
         }
 
 <#+
-    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
     {
 #>
-        private void AddConcurrencyConflict(<#=GenerationUtils.Code.Escape(entitySet.ElementType)#> entity)
+        private void AddConcurrencyConflict(<#=EdmUtility.Code.Escape(entitySet.ElementType)#> entity)
         {
-            if (<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts == null)
+            if (<#=EdmUtility.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts == null)
             {
-                <#=GenerationUtils.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts = new List<<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>>();
+                <#=EdmUtility.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts = new List<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>>();
             }
-            <#=GenerationUtils.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts.Add(entity);
+            <#=EdmUtility.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts.Add(entity);
         }
 
 <#+
@@ -126,12 +126,12 @@ namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
         #region IsConcurrencyConflict
 
 <#+
-    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
     {
 #>
-        public bool IsConcurrencyConflict(<#=GenerationUtils.Code.Escape(entitySet.ElementType)#> e)
+        public bool IsConcurrencyConflict(<#=EdmUtility.Code.Escape(entitySet.ElementType)#> e)
         {
-            return <#=GenerationUtils.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts != null && <#=GenerationUtils.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts.Count > 0 && <#=GenerationUtils.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts.Contains(e);
+            return <#=EdmUtility.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts != null && <#=EdmUtility.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts.Count > 0 && <#=EdmUtility.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts.Contains(e);
         }
 
 <#+
@@ -144,7 +144,7 @@ namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
         {
             get
             {
-                return <#=string.Join(" ||" + Environment.NewLine + "                    ", GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>().Select(e => GenerationUtils.Code.Escape(e.ElementType) + "ConcurrencyConflicts != null").ToArray())#>;
+                return <#=string.Join(" ||" + Environment.NewLine + "                    ", EdmUtility.Container.BaseEntitySets.OfType<EntitySet>().Select(e => EdmUtility.Code.Escape(e.ElementType) + "ConcurrencyConflicts != null").ToArray())#>;
             }
         }
         #endregion

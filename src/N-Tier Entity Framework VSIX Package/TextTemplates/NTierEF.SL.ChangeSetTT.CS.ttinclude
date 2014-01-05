@@ -4,19 +4,19 @@
 // </copyright>
 public class ChangeSetTemplate : Template
 {
-    public GenerationUtils GenerationUtils { get; set; }
+    public EdmUtility EdmUtility { get; set; }
     public string Namespace { get; set; }
     public string ModelBaseNamespace { get; set; }
     private string file = null;
     public string File
     {
-        get { return file != null ? file : string.Format(@"Common{1}Domain{1}Model{1}{0}{1}{0}ChangeSet.g.cs", GenerationUtils.ModelName, System.IO.Path.DirectorySeparatorChar); }
+        get { return file != null ? file : string.Format(@"Common{1}Domain{1}Model{1}{0}{1}{0}ChangeSet.g.cs", EdmUtility.ModelName, System.IO.Path.DirectorySeparatorChar); }
         set { file = value; }
     }
 
-    public ChangeSetTemplate(GenerationUtils generationUtils = null, string defaultNameSpace = null)
+    public ChangeSetTemplate(EdmUtility edmUtility = null, string defaultNameSpace = null)
     {
-        this.GenerationUtils = generationUtils;
+        this.EdmUtility = edmUtility;
         this.Namespace = defaultNameSpace;
         this.ModelBaseNamespace = "NTier.Common.Domain.Model";
     }
@@ -27,9 +27,9 @@ public class ChangeSetTemplate : Template
     /// </summary>
     protected override void OnRendering(System.EventArgs e)
     {
-        if (GenerationUtils == null)
+        if (EdmUtility == null)
         {
-            throw new Exception("Missing property GenerationUtils");
+            throw new Exception("Missing property EdmUtility");
         }
         if (string.IsNullOrWhiteSpace(Namespace))
         {
@@ -48,64 +48,64 @@ public class ChangeSetTemplate : Template
     {
         WriteHeader(ModelBaseNamespace);
 #>
-namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
+namespace <#= this.Namespace + "." + EdmUtility.ModelName #>
 {
     [DataContract(IsReference = true)]
-    public partial class <#= GenerationUtils.ModelName #>ChangeSet : IChangeSet
+    public partial class <#= EdmUtility.ModelName #>ChangeSet : IChangeSet
     {
         #region Constructor
 
-        public <#=GenerationUtils.ModelName#>ChangeSet(<#=string.Join(", ", GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>().Select(e => "IEnumerable<" + GenerationUtils.Code.Escape(e.ElementType) + "> " + FirstCaseLow(GenerationUtils.Code.Escape(e))).ToArray())#>)
+        public <#=EdmUtility.ModelName#>ChangeSet(<#=string.Join(", ", EdmUtility.Container.BaseEntitySets.OfType<EntitySet>().Select(e => "IEnumerable<" + EdmUtility.Code.Escape(e.ElementType) + "> " + FirstCaseLow(EdmUtility.Code.Escape(e))).ToArray())#>)
         {
             // retrieve changes sets (modified entities)
 <#+
-    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
     {
 #>
-            var <#=FirstCaseLow(GenerationUtils.Code.Escape(entitySet.ElementType))#>ChangeSet = <#=FirstCaseLow(GenerationUtils.Code.Escape(entitySet))#>.GetChangeSet();
+            var <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>ChangeSet = <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>.GetChangeSet();
 <#+
     }
 #>
 
             // reduce entities (copy changed values)
 <#+
-    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
     {
 #>
-            var <#=FirstCaseLow(GenerationUtils.Code.Escape(entitySet))#>Map = <#=FirstCaseLow(GenerationUtils.Code.Escape(entitySet.ElementType))#>ChangeSet.ReduceToModifications();
+            var <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>Map = <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>ChangeSet.ReduceToModifications();
 <#+
     }
 
-    if (GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>().Count() > 1)
+    if (EdmUtility.Container.BaseEntitySets.OfType<EntitySet>().Count() > 1)
     {
 #>
 
             // fixup relations (replaces related entities with reduced entites)
             this.FixupRelations(
-                this.Union(<#=string.Join(", ", GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>().Select(e => FirstCaseLow(GenerationUtils.Code.Escape(e)) + "Map.CastToEntityTuple()").ToArray())#>),
-                this.Union(<#=string.Join(", ", GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>().Select(e => FirstCaseLow(GenerationUtils.Code.Escape(e.ElementType)) + "ChangeSet.Cast<Entity>()").ToArray())#>)
+                this.Union(<#=string.Join(", ", EdmUtility.Container.BaseEntitySets.OfType<EntitySet>().Select(e => FirstCaseLow(EdmUtility.Code.Escape(e)) + "Map.CastToEntityTuple()").ToArray())#>),
+                this.Union(<#=string.Join(", ", EdmUtility.Container.BaseEntitySets.OfType<EntitySet>().Select(e => FirstCaseLow(EdmUtility.Code.Escape(e.ElementType)) + "ChangeSet.Cast<Entity>()").ToArray())#>)
             );
 <#+
     }
 #>
 
 <#+
-    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
     {
 #>
-            if (<#=FirstCaseLow(GenerationUtils.Code.Escape(entitySet))#>Map.Count > 0) this.<#=GenerationUtils.Code.Escape(entitySet)#> = <#=FirstCaseLow(GenerationUtils.Code.Escape(entitySet))#>Map.Select(e => e.Item2).ToList();
+            if (<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>Map.Count > 0) this.<#=EdmUtility.Code.Escape(entitySet)#> = <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>Map.Select(e => e.Item2).ToList();
 <#+
     }
 #>
         }
 
-        protected <#=GenerationUtils.ModelName#>ChangeSet(<#=GenerationUtils.ModelName#>ChangeSet changeSet)
+        protected <#=EdmUtility.ModelName#>ChangeSet(<#=EdmUtility.ModelName#>ChangeSet changeSet)
         {
 <#+
-    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
     {
 #>
-            this.<#=GenerationUtils.Code.Escape(entitySet)#> = changeSet.<#=GenerationUtils.Code.Escape(entitySet)#>;
+            this.<#=EdmUtility.Code.Escape(entitySet)#> = changeSet.<#=EdmUtility.Code.Escape(entitySet)#>;
 <#+
     }
 #>
@@ -116,11 +116,11 @@ namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
         #region DataMember
 
 <#+
-    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
     {
 #>
         [DataMember]
-        public List<<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>> <#=GenerationUtils.Code.Escape(entitySet)#> { get; /*private (must be public in silverlight)*/ set; }
+        public List<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> <#=EdmUtility.Code.Escape(entitySet)#> { get; /*private (must be public in silverlight)*/ set; }
 
 <#+
     }
@@ -134,7 +134,7 @@ namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
         {
             get
             {
-                return <#=string.Join(" &&" + Environment.NewLine + "                    ", GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>().Select(e => GenerationUtils.Code.Escape(e) + " == null").ToArray())#>;
+                return <#=string.Join(" &&" + Environment.NewLine + "                    ", EdmUtility.Container.BaseEntitySets.OfType<EntitySet>().Select(e => EdmUtility.Code.Escape(e) + " == null").ToArray())#>;
             }
         }
 
@@ -145,12 +145,12 @@ namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
         public IEnumerator<Entity> GetEnumerator()
         {
 <#+
-    foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+    foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
     {
 #>
-            if (<#=GenerationUtils.Code.Escape(entitySet)#> != null && <#=GenerationUtils.Code.Escape(entitySet)#>.Count > 0)
+            if (<#=EdmUtility.Code.Escape(entitySet)#> != null && <#=EdmUtility.Code.Escape(entitySet)#>.Count > 0)
             {
-                foreach (var item in <#=GenerationUtils.Code.Escape(entitySet)#>)
+                foreach (var item in <#=EdmUtility.Code.Escape(entitySet)#>)
                 {
                     yield return item;
                 }

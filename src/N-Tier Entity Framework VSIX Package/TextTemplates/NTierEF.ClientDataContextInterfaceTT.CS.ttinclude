@@ -4,24 +4,24 @@
 // </copyright>
 public class ClientDataContextInterfaceTemplate : Template
 {
-    public GenerationUtils GenerationUtils { get; set; }
+    public EdmUtility EdmUtility { get; set; }
     public string Namespace { get; set; }
     public string ClientBaseNamespace { get; set; }
     public string ModelNamespace { get; set; }
     private string file = null;
     public string File
     {
-        get { return file != null ? file : string.Format(@"I{0}DataContext.g.cs", GenerationUtils.ModelName); }
+        get { return file != null ? file : string.Format(@"I{0}DataContext.g.cs", EdmUtility.ModelName); }
         set { file = value; }
     }
 
-    public ClientDataContextInterfaceTemplate(string project = null, GenerationUtils generationUtils = null, string defaultNamespace = null, string modelNamespace = null)
+    public ClientDataContextInterfaceTemplate(string project = null, EdmUtility edmUtility = null, string defaultNamespace = null, string modelNamespace = null)
     {
         if (!string.IsNullOrWhiteSpace(project))
         {
             base.Output.Project = project;
         }
-        this.GenerationUtils = generationUtils;
+        this.EdmUtility = edmUtility;
         this.Namespace = defaultNamespace;
         this.ClientBaseNamespace = "NTier.Client.Domain";
         this.ModelNamespace = modelNamespace;
@@ -33,9 +33,9 @@ public class ClientDataContextInterfaceTemplate : Template
     /// </summary>
     protected override void OnRendering(System.EventArgs e)
     {
-        if (GenerationUtils == null)
+        if (EdmUtility == null)
         {
-            throw new Exception("Missing property GenerationUtils");
+            throw new Exception("Missing property EdmUtility");
         }
         if (string.IsNullOrWhiteSpace(Namespace))
         {
@@ -58,32 +58,32 @@ public class ClientDataContextInterfaceTemplate : Template
     {
         WriteHeader(
             ClientBaseNamespace,
-            ModelNamespace + "." + GenerationUtils.ModelName
+            ModelNamespace + "." + EdmUtility.ModelName
         );
 #>
 namespace <#=Namespace#>
 {
-    public partial interface I<#=GenerationUtils.ModelName#>DataContext : IDataContext
+    public partial interface I<#=EdmUtility.ModelName#>DataContext : IDataContext
     {
 
 <#+
-        foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+        foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
         {
             // skip entities which are marked as non-root
             var isAggregateRoot = !entitySet.ElementType.MetadataProperties.Any(p => p.Name.EndsWith("AggregateRoot") && !bool.Parse(p.Value as string));
             if (!isAggregateRoot) continue;
 #>
-        #region <#=GenerationUtils.Code.Escape(entitySet)#>
+        #region <#=EdmUtility.Code.Escape(entitySet)#>
 
-        IEntitySet<<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>> <#=GenerationUtils.Code.Escape(entitySet)#> { get; }
+        IEntitySet<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> <#=EdmUtility.Code.Escape(entitySet)#> { get; }
 
-        void Add(<#=GenerationUtils.Code.Escape(entitySet.ElementType)#> entity);
-        void Delete(<#=GenerationUtils.Code.Escape(entitySet.ElementType)#> entity);
-        void Attach(<#=GenerationUtils.Code.Escape(entitySet.ElementType)#> entity);
-        void AttachAsModified(<#=GenerationUtils.Code.Escape(entitySet.ElementType)#> entity, <#=GenerationUtils.Code.Escape(entitySet.ElementType)#> original);
-        void Detach(<#=GenerationUtils.Code.Escape(entitySet.ElementType)#> entity);
+        void Add(<#=EdmUtility.Code.Escape(entitySet.ElementType)#> entity);
+        void Delete(<#=EdmUtility.Code.Escape(entitySet.ElementType)#> entity);
+        void Attach(<#=EdmUtility.Code.Escape(entitySet.ElementType)#> entity);
+        void AttachAsModified(<#=EdmUtility.Code.Escape(entitySet.ElementType)#> entity, <#=EdmUtility.Code.Escape(entitySet.ElementType)#> original);
+        void Detach(<#=EdmUtility.Code.Escape(entitySet.ElementType)#> entity);
 
-        #endregion <#=GenerationUtils.Code.Escape(entitySet)#>
+        #endregion <#=EdmUtility.Code.Escape(entitySet)#>
 
 <#+
         }

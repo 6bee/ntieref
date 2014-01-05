@@ -1,5 +1,98 @@
-﻿<#@ include file="NTierEF.EF.Utility.CS.ttinclude"#>
+﻿<#@ include file="EF.Utility.CS.ttinclude" #>
 <#+
+// <copyright file="NTierEF.EdmUtility.ttinclude" company="Trivadis">
+//     Copyright © Trivadis. All Rights Reserved.
+// </copyright>
+public class EdmUtility
+{
+    public EdmUtility(object textTransformation, string edmxlFilePath)
+    {
+        this.Template = textTransformation;
+        this.EntityedmxlFilePath = edmxlFilePath;
+
+        this.Code = new CodeGenerationTools(textTransformation) { FullyQualifySystemTypes = true };
+        this.Loader = new MetadataLoader(textTransformation);
+        this.Region = new CodeRegion(textTransformation);
+        this.EF = new MetadataTools(textTransformation);
+
+        //textTransform = DynamicTextTransformation.Create(textTransformation);
+        //var code = new CodeGenerationTools(textTransformation);
+        //var ef = new MetadataTools(textTransformation);
+        this.TypeMapper = new TypeMapper(this.Code, this.EF, /*textTransform.Errors*/ new System.Collections.Generic.List<object>());
+        //this.CodeStringGenerator = new CodeStringGenerator(this.Code, typeMapper, this.EF);
+
+        this.AllMetadataLoaded = this.Loader.TryLoadAllMetadata(edmxlFilePath, out this.MetadataWorkspace);
+        this.ItemCollection = (EdmItemCollection)this.MetadataWorkspace.GetItemCollection(DataSpace.CSpace);
+        //this.OriginalValueMembers = new OriginalValueMembers(this.AllMetadataLoaded, this.MetadataWorkspace, this.EF);
+
+        this.FileManager = EntityFrameworkTemplateFileManager.Create(textTransformation);
+        this.Container = ItemCollection.GetItems<EntityContainer>().FirstOrDefault();
+
+        if (this.Container == null)
+        {
+            //return "// No EntityContainer exists in the model, so no code was generated";
+        }
+
+        string modelName = this.Code.Escape(this.Container);
+        if (modelName.Length > 8 && modelName.EndsWith("Entities", true, CultureInfo.CurrentCulture))
+        {
+            modelName = modelName.Substring(0, modelName.Length - 8);
+        }
+        else if (modelName.Length > 10 && modelName.EndsWith("Repository", true, CultureInfo.CurrentCulture))
+        {
+            modelName = modelName.Substring(0, modelName.Length - 10);
+        }
+        this.ModelName = modelName;
+    }
+
+    public readonly object Template;
+    public readonly string EntityedmxlFilePath;
+
+    public readonly CodeGenerationTools Code;
+    public readonly MetadataLoader Loader;
+    public readonly CodeRegion Region;
+    public readonly MetadataTools EF;
+    public readonly TypeMapper TypeMapper;
+
+    public readonly bool AllMetadataLoaded;
+    public readonly MetadataWorkspace MetadataWorkspace;
+    public readonly EdmItemCollection ItemCollection;
+    //public readonly OriginalValueMembers OriginalValueMembers;
+
+    public readonly EntityFrameworkTemplateFileManager FileManager;
+    public readonly EntityContainer Container;
+
+    public readonly string ModelName;
+
+
+    #region utility methods
+    public static string GetDefaultNamespace(string project = null)
+    {
+        try
+        {
+            if (project == null)
+            {
+                project = T4Context.Project.FileName;
+            }
+
+            var dir = System.IO.Path.GetDirectoryName(T4Context.Project.FileName);
+            var file = System.IO.Path.Combine(dir, project);
+
+            var doc = new System.Xml.XmlDocument();
+            doc.Load(file);
+            var namespaceManager = new System.Xml.XmlNamespaceManager(doc.NameTable);
+            namespaceManager.AddNamespace("namespace", "http://schemas.microsoft.com/developer/msbuild/2003");
+            var node = doc.SelectSingleNode("/namespace:Project/namespace:PropertyGroup/namespace:RootNamespace/text()", namespaceManager);
+            return node.Value;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+    #endregion
+}
+
 public class CodeStringGenerator
 {
     private readonly CodeGenerationTools _code;
@@ -584,5 +677,4 @@ public static void ArgumentNotNull<T>(T arg, string name) where T : class
 //
 //    return ResourceManager.Value.GetString(resourceName, null);
 //}
-
 #>

@@ -64,6 +64,14 @@
       <Link>Additional.pkgdef</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="..\VSIX Package\TextTemplates\NTierEF.EdmUtility.CS.ttinclude">
+      <Link>TextTemplates\NTierEF.EdmUtility.CS.ttinclude</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\VSIX Package\TextTemplates\NTierEF.ProjectUtility.ttinclude">
+      <Link>TextTemplates\NTierEF.ProjectUtility.ttinclude</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="TextTemplates\NTierEF.EF4.Utility.CS.ttinclude">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>

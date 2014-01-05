@@ -7,14 +7,14 @@
 <#@ import namespace="EnvDTE" #>
 <#@ import namespace="EnvDTE80" #>
 <#+
-// <copyright file="NTierEF.ProjectUtils.ttinclude" company="Trivadis">
+// <copyright file="NTierEF.ProjectUtility.ttinclude" company="Trivadis">
 //     Copyright © Trivadis. All Rights Reserved.
 // </copyright>
-public class ProjectUtils
+public class ProjectUtility
 {
     private readonly Project Project;
 
-    public ProjectUtils(string projectName)
+    public ProjectUtility(string projectName)
     {
         if (!System.IO.Path.IsPathRooted(projectName))
         {
@@ -26,7 +26,7 @@ public class ProjectUtils
         var dte = T4Context.DTE;
         this.Project = GetProjects(dte).FirstOrDefault(p => string.Equals(p.FullName, projectName, StringComparison.InvariantCultureIgnoreCase));
 
-        Debug.WriteLine(string.Format("ProjectUtils::ctor - Project: '{0}'", this.Project == null ? string.Format("null ({0})", projectName) : this.Project.FullName));
+        Debug.WriteLine(string.Format("ProjectUtility::ctor - Project: '{0}'", this.Project == null ? string.Format("null ({0})", projectName) : this.Project.FullName));
     }
 
     public string GetProjectDirectory()

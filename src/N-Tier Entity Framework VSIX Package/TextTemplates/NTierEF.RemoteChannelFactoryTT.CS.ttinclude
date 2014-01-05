@@ -4,24 +4,24 @@
 // </copyright>
 public class RemoteChannelFactoryTemplate : Template
 {
-    public GenerationUtils GenerationUtils { get; set; }
+    public EdmUtility EdmUtility { get; set; }
     public string Namespace { get; set; }
     public string ChannelFactoryNamespace { get; set; }
     public string ServiceContractNamespace { get; set; }
     private string file = null;
     public string File
     {
-        get { return file != null ? file : string.Format(@"{0}RemoteChannelFactory.g.cs", GenerationUtils.ModelName); }
+        get { return file != null ? file : string.Format(@"{0}RemoteChannelFactory.g.cs", EdmUtility.ModelName); }
         set { file = value; }
     }
 
-    public RemoteChannelFactoryTemplate(string project = null, GenerationUtils generationUtils = null, string defaultNameSpace = null, string serviceContractNamespace = null)
+    public RemoteChannelFactoryTemplate(string project = null, EdmUtility edmUtility = null, string defaultNameSpace = null, string serviceContractNamespace = null)
     {
         if (!string.IsNullOrWhiteSpace(project))
         {
             base.Output.Project = project;
         }
-        this.GenerationUtils = generationUtils;
+        this.EdmUtility = edmUtility;
         this.Namespace = defaultNameSpace;
         this.ChannelFactoryNamespace = "NTier.Client.Domain.Service.ChannelFactory";
         this.ServiceContractNamespace = serviceContractNamespace;
@@ -33,9 +33,9 @@ public class RemoteChannelFactoryTemplate : Template
     /// </summary>
     protected override void OnRendering(System.EventArgs e)
     {
-        if (GenerationUtils == null)
+        if (EdmUtility == null)
         {
-            throw new Exception("Missing property GenerationUtils");
+            throw new Exception("Missing property EdmUtility");
         }
         if (string.IsNullOrWhiteSpace(Namespace))
         {
@@ -60,12 +60,12 @@ public class RemoteChannelFactoryTemplate : Template
 #>
 namespace <#=Namespace#>
 {
-    [Export(typeof(IChannelFactory<I<#=GenerationUtils.ModelName#>DataService>))]
-    public sealed class <#=GenerationUtils.ModelName#>RemoteChannelFactory : RemoteChannelFactory<I<#=GenerationUtils.ModelName#>DataService>, IChannelFactory<I<#=GenerationUtils.ModelName#>DataService>
+    [Export(typeof(IChannelFactory<I<#=EdmUtility.ModelName#>DataService>))]
+    public sealed class <#=EdmUtility.ModelName#>RemoteChannelFactory : RemoteChannelFactory<I<#=EdmUtility.ModelName#>DataService>, IChannelFactory<I<#=EdmUtility.ModelName#>DataService>
     {
         [ImportingConstructor]
-        public <#=GenerationUtils.ModelName#>RemoteChannelFactory([Import(AllowDefault = true)]string endpointConfigurationName = "<#=GenerationUtils.ModelName#>DataService")
-            :base(string.IsNullOrEmpty(endpointConfigurationName) ? "<#=GenerationUtils.ModelName#>DataService" : endpointConfigurationName)
+        public <#=EdmUtility.ModelName#>RemoteChannelFactory([Import(AllowDefault = true)]string endpointConfigurationName = "<#=EdmUtility.ModelName#>DataService")
+            :base(string.IsNullOrEmpty(endpointConfigurationName) ? "<#=EdmUtility.ModelName#>DataService" : endpointConfigurationName)
         {
         }
     }

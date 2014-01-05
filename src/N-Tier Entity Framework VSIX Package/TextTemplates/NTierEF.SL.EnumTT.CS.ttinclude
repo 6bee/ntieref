@@ -4,19 +4,19 @@
 // </copyright>
 public class EnumTemplate : Template
 {
-    public GenerationUtils GenerationUtils { get; set; }
+    public EdmUtility EdmUtility { get; set; }
     public string Namespace { get; set; }
     public string EnumName { get; set; }
     private string file = null;
     public string File
     {
-        get { return file != null ? file : string.Format(@"Common{2}Domain{2}Model{2}{0}{2}{1}.g.cs", GenerationUtils.ModelName, EnumName, System.IO.Path.DirectorySeparatorChar); }
+        get { return file != null ? file : string.Format(@"Common{2}Domain{2}Model{2}{0}{2}{1}.g.cs", EdmUtility.ModelName, EnumName, System.IO.Path.DirectorySeparatorChar); }
         set { file = value; }
     }
 
-    public EnumTemplate(GenerationUtils generationUtils = null, string defaultNameSpace = null, string enumName = null)
+    public EnumTemplate(EdmUtility edmUtility = null, string defaultNameSpace = null, string enumName = null)
     {
-        this.GenerationUtils = generationUtils;
+        this.EdmUtility = edmUtility;
         this.Namespace = defaultNameSpace;
         this.EnumName = enumName;
     }
@@ -27,9 +27,9 @@ public class EnumTemplate : Template
     /// </summary>
     protected override void OnRendering(System.EventArgs e)
     {
-        if (GenerationUtils == null)
+        if (EdmUtility == null)
         {
-            throw new Exception("Missing property GenerationUtils");
+            throw new Exception("Missing property EdmUtility");
         }
         if (string.IsNullOrWhiteSpace(Namespace))
         {
@@ -47,13 +47,13 @@ public class EnumTemplate : Template
     public override string TransformText()
     {
         var code = new CodeGenerationTools(this);
-        var typeMapper = GenerationUtils.TypeMapper;
-        var codeStringGenerator = new CodeStringGenerator(code, GenerationUtils.TypeMapper, GenerationUtils.EF);
-        var enumType = typeMapper.GetEnumItemsToGenerate(GenerationUtils.ItemCollection).Single(e => e.Name == EnumName);
+        var typeMapper = EdmUtility.TypeMapper;
+        var codeStringGenerator = new CodeStringGenerator(code, EdmUtility.TypeMapper, EdmUtility.EF);
+        var enumType = typeMapper.GetEnumItemsToGenerate(EdmUtility.ItemCollection).Single(e => e.Name == EnumName);
 
         WriteHeader();
 #>
-namespace <#=Namespace + "." + GenerationUtils.ModelName#>
+namespace <#=Namespace + "." + EdmUtility.ModelName#>
 {
 <#+
     if (typeMapper.EnumIsFlags(enumType))

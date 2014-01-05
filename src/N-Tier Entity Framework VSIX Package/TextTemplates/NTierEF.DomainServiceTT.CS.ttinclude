@@ -4,7 +4,7 @@
 // </copyright>
 public class DomainServiceTemplate : Template
 {
-    public GenerationUtils GenerationUtils { get; set; }
+    public EdmUtility EdmUtility { get; set; }
     public bool GenerateModificationMethods { get; set; }
     public string Namespace { get; set; }
     public string ModelNamespace { get; set; }
@@ -12,18 +12,18 @@ public class DomainServiceTemplate : Template
     private string file = null;
     public string File
     {
-        get { return file != null ? file : string.Format(@"{0}DomainService.cs", GenerationUtils.ModelName); }
+        get { return file != null ? file : string.Format(@"{0}DomainService.cs", EdmUtility.ModelName); }
         set { file = value; }
     }
 
-    public DomainServiceTemplate(GenerationUtils GenerationUtils = null, string project = null, string defaultNameSpace = null, string modelNamespace = null, string clientLibraryNamespace = null)
+    public DomainServiceTemplate(EdmUtility EdmUtility = null, string project = null, string defaultNameSpace = null, string modelNamespace = null, string clientLibraryNamespace = null)
     {
         if (!string.IsNullOrWhiteSpace(project))
         {
             base.Output.Project = project;
         }
         base.Output.PreserveExistingFile = true;
-        this.GenerationUtils = GenerationUtils;
+        this.EdmUtility = EdmUtility;
         this.GenerateModificationMethods = true;
         this.Namespace = defaultNameSpace;
         this.ModelNamespace = modelNamespace;
@@ -36,9 +36,9 @@ public class DomainServiceTemplate : Template
     /// </summary>
     protected override void OnRendering(System.EventArgs e)
     {
-        if (GenerationUtils == null)
+        if (EdmUtility == null)
         {
-            throw new Exception("Missing property GenerationUtils");
+            throw new Exception("Missing property EdmUtility");
         }
         if (string.IsNullOrWhiteSpace(Namespace))
         {
@@ -59,44 +59,44 @@ public class DomainServiceTemplate : Template
 
     public override string TransformText()
     {
-        WriteHeader(ModelNamespace + "." + GenerationUtils.ModelName, ClientLibraryNamespace);
+        WriteHeader(ModelNamespace + "." + EdmUtility.ModelName, ClientLibraryNamespace);
 #>
 
-namespace <#=GenerationUtils.Code.EscapeNamespace(Namespace)#>
+namespace <#=EdmUtility.Code.EscapeNamespace(Namespace)#>
 {
     [EnableClientAccess]
-    public partial class  <#=GenerationUtils.ModelName#>DomainService : DomainService
+    public partial class  <#=EdmUtility.ModelName#>DomainService : DomainService
     {
-        protected readonly <#=GenerationUtils.ModelName#>DataContext DataContext = new <#=GenerationUtils.ModelName#>DataContext();
+        protected readonly <#=EdmUtility.ModelName#>DataContext DataContext = new <#=EdmUtility.ModelName#>DataContext();
 
 <#+
-        foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+        foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
         {
 #>
 
-        #region <#=GenerationUtils.Code.Escape(entitySet.ElementType)#>
-        public IQueryable<<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>> Get<#=GenerationUtils.Code.Escape(entitySet)#>()
+        #region <#=EdmUtility.Code.Escape(entitySet.ElementType)#>
+        public IQueryable<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> Get<#=EdmUtility.Code.Escape(entitySet)#>()
         {
-            return DataContext.<#=GenerationUtils.Code.Escape(entitySet)#>.AsQueryable();
+            return DataContext.<#=EdmUtility.Code.Escape(entitySet)#>.AsQueryable();
         }
 <#+
             if (GenerateModificationMethods)
             {
 #>
 
-        public void Insert<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>(<#=GenerationUtils.Code.Escape(entitySet.ElementType)#> <#=FirstCaseLow(GenerationUtils.Code.Escape(entitySet.ElementType))#>)
+        public void Insert<#=EdmUtility.Code.Escape(entitySet.ElementType)#>(<#=EdmUtility.Code.Escape(entitySet.ElementType)#> <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>)
         {
-            DataContext.Add(<#=FirstCaseLow(GenerationUtils.Code.Escape(entitySet.ElementType))#>);
+            DataContext.Add(<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>);
         }
 
-        public void Update<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>(<#=GenerationUtils.Code.Escape(entitySet.ElementType)#> <#=FirstCaseLow(GenerationUtils.Code.Escape(entitySet.ElementType))#>)
+        public void Update<#=EdmUtility.Code.Escape(entitySet.ElementType)#>(<#=EdmUtility.Code.Escape(entitySet.ElementType)#> <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>)
         {
-            DataContext.AttachAsModified(<#=FirstCaseLow(GenerationUtils.Code.Escape(entitySet.ElementType))#>, ChangeSet.GetOriginal(<#=FirstCaseLow(GenerationUtils.Code.Escape(entitySet.ElementType))#>));
+            DataContext.AttachAsModified(<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>, ChangeSet.GetOriginal(<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>));
         }
 
-        public void Delete<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>(<#=GenerationUtils.Code.Escape(entitySet.ElementType)#> <#=FirstCaseLow(GenerationUtils.Code.Escape(entitySet.ElementType))#>)
+        public void Delete<#=EdmUtility.Code.Escape(entitySet.ElementType)#>(<#=EdmUtility.Code.Escape(entitySet.ElementType)#> <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>)
         {
-            DataContext.Delete(<#=FirstCaseLow(GenerationUtils.Code.Escape(entitySet.ElementType))#>);
+            DataContext.Delete(<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>);
         }
 <#+
             }

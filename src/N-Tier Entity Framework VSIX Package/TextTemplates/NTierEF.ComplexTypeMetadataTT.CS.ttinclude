@@ -4,25 +4,25 @@
 // </copyright>
 public class ComplexTypeMetadataTemplate : Template
 {
-    public GenerationUtils GenerationUtils { get; set; }
+    public EdmUtility EdmUtility { get; set; }
     public string Namespace { get; set; }
     public string ModelBaseNamespace { get; set; }
     public string ClassName { get; set; }
     private string file = null;
     public string File
     {
-        get { return file != null ? file : string.Format(@"{0}\{1}.metadata.cs", GenerationUtils.ModelName, ClassName); }
+        get { return file != null ? file : string.Format(@"{0}\{1}.metadata.cs", EdmUtility.ModelName, ClassName); }
         set { file = value; }
     }
 
-    public ComplexTypeMetadataTemplate(string project = null, GenerationUtils generationUtils = null, string defaultNameSpace = null, string className = null)
+    public ComplexTypeMetadataTemplate(string project = null, EdmUtility edmUtility = null, string defaultNameSpace = null, string className = null)
     {
         if (!string.IsNullOrWhiteSpace(project))
         {
             base.Output.Project = project;
         }
         base.Output.PreserveExistingFile = true;
-        this.GenerationUtils = generationUtils;
+        this.EdmUtility = edmUtility;
         this.Namespace = defaultNameSpace;
         this.ModelBaseNamespace = "NTier.Common.Domain.Model";
         this.ClassName = className;
@@ -34,9 +34,9 @@ public class ComplexTypeMetadataTemplate : Template
     /// </summary>
     protected override void OnRendering(System.EventArgs e)
     {
-        if (GenerationUtils == null)
+        if (EdmUtility == null)
         {
-            throw new Exception("Missing property GenerationUtils");
+            throw new Exception("Missing property EdmUtility");
         }
         if (string.IsNullOrWhiteSpace(Namespace))
         {
@@ -57,19 +57,19 @@ public class ComplexTypeMetadataTemplate : Template
 
     public override string TransformText()
     {
-        var typeMapper = GenerationUtils.TypeMapper;
-        ComplexType complex = GenerationUtils.ItemCollection.GetItems<ComplexType>().Single(e => e.Name == ClassName);
+        var typeMapper = EdmUtility.TypeMapper;
+        ComplexType complex = EdmUtility.ItemCollection.GetItems<ComplexType>().Single(e => e.Name == ClassName);
 
         WriteHeader(ModelBaseNamespace);
 #>
-namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
+namespace <#= this.Namespace + "." + EdmUtility.ModelName #>
 {
-    [MetadataType(typeof(<#=GenerationUtils.Code.Escape(complex)#>Metadata))]
-    partial class <#=GenerationUtils.Code.Escape(complex)#>
+    [MetadataType(typeof(<#=EdmUtility.Code.Escape(complex)#>Metadata))]
+    partial class <#=EdmUtility.Code.Escape(complex)#>
     {
     }
 
-    // This class allows you to attach custom attributes to properties of the <#=GenerationUtils.Code.Escape(complex)#> class.
+    // This class allows you to attach custom attributes to properties of the <#=EdmUtility.Code.Escape(complex)#> class.
     //
     // For example, the following marks the Xyz property as a
     // required property and specifies the format for valid values:
@@ -77,10 +77,10 @@ namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
     //    [RegularExpression("[A-Z][A-Za-z0-9]*")]
     //    [StringLength(32)]
     //    string Xyz;
-    <#=Accessibility.ForType(complex)#> sealed class <#=GenerationUtils.Code.Escape(complex)#>Metadata
+    <#=Accessibility.ForType(complex)#> sealed class <#=EdmUtility.Code.Escape(complex)#>Metadata
     {
         // this class is not meant to be instantiated by client code
-        private <#=GenerationUtils.Code.Escape(complex)#>Metadata() { }
+        private <#=EdmUtility.Code.Escape(complex)#>Metadata() { }
 
 #pragma warning disable 0169
 
@@ -90,7 +90,7 @@ namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
         {
 #>
 
-        public <#=GenerationUtils.Code.Escape(edmProperty.TypeUsage)#> <#=GenerationUtils.Code.Escape(edmProperty)#>;
+        public <#=EdmUtility.Code.Escape(edmProperty.TypeUsage)#> <#=EdmUtility.Code.Escape(edmProperty)#>;
 <#+
         }
 
@@ -105,7 +105,7 @@ namespace <#= this.Namespace + "." + GenerationUtils.ModelName #>
         {
 #>
 
-        public <#=GenerationUtils.Code.Escape(edmProperty.TypeUsage)#> <#=GenerationUtils.Code.Escape(edmProperty)#>;
+        public <#=EdmUtility.Code.Escape(edmProperty.TypeUsage)#> <#=EdmUtility.Code.Escape(edmProperty)#>;
 
 <#+
         }
@@ -148,9 +148,9 @@ using System.Runtime.Serialization;
     private string InitializedTrackingField(EdmProperty property)
     {
         string namePart = property.Name + "Initialized";
-        if (GenerationUtils.Code.CamelCaseFields)
+        if (EdmUtility.Code.CamelCaseFields)
         {
-            namePart = GenerationUtils.Code.CamelCase(namePart);
+            namePart = EdmUtility.Code.CamelCase(namePart);
         }
         return "_" + namePart;
     }

@@ -11,21 +11,21 @@
 // </copyright>
 public class DataModelCodeGenerator : Generator
 {
-    private readonly GenerationUtils GenerationUtils;
+    private readonly EdmUtility EdmUtility;
     private readonly string DataModelProject = string.Empty;
 
-    public DataModelCodeGenerator(string dataModelProject, GenerationUtils generationUtils, string modelNamespace)
+    public DataModelCodeGenerator(string dataModelProject, EdmUtility edmUtility, string modelNamespace)
     {
-        this.GenerationUtils = generationUtils;
+        this.EdmUtility = edmUtility;
         this.DataModelProject = dataModelProject;
 
-        this.EnumTemplate = new EnumTemplate(DataModelProject, GenerationUtils, modelNamespace);
-        this.EntityTemplate = new EntityTemplate(DataModelProject, GenerationUtils, modelNamespace);
-        this.EntityMetadataTemplate = new EntityMetadataTemplate(DataModelProject, GenerationUtils, modelNamespace);
-        this.ComplexTypeTemplate = new ComplexTypeTemplate(DataModelProject, GenerationUtils, modelNamespace);
-        this.ComplexTypeMetadataTemplate = new ComplexTypeMetadataTemplate(DataModelProject, GenerationUtils, modelNamespace);
-        this.ChangeSetTemplate = new ChangeSetTemplate(DataModelProject, GenerationUtils, modelNamespace);
-        this.ResultSetTemplate = new ResultSetTemplate(DataModelProject, GenerationUtils, modelNamespace);
+        this.EnumTemplate = new EnumTemplate(DataModelProject, EdmUtility, modelNamespace);
+        this.EntityTemplate = new EntityTemplate(DataModelProject, EdmUtility, modelNamespace);
+        this.EntityMetadataTemplate = new EntityMetadataTemplate(DataModelProject, EdmUtility, modelNamespace);
+        this.ComplexTypeTemplate = new ComplexTypeTemplate(DataModelProject, EdmUtility, modelNamespace);
+        this.ComplexTypeMetadataTemplate = new ComplexTypeMetadataTemplate(DataModelProject, EdmUtility, modelNamespace);
+        this.ChangeSetTemplate = new ChangeSetTemplate(DataModelProject, EdmUtility, modelNamespace);
+        this.ResultSetTemplate = new ResultSetTemplate(DataModelProject, EdmUtility, modelNamespace);
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ public class DataModelCodeGenerator : Generator
     public EntityTemplate EntityTemplate;
 
     /// <summary>
-    /// Gets or sets the template that generates the entity generationUtils types of the entity model.
+    /// Gets or sets the template that generates the entity edmUtility types of the entity model.
     /// </summary>
     /// <remarks>
     /// You can customize generation by replacing the default template
@@ -109,7 +109,7 @@ public class DataModelCodeGenerator : Generator
     {
         if (EnumTemplate != null)
         {
-            foreach (EdmType item in GenerationUtils.TypeMapper.GetEnumItemsToGenerate(GenerationUtils.ItemCollection))
+            foreach (EdmType item in EdmUtility.TypeMapper.GetEnumItemsToGenerate(EdmUtility.ItemCollection))
             {
                 EnumTemplate.EnumName = item.Name;
                 EnumTemplate.Render();
@@ -121,7 +121,7 @@ public class DataModelCodeGenerator : Generator
     {
         if (EntityTemplate != null)
         {
-            foreach (EntityType entity in GenerationUtils.ItemCollection.GetItems<EntityType>())
+            foreach (EntityType entity in EdmUtility.ItemCollection.GetItems<EntityType>())
             {
                 EntityTemplate.EntityName = entity.Name;
                 EntityTemplate.Render();
@@ -133,7 +133,7 @@ public class DataModelCodeGenerator : Generator
     {
         if (EntityMetadataTemplate != null)
         {
-            foreach (EntityType entity in GenerationUtils.ItemCollection.GetItems<EntityType>())
+            foreach (EntityType entity in EdmUtility.ItemCollection.GetItems<EntityType>())
             {
                 EntityMetadataTemplate.EntityName = entity.Name;
                 EntityMetadataTemplate.Render();
@@ -145,7 +145,7 @@ public class DataModelCodeGenerator : Generator
     {
         if (ComplexTypeTemplate != null)
         {
-            foreach (ComplexType complex in GenerationUtils.ItemCollection.GetItems<ComplexType>())
+            foreach (ComplexType complex in EdmUtility.ItemCollection.GetItems<ComplexType>())
             {
                 ComplexTypeTemplate.ClassName = complex.Name;
                 ComplexTypeTemplate.Render();
@@ -157,7 +157,7 @@ public class DataModelCodeGenerator : Generator
     {
         if (ComplexTypeMetadataTemplate != null)
         {
-            foreach (ComplexType complex in GenerationUtils.ItemCollection.GetItems<ComplexType>())
+            foreach (ComplexType complex in EdmUtility.ItemCollection.GetItems<ComplexType>())
             {
                 ComplexTypeMetadataTemplate.ClassName = complex.Name;
                 ComplexTypeMetadataTemplate.Render();

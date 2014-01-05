@@ -4,7 +4,7 @@
 // </copyright>
 public class DataServiceTemplate : Template
 {
-    public GenerationUtils GenerationUtils { get; set; }
+    public EdmUtility EdmUtility { get; set; }
     public string Namespace { get; set; }
     public string ModelNamespace { get; set; }
     public string ModelBaseNamespace { get; set; }
@@ -15,17 +15,17 @@ public class DataServiceTemplate : Template
     private string file = null;
     public string File
     {
-        get { return file != null ? file : string.Format(@"{0}DataService.g.cs", GenerationUtils.ModelName); }
+        get { return file != null ? file : string.Format(@"{0}DataService.g.cs", EdmUtility.ModelName); }
         set { file = value; }
     }
 
-    public DataServiceTemplate(string project = null, GenerationUtils generationUtils = null, string defaultNameSpace = null, string modelNamespace = null, string serviceContractNamespace = null, string repositoryNamespace = null)
+    public DataServiceTemplate(string project = null, EdmUtility edmUtility = null, string defaultNameSpace = null, string modelNamespace = null, string serviceContractNamespace = null, string repositoryNamespace = null)
     {
         if (!string.IsNullOrWhiteSpace(project))
         {
             base.Output.Project = project;
         }
-        this.GenerationUtils = generationUtils;
+        this.EdmUtility = edmUtility;
         this.Namespace = defaultNameSpace;
         this.ModelNamespace = modelNamespace;
         this.ServiceContractNamespace = serviceContractNamespace;
@@ -41,9 +41,9 @@ public class DataServiceTemplate : Template
     /// </summary>
     protected override void OnRendering(System.EventArgs e)
     {
-        if (GenerationUtils == null)
+        if (EdmUtility == null)
         {
-            throw new Exception("Missing property GenerationUtils");
+            throw new Exception("Missing property EdmUtility");
         }
         if (string.IsNullOrWhiteSpace(Namespace))
         {
@@ -83,51 +83,51 @@ public class DataServiceTemplate : Template
         WriteHeader(
             ServiceBaseNamespace,
             ModelBaseNamespace,
-            ModelNamespace + "." + GenerationUtils.ModelName,
+            ModelNamespace + "." + EdmUtility.ModelName,
             ServiceContractNamespace + ".Contracts",
             RepositoryNamespace,
             RepositoryBaseNamespace
         );
 #>
 
-namespace <#=GenerationUtils.Code.EscapeNamespace(Namespace)#>
+namespace <#=EdmUtility.Code.EscapeNamespace(Namespace)#>
 {
-    public partial class <#=GenerationUtils.ModelName#>DataService : DataService<I<#=GenerationUtils.ModelName#>Repository>, I<#=GenerationUtils.ModelName#>DataService
+    public partial class <#=EdmUtility.ModelName#>DataService : DataService<I<#=EdmUtility.ModelName#>Repository>, I<#=EdmUtility.ModelName#>DataService
     {
         #region repository factory
 
-        partial void CreateRepository(ClientInfo clientInfo, ref I<#=GenerationUtils.ModelName#>Repository repository);
+        partial void CreateRepository(ClientInfo clientInfo, ref I<#=EdmUtility.ModelName#>Repository repository);
 
         /// <summary>
         /// Creates a and returns a new instance of the repository
         /// </summary>
         /// <returns>A new instance of the repository</returns>
-        private I<#=GenerationUtils.ModelName#>Repository CreateRepository(ClientInfo clientInfo)
+        private I<#=EdmUtility.ModelName#>Repository CreateRepository(ClientInfo clientInfo)
         {
-            I<#=GenerationUtils.ModelName#>Repository repository = null;
+            I<#=EdmUtility.ModelName#>Repository repository = null;
 
             CreateRepository(clientInfo, ref repository);
 
-            return repository ?? new <#=GenerationUtils.ModelName#>Repository();
+            return repository ?? new <#=EdmUtility.ModelName#>Repository();
         }
 
         #endregion repository factory
 
         #region query service methods
 
-        partial void PreProcessing(ClientInfo clientInfo, ref Query query, I<#=GenerationUtils.ModelName#>Repository repository);
+        partial void PreProcessing(ClientInfo clientInfo, ref Query query, I<#=EdmUtility.ModelName#>Repository repository);
 <#+
-        foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+        foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
         {
             // skip entities which are marked as non-root
             var isAggregateRoot = !entitySet.ElementType.MetadataProperties.Any(p => p.Name.EndsWith("AggregateRoot") && !bool.Parse(p.Value as string));
             if (!isAggregateRoot) continue;
 #>
-        partial void PostProcessing(ClientInfo clientInfo, Query query, ref QueryResult<<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>> result, I<#=GenerationUtils.ModelName#>Repository repository);
+        partial void PostProcessing(ClientInfo clientInfo, Query query, ref QueryResult<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> result, I<#=EdmUtility.ModelName#>Repository repository);
 <#+
         }
 
-        foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+        foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
         {
             // skip entities which are marked as non-root
             var isAggregateRoot = !entitySet.ElementType.MetadataProperties.Any(p => p.Name.EndsWith("AggregateRoot") && !bool.Parse(p.Value as string));
@@ -135,12 +135,12 @@ namespace <#=GenerationUtils.Code.EscapeNamespace(Namespace)#>
 #>
 
         [OperationBehavior(Impersonation = ImpersonationOption.Allowed)]
-        public QueryResult<<#=GenerationUtils.Code.Escape(entitySet.ElementType)#>> Get<#=GenerationUtils.Code.Escape(entitySet)#>(ClientInfo clientInfo, Query query)
+        public QueryResult<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> Get<#=EdmUtility.Code.Escape(entitySet)#>(ClientInfo clientInfo, Query query)
         {
             using (var dataRepository = CreateRepository(clientInfo))
             {
                 PreProcessing(clientInfo, ref query, dataRepository);
-                var result = Get(dataRepository.<#=GenerationUtils.Code.Escape(entitySet)#>, query, clientInfo);
+                var result = Get(dataRepository.<#=EdmUtility.Code.Escape(entitySet)#>, query, clientInfo);
                 PostProcessing(clientInfo, query, ref result, dataRepository);
                 return result;
             }
@@ -153,14 +153,14 @@ namespace <#=GenerationUtils.Code.EscapeNamespace(Namespace)#>
 
         #region update service method
 
-        partial void PreProcessing(ClientInfo clientInfo, ref <#=GenerationUtils.ModelName#>ChangeSet changeSet, I<#=GenerationUtils.ModelName#>Repository repository);
-        partial void BeforeSaving(ClientInfo clientInfo, ref <#=GenerationUtils.ModelName#>ChangeSet changeSet, I<#=GenerationUtils.ModelName#>Repository repository);
-        partial void PostProcessing(ClientInfo clientInfo, ref <#=GenerationUtils.ModelName#>ResultSet result, I<#=GenerationUtils.ModelName#>Repository repository);
+        partial void PreProcessing(ClientInfo clientInfo, ref <#=EdmUtility.ModelName#>ChangeSet changeSet, I<#=EdmUtility.ModelName#>Repository repository);
+        partial void BeforeSaving(ClientInfo clientInfo, ref <#=EdmUtility.ModelName#>ChangeSet changeSet, I<#=EdmUtility.ModelName#>Repository repository);
+        partial void PostProcessing(ClientInfo clientInfo, ref <#=EdmUtility.ModelName#>ResultSet result, I<#=EdmUtility.ModelName#>Repository repository);
 
         [OperationBehavior(TransactionScopeRequired = true, Impersonation = ImpersonationOption.Allowed)]
-        public <#=GenerationUtils.ModelName#>ResultSet SubmitChanges(ClientInfo clientInfo, <#=GenerationUtils.ModelName#>ChangeSet changeSet)
+        public <#=EdmUtility.ModelName#>ResultSet SubmitChanges(ClientInfo clientInfo, <#=EdmUtility.ModelName#>ChangeSet changeSet)
         {
-            var resultSet = new <#=GenerationUtils.ModelName#>ResultSet(changeSet);
+            var resultSet = new <#=EdmUtility.ModelName#>ResultSet(changeSet);
             using (var transactionScope = CreateSavingTransactionScope())
             {
                 using (var dataRepository = CreateRepository(clientInfo))
@@ -170,10 +170,10 @@ namespace <#=GenerationUtils.Code.EscapeNamespace(Namespace)#>
 
                     // apply chnages to repository
 <#+
-            foreach (EntitySet entitySet in GenerationUtils.Container.BaseEntitySets.OfType<EntitySet>())
+            foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
             {
 #>
-                    ApplyChanges(dataRepository, dataRepository.<#=GenerationUtils.Code.Escape(entitySet)#>, changeSet, changeSet.<#=GenerationUtils.Code.Escape(entitySet)#>, clientInfo);
+                    ApplyChanges(dataRepository, dataRepository.<#=EdmUtility.Code.Escape(entitySet)#>, changeSet, changeSet.<#=EdmUtility.Code.Escape(entitySet)#>, clientInfo);
 <#+
             }
 #>
