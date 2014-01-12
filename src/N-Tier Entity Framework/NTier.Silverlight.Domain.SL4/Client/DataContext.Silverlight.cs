@@ -9,7 +9,7 @@ namespace NTier.Client.Domain
 {
     abstract partial class DataContext
     {
-        internal protected delegate void QueryDelegate<TEntity>(ClientInfo clientInfo, Query query, Action<QueryResult<TEntity>> callback) where TEntity : Entity;
+        internal protected delegate void QueryDelegate<TEntity>(ClientInfo clientInfo, Query query, Action<QueryResult<TEntity>, Exception> callback) where TEntity : Entity;
 
         #region Save
 

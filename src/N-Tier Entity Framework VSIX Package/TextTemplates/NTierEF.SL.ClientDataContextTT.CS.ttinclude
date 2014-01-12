@@ -198,7 +198,7 @@ namespace <#=Namespace#>
             if (isAggregateRoot)
             {
 #>
-        private void Get<#=EdmUtility.Code.Escape(entitySet)#>Async(ClientInfo clientInfo, Query query, Action<QueryResult<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>>> callback)
+        private void Get<#=EdmUtility.Code.Escape(entitySet)#>Async(ClientInfo clientInfo, Query query, Action<QueryResult<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>>, Exception> callback)
         {
             var service = ChannelFactory.CreateChannel();
 
@@ -210,7 +210,11 @@ namespace <#=Namespace#>
                     try
                     {
                         var result = service.EndGet<#=EdmUtility.Code.Escape(entitySet)#>(asyncResult);
-                        callback(result);
+                        callback(result, null);
+                    }
+                    catch (Exception ex)
+                    {
+                        callback(null, ex);
                     }
                     finally
                     {

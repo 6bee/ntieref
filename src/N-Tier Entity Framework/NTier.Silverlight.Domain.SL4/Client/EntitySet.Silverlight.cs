@@ -16,7 +16,7 @@ namespace NTier.Client.Domain
             //    throw new Exception(string.Format("There is no query procedure for entity type {0}. Check whether this entity is not a aggregate root and needs to be loaded through its aggregate root.", typeof(TEntity)));
             //}
 
-            _queryDelegate(queryable.ClientInfo, queryable.Query, delegate(QueryResult<TEntity> result)
+            _queryDelegate(queryable.ClientInfo, queryable.Query, delegate(QueryResult<TEntity> result, Exception exception)
             {
                 try
                 {
@@ -36,10 +36,15 @@ namespace NTier.Client.Domain
                     //    }
                     //}
 
-                    var resultList = new List<TEntity>();
+                    IList<TEntity> resultList = null;
+                    long? totalCount = null;
 
+                    if (!ReferenceEquals(null, result))
                     //lock (_internalEntitySet.SyncRoot) // this would potentially lead to deadlocks
                     {
+                        resultList = new List<TEntity>();
+                        totalCount = result.TotalCount;
+
                         using (_internalEntitySet.PreventChangetracking())
                         {
                             if (result.TotalCount.HasValue)
@@ -82,7 +87,7 @@ namespace NTier.Client.Domain
                         }
                     }
 
-                    callback(resultList, result.TotalCount);
+                    callback(resultList, totalCount, exception);
                 }
                 catch (Exception e)
                 {
