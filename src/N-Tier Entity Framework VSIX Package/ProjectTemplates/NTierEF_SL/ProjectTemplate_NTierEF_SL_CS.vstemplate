@@ -32,7 +32,7 @@
   <WizardData>
     <packages repository="extension" repositoryId="NTierEntityFramework.Trivadis.x">
       <package id="NTierEntityFramework.Silverlight" version="0.0.1" />
-      <package id="Remote.Linq" version="1.0.1" />
+      <package id="Remote.Linq" version="1.0.2" />
     </packages>
   </WizardData>
 </VSTemplate>

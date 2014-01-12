@@ -54,9 +54,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
-    <Reference Include="Remote.Linq, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Remote.Linq.1.0.1\lib\sl4\Remote.Linq.dll</HintPath>
+    <Reference Include="Remote.Linq">
+      <HintPath>..\packages\Remote.Linq.1.0.2\lib\sl5\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations, Version=5.0.5.0, Culture=neutral, PublicKeyToken=ddd0da4d3e678217, processorArchitecture=MSIL" />
     <Reference Include="System.Runtime.Serialization" />
@@ -74,6 +73,39 @@
   <ItemGroup>
     <Compile Include="..\NTier.Common.Domain\Model\SimplePropertyAttribute.cs">
       <Link>Common\Model\SimplePropertyAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\AcceptOption.cs">
+      <Link>Client\AcceptOption.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\AsyncQueryCallback.cs">
+      <Link>Client\AsyncQueryCallback.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\DataContext.Silverlight.cs">
+      <Link>Client\DataContext.Silverlight.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\DataServiceQueryable.Silverlight.cs">
+      <Link>Client\DataServiceQueryable.Silverlight.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\DataServiceQueryableImp.Silverlight.cs">
+      <Link>Client\DataServiceQueryableImp.Silverlight.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\Deployment.cs">
+      <Link>Client\Deployment.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\EntitySet.Silverlight.cs">
+      <Link>Client\EntitySet.Silverlight.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\IDataServiceQueryable.Silverlight.cs">
+      <Link>Client\IDataServiceQueryable.Silverlight.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\OrderedDataServiceQueryable.Silverlight.cs">
+      <Link>Client\OrderedDataServiceQueryable.Silverlight.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\System.Collections.Generic\SortedDictionary.cs">
+      <Link>System.Collections.Generic\SortedDictionary.cs</Link>
     </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
@@ -237,17 +269,6 @@
     <Compile Include="..\NTier.Common.Domain\Model\ValueObject.cs">
       <Link>Common\Model\ValueObject.cs</Link>
     </Compile>
-    <Compile Include="Client\AcceptOption.cs" />
-    <Compile Include="Client\AsyncQueryCallback.cs" />
-    <Compile Include="Client\DataContext.Silverlight.cs" />
-    <Compile Include="Client\DataServiceQueryable.Silverlight.cs" />
-    <Compile Include="Client\DataServiceQueryableImp.Silverlight.cs" />
-    <Compile Include="Client\Deployment.cs" />
-    <Compile Include="Client\EntitySet.Silverlight.cs" />
-    <Compile Include="Client\IDataServiceQueryable.Silverlight.cs" />
-    <Compile Include="Client\OrderedDataServiceQueryable.Silverlight.cs" />
-    <Compile Include="System.Collections.Generic\SortedDictionary.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
