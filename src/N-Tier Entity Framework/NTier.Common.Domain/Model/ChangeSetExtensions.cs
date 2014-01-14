@@ -85,13 +85,12 @@ namespace NTier.Common.Domain.Model
 
                 case ObjectState.Modified:
                     {
-                        reducedEntity.ChangeTracker.IsChangeTrackingEnabled = true;
-
                         // copy changed properties (simple and complex properties only)
                         var properties = originalEntity.PropertyInfos
                             .Where(p => p.IsPhysical && 
                                         p.Attributes.Any(attribute => attribute is SimplePropertyAttribute || attribute is ComplexPropertyAttribute) &&
-                                        originalEntity.ChangeTracker.ModifiedProperties.Contains(p.Name))
+                                        originalEntity.ChangeTracker.ModifiedProperties.Contains(p.Name) && 
+                                        originalEntity.ChangeTracker.OriginalValues.ContainsKey(p.Name))
                             .Select(p => p.PropertyInfo);
 
                         foreach (var property in properties)
@@ -99,11 +98,8 @@ namespace NTier.Common.Domain.Model
                             var value = property.GetValue(originalEntity, null);
                             property.SetValue(reducedEntity, value, null);
 
-                            // in case of default value, ModifiedProperties list need to be filled manualy
-                            if (!reducedEntity.ChangeTracker.ModifiedProperties.Contains(property.Name))
-                            {
-                                reducedEntity.ChangeTracker.ModifiedProperties.Add(property.Name);
-                            }
+                            reducedEntity.ChangeTracker.ModifiedProperties.Add(property.Name);
+                            reducedEntity.ChangeTracker.OriginalValues[property.Name] = originalEntity.ChangeTracker.OriginalValues[property.Name];
                         }
                     }
                     break;
