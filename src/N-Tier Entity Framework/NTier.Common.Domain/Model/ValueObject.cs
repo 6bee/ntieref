@@ -153,6 +153,10 @@ namespace NTier.Common.Domain.Model
             return !(obj1 == obj2);
         }
 
+        //public abstract override bool Equals(object obj);
+
+        //public abstract override int GetHashCode();
+
         #endregion Operator overloading
     }
 }

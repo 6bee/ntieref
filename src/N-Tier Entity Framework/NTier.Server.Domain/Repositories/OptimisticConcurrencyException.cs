@@ -49,7 +49,7 @@ namespace NTier.Server.Domain.Repositories
         /// <param name="info">The System.Runtime.Serialization.SerializationInfo that holds the serialized object data about the exception being thrown.</param>
         /// <param name="context">The System.Runtime.Serialization.StreamingContext that contains contextual information about the source or destination.</param>
         [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
-        protected OptimisticConcurrencyException(SerializationInfo info, StreamingContext context)
+        private OptimisticConcurrencyException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
