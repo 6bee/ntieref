@@ -94,24 +94,27 @@ namespace <#=EdmUtility.Code.EscapeNamespace(Namespace)#>
 {
     public partial class <#=EdmUtility.ModelName#>DataService : DataService<I<#=EdmUtility.ModelName#>Repository>, I<#=EdmUtility.ModelName#>DataService
     {
-        #region repository factory
-
-        partial void CreateRepository(ClientInfo clientInfo, ref I<#=EdmUtility.ModelName#>Repository repository);
-
-        /// <summary>
-        /// Creates a and returns a new instance of the repository
-        /// </summary>
-        /// <returns>A new instance of the repository</returns>
-        private I<#=EdmUtility.ModelName#>Repository CreateRepository(ClientInfo clientInfo)
+        #region fields
+ 
+        private static Func<ClientInfo, I<#=EdmUtility.ModelName#>Repository> _defaultRepositoryFactory = clientInfo => new <#=EdmUtility.ModelName#>Repository();
+        private readonly Func<ClientInfo, I<#=EdmUtility.ModelName#>Repository> _repositoryFactory;
+ 
+        #endregion fields
+ 
+        #region constructor
+ 
+        public <#=EdmUtility.ModelName#>DataService()
+            : this(_defaultRepositoryFactory)
         {
-            I<#=EdmUtility.ModelName#>Repository repository = null;
-
-            CreateRepository(clientInfo, ref repository);
-
-            return repository ?? new <#=EdmUtility.ModelName#>Repository();
         }
-
-        #endregion repository factory
+ 
+        public <#=EdmUtility.ModelName#>DataService(Func<ClientInfo, I<#=EdmUtility.ModelName#>Repository> repositoryFactory)
+        {
+            if (ReferenceEquals(null, repositoryFactory)) throw new ArgumentNullException("repositoryFactory");
+            _repositoryFactory = repositoryFactory;
+        }
+ 
+        #endregion constructor
 
         #region query service methods
 
@@ -137,7 +140,7 @@ namespace <#=EdmUtility.Code.EscapeNamespace(Namespace)#>
         [OperationBehavior(Impersonation = ImpersonationOption.Allowed)]
         public QueryResult<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> Get<#=EdmUtility.Code.Escape(entitySet)#>(ClientInfo clientInfo, Query query)
         {
-            using (var dataRepository = CreateRepository(clientInfo))
+            using (var dataRepository = _repositoryFactory(clientInfo))
             {
                 PreProcessing(clientInfo, ref query, dataRepository);
                 var result = Get(dataRepository.<#=EdmUtility.Code.Escape(entitySet)#>, query, clientInfo);
@@ -163,7 +166,7 @@ namespace <#=EdmUtility.Code.EscapeNamespace(Namespace)#>
             var resultSet = new <#=EdmUtility.ModelName#>ResultSet(changeSet);
             using (var transactionScope = CreateSavingTransactionScope())
             {
-                using (var dataRepository = CreateRepository(clientInfo))
+                using (var dataRepository = _repositoryFactory(clientInfo))
                 {
                     // optional custom processing
                     PreProcessing(clientInfo, ref changeSet, dataRepository);
