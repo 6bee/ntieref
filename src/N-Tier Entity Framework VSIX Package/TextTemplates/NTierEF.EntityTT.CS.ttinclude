@@ -1281,6 +1281,7 @@ using System.Runtime.Serialization;
     private void WriteEntityTypeSerializationInfo(EntityType type)
     {
 #>
+    [Serializable]
     [DataContract(IsReference = true)]
 <#+
         foreach(EntityType subtype in EdmUtility.EF.GetSubtypesOf(type, EdmUtility.ItemCollection, true))

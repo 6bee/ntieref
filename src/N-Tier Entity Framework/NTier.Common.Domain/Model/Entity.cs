@@ -274,7 +274,7 @@ namespace NTier.Common.Domain.Model
     // abstract base class Entity
     [Serializable]
     [DataContract(IsReference = true)]
-    public abstract class Entity : IObjectWithChangeTracker, IEditable, INotifyPropertyChanging, INotifyPropertyChanged, IDataErrorInfo
+    public abstract partial class Entity : IObjectWithChangeTracker, IEditable, INotifyPropertyChanging, INotifyPropertyChanged, IDataErrorInfo
     {
         #region Indexer
 
@@ -401,9 +401,7 @@ namespace NTier.Common.Domain.Model
         {
             get { return _isDeserializing; }
         }
-#if !SILVERLIGHT
         [NonSerialized]
-#endif
         private bool _isDeserializing;
 
         #endregion IsDeserializing
@@ -458,9 +456,7 @@ namespace NTier.Common.Domain.Model
                 OnPropertyChanged("ChangeTracker", trackInChangeTracker: false);
             }
         }
-#if !SILVERLIGHT
         [NonSerialized]
-#endif
         private ObjectChangeTracker _changeTracker;
 
         //private void HandleObjectStateChanging(object sender, ObjectStateChangingEventArgs e)
@@ -698,6 +694,7 @@ namespace NTier.Common.Domain.Model
         /// <summary>
         /// Holds a reference to a change tracker while editing within a unit of work
         /// </summary>
+        [NonSerialized]
         private EditableEntityChangeTracker _editableEntityChangeTracker;
 
         /// <summary>
@@ -923,9 +920,7 @@ namespace NTier.Common.Domain.Model
                 }
             }
         }
-#if !SILVERLIGHT
         [NonSerialized]
-#endif
         private bool? _isValidationEnabled = null;
 
         #endregion IsValidationEnabled
@@ -1100,9 +1095,7 @@ namespace NTier.Common.Domain.Model
 
         #region INotifyPropertyChanged
 
-#if !SILVERLIGHT
         [field: NonSerialized]
-#endif
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName, object oldValue = null, object newValue = null, bool trackInChangeTracker = true, bool isNavigationProperty = false)
@@ -1153,9 +1146,7 @@ namespace NTier.Common.Domain.Model
 
         #region INotifyPropertyChanging
 
-#if !SILVERLIGHT
-        [field: NonSerialized] 
-#endif
+        [field: NonSerialized]
         public event PropertyChangingEventHandler PropertyChanging;
 
         protected virtual void OnPropertyChanging(string propertyName, object newValue)
@@ -1339,14 +1330,13 @@ namespace NTier.Common.Domain.Model
 
     // Helper class that captures most of the change tracking work that needs to be done
     // for self tracking entities.
+    [Serializable]
     [DataContract(IsReference = true)]
     public sealed class ObjectChangeTracker : INotifyPropertyChanged
     {
         #region  Fields
 
-#if !SILVERLIGHT
         [NonSerialized]
-#endif
         private bool _isDeserializing;
         private ObjectState _objectState = ObjectState.Added;
 
@@ -1365,9 +1355,7 @@ namespace NTier.Common.Domain.Model
 
         #region INotifyPropertyChanged
 
-#if !SILVERLIGHT
         [field: NonSerialized]
-#endif
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void RaisePropertyChanged(string propertyName)
@@ -1448,9 +1436,7 @@ namespace NTier.Common.Domain.Model
                 }
             }
         }
-#if !SILVERLIGHT
         [NonSerialized]
-#endif
         private bool? _isChangeTrackingEnabled;
 
         [DataMember]
@@ -1641,6 +1627,11 @@ namespace NTier.Common.Domain.Model
         }
 
         #endregion
+
+        internal ObjectChangeTracker ShallowCopy()
+        {
+            return (ObjectChangeTracker)MemberwiseClone();
+        }
     }
 
     [Flags]
@@ -1652,18 +1643,22 @@ namespace NTier.Common.Domain.Model
         Deleted = 0x8
     }
 
+    [Serializable]
     [CollectionDataContract(Name = "EntitiesAddedToCollectionProperties",
         ItemName = "AddedEntitiesForProperty", KeyName = "CollectionPropertyName", ValueName = "AddedEntities")]
     public class EntitiesAddedToCollectionProperties : Dictionary<string, EntityList> { }
 
+    [Serializable]
     [CollectionDataContract(Name = "EntitiesRemovedFromCollectionProperties",
         ItemName = "DeletedEntitiesForProperty", KeyName = "CollectionPropertyName", ValueName = "DeletedEntities")]
     public class EntitiesRemovedFromCollectionProperties : Dictionary<string, EntityList> { }
 
+    [Serializable]
     [CollectionDataContract(Name = "OriginalValuesDictionary",
         ItemName = "OriginalValues", KeyName = "Name", ValueName = "OriginalValue")]
     public class OriginalValuesDictionary : Dictionary<string, object> { }
 
+    [Serializable]
     [CollectionDataContract(Name = "ExtendedPropertiesDictionary",
         ItemName = "ExtendedProperties", KeyName = "Name", ValueName = "ExtendedProperty")]
     public class ExtendedPropertiesDictionary : Dictionary<string, object> { }
@@ -1775,6 +1770,7 @@ namespace NTier.Common.Domain.Model
     /// A collection that raises collection changed notifications and prevents adding duplicates.
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [Serializable]
     public class TrackableCollection<T> : ITrackableCollection<T>, ITrackableCollection, INotifyCollectionChanged
     {
         private readonly IList<T> _data = new List<T>();
@@ -2048,38 +2044,38 @@ namespace NTier.Common.Domain.Model
     //    event EventHandler ComplexPropertyChanging;
     //}
 
-    public static class EqualityComparer
-    {
-        // Helper method to determine if two byte arrays are the same value even if they are different object references
-        public static bool BinaryEquals(object binaryValue1, object binaryValue2)
-        {
-            if (object.ReferenceEquals(binaryValue1, binaryValue2))
-            {
-                return true;
-            }
+    //public static class EqualityComparer
+    //{
+    //    // Helper method to determine if two byte arrays are the same value even if they are different object references
+    //    public static bool BinaryEquals(object binaryValue1, object binaryValue2)
+    //    {
+    //        if (object.ReferenceEquals(binaryValue1, binaryValue2))
+    //        {
+    //            return true;
+    //        }
 
-            byte[] array1 = binaryValue1 as byte[];
-            byte[] array2 = binaryValue2 as byte[];
+    //        byte[] array1 = binaryValue1 as byte[];
+    //        byte[] array2 = binaryValue2 as byte[];
 
-            if (array1 != null && array2 != null)
-            {
-                if (array1.Length != array2.Length)
-                {
-                    return false;
-                }
+    //        if (array1 != null && array2 != null)
+    //        {
+    //            if (array1.Length != array2.Length)
+    //            {
+    //                return false;
+    //            }
 
-                for (int i = 0; i < array1.Length; i++)
-                {
-                    if (array1[i] != array2[i])
-                    {
-                        return false;
-                    }
-                }
+    //            for (int i = 0; i < array1.Length; i++)
+    //            {
+    //                if (array1[i] != array2[i])
+    //                {
+    //                    return false;
+    //                }
+    //            }
 
-                return true;
-            }
+    //            return true;
+    //        }
 
-            return false;
-        }
-    }
+    //        return false;
+    //    }
+    //}
 }

@@ -53,6 +53,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Model\ChangeSetExtensions.cs" />
     <Compile Include="Model\ClientInfo.cs" />
     <Compile Include="Model\ComplexPropertyAttribute.cs" />
@@ -80,6 +81,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Entity.NET.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
