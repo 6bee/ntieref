@@ -52,10 +52,13 @@
     </Compile>
     <Compile Include="Repositories\IEntitySetExtensions.cs" />
     <Compile Include="Repositories\IEntitySet.cs" />
+    <Compile Include="Repositories\InMemoryEntitySet.cs" />
+    <Compile Include="Repositories\InMemoryRepository.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\Linq\Expressions\ExpressionVisitor.cs" />
     <Compile Include="Repositories\Linq\IDomainQueryableExtensions.cs" />
     <Compile Include="Repositories\Linq\IEntityQueryable.cs" />
+    <Compile Include="Repositories\Linq\EntityQueryable.cs" />
     <Compile Include="Repositories\Linq\OrderedDomainQueryable.cs" />
     <Compile Include="Repositories\Linq\DomainQueryable.cs" />
     <Compile Include="Repositories\Linq\IDomainQueryable.cs">

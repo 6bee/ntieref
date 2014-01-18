@@ -20,7 +20,7 @@ namespace NTier.Server.Domain.Repositories.Linq
 
         #region Constructor
 
-        public DomainQueryable(IQueryable<TEntity> queryable, Func<Expression<Func<TEntity, bool>>, Expression<Func<TEntity, bool>>> expressionVisitor)
+        public DomainQueryable(IQueryable<TEntity> queryable, Func<Expression<Func<TEntity, bool>>, Expression<Func<TEntity, bool>>> expressionVisitor = null)
         {
             _queryable = queryable;
             _expressionVisitor = expressionVisitor == null ? e => e : expressionVisitor;
