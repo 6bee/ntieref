@@ -10,7 +10,7 @@ using NTier.Common.Domain.Model;
 
 namespace NTier.Client.Domain
 {
-    public interface IDataContext : INotifyPropertyChanged
+    public interface IDataContext : IDisposable, INotifyPropertyChanged
     {
         /// <summary>
         /// Gets or sets NTier.Common.Domain.Model.ClientInfo object to be passed to any server call

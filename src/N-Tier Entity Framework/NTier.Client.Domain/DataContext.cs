@@ -9,7 +9,7 @@ using NTier.Common.Domain.Model;
 
 namespace NTier.Client.Domain
 {
-    public abstract partial class DataContext : IDataContext
+    public abstract partial class DataContext : IDisposable, IDataContext
     {
         #region Delegates and Enums
 
@@ -28,7 +28,8 @@ namespace NTier.Client.Domain
         private readonly ICollection<IInternalEntitySet> _entitySets = new List<IInternalEntitySet>();
         protected IEnumerable<IInternalEntitySet> EntitySets { get { return _entitySets; } }
 
-        protected bool SuppressHasChanges = false;
+        protected bool SuppressHasChanges = false; 
+        private bool _disposed = false;
 
         #endregion
 
@@ -42,6 +43,8 @@ namespace NTier.Client.Domain
         #endregion
 
         #region Public Properties
+
+        protected bool Disposed { get { return _disposed; } }
 
         /// <summary>
         ///  Gets or sets whether server validation exceptions are suppressed
@@ -388,6 +391,36 @@ namespace NTier.Client.Domain
         public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion INotifyPropertyChanged
+
+        #region IDisposable
+
+        ~DataContext()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true); 
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    // dispose managed resources
+                }
+
+                // dispose unmanaged resources
+
+                _disposed = true;
+            }
+        }
+
+        #endregion IDisposable
     }
 
     public abstract partial class DataContext<TResultSet> : DataContext, IDataContext where TResultSet : IResultSet
