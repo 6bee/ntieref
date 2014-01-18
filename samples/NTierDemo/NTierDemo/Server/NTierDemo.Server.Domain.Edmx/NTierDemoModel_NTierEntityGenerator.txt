@@ -1,0 +1,7 @@
+﻿
+
+
+
+
+
+Generates code in different projects. See NTierDemoModel_NTierEntityGenerator.tt.log for list of generated files.
