@@ -52,8 +52,8 @@ public class NTierEntityGenerator : Generator
         this.DataServiceHostTemplate = new DataServiceHostTemplate(DataServiceHostProject, this.EdmUtility, DataServiceNamespace);
         this.ClientDataContextInterfaceTemplate = new ClientDataContextInterfaceTemplate(ClientLibraryProject, this.EdmUtility, ClientLibraryNamespace, DataModelNamespace);
         this.ClientDataContextTemplate = new ClientDataContextTemplate(ClientLibraryProject, this.EdmUtility, ClientLibraryNamespace, DataModelNamespace, DataServiceContractNamespace);
-        this.RemoteChannelFactoryTemplate = new RemoteChannelFactoryTemplate(RemoteChannelFactoryProject, this.EdmUtility, RemoteChannelFactoryNamespace, DataServiceContractNamespace);
-        this.InProcessChannelFactoryTemplate = new InProcessChannelFactoryTemplate(InProcessChannelFactoryProject, this.EdmUtility, InProcessChannelFactoryNamespace, DataServiceContractNamespace, DataServiceNamespace);
+        //this.RemoteChannelFactoryTemplate = new RemoteChannelFactoryTemplate(RemoteChannelFactoryProject, this.EdmUtility, RemoteChannelFactoryNamespace, DataServiceContractNamespace);
+        //this.InProcessChannelFactoryTemplate = new InProcessChannelFactoryTemplate(InProcessChannelFactoryProject, this.EdmUtility, InProcessChannelFactoryNamespace, DataServiceContractNamespace, DataServiceNamespace);
     }
 
     #region project default namespaces

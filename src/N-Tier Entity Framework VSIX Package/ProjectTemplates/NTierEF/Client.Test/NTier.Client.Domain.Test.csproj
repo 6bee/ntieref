@@ -53,9 +53,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\$safesolutionname$.Client.Domain.Service.RemoteChannelFactory\$safesolutionname$.Client.Domain.Service.RemoteChannelFactory.csproj">
+    <!--<ProjectReference Include="..\$safesolutionname$.Client.Domain.Service.RemoteChannelFactory\$safesolutionname$.Client.Domain.Service.RemoteChannelFactory.csproj">
       <Name>$safesolutionname$.Client.Domain.Service.RemoteChannelFactory</Name>
-    </ProjectReference>
+    </ProjectReference>-->
     <ProjectReference Include="..\$safesolutionname$.Client.Domain\$safesolutionname$.Client.Domain.csproj">
       <Name>$safesolutionname$.Client.Domain</Name>
     </ProjectReference>

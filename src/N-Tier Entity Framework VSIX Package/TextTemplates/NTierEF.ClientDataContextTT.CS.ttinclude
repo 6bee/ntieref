@@ -19,7 +19,7 @@ public class ClientDataContextTemplate : Template
         set { file = value; }
     }
 
-    public ClientDataContextTemplate(string project = null, EdmUtility edmUtility = null, string defaultNamespace = null, string modelNamespace = null, string serviceContractNamespace = null, bool suppressMEF = false)
+    public ClientDataContextTemplate(string project = null, EdmUtility edmUtility = null, string defaultNamespace = null, string modelNamespace = null, string serviceContractNamespace = null, bool suppressMEF = true)
     {
         if (!string.IsNullOrWhiteSpace(project))
         {
@@ -257,7 +257,6 @@ namespace <#=Namespace#>
             }
             finally
             {
-                // http://omaralzabir.com/do-not-use-using-in-wcf-client/
                 var client = service as ICommunicationObject;
                 if (client != null)
                 {
@@ -556,7 +555,6 @@ namespace <#=Namespace#>
                 }
                 finally
                 {
-                    // http://omaralzabir.com/do-not-use-using-in-wcf-client/
                     var client = service as ICommunicationObject;
                     if (client != null)
                     {

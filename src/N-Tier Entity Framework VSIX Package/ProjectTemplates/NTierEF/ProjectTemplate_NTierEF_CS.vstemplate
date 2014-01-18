@@ -29,12 +29,12 @@
                 <ProjectTemplateLink ProjectName="$safesolutionname$.Client.Domain">
                     Client\NTier.Client.Domain.vstemplate
                 </ProjectTemplateLink>
-                <ProjectTemplateLink ProjectName="$safesolutionname$.Client.Domain.Service.InProcessChannelFactory">
+                <!--<ProjectTemplateLink ProjectName="$safesolutionname$.Client.Domain.Service.InProcessChannelFactory">
                     InProcessChannelFactory\NTier.Client.Domain.Service.InProcessChannelFactory.vstemplate
-                </ProjectTemplateLink>
-                <ProjectTemplateLink ProjectName="$safesolutionname$.Client.Domain.Service.RemoteChannelFactory">
+                </ProjectTemplateLink>-->
+                <!--<ProjectTemplateLink ProjectName="$safesolutionname$.Client.Domain.Service.RemoteChannelFactory">
                     RemoteChannelFactory\NTier.Client.Domain.Service.RemoteChannelFactory.vstemplate
-                </ProjectTemplateLink>
+                </ProjectTemplateLink>-->
             </SolutionFolder>
             <SolutionFolder Name="Common">
                 <ProjectTemplateLink ProjectName="$safesolutionname$.Common.Domain.Model">
