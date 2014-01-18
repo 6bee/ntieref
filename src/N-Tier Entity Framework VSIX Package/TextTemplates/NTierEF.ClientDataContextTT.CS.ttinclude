@@ -88,18 +88,9 @@ namespace <#=Namespace#>
 {
     public sealed partial class <#=EdmUtility.ModelName#>DataContext : DataContext<<#=EdmUtility.ModelName#>ResultSet>, I<#=EdmUtility.ModelName#>DataContext
     {
-        #region Private Members
+        #region Fields
 
-<#+
-        if (!SuppressMEF)
-        {
-#>
-        [Import(typeof(IChannelFactory<I<#=EdmUtility.ModelName#>DataService>))]
-<#+
-        }
-#>
-        private IChannelFactory<I<#=EdmUtility.ModelName#>DataService> ChannelFactory { get; set; }
-
+        private readonly Func<I<#=EdmUtility.ModelName#>DataService> _dataServiceFactory;
 <#+
         foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
         {
@@ -109,14 +100,15 @@ namespace <#=Namespace#>
         }
 #>
 
-        #endregion Private Members
+        #endregion Fields
 
         #region Contructor
 
         partial void Initialize();
 
-        private <#=EdmUtility.ModelName#>DataContext(bool dummyParameter)
+        public <#=EdmUtility.ModelName#>DataContext(Func<I<#=EdmUtility.ModelName#>DataService> dataServiceFactory)
         {
+            _dataServiceFactory = dataServiceFactory;
 <#+
         foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
         {
@@ -125,16 +117,38 @@ namespace <#=Namespace#>
 <#+
         }
 #>
+            Initialize();
         }
-<#+
-        if (!SuppressMEF)
+
+        public <#=EdmUtility.ModelName#>DataContext(IChannelFactory<I<#=EdmUtility.ModelName#>DataService> channelFactory)
+            : this(channelFactory.CreateChannel)
         {
-#>
+        }
 
         public <#=EdmUtility.ModelName#>DataContext(string endpointConfigurationName = "<#=EdmUtility.ModelName#>DataService")
-            : this(true)
+            : this(CreateChannelFactory(endpointConfigurationName).CreateChannel)
         {
-            #region MEF composition: inject service factory
+        }
+
+<#+
+        if (SuppressMEF)
+        {
+#>
+        private static ChannelFactory<I<#=EdmUtility.ModelName#>DataService> CreateChannelFactory(string endpointConfigurationName)
+        {
+            var channelFactory = string.IsNullOrEmpty(endpointConfigurationName)
+                ? new ChannelFactory<I<#=EdmUtility.ModelName#>DataService>()
+                : new ChannelFactory<I<#=EdmUtility.ModelName#>DataService>(endpointConfigurationName);
+            return channelFactory;
+        }
+<#+
+        }
+        else
+        {
+#>
+        private static IChannelFactory<I<#=EdmUtility.ModelName#>DataService> CreateChannelFactory(string endpointConfigurationName)
+        {
+            #region MEF composition
 
             var catalog = new System.ComponentModel.Composition.Hosting.AggregateCatalog();
 
@@ -149,25 +163,17 @@ namespace <#=Namespace#>
                 directoryCatalog = new System.ComponentModel.Composition.Hosting.DirectoryCatalog(direcotry);
                 catalog.Catalogs.Add(directoryCatalog);
             }
+
             var container = new System.ComponentModel.Composition.Hosting.CompositionContainer(catalog);
-
             container.ComposeExportedValue(endpointConfigurationName);
-            container.ComposeParts(this);
+            var channelFactory = container.GetExportedValue<IChannelFactory<I<#=EdmUtility.ModelName#>DataService>>();
+            return channelFactory;
 
-            #endregion
-
-            Initialize();
+            #endregion MEF composition
         }
 <#+
         }
 #>
-
-        public <#=EdmUtility.ModelName#>DataContext(IChannelFactory<I<#=EdmUtility.ModelName#>DataService> channelFactory)
-            : this(true)
-        {
-            this.ChannelFactory = channelFactory;
-            Initialize();
-        }
 
         #endregion Contructor
 
@@ -243,7 +249,7 @@ namespace <#=Namespace#>
 #>
         private QueryResult<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> Get<#=EdmUtility.Code.Escape(entitySet)#>(ClientInfo clientInfo, Query query)
         {
-            var service = ChannelFactory.CreateChannel();
+            var service = _dataServiceFactory();
             try
             {
                 var result = service.Get<#=EdmUtility.Code.Escape(entitySet)#>(clientInfo, query);
@@ -541,7 +547,7 @@ namespace <#=Namespace#>
 
             if (!changeSet.IsEmpty)
             {
-                var service = ChannelFactory.CreateChannel();
+                var service = _dataServiceFactory();
                 try
                 {
                     // submit data
