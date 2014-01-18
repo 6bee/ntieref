@@ -50,8 +50,8 @@ if ($projectFolder) {
   
   # remove VS project folder from VS project
   if ($projectFolder.ProjectItems.Count -eq 0) {   
-	$projectFolder.Remove()
-	Remove-Item $contentFolderPath
+    $projectFolder.Remove()
+    Remove-Item $contentFolderPath
   }
   
   # add solution folder to VS solution
@@ -62,11 +62,11 @@ if ($projectFolder) {
   
   # add tt files to VS solution folder
   Get-ChildItem $destinationPath | Foreach-Object { 
-	$fileName = $_.Name
-	$item = $solutionFolder.ProjectItems | Where-Object { $_.Name -eq $fileName }
-	if (-Not $item) {
-	  $solutionFolder.ProjectItems.AddFromFile($_.FullName) | Out-Null 
-	}
+    $fileName = $_.Name
+    $item = $solutionFolder.ProjectItems | Where-Object { $_.Name -eq $fileName }
+    if (-Not $item) {
+      $solutionFolder.ProjectItems.AddFromFile($_.FullName) | Out-Null 
+    }
   }
   
   # close tt files
