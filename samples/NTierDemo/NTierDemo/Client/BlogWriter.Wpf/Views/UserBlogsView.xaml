@@ -53,7 +53,7 @@
                 <ColumnDefinition Width="*" MinWidth="5" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Create" Command="{Binding CreateNewBlogCommand}" />
+            <Button Grid.Column="0" Content="New Blog" Command="{Binding CreateNewBlogCommand}" />
             <Button Grid.Column="2" Content="Save" Command="{Binding SaveCommand}" />
             <Button Grid.Column="4" Content="Cancel" Command="{Binding CancelCommand}" />
             <Button Grid.Column="6" Content="Logout" Command="{Binding LogoutCommand}" />

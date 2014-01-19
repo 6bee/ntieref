@@ -16,16 +16,18 @@ namespace BlogWriter.Wpf.ViewModels
         private readonly Func<INTierDemoDataContext> _dataContextFactory;
         private readonly Action<Author> _setUser;
 
-        public RegistrationViewModel(Func<INTierDemoDataContext> dataContextFactory, Action<Author> setUser)
+        public RegistrationViewModel(Func<INTierDemoDataContext> dataContextFactory, Action<Author> setUser, Action cancel)
         {
             _dataContextFactory = dataContextFactory;
             _setUser = setUser;
 
             User = new Author();
             RegisterCommand = new AsyncRelayCommand(RegisterAsync, () => User.IsValid);
+            CancelCommand = new RelayCommand(cancel);
         }
 
         public ICommand RegisterCommand { get; private set; }
+        public ICommand CancelCommand { get; private set; }
 
         private async Task RegisterAsync()
         {

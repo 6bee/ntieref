@@ -16,7 +16,7 @@ namespace BlogWriter.Wpf.ViewModels
         public MainViewModel(Func<INTierDemoDataContext> dataContextFactory)
         {
             _dataContextFactory = dataContextFactory;
-            OnPropertyChanged(() => IsUserAuthenticated);
+            ActivateLogin();
         }
 
 
@@ -31,18 +31,9 @@ namespace BlogWriter.Wpf.ViewModels
 
                 case "IsUserAuthenticated":
                     if (IsUserAuthenticated)
-                    {
-                        if (UserBlogsViewModel == null) UserBlogsViewModel = new UserBlogsViewModel(_dataContextFactory, CurrentUser.Username, () => CurrentUser = null);
-                        LoginViewModel = null;
-                        RegistrationViewModel = null;
-                    }
+                        ActivateUserBlogs();
                     else
-                    {
-                        if (LoginViewModel == null) LoginViewModel = new LoginViewModel(_dataContextFactory, x => CurrentUser = x);
-                        if (RegistrationViewModel == null) RegistrationViewModel = new RegistrationViewModel(_dataContextFactory, x => CurrentUser = x);
-                        UserBlogsViewModel = null;
-                    }
-
+                        ActivateLogin();
                     break;
             }
         }
@@ -52,6 +43,39 @@ namespace BlogWriter.Wpf.ViewModels
 
 
         #region View models
+
+        private void ActivateLogin()
+        {
+            DeactivateRegistration();
+            DeactivateUserBlogs();
+            if (LoginViewModel == null) LoginViewModel = new LoginViewModel(_dataContextFactory, x => CurrentUser = x, ActivateRegistration);                        
+        }
+        private void ActivateRegistration()
+        {
+            DeactivateLogin();
+            DeactivateUserBlogs();
+            if (RegistrationViewModel == null) RegistrationViewModel = new RegistrationViewModel(_dataContextFactory, x => CurrentUser = x, ActivateLogin);
+        }
+        private void ActivateUserBlogs()
+        {
+            DeactivateLogin();
+            DeactivateRegistration();
+            if (UserBlogsViewModel == null) UserBlogsViewModel = new UserBlogsViewModel(_dataContextFactory, CurrentUser.Username, () => CurrentUser = null);
+        }
+
+        private void DeactivateLogin()
+        {
+            LoginViewModel = null;
+        }
+        private void DeactivateRegistration()
+        {
+            RegistrationViewModel = null;
+        }
+        private void DeactivateUserBlogs()
+        {
+            UserBlogsViewModel = null;
+        }
+
 
         public LoginViewModel LoginViewModel
         {

@@ -26,6 +26,15 @@
         <TextBox Grid.Column="2" Grid.Row="0" Text="{Binding Username}" />
         <TextBox Grid.Column="2" Grid.Row="2" Text="{Binding Password}"  />
 
-        <Button Grid.Column="2" Grid.Row="4" HorizontalAlignment="Right" Content="Login" Command="{Binding LoginCommand}" />
+        <Grid Grid.ColumnSpan="99" Grid.Row="4" HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1" Content="Register" Command="{Binding OpenRegistrationCommand}" />
+            <Button Grid.Column="3" Content="Login" Command="{Binding LoginCommand}" />
+        </Grid>
     </Grid>
 </UserControl>

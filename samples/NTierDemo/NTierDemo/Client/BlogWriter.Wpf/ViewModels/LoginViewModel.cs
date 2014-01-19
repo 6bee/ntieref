@@ -16,19 +16,18 @@ namespace BlogWriter.Wpf.ViewModels
         private readonly Func<INTierDemoDataContext> _dataContextFactory;
         private readonly Action<Author> _setUser;
 
-        public LoginViewModel(Func<INTierDemoDataContext> dataContextFactory, Action<Author> setUser)
+        public LoginViewModel(Func<INTierDemoDataContext> dataContextFactory, Action<Author> setUser, Action openRegistration)
         {
             _dataContextFactory = dataContextFactory;
             _setUser = setUser;
 
             LoginCommand = new AsyncRelayCommand(LoginAsync, CanLogin);
+            OpenRegistrationCommand = new RelayCommand(openRegistration);
 
             // demo purpose: set existung user and password
             Username = "mmeyer";
             Password = "****";
         }
-
-        public ICommand LoginCommand { get; private set; }
 
         private async Task LoginAsync()
         {
@@ -76,5 +75,8 @@ namespace BlogWriter.Wpf.ViewModels
             set { _errorMessage = value; OnPropertyChanged(() => ErrorMessage); }
         }
         private string _errorMessage;
+
+        public ICommand LoginCommand { get; private set; }
+        public ICommand OpenRegistrationCommand { get; private set; }
     }
 }

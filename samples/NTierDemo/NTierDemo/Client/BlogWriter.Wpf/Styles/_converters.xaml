@@ -5,6 +5,8 @@
 
     <sys:Boolean x:Key="True">True</sys:Boolean>
     <sys:Boolean x:Key="False">False</sys:Boolean>
+    
     <c:BooleanToVisibilityConverter x:Key="BooleanToCollapsed" />
+    <c:IsNotNullConverter x:Key="IsNotNullConverter" />
 
 </ResourceDictionary>
