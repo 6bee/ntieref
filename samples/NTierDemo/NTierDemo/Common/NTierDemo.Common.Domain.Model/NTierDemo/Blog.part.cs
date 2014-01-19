@@ -4,6 +4,11 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
 {
     partial class Blog : IUpdatableEntity
     {
+        partial void Initialize()
+        {
+            CreatedDate = DateTime.Now;
+        }
+
         long IUpdatableEntity.Id
         {
             get { return Id; }

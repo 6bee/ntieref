@@ -1,0 +1,46 @@
+﻿<Window x:Class="BlogWriter.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:v="clr-namespace:BlogWriter.Wpf.Views"
+        Title="N-Tier Demo  -  Blog Witer" 
+        Height="350" Width="525">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <!-- login and registration -->
+        <TabControl Visibility="{Binding IsUserAuthenticated, Converter={StaticResource BooleanToCollapsed}, ConverterParameter={StaticResource True}}"
+                    TabStripPlacement="Left">
+            <TabItem Header="Login" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                <v:LoginView Width="300" DataContext="{Binding LoginViewModel}" />
+            </TabItem>
+            <TabItem Header="Register" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                <v:RegistrationView Width="300" DataContext="{Binding RegistrationViewModel}" />
+            </TabItem>
+        </TabControl>
+        
+        <!-- blogs and posts -->
+        <!--<TabControl Visibility="{Binding IsUserAuthenticated, Converter={StaticResource BooleanToCollapsed}}"
+                    TabStripPlacement="Left">
+            <TabItem Header="Blogs">
+                <v:UserBlogsView DataContext="{Binding UserBlogsViewModel}" />
+            </TabItem>
+        </TabControl>-->
+        <ContentControl Visibility="{Binding IsUserAuthenticated, Converter={StaticResource BooleanToCollapsed}}">
+            <v:UserBlogsView DataContext="{Binding UserBlogsViewModel}" />            
+        </ContentControl>
+
+        <StatusBar Grid.Row="1">
+            <StatusBarItem Content="Powered by N-Tier Entity Framework"/>
+            <Separator Visibility="{Binding IsUserAuthenticated, Converter={StaticResource BooleanToCollapsed}}" />
+            <StatusBarItem Visibility="{Binding IsUserAuthenticated, Converter={StaticResource BooleanToCollapsed}}">
+                <TextBlock>
+                    <Run Text="{Binding CurrentUser.FirstName}"/>
+                    <Run Text="{Binding CurrentUser.LastName}"/>
+                </TextBlock>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

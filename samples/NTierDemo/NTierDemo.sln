@@ -48,6 +48,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTierDemo.Server.Domain.Rep
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTierDemo.Server.Domain.Service", "NTierDemo\Server\NTierDemo.Server.Domain.Service\NTierDemo.Server.Domain.Service.csproj", "{50C69B62-B425-4204-9891-0E77B470F8EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogWriter.Wpf", "NTierDemo\Client\BlogWriter.Wpf\BlogWriter.Wpf.csproj", "{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -138,6 +140,16 @@ Global
 		{50C69B62-B425-4204-9891-0E77B470F8EE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{50C69B62-B425-4204-9891-0E77B470F8EE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{50C69B62-B425-4204-9891-0E77B470F8EE}.Release|x86.ActiveCfg = Release|Any CPU
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,6 +157,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{D740BDB0-F705-4F45-AC1D-168627042F3B} = {15444A08-394B-4B6C-B54B-AA81C51C008B}
 		{5D6116A2-D954-4F86-B14B-BB9C65670AF0} = {15444A08-394B-4B6C-B54B-AA81C51C008B}
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E} = {15444A08-394B-4B6C-B54B-AA81C51C008B}
 		{2EF15A05-B392-41D9-A089-CCBC81FFCF03} = {7CE56EDD-AE0E-4A34-AB1A-DB2AE97FD9AF}
 		{27B4FF09-CB78-4B4D-A500-4A5CD5015FB1} = {7CE56EDD-AE0E-4A34-AB1A-DB2AE97FD9AF}
 		{004C00A8-14EC-444D-AF20-99D7182083F5} = {60559A4A-9F6C-4D39-A373-E0A6575B1C8C}
