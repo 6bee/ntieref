@@ -35,8 +35,8 @@
           </Key>
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BlogId" Type="bigint" Nullable="false" />
-          <Property Name="Title" Type="bigint" Nullable="false" />
-          <Property Name="Abstract" Type="bigint" Nullable="false" />
+          <Property Name="Title" Type="varchar" Nullable="false" />
+          <Property Name="Abstract" Type="varchar" Nullable="false" />
           <Property Name="Content" Type="varchar(max)" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime2" Nullable="false" />
           <Property Name="ModifiedDate" Type="datetime2" Nullable="false" />
@@ -47,8 +47,8 @@
           </Key>
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BlogId" Type="bigint" Nullable="false" />
-          <Property Name="Title" Type="bigint" Nullable="false" />
-          <Property Name="Abstract" Type="bigint" Nullable="false" />
+          <Property Name="Title" Type="varchar" Nullable="false" />
+          <Property Name="Abstract" Type="varchar" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime2" Nullable="false" />
           <Property Name="ModifiedDate" Type="datetime2" Nullable="false" />
         </EntityType>
@@ -136,8 +136,8 @@
           </Key>
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
           <Property Name="BlogId" Type="Int64" Nullable="false" />
-          <Property Name="Title" Type="Int64" Nullable="false" />
-          <Property Name="Abstract" Type="Int64" Nullable="false" />
+          <Property Name="Title" Type="String" Nullable="false" />
+          <Property Name="Abstract" Type="String" Nullable="false" />
           <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
           <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
@@ -148,8 +148,8 @@
           </Key>
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
           <Property Name="BlogId" Type="Int64" Nullable="false" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" a:GetterAccess="Internal" />
-          <Property Name="Title" Type="Int64" Nullable="false" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
-          <Property Name="Abstract" Type="Int64" Nullable="false" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+          <Property Name="Title" Type="String" Nullable="false" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+          <Property Name="Abstract" Type="String" Nullable="false" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
           <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
         </EntityType>

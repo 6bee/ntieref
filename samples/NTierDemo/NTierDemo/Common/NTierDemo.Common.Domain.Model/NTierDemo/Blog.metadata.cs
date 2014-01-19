@@ -41,8 +41,10 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
 
         public global::System.Int64 OwnerId;
 
+        [StringLength(100)]
         public global::System.String Title;
 
+        [StringLength(500)]
         public global::System.String Description;
 
         [ServerGeneration(ServerGenerationTypes.Insert)]

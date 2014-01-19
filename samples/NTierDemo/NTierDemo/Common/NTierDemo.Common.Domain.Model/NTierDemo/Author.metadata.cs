@@ -39,14 +39,19 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
 
         public global::System.Int64 Id;
 
+        [StringLength(30)]
         public global::System.String Username;
 
+        [StringLength(30)]
         public global::System.String Password;
 
+        [StringLength(50)]
         public global::System.String FirstName;
 
+        [StringLength(50)]
         public global::System.String LastName;
 
+        [StringLength(500)]
         public global::System.String Description;
 
         [ServerGeneration(ServerGenerationTypes.Insert)]

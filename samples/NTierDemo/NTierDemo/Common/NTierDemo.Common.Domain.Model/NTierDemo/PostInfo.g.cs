@@ -106,7 +106,7 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
         [RoundtripOriginal]
 #endif
         [SimpleProperty]
-        public global::System.Int64 Title
+        public global::System.String Title
         {
             get { return _title; }
             internal set
@@ -122,10 +122,10 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
                 }
             }
         }
-        private global::System.Int64 _title;
+        private global::System.String _title;
 
-        partial void TitleChanging(global::System.Int64 newValue);
-        partial void TitleChanged(global::System.Int64 previousValue);
+        partial void TitleChanging(global::System.String newValue);
+        partial void TitleChanged(global::System.String previousValue);
 
         [DataMember]
         [Required]
@@ -133,7 +133,7 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
         [RoundtripOriginal]
 #endif
         [SimpleProperty]
-        public global::System.Int64 Abstract
+        public global::System.String Abstract
         {
             get { return _abstract; }
             internal set
@@ -149,10 +149,10 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
                 }
             }
         }
-        private global::System.Int64 _abstract;
+        private global::System.String _abstract;
 
-        partial void AbstractChanging(global::System.Int64 newValue);
-        partial void AbstractChanged(global::System.Int64 previousValue);
+        partial void AbstractChanging(global::System.String newValue);
+        partial void AbstractChanged(global::System.String previousValue);
 
         [DataMember]
         [Required]

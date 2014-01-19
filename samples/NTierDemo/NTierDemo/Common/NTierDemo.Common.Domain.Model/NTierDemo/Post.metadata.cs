@@ -41,9 +41,11 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
 
         public global::System.Int64 BlogId;
 
-        public global::System.Int64 Title;
-
-        public global::System.Int64 Abstract;
+        [StringLength(100)]
+        public global::System.String Title;
+        
+        [StringLength(200)]
+        public global::System.String Abstract;
 
         public global::System.String Content;
 
