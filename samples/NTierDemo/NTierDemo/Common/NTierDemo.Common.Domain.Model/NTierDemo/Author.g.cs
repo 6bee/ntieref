@@ -155,6 +155,7 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
         partial void FirstNameChanged(global::System.String previousValue);
 
         [DataMember]
+        [Required]
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
