@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using NTier.Common.Domain.Model;
 using NTier.Server.Domain.Repositories.Linq;
@@ -11,37 +12,37 @@ namespace NTier.Server.Domain.Repositories
 {
     public static class IEntitySetExtensions
     {
-        public static IDomainQueryable<TEntity> CreateQuery<TEntity>(this IEntitySet<TEntity> entitySet, Query query) where TEntity : Entity
-        {
-            var queriable = entitySet
-                .AsQueryable()
-                .ApplyInclude<TEntity>(query.IncludeList)
-                .ApplyFilters<TEntity>(query.FilterExpressionList)
-                .ApplySorting<TEntity>(query.SortExpressionList);
+        //public static IDomainQueryable<TEntity> CreateQuery<TEntity>(this IEntitySet<TEntity> entitySet, Query query) where TEntity : Entity
+        //{
+        //    var queriable = entitySet
+        //        .AsQueryable()
+        //        .ApplyInclude<TEntity>(query.IncludeList)
+        //        .ApplyFilters<TEntity>(query.FilterExpressionList)
+        //        .ApplySorting<TEntity>(query.SortExpressionList);
 
-            if (query.Skip.HasValue && query.Skip.Value > 0)
-            {
-                queriable = queriable.Skip(query.Skip.Value);
-            }
+        //    if (query.Skip.HasValue && query.Skip.Value > 0)
+        //    {
+        //        queriable = queriable.Skip(query.Skip.Value);
+        //    }
 
-            if (query.Take.HasValue && query.Take.Value > 0)
-            {
-                queriable = queriable.Take(query.Take.Value);
-            }
+        //    if (query.Take.HasValue && query.Take.Value > 0)
+        //    {
+        //        queriable = queriable.Take(query.Take.Value);
+        //    }
 
-            return queriable;
-        }
+        //    return queriable;
+        //}
 
-        public static IDomainQueryable<TEntity> CreateCountQuery<TEntity>(this IEntitySet<TEntity> entitySet, Query query) where TEntity : Entity
-        {
-            var queriable = entitySet
-                .AsQueryable()
-                .ApplyFilters<TEntity>(query.FilterExpressionList);
+        //public static IDomainQueryable<TEntity> CreateCountQuery<TEntity>(this IEntitySet<TEntity> entitySet, Query query) where TEntity : Entity
+        //{
+        //    var queriable = entitySet
+        //        .AsQueryable()
+        //        .ApplyFilters<TEntity>(query.FilterExpressionList);
 
-            return queriable;
-        }
+        //    return queriable;
+        //}
 
-        private static IEntityQueryable<TEntity> ApplyInclude<TEntity>(this IEntityQueryable<TEntity> queriable, IEnumerable<string> includeList) where TEntity : Entity
+        internal static IEntityQueryable<TEntity> ApplyInclude<TEntity>(this IEntityQueryable<TEntity> queriable, IEnumerable<string> includeList) where TEntity : Entity
         {
             if (!ReferenceEquals(includeList, null))
             {
@@ -53,20 +54,31 @@ namespace NTier.Server.Domain.Repositories
             return queriable;
         }
 
-        private static IDomainQueryable<TEntity> ApplyFilters<TEntity>(this IDomainQueryable<TEntity> queriable, IEnumerable<RLinq.LambdaExpression> filterList) where TEntity : Entity
+        internal static IDomainQueryable<TEntity> ApplyFilters<TEntity>(this IDomainQueryable<TEntity> queriable, IEnumerable<RLinq.LambdaExpression> filterList) where TEntity : Entity
         {
             if (!ReferenceEquals(filterList, null))
             {
-                foreach (var filter in filterList)
+                var filters =
+                    from f in filterList
+                    select f.ToLinqExpression<TEntity, bool>();
+                queriable = queriable.ApplyFilters(filters);
+            }
+            return queriable;
+        }
+
+        internal static IDomainQueryable<TEntity> ApplyFilters<TEntity>(this IDomainQueryable<TEntity> queriable, IEnumerable<Expression<Func<TEntity,bool>>> filters) where TEntity : Entity
+        {
+            if (!ReferenceEquals(filters, null))
+            {
+                foreach (var filter in filters)
                 {
-                    var exp = filter.ToLinqExpression<TEntity, bool>();
-                    queriable = queriable.Where(exp);
+                    queriable = queriable.Where(filter);
                 }
             }
             return queriable;
         }
 
-        private static IDomainQueryable<TEntity> ApplySorting<TEntity>(this IDomainQueryable<TEntity> queriable, IEnumerable<RLinq.SortExpression> sortList) where TEntity : Entity
+        internal static IDomainQueryable<TEntity> ApplySorting<TEntity>(this IDomainQueryable<TEntity> queriable, IEnumerable<RLinq.SortExpression> sortList) where TEntity : Entity
         {
             IOrderedDomainQueryable<TEntity> orderedQueriable = null;
 

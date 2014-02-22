@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Transactions;
 using NTier.Common.Domain.Model;
 using NTier.Server.Domain.Repositories;
+using NTier.Server.Domain.Repositories.Linq;
 
 namespace NTier.Server.Domain.Service
 {
@@ -27,20 +28,31 @@ namespace NTier.Server.Domain.Service
         {
             List<TEntity> result = null;
             long? totalCount = null;
-
+            if ((query.IncludeData ?? false) || (query.IncludeTotalCount ?? false))
             {
                 // get filters defined by interceptors
                 var filters = GetQueryInterceptors<TEntity>(clientInfo);
 
+                var queryable = entitySet
+                    .AsQueryable()
+                    .ApplyInclude(query.IncludeList)
+                    .ApplyFilters(filters);
+
                 // retrieve data
                 if (query.IncludeData ?? false)
                 {
-                    var q = entitySet.CreateQuery(query);
+                    var q = queryable
+                        .ApplyFilters(query.FilterExpressionList)
+                        .ApplySorting(query.SortExpressionList);
 
-                    // apply query interceptors
-                    foreach (var filter in filters)
+                    if (query.Skip.HasValue && query.Skip.Value > 0)
                     {
-                        q = q.Where(filter);
+                        q = q.Skip(query.Skip.Value);
+                    }
+
+                    if (query.Take.HasValue && query.Take.Value > 0)
+                    {
+                        q = q.Take(query.Take.Value);
                     }
 
                     result = q.ToList();
@@ -49,14 +61,7 @@ namespace NTier.Server.Domain.Service
                 // retrieve count
                 if (query.IncludeTotalCount ?? false)
                 {
-                    var q = entitySet.CreateCountQuery(query);
-
-                    // apply query interceptors
-                    foreach (var filter in filters)
-                    {
-                        q = q.Where(filter);
-                    }
-
+                    var q = queryable.ApplyFilters(query.FilterExpressionList);
                     totalCount = q.LongCount();
                 }
             }
