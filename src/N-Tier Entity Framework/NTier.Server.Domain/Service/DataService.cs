@@ -131,9 +131,17 @@ namespace NTier.Server.Domain.Service
                 catch (OptimisticConcurrencyException ex)
                 {
                     var entities = ex.Entities;
-                    repository.Refresh(RefreshMode.StoreWins, entities);
-
-                    resultSet.AddConcurrencyConflicts(entities);
+                    if (ReferenceEquals(null, entities))
+                    {
+                        repository.Refresh(RefreshMode.StoreWins, changeSet);
+                        resultSet.AddConcurrencyConflicts(changeSet);
+                        break;
+                    }
+                    else
+                    {
+                        repository.Refresh(RefreshMode.StoreWins, entities);
+                        resultSet.AddConcurrencyConflicts(entities);
+                    }
                 }
             }
         }
