@@ -66,7 +66,7 @@ namespace NTier.Server.Domain.Repositories
         public UpdateException(string message, Exception innerException, IEnumerable<Entity> entities)
             : base(message, innerException)
         {
-            Entities = entities.ToList().AsReadOnly();
+            Entities = ReferenceEquals(null, entities) ? null : entities.ToList().AsReadOnly();
         }
 
         /// <summary>
