@@ -131,7 +131,7 @@ namespace NTier.Server.Domain.Service
                 catch (OptimisticConcurrencyException ex)
                 {
                     var entities = ex.Entities;
-                    if (ReferenceEquals(null, entities))
+                    if (ReferenceEquals(null, entities) || entities.Count == 0)
                     {
                         repository.Refresh(RefreshMode.StoreWins, changeSet);
                         resultSet.AddConcurrencyConflicts(changeSet);
