@@ -39,6 +39,27 @@ namespace NTier.Client.Domain
         public abstract Task SaveChangesAsync(AcceptOption acceptOption = AcceptOption.Default, bool clearErrors = true, ClientInfo clientInfo = null, bool startImmediately = true, TaskScheduler taskScheduler = null, CancellationToken cancellationToken = default(CancellationToken), TaskCreationOptions taskCreationOptions = TaskCreationOptions.None);
 
         #endregion Save
+
+        protected void Invoke(Action action, bool invokeAsync = false)
+        {
+            var dispatcher = Dispatcher;
+            if (dispatcher == null || dispatcher.CheckAccess())
+            {
+                action();
+            }
+            else if (dispatcher.HasShutdownStarted || dispatcher.HasShutdownFinished)
+            {
+                // dispatcher must no longer be used
+            }
+            else if (invokeAsync)
+            {
+                dispatcher.BeginInvoke(action);
+            }
+            else
+            {
+                dispatcher.Invoke(action);
+            }
+        }
     }
 
     partial class DataContext<TResultSet>

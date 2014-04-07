@@ -185,10 +185,15 @@ namespace NTier.Client.Domain
             if (saveChangesCompleted != null)
             {
                 // raise event on calling thread
-                Invoke(delegate
-                {
-                    saveChangesCompleted(this, new AsyncCompletedEventArgs(error, false, null));
-                });
+                Invoke(
+                    delegate
+                    {
+                        saveChangesCompleted(this, new AsyncCompletedEventArgs(error, false, null)); 
+                    }  
+#if !SILVERLIGHT
+                    , invokeAsync: true
+#endif
+                ); 
             }
             else
             {
@@ -359,19 +364,6 @@ namespace NTier.Client.Domain
                 }
 
                 #endregion
-            }
-        }
-
-        protected void Invoke(Action action)
-        {
-            var dispatcher = Dispatcher;
-            if (dispatcher == null || dispatcher.CheckAccess())
-            {
-                action();
-            }
-            else
-            {
-                dispatcher.BeginInvoke(action);
             }
         }
 
