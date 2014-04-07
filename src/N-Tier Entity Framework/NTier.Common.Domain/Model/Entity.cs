@@ -17,7 +17,7 @@ namespace NTier.Common.Domain.Model
     public abstract class Entity<T> : Entity where T : Entity<T>
     {
         #region Generic entity factory method
-        
+
 #if !SILVERLIGHT
         private delegate T ObjectActivator();
 
@@ -493,8 +493,8 @@ namespace NTier.Common.Domain.Model
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public void HandleCascadeDelete(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "State" && 
-                sender is IObjectWithChangeTracker && 
+            if (e.PropertyName == "State" &&
+                sender is IObjectWithChangeTracker &&
                 ((IObjectWithChangeTracker)sender).ChangeTracker.State == ObjectState.Deleted)
             {
                 this.MarkAsDeleted();
@@ -1049,8 +1049,8 @@ namespace NTier.Common.Domain.Model
         {
             get
             {
-                return !Errors.Any(e => e.IsError) && 
-                    ((IDataErrorInfo)this).Error == null && 
+                return !Errors.Any(e => e.IsError) &&
+                    ((IDataErrorInfo)this).Error == null &&
                     PropertyInfos.All(p => ((IDataErrorInfo)this)[p.Name] == null);
             }
         }
@@ -1066,7 +1066,7 @@ namespace NTier.Common.Domain.Model
 
         public bool Equals(Entity entity)
         {
-            return !object.ReferenceEquals(entity, null) 
+            return !object.ReferenceEquals(entity, null)
                 && (object.ReferenceEquals(this, entity) || (ChangeTracker.State != ObjectState.Added && entity.ChangeTracker.State != ObjectState.Added && IsKeyEqual(entity)));
         }
 
@@ -1140,7 +1140,7 @@ namespace NTier.Common.Domain.Model
                 ChangeTracker.RecordOriginalValue(propertyName, oldValue, newValue);
                 RecordOriginalValueInEditableEntityChangeTracker(propertyName, oldValue);
             }
-        }        
+        }
 
         #endregion INotifyPropertyChanged
 
@@ -1194,7 +1194,7 @@ namespace NTier.Common.Domain.Model
                     ValidateProperty(propertyName, newValue);
                 }
             }
-        }  
+        }
 
         #endregion INotifyPropertyChanging
     }
@@ -1418,7 +1418,7 @@ namespace NTier.Common.Domain.Model
             get
             {
 #if !SILVERLIGHT
-				return (_isChangeTrackingEnabled.HasValue && _isChangeTrackingEnabled.Value) || (!_isChangeTrackingEnabled.HasValue && _objectState != ObjectState.Added); 
+                return (_isChangeTrackingEnabled.HasValue && _isChangeTrackingEnabled.Value) || (!_isChangeTrackingEnabled.HasValue && _objectState != ObjectState.Added);
 #else
                 return _isChangeTrackingEnabled ?? true;
 #endif
@@ -1517,7 +1517,7 @@ namespace NTier.Common.Domain.Model
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public
 #endif
- void OnDeserializingMethod(StreamingContext context)
+        void OnDeserializingMethod(StreamingContext context)
         {
             _isDeserializing = true;
         }
@@ -1527,7 +1527,7 @@ namespace NTier.Common.Domain.Model
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public
 #endif
- void OnDeserializedMethod(StreamingContext context)
+        void OnDeserializedMethod(StreamingContext context)
         {
             _isDeserializing = false;
         }
@@ -1773,6 +1773,7 @@ namespace NTier.Common.Domain.Model
     [Serializable]
     public class TrackableCollection<T> : ITrackableCollection<T>, ITrackableCollection, INotifyCollectionChanged
     {
+        private readonly object SyncRoot = new object();
         private readonly IList<T> _data = new List<T>();
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
@@ -1783,70 +1784,81 @@ namespace NTier.Common.Domain.Model
             return _data.IndexOf(item);
         }
 
-        //public void Insert(int index, T item)
-        //{
-        //    if (Contains(item))
-        //    {
-        //        return;
-        //    }
+        int IList<T>.IndexOf(T item)
+        {
+            return IndexOf(item);
+        }
 
-        //    _data.Insert(index, item);
+        void IList<T>.Insert(int index, T item)
+        {
+            if (Contains(item))
+            {
+                return;
+            }
 
-        //    var collectionChanged = CollectionChanged;
-        //    if (collectionChanged != null)
-        //    {
-        //        collectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
-        //    }
-        //}
+            _data.Insert(index, item);
 
-        //public void RemoveAt(int index)
-        //{
-        //    var item = this[index];
-        //    _data.RemoveAt(index);
+            var collectionChanged = CollectionChanged;
+            if (collectionChanged != null)
+            {
+                collectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
+            }
+        }
 
-        //    var collectionChanged = CollectionChanged;
-        //    if (collectionChanged != null)
-        //    {
-        //        collectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index));
-        //    }
-        //}
+        void IList<T>.RemoveAt(int index)
+        {
+            var item = this[index];
+            _data.RemoveAt(index);
 
-        //public T this[int index]
-        //{
-        //    get
-        //    {
-        //        return _data[index];
-        //    }
-        //    set
-        //    {
-        //        if (Contains(value))
-        //        {
-        //            return;
-        //        }
+            var collectionChanged = CollectionChanged;
+            if (collectionChanged != null)
+            {
+                collectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index));
+            }
+        }
 
-        //        if (index >= 0 && index < Count)
-        //        {
-        //            var oldItem = _data[index];
-        //            _data[index] = value;
+        private T this[int index]
+        {
+            get
+            {
+                return _data[index];
+            }
+            set
+            {
+                if (Contains(value))
+                {
+                    return;
+                }
 
-        //            var collectionChanged = CollectionChanged;
-        //            if (collectionChanged != null)
-        //            {
-        //                collectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, value, oldItem, index));
-        //            }
-        //        }
-        //        else
-        //        {
-        //            _data[index] = value;
+                if (index >= 0 && index < Count)
+                {
+                    var oldItem = _data[index];
+                    _data[index] = value;
 
-        //            var collectionChanged = CollectionChanged;
-        //            if (collectionChanged != null)
-        //            {
-        //                collectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, value, index));
-        //            }
-        //        }
-        //    }
-        //}
+                    var collectionChanged = CollectionChanged;
+                    if (collectionChanged != null)
+                    {
+                        collectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, value, oldItem, index));
+                    }
+                }
+                else
+                {
+                    _data[index] = value;
+
+                    var collectionChanged = CollectionChanged;
+                    if (collectionChanged != null)
+                    {
+                        collectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, value, index));
+                    }
+                }
+            }
+        }
+
+        T IList<T>.this[int index]
+        {
+            get { return this[index]; }
+            set { this[index] = value; }
+        }
 
         public void Replace(T oldItem, T newItem)
         {
@@ -1855,30 +1867,33 @@ namespace NTier.Common.Domain.Model
                 return;
             }
 
-            //if (!Contains(oldItem))
-            //{
-            //    throw new Exception("Old item is not contained.");
-            //}
-            
+            if (!Contains(oldItem))
+            {
+                throw new Exception("Old item is not contained.");
+            }
+
+            var index = IndexOf(oldItem);
+            this[index] = newItem;
+
             //if (Contains(newItem))
             //{
             //    throw new Exception("New item is already contained.");
             //}
 
-            var index = IndexOf(oldItem);
-            _data.Add(newItem);
-            var successfullyRemoved = _data.Remove(oldItem);
-            if (!successfullyRemoved)
-            {
-                _data.Remove(newItem);
-                throw new Exception("Old item is not contained.");
-            }
+            //var index = IndexOf(oldItem);
+            //_data.Add(newItem);
+            //var successfullyRemoved = _data.Remove(oldItem);
+            //if (!successfullyRemoved)
+            //{
+            //    _data.Remove(newItem);
+            //    throw new Exception("Old item is not contained.");
+            //}
 
-            var collectionChanged = CollectionChanged;
-            if (collectionChanged != null)
-            {
-                collectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, newItem, oldItem, index));
-            }
+            //var collectionChanged = CollectionChanged;
+            //if (collectionChanged != null)
+            //{
+            //    collectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, newItem, oldItem, index));
+            //}
         }
 
         public void Add(T item)
@@ -1913,9 +1928,9 @@ namespace NTier.Common.Domain.Model
             {
                 list = _data.ToList();
             }
-			
+
             _data.Clear();
-			
+
             if (collectionChanged != null)
             {
                 collectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, list));
@@ -1936,7 +1951,7 @@ namespace NTier.Common.Domain.Model
             return _data.Contains(item);
         }
 
-        public void CopyTo(T[] array, int arrayIndex)
+        void ICollection<T>.CopyTo(T[] array, int arrayIndex)
         {
             _data.CopyTo(array, arrayIndex);
         }
@@ -1946,7 +1961,7 @@ namespace NTier.Common.Domain.Model
             get { return _data.Count; }
         }
 
-        public bool IsReadOnly
+        bool ICollection<T>.IsReadOnly
         {
             get { return _data.IsReadOnly; }
         }
@@ -1980,37 +1995,88 @@ namespace NTier.Common.Domain.Model
             return GetEnumerator();
         }
 
-        void ITrackableCollection.Add(object obj)
+        int System.Collections.IList.Add(object obj)
         {
-            if (obj == null)
-            {
-                throw new ArgumentNullException("obj");
-            }
-            if (obj.GetType() != typeof(T))
-            {
-                throw new ArgumentException(string.Format("Argument expected to be of type {0} and got type {1}.", typeof(T).FullName, obj.GetType().FullName));
-            }
-
-            Add((T)obj);
+            var item = Cast(obj);
+            Add(item);
+            return IndexOf(item) + 1;
         }
 
-        bool ITrackableCollection.Remove(object obj)
-        {
-            if (obj == null)
-            {
-                throw new ArgumentNullException("obj");
-            }
-            if (obj.GetType() != typeof(T))
-            {
-                throw new ArgumentException(string.Format("Argument expected to be of type {0} and got type {1}.", typeof(T).FullName, obj.GetType().FullName));
-            }
+        //void System.Collections.IList.Clear()
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-            return Remove((T)obj);
+        bool System.Collections.IList.Contains(object obj)
+        {
+            return Contains(Cast(obj));
         }
 
-        bool ITrackableCollection.Contains(object obj)
+        int System.Collections.IList.IndexOf(object obj)
         {
-            if (obj == null)
+            return IndexOf(Cast(obj));
+        }
+
+        void System.Collections.IList.Insert(int index, object obj)
+        {
+            ((IList<T>)this).Insert(index, Cast(obj));
+        }
+
+        bool System.Collections.IList.IsFixedSize
+        {
+            get { return false; }
+        }
+
+        bool System.Collections.IList.IsReadOnly
+        {
+            get { return false; }
+        }
+
+        void System.Collections.IList.Remove(object obj)
+        {
+            Remove(Cast(obj));
+        }
+
+        void System.Collections.IList.RemoveAt(int index)
+        {
+            ((IList<T>)this).RemoveAt(index);
+        }
+
+        object System.Collections.IList.this[int index]
+        {
+            get
+            {
+                return this[index];
+            }
+            set
+            {
+                this[index] = Cast(value);
+            }
+        }
+
+        void System.Collections.ICollection.CopyTo(Array array, int index)
+        {
+            ((System.Collections.IList)_data).CopyTo(array, index);
+        }
+
+        //int System.Collections.ICollection.Count
+        //{
+        //    get { throw new NotImplementedException(); }
+        //}
+
+        bool System.Collections.ICollection.IsSynchronized
+        {
+            get { return false; }
+        }
+
+        object System.Collections.ICollection.SyncRoot
+        {
+            get { return SyncRoot; }
+        }
+
+        private static T Cast(object obj)
+        {
+            if (ReferenceEquals(obj, null))
             {
                 throw new ArgumentNullException("obj");
             }
@@ -2018,64 +2084,15 @@ namespace NTier.Common.Domain.Model
             {
                 throw new ArgumentException(string.Format("Argument expected to be of type {0} and got type {1}.", typeof(T).FullName, obj.GetType().FullName));
             }
-
-            return Contains((T)obj);
+            return (T)obj;
         }
     }
 
-    public interface ITrackableCollection<T> : ICollection<T>, INotifyCollectionChanged
+    public interface ITrackableCollection<T> : IList<T>, INotifyCollectionChanged
     {
     }
 
-    internal interface ITrackableCollection : System.Collections.IEnumerable
+    public interface ITrackableCollection : System.Collections.IList, System.Collections.IEnumerable
     {
-        void Add(object obj);
-        bool Contains(object obj);
-        int Count { get; }
-        void Clear();
-        bool Remove(object item);
     }
-
-    //// An interface that provides an event that fires when complex properties change.
-    //// Changes can be the replacement of a complex property with a new complex type instance or
-    //// a change to a scalar property within a complex type instance.
-    //public interface INotifyComplexPropertyChanging
-    //{
-    //    event EventHandler ComplexPropertyChanging;
-    //}
-
-    //public static class EqualityComparer
-    //{
-    //    // Helper method to determine if two byte arrays are the same value even if they are different object references
-    //    public static bool BinaryEquals(object binaryValue1, object binaryValue2)
-    //    {
-    //        if (object.ReferenceEquals(binaryValue1, binaryValue2))
-    //        {
-    //            return true;
-    //        }
-
-    //        byte[] array1 = binaryValue1 as byte[];
-    //        byte[] array2 = binaryValue2 as byte[];
-
-    //        if (array1 != null && array2 != null)
-    //        {
-    //            if (array1.Length != array2.Length)
-    //            {
-    //                return false;
-    //            }
-
-    //            for (int i = 0; i < array1.Length; i++)
-    //            {
-    //                if (array1[i] != array2[i])
-    //                {
-    //                    return false;
-    //                }
-    //            }
-
-    //            return true;
-    //        }
-
-    //        return false;
-    //    }
-    //}
 }
