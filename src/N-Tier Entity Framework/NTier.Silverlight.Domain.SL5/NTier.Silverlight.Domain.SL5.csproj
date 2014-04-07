@@ -83,6 +83,9 @@
     <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\DataContext.Silverlight.cs">
       <Link>Client\DataContext.Silverlight.cs</Link>
     </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\DataContext`.Silverlight.cs">
+      <Link>Client\DataContext`.Silverlight.cs</Link>
+    </Compile>
     <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\DataServiceQueryable.Silverlight.cs">
       <Link>Client\DataServiceQueryable.Silverlight.cs</Link>
     </Compile>
@@ -112,6 +115,9 @@
     </Compile>
     <Compile Include="..\NTier.Client.Domain\DataContext.cs">
       <Link>Client\DataContext.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\DataContext`.cs">
+      <Link>Client\DataContext`.cs</Link>
     </Compile>
     <Compile Include="..\NTier.Client.Domain\DataLoader.cs">
       <Link>Client\DataLoader.cs</Link>
@@ -154,6 +160,9 @@
     </Compile>
     <Compile Include="..\NTier.Client.Domain\IDataContext.cs">
       <Link>Client\IDataContext.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\IDataContext.Silverlight.cs">
+      <Link>Client\IDataContext.Silverlight.cs</Link>
     </Compile>
     <Compile Include="..\NTier.Client.Domain\IDataLoader.cs">
       <Link>Client\IDataLoader.cs</Link>

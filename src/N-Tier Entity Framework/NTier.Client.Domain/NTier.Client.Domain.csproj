@@ -53,7 +53,10 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="DataContext`.NET.cs" />
+    <Compile Include="DataContext`.cs" />
     <Compile Include="FilterDescriptionExtensions.cs" />
+    <Compile Include="IDataContext.NET.cs" />
     <Compile Include="IOrderedDataServiceQueryableExtensions.cs" />
     <Compile Include="IDataServiceQueryableExtensions.cs" />
     <Compile Include="Deployment.cs" />

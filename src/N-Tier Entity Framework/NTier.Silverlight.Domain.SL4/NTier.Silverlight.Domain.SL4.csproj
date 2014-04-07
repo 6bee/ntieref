@@ -84,6 +84,9 @@
     <Compile Include="..\NTier.Client.Domain\DataContext.cs">
       <Link>Client\DataContext.cs</Link>
     </Compile>
+    <Compile Include="..\NTier.Client.Domain\DataContext`.cs">
+      <Link>Client\DataContext`.cs</Link>
+    </Compile>
     <Compile Include="..\NTier.Client.Domain\DataLoader.cs">
       <Link>Client\DataLoader.cs</Link>
     </Compile>
@@ -243,10 +246,12 @@
     <Compile Include="Client\AcceptOption.cs" />
     <Compile Include="Client\AsyncQueryCallback.cs" />
     <Compile Include="Client\DataContext.Silverlight.cs" />
+    <Compile Include="Client\DataContext`.Silverlight.cs" />
     <Compile Include="Client\DataServiceQueryable.Silverlight.cs" />
     <Compile Include="Client\DataServiceQueryableImp.Silverlight.cs" />
     <Compile Include="Client\Deployment.cs" />
     <Compile Include="Client\EntitySet.Silverlight.cs" />
+    <Compile Include="Client\IDataContext.Silverlight.cs" />
     <Compile Include="Client\IDataServiceQueryable.Silverlight.cs" />
     <Compile Include="Client\OrderedDataServiceQueryable.Silverlight.cs" />
     <Compile Include="System.Collections.Generic\SortedDictionary.cs" />
