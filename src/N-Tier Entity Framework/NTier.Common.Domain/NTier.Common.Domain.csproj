@@ -53,6 +53,27 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Model\ITrackableCollection.cs" />
+    <Compile Include="Model\ITrackableCollection`.cs" />
+    <Compile Include="Model\TrackableCollection`.cs" />
+    <Compile Include="Model\ObjectWithChangeTrackerExtensions.cs" />
+    <Compile Include="Model\ObjectStateChangingEventArgs.cs" />
+    <Compile Include="Model\IObjectWithChangeTracker.cs" />
+    <Compile Include="Model\EntityList.cs" />
+    <Compile Include="Model\ExtendedPropertiesDictionary.cs" />
+    <Compile Include="Model\OriginalValuesDictionary.cs" />
+    <Compile Include="Model\EntitiesRemovedFromCollectionProperties.cs" />
+    <Compile Include="Model\IncludeOnDeleteAttribute.cs" />
+    <Compile Include="Model\EntitiesAddedToCollectionProperties.cs" />
+    <Compile Include="Model\ObjectState.cs" />
+    <Compile Include="Model\ObjectChangeTracker.cs" />
+    <Compile Include="Model\IncludeOnUpdateAttribute.cs" />
+    <Compile Include="Model\ConcurrencyPropertyAttribute.cs" />
+    <Compile Include="Model\ServerGenerationAttribute.cs" />
+    <Compile Include="Model\ServerGenerationTypes.cs" />
+    <Compile Include="Model\ErrorType.cs" />
+    <Compile Include="Model\Error.cs" />
+    <Compile Include="Model\Entity`.cs" />
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Model\ChangeSetExtensions.cs" />
     <Compile Include="Model\ClientInfo.cs" />

@@ -71,9 +71,6 @@
     <Reference Include="System.Xml.XPath, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\NTier.Common.Domain\Model\SimplePropertyAttribute.cs">
-      <Link>Common\Model\SimplePropertyAttribute.cs</Link>
-    </Compile>
     <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\AcceptOption.cs">
       <Link>Client\AcceptOption.cs</Link>
     </Compile>
@@ -236,11 +233,35 @@
     <Compile Include="..\NTier.Common.Domain\Model\ComplexPropertyAttribute.cs">
       <Link>Common\Model\ComplexPropertyAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ConcurrencyPropertyAttribute.cs">
+      <Link>Common\Model\ConcurrencyPropertyAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\NTier.Common.Domain\Model\DynamicPropertyHelper.cs">
       <Link>Common\Model\DynamicPropertyHelper.cs</Link>
     </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\EntitiesAddedToCollectionProperties.cs">
+      <Link>Common\Model\EntitiesAddedToCollectionProperties.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\EntitiesRemovedFromCollectionProperties.cs">
+      <Link>Common\Model\EntitiesRemovedFromCollectionProperties.cs</Link>
+    </Compile>
     <Compile Include="..\NTier.Common.Domain\Model\Entity.cs">
       <Link>Common\Model\Entity.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\Entity`.cs">
+      <Link>Common\Model\Entity`.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\EntityList.cs">
+      <Link>Common\Model\EntityList.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\Error.cs">
+      <Link>Common\Model\Error.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ErrorType.cs">
+      <Link>Common\Model\ErrorType.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ExtendedPropertiesDictionary.cs">
+      <Link>Common\Model\ExtendedPropertiesDictionary.cs</Link>
     </Compile>
     <Compile Include="..\NTier.Common.Domain\Model\IChangeSet.cs">
       <Link>Common\Model\IChangeSet.cs</Link>
@@ -251,11 +272,41 @@
     <Compile Include="..\NTier.Common.Domain\Model\IEnumerableExtensions.cs">
       <Link>Common\Model\IEnumerableExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\IncludeOnDeleteAttribute.cs">
+      <Link>Common\Model\IncludeOnDeleteAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\IncludeOnUpdateAttribute.cs">
+      <Link>Common\Model\IncludeOnUpdateAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\IObjectWithChangeTracker.cs">
+      <Link>Common\Model\IObjectWithChangeTracker.cs</Link>
+    </Compile>
     <Compile Include="..\NTier.Common.Domain\Model\IResultSet.cs">
       <Link>Common\Model\IResultSet.cs</Link>
     </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ITrackableCollection.cs">
+      <Link>Common\Model\ITrackableCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ITrackableCollection`.cs">
+      <Link>Common\Model\ITrackableCollection`.cs</Link>
+    </Compile>
     <Compile Include="..\NTier.Common.Domain\Model\NavigationPropertyAttribute.cs">
       <Link>Common\Model\NavigationPropertyAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ObjectChangeTracker.cs">
+      <Link>Common\Model\ObjectChangeTracker.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ObjectState.cs">
+      <Link>Common\Model\ObjectState.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ObjectStateChangingEventArgs.cs">
+      <Link>Common\Model\ObjectStateChangingEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ObjectWithChangeTrackerExtensions.cs">
+      <Link>Common\Model\ObjectWithChangeTrackerExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\OriginalValuesDictionary.cs">
+      <Link>Common\Model\OriginalValuesDictionary.cs</Link>
     </Compile>
     <Compile Include="..\NTier.Common.Domain\Model\PrimitivePropertyAttribute.cs">
       <Link>Common\Model\PrimitivePropertyAttribute.cs</Link>
@@ -274,6 +325,18 @@
     </Compile>
     <Compile Include="..\NTier.Common.Domain\Model\QueryResult.cs">
       <Link>Common\Model\QueryResult.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ServerGenerationAttribute.cs">
+      <Link>Common\Model\ServerGenerationAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ServerGenerationTypes.cs">
+      <Link>Common\Model\ServerGenerationTypes.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\SimplePropertyAttribute.cs">
+      <Link>Common\Model\SimplePropertyAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\TrackableCollection`.cs">
+      <Link>Common\Model\TrackableCollection`.cs</Link>
     </Compile>
     <Compile Include="..\NTier.Common.Domain\Model\ValueObject.cs">
       <Link>Common\Model\ValueObject.cs</Link>
