@@ -727,7 +727,7 @@ namespace NTier.Common.Domain.Model
             {
                 if (string.IsNullOrEmpty(propertyName))
                 {
-                    throw new ArgumentNullException("columnName");
+                    throw new ArgumentNullException("propertyName");
                 }
 
                 if (!PropertyInfos.Any(p => p.Name == propertyName))
