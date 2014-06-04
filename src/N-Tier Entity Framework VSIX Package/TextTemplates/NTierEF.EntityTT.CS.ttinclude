@@ -1137,6 +1137,10 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
 #>
 
         #endregion Association Fixup
+<#+
+    if (entity.BaseType == null)
+    {
+#>
 
         protected override bool IsKeyEqual(<#=EdmUtility.Code.Escape(entity)#> entity)
         {
@@ -1225,10 +1229,14 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
 #>
                 return hashCode;
             }
+        
 <#+
         }
 #>
         }
+<#+
+        }
+#>
     }
 }
 <#+
