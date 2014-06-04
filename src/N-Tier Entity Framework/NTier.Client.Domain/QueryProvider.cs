@@ -247,7 +247,7 @@ namespace NTier.Client.Domain
             }
             if (returnType == typeof(TEntity))
             {
-                return (object)_queriable.FirstOrDefault();
+                return (object)_queriable.AsEnumerable().FirstOrDefault();
             }
             if (returnType == typeof(int) && _totalCountInt32.HasValue)
             {
