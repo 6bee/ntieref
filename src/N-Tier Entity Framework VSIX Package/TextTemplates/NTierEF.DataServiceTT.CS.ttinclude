@@ -143,7 +143,7 @@ namespace <#=EdmUtility.Code.EscapeNamespace(Namespace)#>
             using (var dataRepository = _repositoryFactory(clientInfo))
             {
                 PreProcessing(clientInfo, ref query, dataRepository);
-                var result = Get(dataRepository.<#=EdmUtility.Code.Escape(entitySet)#>, query, clientInfo);
+                var result = Get(dataRepository.<#=EdmUtility.Code.Escape(entitySet)#>.AsNoTrackingQueryable(), query, clientInfo);
                 PostProcessing(clientInfo, query, ref result, dataRepository);
                 return result;
             }

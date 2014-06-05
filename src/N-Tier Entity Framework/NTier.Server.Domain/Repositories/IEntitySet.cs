@@ -17,8 +17,13 @@ namespace NTier.Server.Domain.Repositories
 
 
         /// <summary>
-        /// Gets a data service queriable for the specific entity type
+        /// Gets an entity queriable for the specific entity type
         /// </summary>
         IEntityQueryable<TEntity> AsQueryable();
+
+        /// <summary>
+        /// Gets an entity queriable where the entities returned will not be cached in the repository
+        /// </summary>
+        IEntityQueryable<TEntity> AsNoTrackingQueryable();
     }
 }

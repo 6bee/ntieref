@@ -24,7 +24,7 @@ namespace NTier.Server.Domain.Service
         /// Executes the query against the data store including query interceptors
         /// </summary>
         /// <returns>The result for the given query</returns>
-        protected virtual QueryResult<TEntity> Get<TEntity>(IEntitySet<TEntity> entitySet, Query query, ClientInfo clientInfo) where TEntity : Entity
+        protected virtual QueryResult<TEntity> Get<TEntity>(IEntityQueryable<TEntity> entityQueryable, Query query, ClientInfo clientInfo) where TEntity : Entity
         {
             List<TEntity> result = null;
             long? totalCount = null;
@@ -33,8 +33,7 @@ namespace NTier.Server.Domain.Service
                 // get filters defined by interceptors
                 var filters = GetQueryInterceptors<TEntity>(clientInfo);
 
-                var queryable = entitySet
-                    .AsQueryable()
+                var queryable = entityQueryable
                     .ApplyInclude(query.IncludeList)
                     .ApplyFilters(filters);
 

@@ -18,7 +18,7 @@ namespace NTier.Server.Domain.Repositories.EntityFramework
 
         #region Constructor
 
-        public EntitySet(ObjectSet<TEntity> objectSet)
+        internal EntitySet(ObjectSet<TEntity> objectSet)
         {
             _objectSet = objectSet;
         }
@@ -34,7 +34,12 @@ namespace NTier.Server.Domain.Repositories.EntityFramework
 
         public IEntityQueryable<TEntity> AsQueryable()
         {
-            return new EntityQueryable<TEntity>(_objectSet, ExpressionVisitor.Visit);
+            return new EntityQueryable<TEntity>(_objectSet, ExpressionVisitor.Visit, false);
+        }
+
+        public IEntityQueryable<TEntity> AsNoTrackingQueryable()
+        {
+            return new EntityQueryable<TEntity>(_objectSet, ExpressionVisitor.Visit, true);
         }
 
         #endregion IEntitySet<T>

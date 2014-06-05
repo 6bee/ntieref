@@ -34,6 +34,11 @@ namespace NTier.Server.Domain.Repositories
             return new EntityQueryable<TEntity>(query.AsQueryable());
         }
 
+        public IEntityQueryable<TEntity> AsNoTrackingQueryable()
+        {
+            return AsQueryable();
+        }
+
         int IInMemoryEntitySet.AcceptChanges()
         {
             lock (_source)
