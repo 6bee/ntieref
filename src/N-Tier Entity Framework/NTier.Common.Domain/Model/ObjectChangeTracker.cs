@@ -13,7 +13,7 @@ namespace NTier.Common.Domain.Model
     [DataContract(IsReference = true)]
     public sealed class ObjectChangeTracker : INotifyPropertyChanged
     {
-        #region  Fields
+        #region Fields
 
         [NonSerialized]
         private bool _isDeserializing;
@@ -25,7 +25,7 @@ namespace NTier.Common.Domain.Model
         private EntitiesRemovedFromCollectionProperties _objectsRemovedFromCollections;
         private List<string> _modifiedProperties;
 
-        #endregion
+        #endregion Fields
 
         #region Events
 
@@ -50,7 +50,7 @@ namespace NTier.Common.Domain.Model
 
         #endregion INotifyPropertyChanged
 
-        #endregion
+        #endregion Events
 
         //private void OnObjectStateChanging(ObjectState newState)
         //{
@@ -82,7 +82,7 @@ namespace NTier.Common.Domain.Model
             get { return _objectState; }
             set
             {
-                if (_isDeserializing || (_isChangeTrackingEnabled ?? true))
+                if (_objectState != value && (_isDeserializing || (_isChangeTrackingEnabled ?? true)))
                 {
                     //OnObjectStateChanging(value);
                     _objectState = value;
