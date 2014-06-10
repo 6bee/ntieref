@@ -1,0 +1,1 @@
+For the 'ConcurrencyDemo' you may either attach the ConcurrencyTest.mdf database file to an SQL server or create the database objects within an existing  or new SQL database using the DDL.sql script.
