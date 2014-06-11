@@ -15,25 +15,36 @@ namespace ConcurrencyDemo.Client.Domain.Test
         {
             var ctx = new ConcurrencyTestDataContext();
 
-            var entityA = new ARecord { Value = "[0] Payload" };
+            var entityA = new ARecord { Value = "[0] created payload" };
             ctx.ARecords.Add(entityA);
             ctx.SaveChanges();
 
-            entityA.Value = string.Format("[1]  Payload at {0}", DateTime.Now);
+            entityA.Value = string.Format("[1]  updated payload at {0}", DateTime.Now);
             ctx.SaveChanges();
 
-            entityA.Value = string.Format("[2] Payload at {0}", DateTime.Now);
+            entityA.Value = string.Format("[2] updated payload at {0}", DateTime.Now);
             ctx.SaveChanges();
 
 
-            var entityB = new BRecord { Value = "[0] Payload" };
+            var entityB = new BRecord { Value = "[0] created payload" };
             ctx.BRecords.Add(entityB);
             ctx.SaveChanges();
 
-            entityB.Value = string.Format("[1]  Payload at {0}", DateTime.Now);
+            entityB.Value = string.Format("[1]  updated payload at {0}", DateTime.Now);
             ctx.SaveChanges();
 
-            entityB.Value = string.Format("[2] Payload at {0}", DateTime.Now);
+            entityB.Value = string.Format("[2] updated payload at {0}", DateTime.Now);
+            ctx.SaveChanges();
+
+
+            var entityC = new CRecord { Value = "[0] created payload" };
+            ctx.CRecords.Add(entityC);
+            ctx.SaveChanges();
+
+            entityC.Value = string.Format("[1]  updated payload at {0}", DateTime.Now);
+            ctx.SaveChanges();
+
+            entityC.Value = string.Format("[2] updated payload at {0}", DateTime.Now);
             ctx.SaveChanges();
         }
     }

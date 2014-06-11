@@ -50,8 +50,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrencyDemo.Server.Doma
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_database", "_database", "{D7DA4F9E-E448-4F27-835D-8742B674C98B}"
 	ProjectSection(SolutionItems) = preProject
-		database\ConcurrencyTest.mdf = database\ConcurrencyTest.mdf
-		database\ConcurrencyTest_log.ldf = database\ConcurrencyTest_log.ldf
+		database\ConcurrencyDemo.mdf = database\ConcurrencyDemo.mdf
+		database\ConcurrencyDemo_log.ldf = database\ConcurrencyDemo_log.ldf
 		database\DDL.sql = database\DDL.sql
 		database\readme.txt = database\readme.txt
 	EndProjectSection

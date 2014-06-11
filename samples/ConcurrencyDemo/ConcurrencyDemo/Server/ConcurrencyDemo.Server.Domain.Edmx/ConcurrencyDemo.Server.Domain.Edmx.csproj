@@ -48,22 +48,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ARecord.cs">
-      <DependentUpon>DemoModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="BRecord.cs">
-      <DependentUpon>DemoModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DemoModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DemoModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DemoModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DemoModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="DemoModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -111,22 +95,12 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>DemoModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="DemoModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>DemoModel.edmx</DependentUpon>
-      <LastGenOutput>DemoModel.Context.cs</LastGenOutput>
-    </None>
     <None Include="DemoModel.edmx.diagram">
       <DependentUpon>DemoModel.edmx</DependentUpon>
     </None>
     <None Include="DemoModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>DemoModel.edmx</DependentUpon>
-      <LastGenOutput>DemoModel.cs</LastGenOutput>
-    </None>
-    <None Include="Model1.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Model1.txt</LastGenOutput>
+      <LastGenOutput>DemoModel.txt</LastGenOutput>
       <DependentUpon>DemoModel.edmx</DependentUpon>
       <LastOutputs>
 ..\..\Client\ConcurrencyDemo.Client.Domain\ConcurrencyTestDataContext.g.cs
@@ -135,6 +109,7 @@
 ..\..\Common\ConcurrencyDemo.Common.Domain.Model\ConcurrencyTest\BRecord.g.cs
 ..\..\Common\ConcurrencyDemo.Common.Domain.Model\ConcurrencyTest\ConcurrencyTestChangeSet.g.cs
 ..\..\Common\ConcurrencyDemo.Common.Domain.Model\ConcurrencyTest\ConcurrencyTestResultSet.g.cs
+..\..\Common\ConcurrencyDemo.Common.Domain.Model\ConcurrencyTest\CRecord.g.cs
 ..\..\Common\ConcurrencyDemo.Common.Domain.Service\Contracts\IConcurrencyTestDataService.g.cs
 ..\ConcurrencyDemo.Server.Domain.Repositories\ConcurrencyTestRepository.g.cs
 ..\ConcurrencyDemo.Server.Domain.Repositories\IConcurrencyTestRepository.g.cs
@@ -162,10 +137,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Model1.txt">
+    <Content Include="DemoModel.txt">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>DemoModel.tt</DependentUpon>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

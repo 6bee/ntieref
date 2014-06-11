@@ -41,9 +41,12 @@ namespace ConcurrencyDemo.Common.Domain.Model.ConcurrencyTest
 
         public global::System.String Value;
 
+        // Note: this property is set by data service on save operation for added and modified entities
         [ServerGeneration(ServerGenerationTypes.Insert | ServerGenerationTypes.Update)]
         public global::System.Guid Key;
 
+        // Note: this property is set by data service on save operation for added and modified entities
+        [ServerGeneration(ServerGenerationTypes.Insert | ServerGenerationTypes.Update)]
         public global::System.DateTime ChangedDate;
 
         #endregion Simple Properties

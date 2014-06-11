@@ -56,6 +56,8 @@
     <Compile Include="ConcurrencyTest\BRecord.metadata.cs" />
     <Compile Include="ConcurrencyTest\ConcurrencyTestChangeSet.g.cs" />
     <Compile Include="ConcurrencyTest\ConcurrencyTestResultSet.g.cs" />
+    <Compile Include="ConcurrencyTest\CRecord.g.cs" />
+    <Compile Include="ConcurrencyTest\CRecord.metadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

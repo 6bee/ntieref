@@ -30,6 +30,18 @@ namespace ConcurrencyDemo.Server.Domain.Service
                     break;
             }
         }
+
+        [ChangeInterceptor(typeof(CRecord))]
+        public void OnChange(CRecord entity, UpdateOperations operation)
+        {
+            switch (operation)
+            {
+                case UpdateOperations.Add:
+                case UpdateOperations.Change:
+                    entity.ChangedDate = DateTime.Now;
+                    break;
+            }
+        }
     }
 }
 
