@@ -23,6 +23,11 @@ namespace NTier.Client.Domain
         MergeOption MergeOption { get; set; }
 
         /// <summary>
+        /// Gets or sets a dispatcher instance for synchronizing firing events
+        /// </summary>
+        System.Windows.Threading.Dispatcher Dispatcher { get; set; }
+
+        /// <summary>
         /// Gets or sets whether existing entities should be detached before attaching entites of a new query result
         /// </summary>
         bool DetachEntitiesUponNewQueryResult { get; set; }
