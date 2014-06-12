@@ -389,16 +389,12 @@ namespace NTier.Client.Domain
                     {
                         _added.Remove(entity);
                     }
-                    foreach (var entity in _removed.Where(e => e.IsValid).ToArray())
-                    {
-                        _removed.Remove(entity);
-                    }
                 }
                 else
                 {
                     _added.Clear();
-                    _removed.Clear();
                 }
+                _removed.Clear();
                 _suppressHasChangesEvent = false;
             }
             OnPropertyChanged("HasChanges");
