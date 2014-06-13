@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using NTier.Common.Domain.Model;
+﻿using NTier.Common.Domain.Model;
 using NTier.Server.Domain.Repositories;
 using NTierDemo.Common.Domain.Model;
 using NTierDemo.Common.Domain.Model.NTierDemo;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace NTierDemo.Server.Domain.Repositories
 {
@@ -13,17 +13,17 @@ namespace NTierDemo.Server.Domain.Repositories
     {
         #region InMemoryDataStore
 
-        private static class InMemoryDataStore
+        private sealed class InMemoryDataStore
         {
             private static long _id = 0;
-            private static readonly ISet<Author> _authors;
-            private static readonly ISet<Blog> _blogs;
-            private static readonly ISet<Post> _posts;
+            private readonly ISet<Author> _authors;
+            private readonly ISet<Blog> _blogs;
+            private readonly ISet<Post> _posts;
 
-            public static ISet<Author> Authors { get { return _authors; } }
-            public static ISet<Post> Posts { get { return _posts; } }
-            public static ISet<Blog> Blogs { get { return _blogs; } }
-            public static ISet<PostInfo> PostInfos
+            public ISet<Author> Authors { get { return _authors; } }
+            public ISet<Post> Posts { get { return _posts; } }
+            public ISet<Blog> Blogs { get { return _blogs; } }
+            public ISet<PostInfo> PostInfos
             {
                 get
                 {
@@ -41,7 +41,7 @@ namespace NTierDemo.Server.Domain.Repositories
                 }
             }
             
-            static InMemoryDataStore()
+            public InMemoryDataStore()
             {
                 // Here we create the initial data
                 var authors = new[]
@@ -70,23 +70,25 @@ namespace NTierDemo.Server.Domain.Repositories
             /// <summary>
             /// primary key generator
             /// </summary>
-            public static long GetNextId()
+            public long GetNextId()
             {
                 return Interlocked.Increment(ref _id);
             }
         }
 
+        private static readonly InMemoryDataStore _store = new InMemoryDataStore();
+
         #endregion InMemoryDataStore
 
         #region EntitySets
 
-        public IEntitySet<Author> Authors { get { return GetEntitySet<Author>(InMemoryDataStore.Authors); } }
+        public IEntitySet<Author> Authors { get { return GetEntitySet<Author>(_store.Authors); } }
 
-        public IEntitySet<Blog> Blogs { get { return GetEntitySet<Blog>(InMemoryDataStore.Blogs); } }
+        public IEntitySet<Blog> Blogs { get { return GetEntitySet<Blog>(_store.Blogs); } }
 
-        public IEntitySet<Post> Posts { get { return GetEntitySet<Post>(InMemoryDataStore.Posts); } }
+        public IEntitySet<Post> Posts { get { return GetEntitySet<Post>(_store.Posts); } }
 
-        public IEntitySet<PostInfo> PostInfos { get { return GetEntitySet<PostInfo>(InMemoryDataStore.PostInfos); } }
+        public IEntitySet<PostInfo> PostInfos { get { return GetEntitySet<PostInfo>(_store.PostInfos); } }
 
         #endregion EntitySets
 
@@ -96,7 +98,55 @@ namespace NTierDemo.Server.Domain.Repositories
         {
             if (entity is IUpdatableEntity)
             {
-                ((IUpdatableEntity)entity).Id = InMemoryDataStore.GetNextId();
+                ((IUpdatableEntity)entity).Id = _store.GetNextId();
+            }
+
+
+            FixeUpReferencesAndState(entity);
+        }
+
+        protected override void OnUpdate(Entity entity)
+        {
+            FixeUpReferencesAndState(entity);
+        }
+
+        protected override void OnDelete(Entity entity)
+        {
+            CleanUpReferences(entity);
+        }
+
+        private void FixeUpReferencesAndState(Entity entity)
+        {
+            if (entity is Blog)
+            {
+                var blog = (Blog)entity;
+                var owner = Authors.FirstOrDefault(i => i.Id == blog.OwnerId);
+                if (owner != null)
+                {
+                    blog.Author = owner;
+                    owner.AcceptChanges();
+                }
+            }
+
+            entity.AcceptChanges();
+        }
+
+        private void CleanUpReferences(Entity entity)
+        {
+            if (entity is Blog)
+            {
+                var blog = (Blog)entity;
+                var owner = Authors.SingleOrDefault(i => i.Id == blog.OwnerId);
+                if (owner != null)
+                {
+                    var referencesBlog = owner.Blogs.SingleOrDefault(i => i.Id == blog.Id);
+                    if (referencesBlog != null)
+                    {
+                        owner.Blogs.Remove(referencesBlog);
+                        owner.AcceptChanges();
+                        referencesBlog.AcceptChanges();
+                    }
+                }
             }
         }
         

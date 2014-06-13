@@ -48,19 +48,19 @@ namespace BlogWriter.Wpf.ViewModels
         {
             DeactivateRegistration();
             DeactivateUserBlogs();
-            if (LoginViewModel == null) LoginViewModel = new LoginViewModel(_dataContextFactory, x => CurrentUser = x, ActivateRegistration);                        
+            if (LoginViewModel == null) LoginViewModel = new LoginViewModel(_dataContextFactory, x => CurrentUser = x, ActivateRegistration) { IsActive = true };
         }
         private void ActivateRegistration()
         {
             DeactivateLogin();
             DeactivateUserBlogs();
-            if (RegistrationViewModel == null) RegistrationViewModel = new RegistrationViewModel(_dataContextFactory, x => CurrentUser = x, ActivateLogin);
+            if (RegistrationViewModel == null) RegistrationViewModel = new RegistrationViewModel(_dataContextFactory, x => CurrentUser = x, ActivateLogin) { IsActive = true };
         }
         private void ActivateUserBlogs()
         {
             DeactivateLogin();
             DeactivateRegistration();
-            if (UserBlogsViewModel == null) UserBlogsViewModel = new UserBlogsViewModel(_dataContextFactory, CurrentUser.Username, () => CurrentUser = null);
+            if (UserBlogsViewModel == null) UserBlogsViewModel = new UserBlogsViewModel(_dataContextFactory, CurrentUser, () => CurrentUser = null) { IsActive = true };
         }
 
         private void DeactivateLogin()
@@ -71,9 +71,12 @@ namespace BlogWriter.Wpf.ViewModels
         {
             RegistrationViewModel = null;
         }
-        private void DeactivateUserBlogs()
+        private void DeactivateUserBlogs(bool isLogoff = true)
         {
-            UserBlogsViewModel = null;
+            if (isLogoff)
+                UserBlogsViewModel = null;
+            else
+                UserBlogsViewModel.IsActive = false;
         }
 
 

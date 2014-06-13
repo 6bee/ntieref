@@ -8,6 +8,8 @@ using NTierDemo.Client.Domain;
 using NTierDemo.Common.Domain.Model.NTierDemo;
 using NTier.Client.Domain;
 using BlogWriter.Wpf.Commands;
+using BlogWriter.Wpf.Extensions;
+using System.Security;
 
 namespace BlogWriter.Wpf.ViewModels
 {
@@ -26,18 +28,19 @@ namespace BlogWriter.Wpf.ViewModels
 
             // demo purpose: set existung user and password
             Username = "mmeyer";
-            Password = "****";
+            Password = "****".ToSecureString();
         }
 
-        private async Task LoginAsync()
+        private async Task LoginAsync(object pw)
         {
             var dataContext = _dataContextFactory();
             dataContext.MergeOption = MergeOption.NoTracking;
 
             // retrieve user from backend
+            var password = Password.ToUnsecureString();
             var query =
                 from author in dataContext.Authors.AsQueryable()
-                where author.Username == Username && author.Password == Password
+                where author.Username == Username && author.Password == password
                 select author;
 
             var user = (await query.ExecuteAsync()).FirstOrDefault();
@@ -49,10 +52,11 @@ namespace BlogWriter.Wpf.ViewModels
             _setUser(user);
         }
 
-        private bool CanLogin()
+        private bool CanLogin(object pw)
         {
             return !string.IsNullOrWhiteSpace(Username) 
-                && !string.IsNullOrWhiteSpace(Password);
+                && Password != null
+                && Password.Length > 0;
         }
 
         public string Username
@@ -62,12 +66,12 @@ namespace BlogWriter.Wpf.ViewModels
         }
         private string _username;
 
-        public string Password
+        public SecureString Password
         {
             get { return _password; }
             set { _password = value; OnPropertyChanged(() => Password); }
         }
-        private string _password;
+        private SecureString _password;
 
         public string ErrorMessage
         {

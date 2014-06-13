@@ -1,13 +1,10 @@
 ﻿using BlogWriter.Wpf.Commands;
-using NTier.Client.Domain;
 using NTierDemo.Client.Domain;
 using NTierDemo.Common.Domain.Model.NTierDemo;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace BlogWriter.Wpf.ViewModels
@@ -15,17 +12,19 @@ namespace BlogWriter.Wpf.ViewModels
     public class UserBlogsViewModel : ViewModel
     {
         private readonly INTierDemoDataContext _dataContext;
-        private readonly string _username;
+        private readonly Author _user;
 
-        public UserBlogsViewModel(Func<INTierDemoDataContext> dataContextFactory, string username, Action logout)
+        public UserBlogsViewModel(Func<INTierDemoDataContext> dataContextFactory, Author user, Action logout)
         {
             _dataContext = dataContextFactory();
-            _username = username;
+            _user = user;
 
             LogoutCommand = new RelayCommand(logout);
-            CreateNewBlogCommand = new RelayCommand(CreateNewBlog);
+            CreateNewBlogCommand = new RelayCommand(CreateNewBlog, _dataContext.Authors.Count == 1);
             SaveCommand = new AsyncRelayCommand(SaveAsync, () => _dataContext.HasChanges && _dataContext.Blogs.All(x => x.IsValid));
             CancelCommand = new RelayCommand(Cancel, () => _dataContext.HasChanges);
+            OpenBlogCommand = new RelayCommand(OpenBlog, () => SelectedBlog != null);
+            DeleteBlogCommand = new RelayCommand(DeleteBlog, () => SelectedBlog != null);
 
             InitializeAsync();
         }
@@ -37,31 +36,45 @@ namespace BlogWriter.Wpf.ViewModels
                 var query = _dataContext.Authors
                     .AsQueryable()
                     .Include("Blogs.Posts")
-                    .Where(x => x.Username == _username);
+                    .Where(x => x.Username == _user.Username);
 
                 await query.ExecuteAsync();
+
+                if (_dataContext.Authors.Count == 1)
+                {
+                    // creating a collection view based on the user's blogs
+                    UserBlogs = new ListCollectionView(_dataContext.Authors.Single().Blogs);
+                    OnPropertyChanged(() => UserBlogs);
+                }
             }
         }
 
-        public IEntitySet<Blog> Blogs { get { return _dataContext.Blogs; } }
+        public ListCollectionView UserBlogs { get; private set; }
 
-        public Blog SelectedBlog
+        private Blog SelectedBlog
         {
-            get { return _selectedBlog; }
-            set { _selectedBlog = value; OnPropertyChanged(() => SelectedBlog); }
+            get
+            {
+                var blogs = UserBlogs;
+                return blogs == null ? null : blogs.CurrentItem as Blog;
+            }
         }
-        private Blog _selectedBlog;
-
+        
         public ICommand LogoutCommand { get; private set; }
         public ICommand CreateNewBlogCommand { get; private set; }
         public ICommand SaveCommand { get; private set; }
         public ICommand CancelCommand { get; private set; }
+        public ICommand OpenBlogCommand { get; private set; }
+        public ICommand DeleteBlogCommand { get; private set; }
 
         private void CreateNewBlog()
         {
-            var blog = new Blog();
-            _dataContext.Authors.Single().Blogs.Add(blog);
-            SelectedBlog = blog;
+            var userBlogs = UserBlogs;
+            if (userBlogs == null) return;
+
+            // add new blog the user's blogs collection
+            userBlogs.AddNewItem(new Blog() { OwnerId = _user.Id });
+            userBlogs.CommitNew();
         }
 
         private async Task SaveAsync()
@@ -72,6 +85,28 @@ namespace BlogWriter.Wpf.ViewModels
         private void Cancel()
         {
             _dataContext.RevertChanges();
+        }
+
+        private void OpenBlog()
+        {
+            var selectedBlog = SelectedBlog;
+            if (selectedBlog == null) return;
+
+            // TODO: open blog
+        }
+
+        private void DeleteBlog()
+        {
+            var blogs = UserBlogs;
+            if (blogs == null) return;
+
+            var blog = blogs.CurrentItem as Blog;
+            //var blog = SelectedBlog;
+            if (blog == null) return;
+
+            // instead of just removing from user's blogs collection we want to actually remove the blog instance altogether
+            blog.Author = null;
+            _dataContext.Delete(blog);
         }
     }
 }

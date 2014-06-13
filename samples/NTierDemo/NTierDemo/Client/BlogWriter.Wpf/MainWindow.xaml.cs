@@ -26,7 +26,15 @@ namespace BlogWriter.Wpf
         {
             InitializeComponent();
 
-            DataContext = new MainViewModel(() => new NTierDemoDataContext());
+            Func<INTierDemoDataContext> dataContextFactory = () => 
+                new NTierDemoDataContext()
+                {
+                    // Note: we're required to unset the dispatcher to avoid dead-locking when scheddlung to main thread from background task as we use async/await
+                    //       once a proper .NET 4.5 implementation of the n-tier entity framework we don't need to do this any longer
+                    Dispatcher = null
+                };
+
+            DataContext = new MainViewModel(dataContextFactory);
         }
     }
 }

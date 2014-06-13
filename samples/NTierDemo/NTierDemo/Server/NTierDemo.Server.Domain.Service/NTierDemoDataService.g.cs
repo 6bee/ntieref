@@ -63,7 +63,7 @@ namespace NTierDemo.Server.Domain.Service
             using (var dataRepository = _repositoryFactory(clientInfo))
             {
                 PreProcessing(clientInfo, ref query, dataRepository);
-                var result = Get(dataRepository.Authors, query, clientInfo);
+                var result = Get(dataRepository.Authors.AsNoTrackingQueryable(), query, clientInfo);
                 PostProcessing(clientInfo, query, ref result, dataRepository);
                 return result;
             }
@@ -75,7 +75,7 @@ namespace NTierDemo.Server.Domain.Service
             using (var dataRepository = _repositoryFactory(clientInfo))
             {
                 PreProcessing(clientInfo, ref query, dataRepository);
-                var result = Get(dataRepository.Blogs, query, clientInfo);
+                var result = Get(dataRepository.Blogs.AsNoTrackingQueryable(), query, clientInfo);
                 PostProcessing(clientInfo, query, ref result, dataRepository);
                 return result;
             }
@@ -87,7 +87,7 @@ namespace NTierDemo.Server.Domain.Service
             using (var dataRepository = _repositoryFactory(clientInfo))
             {
                 PreProcessing(clientInfo, ref query, dataRepository);
-                var result = Get(dataRepository.Posts, query, clientInfo);
+                var result = Get(dataRepository.Posts.AsNoTrackingQueryable(), query, clientInfo);
                 PostProcessing(clientInfo, query, ref result, dataRepository);
                 return result;
             }

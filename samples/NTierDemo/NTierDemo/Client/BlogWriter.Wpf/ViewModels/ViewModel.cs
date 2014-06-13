@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace BlogWriter.Wpf.ViewModels
 {
@@ -12,12 +9,19 @@ namespace BlogWriter.Wpf.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public bool IsActive
+        {
+            get { return _isActive; }
+            internal protected set { _isActive = value; OnPropertyChanged(() => IsActive); }
+        }
+        private bool _isActive;
+
         protected virtual void OnPropertyChanged(string propertyName)
         {
             var propertyChanged = PropertyChanged;
             if (propertyChanged != null)
             {
-                propertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                Invoke(() => propertyChanged(this, new PropertyChangedEventArgs(propertyName)));
             }
         }
 
@@ -25,6 +29,24 @@ namespace BlogWriter.Wpf.ViewModels
         {
             var propertyName = ((MemberExpression)property.Body).Member.Name;
             OnPropertyChanged(propertyName);
+        }
+
+        protected void Invoke(Action action)
+        {
+            var dispatcher = Dispatcher;
+            if (dispatcher != null && !dispatcher.CheckAccess())
+            {
+                dispatcher.BeginInvoke(action);
+            }
+            else
+            {
+                action();
+            }
+        }
+
+        public static Dispatcher Dispatcher
+        {
+            get { return Dispatcher.CurrentDispatcher; }
         }
     }
 }

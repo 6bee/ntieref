@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,11 +50,11 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -69,7 +70,9 @@
     <Compile Include="Converters\IsNotNullConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="BusyCursor.cs" />
-    <Compile Include="DependencyProperties\ContentControlProperty.cs" />
+    <Compile Include="DependencyProperties\ContentControl.cs" />
+    <Compile Include="DependencyProperties\PasswordBox.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="ViewModels\RegistrationViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -159,6 +162,7 @@
     <ProjectReference Include="..\..\Common\NTierDemo.Common.Domain.Model\NTierDemo.Common.Domain.Model.csproj">
       <Project>{2ef15a05-b392-41d9-a089-ccbc81ffcf03}</Project>
       <Name>NTierDemo.Common.Domain.Model</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Common\NTierDemo.Common.Domain.Service\NTierDemo.Common.Domain.Service.csproj">
       <Project>{27b4ff09-cb78-4b4d-a500-4a5cd5015fb1}</Project>
@@ -167,6 +171,7 @@
     <ProjectReference Include="..\NTierDemo.Client.Domain\NTierDemo.Client.Domain.csproj">
       <Project>{5d6116a2-d954-4f86-b14b-bb9c65670af0}</Project>
       <Name>NTierDemo.Client.Domain</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

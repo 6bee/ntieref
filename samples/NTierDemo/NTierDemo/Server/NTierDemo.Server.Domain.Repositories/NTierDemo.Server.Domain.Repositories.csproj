@@ -33,11 +33,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="NTier.Common.Domain">
       <HintPath>..\..\..\packages\NTierEntityFramework.Common.0.0.1\lib\net4-client\NTier.Common.Domain.dll</HintPath>
@@ -48,7 +50,8 @@
     <Reference Include="NTier.Server.Domain.Repositories.EntityFramework">
       <HintPath>..\..\..\packages\NTierEntityFramework.Server.EntityFramework6_0.0.0.1\lib\net4-client\NTier.Server.Domain.Repositories.EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Remote.Linq">
+    <Reference Include="Remote.Linq, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Remote.Linq.1.0.2\lib\net35-client\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />

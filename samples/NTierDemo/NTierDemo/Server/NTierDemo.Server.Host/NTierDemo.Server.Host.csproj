@@ -43,7 +43,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Remote.Linq">
+    <Reference Include="Remote.Linq, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Remote.Linq.1.0.2\lib\net35-client\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />

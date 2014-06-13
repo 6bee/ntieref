@@ -5,7 +5,7 @@
     <Style TargetType="ContentControl" x:Key="SlidingPage">
         <Setter Property="Opacity" Value="0.25" />
         <Style.Triggers>
-            <Trigger Property="dp:ContentControlProperty.IsActive" Value="True">
+            <Trigger Property="dp:ContentControl.IsActive" Value="True">
                 <Trigger.EnterActions>
                     <BeginStoryboard>
                         <Storyboard>

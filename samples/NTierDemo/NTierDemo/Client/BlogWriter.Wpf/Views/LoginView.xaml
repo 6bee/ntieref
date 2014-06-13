@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:dp="clr-namespace:BlogWriter.Wpf.DependencyProperties"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -24,7 +25,7 @@
         <TextBlock Grid.ColumnSpan="3" Grid.Row="4" Foreground="Red" Text="{Binding ErrorMessage}" />
 
         <TextBox Grid.Column="2" Grid.Row="0" Text="{Binding Username}" />
-        <TextBox Grid.Column="2" Grid.Row="2" Text="{Binding Password}"  />
+        <PasswordBox Grid.Column="2" Grid.Row="2" dp:PasswordBox.Password="{Binding Password}" />
 
         <Grid Grid.ColumnSpan="99" Grid.Row="4" HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>

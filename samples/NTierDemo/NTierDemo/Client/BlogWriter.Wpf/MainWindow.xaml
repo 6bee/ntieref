@@ -13,19 +13,19 @@
         
         <!-- login -->
         <ContentControl Style="{StaticResource SlidingPage}" VerticalAlignment="Center" Width="300" 
-                        dp:ContentControlProperty.IsActive="{Binding LoginViewModel, Converter={StaticResource IsNotNullConverter}}">
+                        dp:ContentControl.IsActive="{Binding LoginViewModel.IsActive, FallbackValue=False}">
             <v:LoginView DataContext="{Binding LoginViewModel}" />
         </ContentControl>
 
         <!-- registration -->
         <ContentControl Style="{StaticResource SlidingPage}" VerticalAlignment="Center" Width="300"
-                        dp:ContentControlProperty.IsActive="{Binding RegistrationViewModel, Converter={StaticResource IsNotNullConverter}}">
+                        dp:ContentControl.IsActive="{Binding RegistrationViewModel.IsActive, FallbackValue=False}">
             <v:RegistrationView DataContext="{Binding RegistrationViewModel}" />
         </ContentControl>
 
         <!-- blogs and posts -->
         <ContentControl Style="{StaticResource SlidingPage}"
-                        dp:ContentControlProperty.IsActive="{Binding UserBlogsViewModel, Converter={StaticResource IsNotNullConverter}}">
+                        dp:ContentControl.IsActive="{Binding UserBlogsViewModel.IsActive, FallbackValue=False}">
             <v:UserBlogsView DataContext="{Binding UserBlogsViewModel}" />
         </ContentControl>
 
