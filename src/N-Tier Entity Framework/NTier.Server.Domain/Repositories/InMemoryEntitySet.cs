@@ -10,12 +10,19 @@ using NTier.Server.Domain.Repositories.Linq;
 
 namespace NTier.Server.Domain.Repositories
 {
-    internal interface IInMemoryEntitySet
+    public interface IInMemoryEntitySet
     {
         int AcceptChanges();
     }
 
-    public class InMemoryEntitySet<TEntity> : IEntitySet<TEntity>, IInMemoryEntitySet where TEntity : Entity
+    public interface IInMemoryEntitySet<TEntity> : IEntitySet<TEntity>, IInMemoryEntitySet where TEntity : Entity
+    {
+        void Add(TEntity entity);
+        void Update(TEntity entity);
+        void Remove(TEntity entity);
+    }
+
+    public class InMemoryEntitySet<TEntity> : IInMemoryEntitySet<TEntity> where TEntity : Entity
     {
         private readonly InMemoryRepository _repository;
         private readonly ISet<TEntity> _source;
@@ -60,42 +67,68 @@ namespace NTier.Server.Domain.Repositories
                 switch (entity.ChangeTracker.State)
                 {
                     case ObjectState.Added:
-                        _repository.OnInsert(entity);
-                        _source.Add((TEntity)entity.ShallowCopy());
+                        Add(entity);
                         break;
 
                     case ObjectState.Modified:
-                    case ObjectState.Deleted:
-                        var existing = _source.SingleOrDefault(i => Equals(i, entity));
-                        if (!ReferenceEquals(existing, null) && !ReferenceEquals(existing, entity))
-                        {
-                            if (entity.ChangeTracker.State == ObjectState.Modified)
-                            {
-                                _repository.OnUpdate(entity);
-                                var properties =
-                                    from p in entity.PropertyInfos
-                                    where p.IsPhysical &&
-                                          p.Attributes.Any(attribute => attribute is SimplePropertyAttribute || attribute is ComplexPropertyAttribute) &&
-                                          entity.ChangeTracker.ModifiedProperties.Contains(p.Name)
-                                    select p.PropertyInfo;
-
-                                foreach (var property in properties)
-                                {
-                                    var newValue = property.GetValue(entity, null);
-                                    var oldValue = property.GetValue(existing, null);
-                                    if (!object.Equals(newValue, oldValue))
-                                    {
-                                        property.SetValue(existing, newValue, null);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                _repository.OnDelete(entity);
-                            }
-                            existing.ChangeTracker.State = entity.ChangeTracker.State;
-                        }
+                        Update(entity);
                         break;
+
+                    case ObjectState.Deleted:
+                        Remove(entity);
+                        break;
+                }
+            }
+        }
+
+        public void Add(TEntity entity)
+        {
+            var copy = (TEntity)entity.ShallowCopy();
+            _repository.OnInsert(copy);
+            ApplyChangedProperties(copy, entity);
+            copy.AcceptChanges();
+            _source.Add(copy);
+        }
+
+        public void Update(TEntity entity)
+        {
+            var existing = _source.SingleOrDefault(i => Equals(i, entity));
+            if (!ReferenceEquals(existing, null))
+            {
+                var copy = (TEntity)entity.ShallowCopy();
+                _repository.OnUpdate(copy);
+                ApplyChangedProperties(copy, existing);
+                existing.AcceptChanges();
+            }
+        }
+
+        public void Remove(TEntity entity)
+        {
+            var existing = _source.SingleOrDefault(i => Equals(i, entity));
+            if (!ReferenceEquals(existing, null))
+            {
+                var copy = (TEntity)entity.ShallowCopy();
+                _repository.OnDelete(copy);
+                _source.Remove(existing);
+            }
+        }
+
+        private static void ApplyChangedProperties(TEntity source, TEntity target)
+        {
+            var properties =
+                from p in source.PropertyInfos
+                where p.IsPhysical &&
+                      p.Attributes.Any(attribute => attribute is SimplePropertyAttribute || attribute is ComplexPropertyAttribute) &&
+                      source.ChangeTracker.ModifiedProperties.Contains(p.Name)
+                select p.PropertyInfo;
+
+            foreach (var property in properties)
+            {
+                var newValue = property.GetValue(source, null);
+                var oldValue = property.GetValue(target, null);
+                if (!object.Equals(newValue, oldValue))
+                {
+                    property.SetValue(target, newValue, null);
                 }
             }
         }

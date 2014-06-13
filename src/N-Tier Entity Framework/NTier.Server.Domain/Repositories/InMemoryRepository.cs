@@ -29,7 +29,7 @@ namespace NTier.Server.Domain.Repositories
         {
         }
 
-        protected virtual IEntitySet<T> GetEntitySet<T>(ISet<T> source) where T : Entity
+        protected virtual IInMemoryEntitySet<T> GetEntitySet<T>(ISet<T> source) where T : Entity
         {
             lock (StaticSyncRoot)
             {
