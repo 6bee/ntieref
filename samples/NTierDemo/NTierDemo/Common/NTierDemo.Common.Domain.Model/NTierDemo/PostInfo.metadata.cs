@@ -45,8 +45,6 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
 
         public global::System.Int64 Abstract;
 
-        public global::System.String Content;
-
         public global::System.DateTime CreatedDate;
 
         public global::System.DateTime ModifiedDate;

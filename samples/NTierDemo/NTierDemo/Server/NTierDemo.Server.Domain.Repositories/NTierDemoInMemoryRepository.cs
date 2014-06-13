@@ -32,7 +32,12 @@ namespace NTierDemo.Server.Domain.Repositories
                         {
                             var info = new PostInfo
                             {
-
+                                Id = p.Id,
+                                BlogId = p.BlogId,
+                                Title = p.Title,
+                                Abstract = p.Abstract,
+                                CreatedDate = p.CreatedDate,
+                                ModifiedDate = p.ModifiedDate,
                             };
                             info.AcceptChanges();
                             return info;
@@ -101,7 +106,6 @@ namespace NTierDemo.Server.Domain.Repositories
                 ((IUpdatableEntity)entity).Id = _store.GetNextId();
             }
 
-
             FixeUpReferencesAndState(entity);
         }
 
@@ -127,8 +131,6 @@ namespace NTierDemo.Server.Domain.Repositories
                     owner.AcceptChanges();
                 }
             }
-
-            entity.AcceptChanges();
         }
 
         private void CleanUpReferences(Entity entity)
@@ -136,16 +138,19 @@ namespace NTierDemo.Server.Domain.Repositories
             if (entity is Blog)
             {
                 var blog = (Blog)entity;
-                var owner = Authors.SingleOrDefault(i => i.Id == blog.OwnerId);
-                if (owner != null)
+
+                foreach (var author in Authors)
                 {
-                    var referencesBlog = owner.Blogs.SingleOrDefault(i => i.Id == blog.Id);
-                    if (referencesBlog != null)
+                    foreach (var referencesBlog in author.Blogs.Where(b => b.Id == blog.Id).ToList())
                     {
-                        owner.Blogs.Remove(referencesBlog);
-                        owner.AcceptChanges();
-                        referencesBlog.AcceptChanges();
+                        author.Blogs.Remove(referencesBlog);
                     }
+                    author.AcceptChanges();
+                }
+
+                foreach(var post in Posts.Where(x => x.BlogId == blog.Id).ToList())
+                {
+                    ((IInMemoryEntitySet<Post>)Posts).Remove(post);
                 }
             }
         }
