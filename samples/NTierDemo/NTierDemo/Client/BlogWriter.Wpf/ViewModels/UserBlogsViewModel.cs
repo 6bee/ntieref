@@ -24,6 +24,7 @@ namespace BlogWriter.Wpf.ViewModels
             SaveCommand = new AsyncRelayCommand(SaveAsync, () => _dataContext.HasChanges && _dataContext.Blogs.All(x => x.IsValid));
             CancelCommand = new RelayCommand(Cancel, () => _dataContext.HasChanges);
             OpenBlogCommand = new RelayCommand(OpenBlog, () => SelectedBlog != null);
+            CloseBlogCommand = new RelayCommand(CloseBlog, () => OpenedBlog != null);
             DeleteBlogCommand = new RelayCommand(DeleteBlog, () => SelectedBlog != null);
 
             InitializeAsync();
@@ -59,12 +60,15 @@ namespace BlogWriter.Wpf.ViewModels
                 return blogs == null ? null : blogs.CurrentItem as Blog;
             }
         }
-        
+
+        public Blog OpenedBlog { get; private set; }
+
         public ICommand LogoutCommand { get; private set; }
         public ICommand CreateNewBlogCommand { get; private set; }
         public ICommand SaveCommand { get; private set; }
         public ICommand CancelCommand { get; private set; }
         public ICommand OpenBlogCommand { get; private set; }
+        public ICommand CloseBlogCommand { get; private set; }
         public ICommand DeleteBlogCommand { get; private set; }
 
         private void CreateNewBlog()
@@ -85,6 +89,13 @@ namespace BlogWriter.Wpf.ViewModels
         private void Cancel()
         {
             _dataContext.RevertChanges();
+            
+            var openedBlog = OpenedBlog;
+            if (openedBlog != null && !_dataContext.Blogs.Any(b => Equals(b, openedBlog)))
+            {
+                OpenedBlog = null;
+                OnPropertyChanged(() => OpenedBlog);
+            }
         }
 
         private void OpenBlog()
@@ -92,7 +103,14 @@ namespace BlogWriter.Wpf.ViewModels
             var selectedBlog = SelectedBlog;
             if (selectedBlog == null) return;
 
-            // TODO: open blog
+            OpenedBlog = selectedBlog;
+            OnPropertyChanged(() => OpenedBlog);
+        }
+
+        private void CloseBlog()
+        {
+            OpenedBlog = null;
+            OnPropertyChanged(() => OpenedBlog);
         }
 
         private void DeleteBlog()

@@ -6,11 +6,11 @@ using System.Windows;
 namespace BlogWriter.Wpf.Converters
 {
     [ValueConversion(typeof(object), typeof(bool))]
-    public sealed class IsNotNullConverter : IValueConverter
+    public sealed class IsNullConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return !ReferenceEquals(value, null);
+            return ReferenceEquals(value, null);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
