@@ -95,7 +95,7 @@
         </ContentControl>
         <ContentControl Style="{StaticResource SlidingPage}"
                         dp:ContentControl.IsActive="{Binding OpenedBlog, Converter={StaticResource IsNotNullConverter}, FallbackValue=False}">
-            <Grid>
+            <Grid Background="White">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
@@ -104,11 +104,11 @@
                 <Grid Grid.Column="1" DataContext="{Binding OpenedBlog}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" MinHeight="20" MaxHeight="60" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <TextBox Grid.Row="0" Margin="3 3 3 0" Text="{Binding Title, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" FontWeight="SemiBold" TextWrapping="Wrap" />
-                    <TextBox Grid.Row="1" Margin="3 3 3 0" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" />
+                    <TextBox Grid.Row="1" Margin="3 3 3 0" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" TextWrapping="Wrap" />
                     <ListView Grid.Row="3" Margin="3 3 3 0">
                         <ListBoxItem Content="Post1" />
                         <ListBoxItem Content="Post2" />
@@ -129,8 +129,8 @@
                 <ColumnDefinition Width="Auto" />
                 <!--<ColumnDefinition Width="Auto" />-->
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="New Blog" Command="{Binding CreateNewBlogCommand}" Visibility="{Binding OpenedBlog, Converter={StaticResource VisibleIfNullConverter}}" />
-            <Button Grid.Column="0" Content="New Post" Command="{Binding CreateNewPostCommand}" Visibility="{Binding OpenedBlog, Converter={StaticResource VisibleIfNotNullConverter}}" />
+            <Button Grid.Column="0" Content="New Blog" Command="{Binding CreateNewBlogCommand}" Visibility="{Binding OpenedBlog, Converter={StaticResource VisibleIfNullConverter}, ConverterParameter={x:Static Visibility.Hidden}}" />
+            <Button Grid.Column="0" Content="New Post" Command="{Binding CreateNewPostCommand}" Visibility="{Binding OpenedBlog, Converter={StaticResource VisibleIfNotNullConverter}, ConverterParameter={x:Static Visibility.Hidden}}" />
             <Button Grid.Column="2" Content="Save" Command="{Binding SaveCommand}" />
             <Button Grid.Column="4" Content="Cancel" Command="{Binding CancelCommand}" /> 
             <Button Grid.Column="6" Content="Logout" Command="{Binding LogoutCommand}" />
