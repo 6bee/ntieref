@@ -25,37 +25,33 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
     {
         #region Constructor
 
-        public NTierDemoChangeSet(IEnumerable<Author> authors, IEnumerable<Blog> blogs, IEnumerable<Post> posts, IEnumerable<PostInfo> postInfos)
+        public NTierDemoChangeSet(IEnumerable<User> users, IEnumerable<Blog> blogs, IEnumerable<Post> posts)
         {
             // retrieve changes sets (modified entities)
-            var authorChangeSet = authors.GetChangeSet();
+            var userChangeSet = users.GetChangeSet();
             var blogChangeSet = blogs.GetChangeSet();
             var postChangeSet = posts.GetChangeSet();
-            var postInfoChangeSet = postInfos.GetChangeSet();
 
             // reduce entities (copy changed values)
-            var authorsMap = authorChangeSet.ReduceToModifications();
+            var usersMap = userChangeSet.ReduceToModifications();
             var blogsMap = blogChangeSet.ReduceToModifications();
             var postsMap = postChangeSet.ReduceToModifications();
-            var postInfosMap = postInfoChangeSet.ReduceToModifications();
 
             // fixup relations (replaces related entities with reduced entites)
             this.FixupRelations(
-                this.Union(authorsMap.CastToEntityTuple(), blogsMap.CastToEntityTuple(), postsMap.CastToEntityTuple(), postInfosMap.CastToEntityTuple()),
-                this.Union(authorChangeSet, blogChangeSet, postChangeSet, postInfoChangeSet)
+                this.Union(usersMap.CastToEntityTuple(), blogsMap.CastToEntityTuple(), postsMap.CastToEntityTuple()),
+                this.Union(userChangeSet, blogChangeSet, postChangeSet)
             );
-            if (authorsMap.Count > 0) this.Authors = authorsMap.Select(e => e.Item2).ToList();
+            if (usersMap.Count > 0) this.Users = usersMap.Select(e => e.Item2).ToList();
             if (blogsMap.Count > 0) this.Blogs = blogsMap.Select(e => e.Item2).ToList();
             if (postsMap.Count > 0) this.Posts = postsMap.Select(e => e.Item2).ToList();
-            if (postInfosMap.Count > 0) this.PostInfos = postInfosMap.Select(e => e.Item2).ToList();
         }
 
         protected NTierDemoChangeSet(NTierDemoChangeSet changeSet)
         {
-            this.Authors = changeSet.Authors;
+            this.Users = changeSet.Users;
             this.Blogs = changeSet.Blogs;
             this.Posts = changeSet.Posts;
-            this.PostInfos = changeSet.PostInfos;
         }
 
         #endregion Constructor
@@ -63,16 +59,13 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
         #region DataMember
 
         [DataMember]
-        public List<Author> Authors { get; private set; }
+        public List<User> Users { get; private set; }
 
         [DataMember]
         public List<Blog> Blogs { get; private set; }
 
         [DataMember]
         public List<Post> Posts { get; private set; }
-
-        [DataMember]
-        public List<PostInfo> PostInfos { get; private set; }
 
         #endregion DataMember
 
@@ -82,10 +75,9 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
         {
             get
             {
-                return Authors == null &&
+                return Users == null &&
                     Blogs == null &&
-                    Posts == null &&
-                    PostInfos == null;
+                    Posts == null;
             }
         }
 
@@ -95,9 +87,9 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
 
         public IEnumerator<Entity> GetEnumerator()
         {
-            if (Authors != null && Authors.Count > 0)
+            if (Users != null && Users.Count > 0)
             {
-                foreach (var item in Authors)
+                foreach (var item in Users)
                 {
                     yield return item;
                 }
@@ -114,14 +106,6 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
             if (Posts != null && Posts.Count > 0)
             {
                 foreach (var item in Posts)
-                {
-                    yield return item;
-                }
-            }
-
-            if (PostInfos != null && PostInfos.Count > 0)
-            {
-                foreach (var item in PostInfos)
                 {
                     yield return item;
                 }

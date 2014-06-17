@@ -15,17 +15,17 @@ namespace NTierDemo.Client.Domain
     public partial interface INTierDemoDataContext : IDataContext
     {
 
-        #region Authors
+        #region Users
 
-        IEntitySet<Author> Authors { get; }
+        IEntitySet<User> Users { get; }
 
-        void Add(Author entity);
-        void Delete(Author entity);
-        void Attach(Author entity);
-        void AttachAsModified(Author entity, Author original);
-        void Detach(Author entity);
+        void Add(User entity);
+        void Delete(User entity);
+        void Attach(User entity);
+        void AttachAsModified(User entity, User original);
+        void Detach(User entity);
 
-        #endregion Authors
+        #endregion Users
 
         #region Blogs
 

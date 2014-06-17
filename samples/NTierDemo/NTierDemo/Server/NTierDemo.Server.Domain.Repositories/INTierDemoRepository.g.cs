@@ -24,13 +24,11 @@ namespace NTierDemo.Server.Domain.Repositories
     {
         #region EntitySets
 
-        IEntitySet<Author> Authors { get; }
+        IEntitySet<User> Users { get; }
 
         IEntitySet<Blog> Blogs { get; }
 
         IEntitySet<Post> Posts { get; }
-
-        IEntitySet<PostInfo> PostInfos { get; }
 
         #endregion EntitySets
     }

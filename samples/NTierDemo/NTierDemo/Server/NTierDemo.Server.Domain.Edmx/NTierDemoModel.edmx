@@ -5,7 +5,7 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="NTierDemoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="Author">
+        <EntityType Name="User">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -41,22 +41,11 @@
           <Property Name="CreatedDate" Type="datetime2" Nullable="false" />
           <Property Name="ModifiedDate" Type="datetime2" Nullable="false" />
         </EntityType>
-        <EntityType Name="vPostInfo">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="BlogId" Type="bigint" Nullable="false" />
-          <Property Name="Title" Type="varchar" Nullable="false" />
-          <Property Name="Abstract" Type="varchar" Nullable="false" />
-          <Property Name="CreatedDate" Type="datetime2" Nullable="false" />
-          <Property Name="ModifiedDate" Type="datetime2" Nullable="false" />
-        </EntityType>
         <Association Name="FK__Blog__OwnerId__1273C1CD">
-          <End Role="Author" Type="Self.Author" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="1" />
           <End Role="Blog" Type="Self.Blog" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Author">
+            <Principal Role="User">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Blog">
@@ -66,44 +55,34 @@
         </Association>
         <Association Name="FK__Post__BlogId__15502E78">
           <End Role="Blog" Type="Self.Blog" Multiplicity="1" />
-          <End Role="vPostInfo" Type="Self.vPostInfo" Multiplicity="*" />
+          <End Role="Post" Type="Self.Post" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Blog">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="vPostInfo">
+            <Dependent Role="Post">
               <PropertyRef Name="BlogId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="NTierDemoModelStoreContainer">
-          <EntitySet Name="Author" EntityType="Self.Author" Schema="pub" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="pub" store:Type="Tables" />
           <EntitySet Name="Blog" EntityType="Self.Blog" Schema="pub" store:Type="Tables" />
           <EntitySet Name="Post" EntityType="Self.Post" Schema="pub" store:Type="Tables" />
-          <EntitySet Name="vPostInfo" EntityType="Self.vPostInfo" store:Type="Views" store:Schema="pub">
-            <DefiningQuery>SELECT 
-    [vPostInfo].[Id] AS [Id], 
-    [vPostInfo].[BlogId] AS [BlogId], 
-    [vPostInfo].[Title] AS [Title], 
-    [vPostInfo].[Abstract] AS [Abstract], 
-    [vPostInfo].[CreatedDate] AS [CreatedDate], 
-    [vPostInfo].[ModifiedDate] AS [ModifiedDate]
-    FROM [pub].[vPostInfo] AS [vPostInfo]</DefiningQuery>
-          </EntitySet>
           <AssociationSet Name="FK__Blog__OwnerId__1273C1CD" Association="Self.FK__Blog__OwnerId__1273C1CD">
-            <End Role="Author" EntitySet="Author" />
+            <End Role="User" EntitySet="User" />
             <End Role="Blog" EntitySet="Blog" />
           </AssociationSet>
           <AssociationSet Name="FK__Post__BlogId__15502E78" Association="Self.FK__Post__BlogId__15502E78">
             <End Role="Blog" EntitySet="Blog" />
-            <End Role="vPostInfo" EntitySet="vPostInfo" />
+            <End Role="Post" EntitySet="Post" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="NTierDemoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Author">
+        <EntityType Name="User">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -115,7 +94,7 @@
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
           <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
-          <NavigationProperty Name="Blogs" Relationship="NTierDemoModel.BlogOwner" FromRole="Author" ToRole="Blog" />
+          <NavigationProperty Name="Blogs" Relationship="NTierDemoModel.BlogOwner" FromRole="User" ToRole="Blog" />
         </EntityType>
         <EntityType Name="Blog">
           <Key>
@@ -127,8 +106,8 @@
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
           <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
-          <NavigationProperty Name="Author" Relationship="NTierDemoModel.BlogOwner" FromRole="Blog" ToRole="Author" />
-          <NavigationProperty Name="Posts" Relationship="NTierDemoModel.BlogPostInfo" FromRole="Blog" ToRole="PostInfo" />
+          <NavigationProperty Name="Owner" Relationship="NTierDemoModel.BlogOwner" FromRole="Blog" ToRole="User" />
+          <NavigationProperty Name="Posts" Relationship="NTierDemoModel.BlogPost" FromRole="Blog" ToRole="Post" />
         </EntityType>
         <EntityType Name="Post">
           <Key>
@@ -142,22 +121,11 @@
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
           <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
         </EntityType>
-        <EntityType Name="PostInfo" a:AggregateRoot="false" xmlns:a="http://schemas.trivadis.com/dotnet/2011/11/edm/DomainDrivenDesign">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
-          <Property Name="BlogId" Type="Int64" Nullable="false" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" a:GetterAccess="Internal" />
-          <Property Name="Title" Type="String" Nullable="false" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
-          <Property Name="Abstract" Type="String" Nullable="false" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
-          <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" a:SetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
-        </EntityType>
         <Association Name="BlogOwner">
-          <End Role="Author" Type="Self.Author" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="1" />
           <End Role="Blog" Type="Self.Blog" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Author">
+            <Principal Role="User">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Blog">
@@ -166,27 +134,26 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="NTierDemoEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Authors" EntityType="Self.Author" />
+          <EntitySet Name="Users" EntityType="Self.User" />
           <EntitySet Name="Blogs" EntityType="Self.Blog" />
           <EntitySet Name="Posts" EntityType="Self.Post" />
-          <EntitySet Name="PostInfos" EntityType="NTierDemoModel.PostInfo" />
           <AssociationSet Name="BlogOwner" Association="NTierDemoModel.BlogOwner">
-            <End Role="Author" EntitySet="Authors" />
+            <End Role="User" EntitySet="Users" />
             <End Role="Blog" EntitySet="Blogs" />
           </AssociationSet>
-          <AssociationSet Name="BlogPostInfo" Association="NTierDemoModel.BlogPostInfo">
+          <AssociationSet Name="BlogPost" Association="NTierDemoModel.BlogPost">
             <End Role="Blog" EntitySet="Blogs" />
-            <End Role="PostInfo" EntitySet="PostInfos" />
+            <End Role="Post" EntitySet="Posts" />
           </AssociationSet>
         </EntityContainer>
-        <Association Name="BlogPostInfo">
+        <Association Name="BlogPost">
           <End Type="NTierDemoModel.Blog" Role="Blog" Multiplicity="1" />
-          <End Type="NTierDemoModel.PostInfo" Role="PostInfo" Multiplicity="*" />
+          <End Type="NTierDemoModel.Post" Role="Post" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Blog">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="PostInfo">
+            <Dependent Role="Post">
               <PropertyRef Name="BlogId" />
             </Dependent>
           </ReferentialConstraint>
@@ -197,9 +164,9 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="NTierDemoModelStoreContainer" CdmEntityContainer="NTierDemoEntities">
-          <EntitySetMapping Name="Authors">
-            <EntityTypeMapping TypeName="NTierDemoModel.Author">
-              <MappingFragment StoreEntitySet="Author">
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="NTierDemoModel.User">
+              <MappingFragment StoreEntitySet="User">
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
@@ -232,18 +199,6 @@
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="Abstract" ColumnName="Abstract" />
                 <ScalarProperty Name="Content" ColumnName="Content" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PostInfos">
-            <EntityTypeMapping TypeName="NTierDemoModel.PostInfo">
-              <MappingFragment StoreEntitySet="vPostInfo">
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="BlogId" ColumnName="BlogId" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="Abstract" ColumnName="Abstract" />
                 <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
               </MappingFragment>
             </EntityTypeMapping>

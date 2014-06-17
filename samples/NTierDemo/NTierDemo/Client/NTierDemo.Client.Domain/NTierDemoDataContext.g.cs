@@ -28,10 +28,9 @@ namespace NTierDemo.Client.Domain
         #region Fields
 
         private readonly Func<INTierDemoDataService> _dataServiceFactory;
-        private readonly InternalEntitySet<Author> _authors;
+        private readonly InternalEntitySet<User> _users;
         private readonly InternalEntitySet<Blog> _blogs;
         private readonly InternalEntitySet<Post> _posts;
-        private readonly InternalEntitySet<PostInfo> _postInfos;
 
         #endregion Fields
 
@@ -42,10 +41,9 @@ namespace NTierDemo.Client.Domain
         public NTierDemoDataContext(Func<INTierDemoDataService> dataServiceFactory)
         {
             _dataServiceFactory = dataServiceFactory;
-            _authors = CreateAndRegisterInternalEntitySet<Author>();
+            _users = CreateAndRegisterInternalEntitySet<User>();
             _blogs = CreateAndRegisterInternalEntitySet<Blog>();
             _posts = CreateAndRegisterInternalEntitySet<Post>();
-            _postInfos = CreateAndRegisterInternalEntitySet<PostInfo>();
             Initialize();
         }
 
@@ -71,52 +69,52 @@ namespace NTierDemo.Client.Domain
 
         #region Entities
 
-        #region Authors
+        #region Users
 
-        public IEntitySet<Author> Authors
+        public IEntitySet<User> Users
         {
             get
             {
-                if (authorEntitySet == null)
+                if (userEntitySet == null)
                 {
-                    authorEntitySet = CreateEntitySet<Author>(_authors, AttachWithRelations, GetAuthors);
+                    userEntitySet = CreateEntitySet<User>(_users, AttachWithRelations, GetUsers);
                 }
-                return authorEntitySet;
+                return userEntitySet;
             }
         }
-        private IEntitySet<Author> authorEntitySet;
+        private IEntitySet<User> userEntitySet;
 
-        public void Add(Author entity)
+        public void Add(User entity)
         {
-            Authors.Add(entity);
+            Users.Add(entity);
         }
 
-        public void Delete(Author entity)
+        public void Delete(User entity)
         {
-            Authors.Delete(entity);
+            Users.Delete(entity);
         }
 
-        public void Attach(Author entity)
+        public void Attach(User entity)
         {
-            Authors.Attach(entity);
+            Users.Attach(entity);
         }
 
-        public void AttachAsModified(Author entity, Author original)
+        public void AttachAsModified(User entity, User original)
         {
-            Authors.AttachAsModified(entity, original);
+            Users.AttachAsModified(entity, original);
         }
 
-        public void Detach(Author entity)
+        public void Detach(User entity)
         {
-            Authors.Detach(entity);
+            Users.Detach(entity);
         }
 
-        private QueryResult<Author> GetAuthors(ClientInfo clientInfo, Query query)
+        private QueryResult<User> GetUsers(ClientInfo clientInfo, Query query)
         {
             var service = _dataServiceFactory();
             try
             {
-                var result = service.GetAuthors(clientInfo, query);
+                var result = service.GetUsers(clientInfo, query);
                 return result;
             }
             finally
@@ -136,7 +134,7 @@ namespace NTierDemo.Client.Domain
             }
         }
 
-        private Author AttachWithRelations(Author entity, InsertMode insertMode = InsertMode.Attach, MergeOption mergeOption = MergeOption.AppendOnly, List<object> referenceTrackingList = null)
+        private User AttachWithRelations(User entity, InsertMode insertMode = InsertMode.Attach, MergeOption mergeOption = MergeOption.AppendOnly, List<object> referenceTrackingList = null)
         {
             #region iteration tracking
 
@@ -147,7 +145,7 @@ namespace NTierDemo.Client.Domain
 
             if (referenceTrackingList.Contains(entity))
             {
-                return _authors.GetExisting(entity);
+                return _users.GetExisting(entity);
             }
             else
             {
@@ -158,15 +156,15 @@ namespace NTierDemo.Client.Domain
 
             #region add/attach entity
 
-            Author existingEntity = null;
+            User existingEntity = null;
 
             switch (insertMode)
             {
                 case InsertMode.Add:
-                    existingEntity = _authors.Add(entity);
+                    existingEntity = _users.Add(entity);
                     break;
                 case InsertMode.Attach:
-                    existingEntity = _authors.Attach(entity);
+                    existingEntity = _users.Attach(entity);
                     break;
                 default:
                     throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
@@ -220,7 +218,7 @@ namespace NTierDemo.Client.Domain
                         if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, item))
                         {
                             // check merge options
-                            if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Author")))
+                            if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Owner")))
                             {
                                 using (entity.ChangeTrackingPrevention())
                                 {
@@ -228,7 +226,7 @@ namespace NTierDemo.Client.Domain
                                 }
                                 using (existingRelatedEntity.ChangeTrackingPrevention())
                                 {
-                                    existingRelatedEntity.Author = entity;
+                                    existingRelatedEntity.Owner = entity;
                                 }
                             }
                         }
@@ -242,7 +240,7 @@ namespace NTierDemo.Client.Domain
 
             if (existingEntity != null && !object.ReferenceEquals(existingEntity, entity))
             {
-                if (Authors.MergeOption == MergeOption.OverwriteChanges)
+                if (Users.MergeOption == MergeOption.OverwriteChanges)
                 {
                     Invoke(delegate
                     {
@@ -250,7 +248,7 @@ namespace NTierDemo.Client.Domain
                         existingEntity.AcceptChanges();
                     });
                 }
-                else if (Authors.MergeOption == MergeOption.PreserveChanges)
+                else if (Users.MergeOption == MergeOption.PreserveChanges)
                 {
                     Invoke(delegate
                     {
@@ -264,7 +262,7 @@ namespace NTierDemo.Client.Domain
             return existingEntity;
         }
 
-        #endregion Authors
+        #endregion Users
 
         #region Blogs
 
@@ -383,9 +381,9 @@ namespace NTierDemo.Client.Domain
                 {
                     if (entity.IsChangeTrackingPrevented) return;
 
-                    if (e.PropertyName == "Author")
+                    if (e.PropertyName == "Owner")
                     {
-                        var relation = entity[e.PropertyName] as Author;
+                        var relation = entity[e.PropertyName] as User;
                         if (relation != null)
                         {
                             Attach(relation);
@@ -395,20 +393,20 @@ namespace NTierDemo.Client.Domain
             }
 
             // attach related entity to context
-            if (entity.Author != null)
+            if (entity.Owner != null)
             {
-                var existingRelatedEntity = AttachWithRelations(entity.Author, insertMode, mergeOption, referenceTrackingList);
+                var existingRelatedEntity = AttachWithRelations(entity.Owner, insertMode, mergeOption, referenceTrackingList);
                 // update relation if entity is new to context or relation is new to entity
-                if (existingEntity == null || !entity.Author.Equals(existingEntity.Author))
+                if (existingEntity == null || !entity.Owner.Equals(existingEntity.Owner))
                 {
-                    if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, entity.Author))
+                    if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, entity.Owner))
                     {
                         // check merge options
                         if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Blogs")))
                         {
                             using (entity.ChangeTrackingPrevention())
                             {
-                                entity.Author = existingRelatedEntity;
+                                entity.Owner = existingRelatedEntity;
                             }
 
                             using (existingRelatedEntity.ChangeTrackingPrevention())
@@ -437,14 +435,14 @@ namespace NTierDemo.Client.Domain
 
                     if (e.NewItems != null)
                     {
-                        foreach (PostInfo item in e.NewItems)
+                        foreach (Post item in e.NewItems)
                         {
                             Attach(item);
                         }
                     }
                     //if (e.OldItems != null)
                     //{
-                    //    foreach (PostInfo item in e.OldItems)
+                    //    foreach (Post item in e.OldItems)
                     //    {
                     //        if (item.ChangeTracker.State == ObjectState.Unchanged)
                     //        {
@@ -634,131 +632,6 @@ namespace NTierDemo.Client.Domain
 
         #endregion Posts
 
-        #region PostInfos
-
-        private IEntitySet<PostInfo> PostInfos
-        {
-            get
-            {
-                if (postInfoEntitySet == null)
-                {
-                    postInfoEntitySet = CreateEntitySet<PostInfo>(_postInfos, AttachWithRelations, null);
-                }
-                return postInfoEntitySet;
-            }
-        }
-        private IEntitySet<PostInfo> postInfoEntitySet;
-
-        public void SetMergeOptionForPostInfos(MergeOption mergeOption)
-        {
-            PostInfos.MergeOption = mergeOption;
-        }
-
-        public MergeOption GetMergeOptionOfPostInfos()
-        {
-            return PostInfos.MergeOption;
-        }
-
-        private void Add(PostInfo entity)
-        {
-            PostInfos.Add(entity);
-        }
-
-        private void Delete(PostInfo entity)
-        {
-            PostInfos.Delete(entity);
-        }
-
-        private void Attach(PostInfo entity)
-        {
-            PostInfos.Attach(entity);
-        }
-
-        private void AttachAsModified(PostInfo entity, PostInfo original)
-        {
-            PostInfos.AttachAsModified(entity, original);
-        }
-
-        private void Detach(PostInfo entity)
-        {
-            PostInfos.Detach(entity);
-        }
-
-        private PostInfo AttachWithRelations(PostInfo entity, InsertMode insertMode = InsertMode.Attach, MergeOption mergeOption = MergeOption.AppendOnly, List<object> referenceTrackingList = null)
-        {
-            #region iteration tracking
-
-            if (referenceTrackingList == null)
-            {
-                referenceTrackingList = new List<object>();
-            }
-
-            if (referenceTrackingList.Contains(entity))
-            {
-                return _postInfos.GetExisting(entity);
-            }
-            else
-            {
-                referenceTrackingList.Add(entity);
-            }
-
-            #endregion
-
-            #region add/attach entity
-
-            PostInfo existingEntity = null;
-
-            switch (insertMode)
-            {
-                case InsertMode.Add:
-                    existingEntity = _postInfos.Add(entity);
-                    break;
-                case InsertMode.Attach:
-                    existingEntity = _postInfos.Attach(entity);
-                    break;
-                default:
-                    throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
-            }
-
-            if (((object)existingEntity) != null && object.ReferenceEquals(existingEntity, entity))
-            {
-                return existingEntity;
-            }
-
-            #endregion
-
-            #region attach relations recursively
-
-            #endregion
-
-            #region refresh existing entity based on merge options
-
-            if (existingEntity != null && !object.ReferenceEquals(existingEntity, entity))
-            {
-                if (PostInfos.MergeOption == MergeOption.OverwriteChanges)
-                {
-                    Invoke(delegate
-                    {
-                        existingEntity.Refresh(entity, trackChanges: false);
-                        existingEntity.AcceptChanges();
-                    });
-                }
-                else if (PostInfos.MergeOption == MergeOption.PreserveChanges)
-                {
-                    Invoke(delegate
-                    {
-                        existingEntity.Refresh(entity, trackChanges: false, preserveExistingChanges: true);
-                    });
-                }
-            }
-
-            #endregion
-
-            return existingEntity;
-        }
-
-        #endregion PostInfos
-
         #endregion Entities
 
         #region Submit Changes
@@ -802,10 +675,10 @@ namespace NTierDemo.Client.Domain
 
         private NTierDemoChangeSet GetChangeSet()
         {
-            IEnumerable<Author> authors;
-            lock (_authors.SyncRoot)
+            IEnumerable<User> users;
+            lock (_users.SyncRoot)
             {
-                authors = _authors.GetAllEntities();
+                users = _users.GetAllEntities();
             }
             IEnumerable<Blog> blogs;
             lock (_blogs.SyncRoot)
@@ -817,26 +690,20 @@ namespace NTierDemo.Client.Domain
             {
                 posts = _posts.GetAllEntities();
             }
-            IEnumerable<PostInfo> postInfos;
-            lock (_postInfos.SyncRoot)
-            {
-                postInfos = _postInfos.GetAllEntities();
-            }
             // get reduced change set
             var changeSet = new NTierDemoChangeSet(
-                authors, 
+                users, 
                 blogs, 
-                posts, 
-                postInfos);
+                posts);
 
             return changeSet;
         }
 
         protected override void Refresh(NTierDemoResultSet resultSet)
         {
-            lock (_authors.SyncRoot)
+            lock (_users.SyncRoot)
             {
-                Refresh(_authors, resultSet.Authors == null ? null : resultSet.Authors.Where(e => !resultSet.IsConcurrencyConflict(e)));
+                Refresh(_users, resultSet.Users == null ? null : resultSet.Users.Where(e => !resultSet.IsConcurrencyConflict(e)));
             }
             lock (_blogs.SyncRoot)
             {
@@ -846,23 +713,19 @@ namespace NTierDemo.Client.Domain
             {
                 Refresh(_posts, resultSet.Posts == null ? null : resultSet.Posts.Where(e => !resultSet.IsConcurrencyConflict(e)));
             }
-            lock (_postInfos.SyncRoot)
-            {
-                Refresh(_postInfos, resultSet.PostInfos == null ? null : resultSet.PostInfos.Where(e => !resultSet.IsConcurrencyConflict(e)));
-            }
         }
 
         protected override void HandleConcurrencyConflicts(NTierDemoResultSet resultSet)
         {
             var entities = new List<StateEntry>();
 
-            lock (_authors.SyncRoot)
+            lock (_users.SyncRoot)
             {
-                if (resultSet.AuthorConcurrencyConflicts != null)
+                if (resultSet.UserConcurrencyConflicts != null)
                 {
                     entities.AddRange(
-                        resultSet.AuthorConcurrencyConflicts
-                            .Select(store => new StateEntry(_authors.FirstOrDefault(local => local.Equals(store)), store)));
+                        resultSet.UserConcurrencyConflicts
+                            .Select(store => new StateEntry(_users.FirstOrDefault(local => local.Equals(store)), store)));
                 }
             }
             lock (_blogs.SyncRoot)
@@ -881,15 +744,6 @@ namespace NTierDemo.Client.Domain
                     entities.AddRange(
                         resultSet.PostConcurrencyConflicts
                             .Select(store => new StateEntry(_posts.FirstOrDefault(local => local.Equals(store)), store)));
-                }
-            }
-            lock (_postInfos.SyncRoot)
-            {
-                if (resultSet.PostInfoConcurrencyConflicts != null)
-                {
-                    entities.AddRange(
-                        resultSet.PostInfoConcurrencyConflicts
-                            .Select(store => new StateEntry(_postInfos.FirstOrDefault(local => local.Equals(store)), store)));
                 }
             }
 

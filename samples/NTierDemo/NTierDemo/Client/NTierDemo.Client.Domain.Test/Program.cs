@@ -36,7 +36,7 @@ namespace NTierDemo.Client.Domain.Test
 
             // query data using filtes, paging, sorting
             var authorsQuery =
-                from author in dataContext.Authors
+                from author in dataContext.Users
                                           .AsQueryable() // <-- AsQueryable() specifies the query to be executed remotely, without AsQueryable you only process in-memory data of the local data context
                                           .Include("Blogs.Posts") // <-- indicates to load related blogs and blog posts for each author within one single request
                 where author.Blogs.Any()
@@ -47,7 +47,7 @@ namespace NTierDemo.Client.Domain.Test
 
 
             // modify existing data and relations
-            var theAuthor = dataContext.Authors.First(); // <-- previousely queried data by default remains in data context and is available for local processing
+            var theAuthor = dataContext.Users.First(); // <-- previousely queried data by default remains in data context and is available for local processing
             theAuthor.Description = "Have you seen my new blog about N-Tier Entity Framework?";
             var newBlog = new Blog
             {
@@ -59,7 +59,7 @@ namespace NTierDemo.Client.Domain.Test
 
 
             // create and store new data
-            var newAuthor = new Author
+            var newAuthor = new User
             {
                 //Id = 1  <-- id is readonly and will be set by backend
                 FirstName = "Michael",
@@ -72,10 +72,10 @@ namespace NTierDemo.Client.Domain.Test
             };
             new Blog
             {
-                Author = newAuthor, // <-- automatically creates 2-way association Author <--> Blog
+                Owner = newAuthor, // <-- automatically creates 2-way association Author <--> Blog
                 Title = "All you need to know about http://blog.trivadis.com",
             };
-            dataContext.Authors.Add(newAuthor); // <-- adds author and relates blogs to data context
+            dataContext.Users.Add(newAuthor); // <-- adds author and relates blogs to data context
 
 
             // save all changes in one unit of work

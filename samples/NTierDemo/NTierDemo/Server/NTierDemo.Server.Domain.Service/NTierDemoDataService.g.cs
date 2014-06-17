@@ -53,17 +53,17 @@ namespace NTierDemo.Server.Domain.Service
         #region query service methods
 
         partial void PreProcessing(ClientInfo clientInfo, ref Query query, INTierDemoRepository repository);
-        partial void PostProcessing(ClientInfo clientInfo, Query query, ref QueryResult<Author> result, INTierDemoRepository repository);
+        partial void PostProcessing(ClientInfo clientInfo, Query query, ref QueryResult<User> result, INTierDemoRepository repository);
         partial void PostProcessing(ClientInfo clientInfo, Query query, ref QueryResult<Blog> result, INTierDemoRepository repository);
         partial void PostProcessing(ClientInfo clientInfo, Query query, ref QueryResult<Post> result, INTierDemoRepository repository);
 
         [OperationBehavior(Impersonation = ImpersonationOption.Allowed)]
-        public QueryResult<Author> GetAuthors(ClientInfo clientInfo, Query query)
+        public QueryResult<User> GetUsers(ClientInfo clientInfo, Query query)
         {
             using (var dataRepository = _repositoryFactory(clientInfo))
             {
                 PreProcessing(clientInfo, ref query, dataRepository);
-                var result = Get(dataRepository.Authors.AsNoTrackingQueryable(), query, clientInfo);
+                var result = Get(dataRepository.Users.AsNoTrackingQueryable(), query, clientInfo);
                 PostProcessing(clientInfo, query, ref result, dataRepository);
                 return result;
             }
@@ -113,10 +113,9 @@ namespace NTierDemo.Server.Domain.Service
                     PreProcessing(clientInfo, ref changeSet, dataRepository);
 
                     // apply chnages to repository
-                    ApplyChanges(dataRepository, dataRepository.Authors, changeSet, changeSet.Authors, clientInfo);
+                    ApplyChanges(dataRepository, dataRepository.Users, changeSet, changeSet.Users, clientInfo);
                     ApplyChanges(dataRepository, dataRepository.Blogs, changeSet, changeSet.Blogs, clientInfo);
                     ApplyChanges(dataRepository, dataRepository.Posts, changeSet, changeSet.Posts, clientInfo);
-                    ApplyChanges(dataRepository, dataRepository.PostInfos, changeSet, changeSet.PostInfos, clientInfo);
 
                     // optional custom processing
                     BeforeSaving(clientInfo, ref changeSet, dataRepository);

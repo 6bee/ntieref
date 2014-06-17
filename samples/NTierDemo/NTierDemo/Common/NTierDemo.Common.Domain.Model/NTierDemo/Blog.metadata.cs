@@ -60,10 +60,9 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
         #endregion Complex Properties
 
         #region Navigation Properties
-
-        public Author Author;
-
-        public TrackableCollection<PostInfo> Posts;
+        
+        public User Owner;
+        public TrackableCollection<Post> Posts;
 
         #endregion Navigation Properties
 

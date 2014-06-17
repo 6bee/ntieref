@@ -22,8 +22,8 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
 {
     [Serializable]
     [DataContract(IsReference = true)]
-    [KnownType(typeof(Author))]
-    [KnownType(typeof(PostInfo))]
+    [KnownType(typeof(User))]
+    [KnownType(typeof(Post))]
     public partial class Blog : Entity<Blog>, INotifyPropertyChanged, INotifyPropertyChanging, IDataErrorInfo
     {
         #region Constructor and Initialization
@@ -92,9 +92,9 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
                     OnPropertyChanging("OwnerId", value);
                     if (!IsDeserializing)
                     {
-                        if (Author != null && Author.Id != value)
+                        if (Owner != null && Owner.Id != value)
                         {
-                            Author = null;
+                            Owner = null;
                         }
                     }
                     var previousValue = _ownerId;
@@ -226,37 +226,37 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
 
         [DataMember]
         [NavigationProperty]
-        public Author Author
+        public User Owner
         {
-            get { return _author; }
+            get { return _owner; }
             set
             {
-                if (!object.ReferenceEquals(_author, value))
+                if (!object.ReferenceEquals(_owner, value))
                 {
-                    AuthorChanging(value);
-                    OnPropertyChanging("Author", value);
-                    var previousValue = _author;
-                    _author = value;
-                    FixupAuthor(previousValue);
-                    OnPropertyChanged("Author", previousValue, value, isNavigationProperty: true);
-                    AuthorChanged(previousValue);
+                    OwnerChanging(value);
+                    OnPropertyChanging("Owner", value);
+                    var previousValue = _owner;
+                    _owner = value;
+                    FixupOwner(previousValue);
+                    OnPropertyChanged("Owner", previousValue, value, isNavigationProperty: true);
+                    OwnerChanged(previousValue);
                 }
             }
         }
-        private Author _author;
+        private User _owner;
 
-        partial void AuthorChanging(Author newValue);
-        partial void AuthorChanged(Author previousValue);
+        partial void OwnerChanging(User newValue);
+        partial void OwnerChanged(User previousValue);
 
         [DataMember]
         [NavigationProperty]
-        public TrackableCollection<PostInfo> Posts
+        public TrackableCollection<Post> Posts
         {
             get
             {
                 if (_posts == null)
                 {
-                    _posts = new TrackableCollection<PostInfo>();
+                    _posts = new TrackableCollection<Post>();
                     _posts.CollectionChanged += FixupPosts;
                 }
                 return _posts;
@@ -286,7 +286,7 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
                 }
             }
         }
-        private TrackableCollection<PostInfo> _posts;
+        private TrackableCollection<Post> _posts;
 
         #endregion Navigation Properties
 
@@ -294,7 +294,7 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
 
         protected override void ClearNavigationProperties()
         {
-            Author = null;
+            Owner = null;
             Posts.Clear();
         }
 
@@ -302,7 +302,7 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
 
         #region Association Fixup
 
-        private void FixupAuthor(Author previousValue)
+        private void FixupOwner(User previousValue)
         {
             if (IsDeserializing)
             {
@@ -314,29 +314,29 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
                 previousValue.Blogs.Remove(this);
             }
 
-            if (Author != null)
+            if (Owner != null)
             {
-                if (!Author.Blogs.Contains(this))
+                if (!Owner.Blogs.Contains(this))
                 {
-                    Author.Blogs.Add(this);
+                    Owner.Blogs.Add(this);
                 }
 
-                OwnerId = Author.Id;
+                OwnerId = Owner.Id;
             }
             if (ChangeTracker.IsChangeTrackingEnabled)
             {
-                if (ChangeTracker.OriginalValues.ContainsKey("Author")
-                    && object.ReferenceEquals(ChangeTracker.OriginalValues["Author"], Author))
+                if (ChangeTracker.OriginalValues.ContainsKey("Owner")
+                    && object.ReferenceEquals(ChangeTracker.OriginalValues["Owner"], Owner))
                 {
-                    //ChangeTracker.OriginalValues.Remove("Author");
+                    //ChangeTracker.OriginalValues.Remove("Owner");
                 }
                 else
                 {
-                    //RecordOriginalValue("Author", previousValue);
+                    //RecordOriginalValue("Owner", previousValue);
                 }
-                if (Author != null && !Author.ChangeTracker.IsChangeTrackingEnabled)
+                if (Owner != null && !Owner.ChangeTracker.IsChangeTrackingEnabled)
                 {
-                    Author.StartTracking();
+                    Owner.StartTracking();
                 }
             }
         }
@@ -350,7 +350,7 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
 
             if (e.NewItems != null)
             {
-                foreach (PostInfo item in e.NewItems)
+                foreach (Post item in e.NewItems)
                 {
                     item.BlogId = Id;
                     if (ChangeTracker.IsChangeTrackingEnabled)
@@ -366,7 +366,7 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
 
             if (e.OldItems != null)
             {
-                foreach (PostInfo item in e.OldItems)
+                foreach (Post item in e.OldItems)
                 {
                     if (ChangeTracker.IsChangeTrackingEnabled)
                     {

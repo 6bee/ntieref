@@ -23,14 +23,14 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
     [Serializable]
     [DataContract(IsReference = true)]
     [KnownType(typeof(Blog))]
-    public partial class Author : Entity<Author>, INotifyPropertyChanged, INotifyPropertyChanging, IDataErrorInfo
+    public partial class User : Entity<User>, INotifyPropertyChanged, INotifyPropertyChanging, IDataErrorInfo
     {
         #region Constructor and Initialization
 
         // partial method for initialization
         partial void Initialize();
 
-        public Author()
+        public User()
         {
             Initialize();
         }
@@ -333,7 +333,7 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
             {
                 foreach (Blog item in e.NewItems)
                 {
-                    item.Author = this;
+                    item.Owner = this;
                     if (ChangeTracker.IsChangeTrackingEnabled)
                     {
                         if (!item.ChangeTracker.IsChangeTrackingEnabled)
@@ -349,9 +349,9 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
             {
                 foreach (Blog item in e.OldItems)
                 {
-                    if (object.ReferenceEquals(item.Author, this))
+                    if (object.ReferenceEquals(item.Owner, this))
                     {
-                        item.Author = null;
+                        item.Owner = null;
                     }
                     if (ChangeTracker.IsChangeTrackingEnabled)
                     {
@@ -363,7 +363,7 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
 
         #endregion Association Fixup
 
-        protected override bool IsKeyEqual(Author entity)
+        protected override bool IsKeyEqual(User entity)
         {
             return this.Id == entity.Id;
         }

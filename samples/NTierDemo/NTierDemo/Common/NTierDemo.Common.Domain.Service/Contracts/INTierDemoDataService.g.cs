@@ -22,7 +22,7 @@ namespace NTierDemo.Common.Domain.Service.Contracts
     public partial interface INTierDemoDataService
     {
         [OperationContract]
-        QueryResult<Author> GetAuthors(ClientInfo clientInfo, Query query);
+        QueryResult<User> GetUsers(ClientInfo clientInfo, Query query);
 
         [OperationContract]
         QueryResult<Blog> GetBlogs(ClientInfo clientInfo, Query query);

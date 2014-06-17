@@ -111,7 +111,7 @@ namespace BlogWriter.Wpf.ViewModels
             get { return CurrentUser != null; }
         }
 
-        public Author CurrentUser
+        public User CurrentUser
         {
             get { return _currentUser; }
             private set
@@ -123,7 +123,7 @@ namespace BlogWriter.Wpf.ViewModels
                 }
             }
         }
-        private Author _currentUser;
+        private User _currentUser;
 
         #endregion User
     }

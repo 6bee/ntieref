@@ -50,6 +50,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTierDemo.Server.Domain.Ser
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogWriter.Wpf", "NTierDemo\Client\BlogWriter.Wpf\BlogWriter.Wpf.csproj", "{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_database", "_database", "{33FC39CB-CFB6-483B-9E33-DF49376BAD55}"
+	ProjectSection(SolutionItems) = preProject
+		database\NTierDemoDB.sql = database\NTierDemoDB.sql
+		database\NTierDemoDBSetup.cmd = database\NTierDemoDBSetup.cmd
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

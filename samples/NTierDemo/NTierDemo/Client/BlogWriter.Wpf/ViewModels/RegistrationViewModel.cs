@@ -14,14 +14,14 @@ namespace BlogWriter.Wpf.ViewModels
     public class RegistrationViewModel:ViewModel
     {
         private readonly Func<INTierDemoDataContext> _dataContextFactory;
-        private readonly Action<Author> _setUser;
+        private readonly Action<User> _setUser;
 
-        public RegistrationViewModel(Func<INTierDemoDataContext> dataContextFactory, Action<Author> setUser, Action cancel)
+        public RegistrationViewModel(Func<INTierDemoDataContext> dataContextFactory, Action<User> setUser, Action cancel)
         {
             _dataContextFactory = dataContextFactory;
             _setUser = setUser;
 
-            User = new Author();
+            User = new User();
             RegisterCommand = new AsyncRelayCommand(RegisterAsync, () => User.IsValid);
             CancelCommand = new RelayCommand(cancel);
         }
@@ -39,7 +39,7 @@ namespace BlogWriter.Wpf.ViewModels
 
             // ensure user does not exists
             var query =
-                from author in dataContext.Authors.AsQueryable()
+                from author in dataContext.Users.AsQueryable()
                 where author.Username == User.Username
                 select author;
             if ((await query.ExecuteAsync()).Any()) throw new Exception(string.Format("User with user name '{0}' already exists!", User.Username));
@@ -52,6 +52,6 @@ namespace BlogWriter.Wpf.ViewModels
             _setUser(User);
         }
 
-        public Author User { get; private set; }
+        public User User { get; private set; }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace NTierDemo.Common.Domain.Model.NTierDemo
 {
-    partial class Author : IUpdatableEntity
+    partial class User : IUpdatableEntity
     {
         long IUpdatableEntity.Id
         {

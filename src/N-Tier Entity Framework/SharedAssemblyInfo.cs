@@ -20,14 +20,14 @@ using System.Runtime.InteropServices;
 
 // Version information for an assembly consists of the following four values:
 //
-//      N-Tier Entity Framework Major Version
-//      N-Tier Entity Framework Minor Version
-//      Microsoft .NET Framework Major Version
-//      Microsoft .NET Framework Minor Version 
+//      Major Version
+//      Minor Version
+//      Patch Number
+//      Unised 
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("1.4.4.0")]
+[assembly: AssemblyVersion("1.5.0.0")]
 //[assembly: AssemblyFileVersion("1.0.0.0")]
 //[assembly: AssemblyInformationalVersion("$version (build $build; revision $revision)")]
-[assembly: AssemblyInformationalVersion("1.4.2")]
+[assembly: AssemblyInformationalVersion("1.5.0")]

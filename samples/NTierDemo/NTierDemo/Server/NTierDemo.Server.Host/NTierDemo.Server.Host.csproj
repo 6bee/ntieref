@@ -66,9 +66,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\NTierDemoDB_Jan2014.mdf" />
-    <Content Include="App_Data\NTierDemoDB_Jan2014_log.ldf">
-      <DependentUpon>NTierDemoDB_Jan2014.mdf</DependentUpon>
+    <Content Include="App_Data\NTierDemoDB_Jun2014.mdf" />
+    <Content Include="App_Data\NTierDemoDB_Jun2014_log.ldf">
+      <DependentUpon>NTierDemoDB_Jun2014.mdf</DependentUpon>
     </Content>
     <Content Include="clientaccesspolicy.xml" />
     <Content Include="crossdomain.xml" />

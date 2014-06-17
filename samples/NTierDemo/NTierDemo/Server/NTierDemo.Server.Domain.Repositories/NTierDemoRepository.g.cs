@@ -46,11 +46,11 @@ namespace NTierDemo.Server.Domain.Repositories
 
         #region EntitySets
 
-        public IEntitySet<Author> Authors
+        public IEntitySet<User> Users
         {
-            get { return _authors  ?? (_authors = CreateEntitySet<Author>("Authors")); }
+            get { return _users  ?? (_users = CreateEntitySet<User>("Users")); }
         }
-        private IEntitySet<Author> _authors;
+        private IEntitySet<User> _users;
 
         public IEntitySet<Blog> Blogs
         {
@@ -63,12 +63,6 @@ namespace NTierDemo.Server.Domain.Repositories
             get { return _posts  ?? (_posts = CreateEntitySet<Post>("Posts")); }
         }
         private IEntitySet<Post> _posts;
-
-        public IEntitySet<PostInfo> PostInfos
-        {
-            get { return _postInfos  ?? (_postInfos = CreateEntitySet<PostInfo>("PostInfos")); }
-        }
-        private IEntitySet<PostInfo> _postInfos;
 
         #endregion EntitySets
     }

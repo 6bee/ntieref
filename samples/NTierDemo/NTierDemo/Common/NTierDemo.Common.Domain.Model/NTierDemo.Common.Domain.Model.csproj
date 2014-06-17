@@ -53,17 +53,15 @@
     <Compile Include="IUpdatableEntity.cs" />
     <Compile Include="NTierDemo\Blog.part.cs" />
     <Compile Include="NTierDemo\Post.part.cs" />
-    <Compile Include="NTierDemo\Author.part.cs" />
-    <Compile Include="NTierDemo\Author.g.cs" />
-    <Compile Include="NTierDemo\Author.metadata.cs" />
+    <Compile Include="NTierDemo\User.part.cs" />
     <Compile Include="NTierDemo\Blog.g.cs" />
     <Compile Include="NTierDemo\Blog.metadata.cs" />
     <Compile Include="NTierDemo\NTierDemoChangeSet.g.cs" />
     <Compile Include="NTierDemo\NTierDemoResultSet.g.cs" />
     <Compile Include="NTierDemo\Post.g.cs" />
     <Compile Include="NTierDemo\Post.metadata.cs" />
-    <Compile Include="NTierDemo\PostInfo.g.cs" />
-    <Compile Include="NTierDemo\PostInfo.metadata.cs" />
+    <Compile Include="NTierDemo\User.g.cs" />
+    <Compile Include="NTierDemo\User.metadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

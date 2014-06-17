@@ -6,6 +6,7 @@
     <sys:Boolean x:Key="True">True</sys:Boolean>
     <sys:Boolean x:Key="False">False</sys:Boolean>
 
+    <c:BooleanAndConverter x:Key="BooleanAndConverter" />
     <c:BooleanToVisibilityConverter x:Key="BooleanToCollapsed" />
     <c:IsNullConverter x:Key="IsNullConverter" />
     <c:IsNotNullConverter x:Key="IsNotNullConverter" />

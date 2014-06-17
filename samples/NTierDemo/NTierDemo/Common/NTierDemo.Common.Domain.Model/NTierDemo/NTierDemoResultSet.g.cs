@@ -33,16 +33,13 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
         #region DataMember
 
         [DataMember]
-        public IList<Author> AuthorConcurrencyConflicts { get; private set; }
+        public IList<User> UserConcurrencyConflicts { get; private set; }
 
         [DataMember]
         public IList<Blog> BlogConcurrencyConflicts { get; private set; }
 
         [DataMember]
         public IList<Post> PostConcurrencyConflicts { get; private set; }
-
-        [DataMember]
-        public IList<PostInfo> PostInfoConcurrencyConflicts { get; private set; }
 
         #endregion
 
@@ -52,9 +49,9 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
         {
             foreach (var entity in entities)
             {
-                if (entity is Author)
+                if (entity is User)
                 {
-                    AddConcurrencyConflict((Author)entity);
+                    AddConcurrencyConflict((User)entity);
                 }
                 else if (entity is Blog)
                 {
@@ -64,10 +61,6 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
                 {
                     AddConcurrencyConflict((Post)entity);
                 }
-                else if (entity is PostInfo)
-                {
-                    AddConcurrencyConflict((PostInfo)entity);
-                }
                 else
                 {
                     throw new Exception(string.Format("Unknown type {0}", entity.GetType().Name));
@@ -75,13 +68,13 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
             }
         }
 
-        private void AddConcurrencyConflict(Author entity)
+        private void AddConcurrencyConflict(User entity)
         {
-            if (AuthorConcurrencyConflicts == null)
+            if (UserConcurrencyConflicts == null)
             {
-                AuthorConcurrencyConflicts = new List<Author>();
+                UserConcurrencyConflicts = new List<User>();
             }
-            AuthorConcurrencyConflicts.Add(entity);
+            UserConcurrencyConflicts.Add(entity);
         }
 
         private void AddConcurrencyConflict(Blog entity)
@@ -102,22 +95,13 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
             PostConcurrencyConflicts.Add(entity);
         }
 
-        private void AddConcurrencyConflict(PostInfo entity)
-        {
-            if (PostInfoConcurrencyConflicts == null)
-            {
-                PostInfoConcurrencyConflicts = new List<PostInfo>();
-            }
-            PostInfoConcurrencyConflicts.Add(entity);
-        }
-
         #endregion
 
         #region IsConcurrencyConflict
 
-        public bool IsConcurrencyConflict(Author e)
+        public bool IsConcurrencyConflict(User e)
         {
-            return AuthorConcurrencyConflicts != null && AuthorConcurrencyConflicts.Count > 0 && AuthorConcurrencyConflicts.Contains(e);
+            return UserConcurrencyConflicts != null && UserConcurrencyConflicts.Count > 0 && UserConcurrencyConflicts.Contains(e);
         }
 
         public bool IsConcurrencyConflict(Blog e)
@@ -130,11 +114,6 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
             return PostConcurrencyConflicts != null && PostConcurrencyConflicts.Count > 0 && PostConcurrencyConflicts.Contains(e);
         }
 
-        public bool IsConcurrencyConflict(PostInfo e)
-        {
-            return PostInfoConcurrencyConflicts != null && PostInfoConcurrencyConflicts.Count > 0 && PostInfoConcurrencyConflicts.Contains(e);
-        }
-
         #endregion
 
         #region HasConcurrencyConflicts
@@ -142,10 +121,9 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
         {
             get
             {
-                return AuthorConcurrencyConflicts != null ||
+                return UserConcurrencyConflicts != null ||
                     BlogConcurrencyConflicts != null ||
-                    PostConcurrencyConflicts != null ||
-                    PostInfoConcurrencyConflicts != null;
+                    PostConcurrencyConflicts != null;
             }
         }
         #endregion

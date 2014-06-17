@@ -16,9 +16,9 @@ namespace BlogWriter.Wpf.ViewModels
     public class LoginViewModel:ViewModel
     {
         private readonly Func<INTierDemoDataContext> _dataContextFactory;
-        private readonly Action<Author> _setUser;
+        private readonly Action<User> _setUser;
 
-        public LoginViewModel(Func<INTierDemoDataContext> dataContextFactory, Action<Author> setUser, Action openRegistration)
+        public LoginViewModel(Func<INTierDemoDataContext> dataContextFactory, Action<User> setUser, Action openRegistration)
         {
             _dataContextFactory = dataContextFactory;
             _setUser = setUser;
@@ -39,7 +39,7 @@ namespace BlogWriter.Wpf.ViewModels
             // retrieve user from backend
             var password = Password.ToUnsecureString();
             var query =
-                from author in dataContext.Authors.AsQueryable()
+                from author in dataContext.Users.AsQueryable()
                 where author.Username == Username && author.Password == password
                 select author;
 

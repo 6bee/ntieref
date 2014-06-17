@@ -15,12 +15,12 @@ using NTier.Common.Domain.Model;
 
 namespace NTierDemo.Common.Domain.Model.NTierDemo
 {
-    [MetadataType(typeof(PostInfoMetadata))]
-    partial class PostInfo
+    [MetadataType(typeof(UserMetadata))]
+    partial class User
     {
     }
 
-    // This class allows you to attach custom attributes to properties of the PostInfo class.
+    // This class allows you to attach custom attributes to properties of the User class.
     //
     // For example, the following marks the Xyz property as a
     // required property and specifies the format for valid values:
@@ -28,10 +28,10 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
     //    [RegularExpression("[A-Z][A-Za-z0-9]*")]
     //    [StringLength(32)]
     //    string Xyz;
-    public sealed class PostInfoMetadata
+    public sealed class UserMetadata
     {
         // this class is not meant to be instantiated by client code
-        private PostInfoMetadata() { }
+        private UserMetadata() { }
 
 #pragma warning disable 0169
 
@@ -39,14 +39,25 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
 
         public global::System.Int64 Id;
 
-        public global::System.Int64 BlogId;
+        [StringLength(30)]
+        public global::System.String Username;
 
-        public global::System.Int64 Title;
+        [StringLength(30)]
+        public global::System.String Password;
 
-        public global::System.Int64 Abstract;
+        [StringLength(50)]
+        public global::System.String FirstName;
 
+        [StringLength(50)]
+        public global::System.String LastName;
+
+        [StringLength(500)]
+        public global::System.String Description;
+
+        [ServerGeneration(ServerGenerationTypes.Insert)]
         public global::System.DateTime CreatedDate;
 
+        [ServerGeneration(ServerGenerationTypes.Insert | ServerGenerationTypes.Update)]
         public global::System.DateTime ModifiedDate;
 
         #endregion Simple Properties
@@ -56,6 +67,8 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
         #endregion Complex Properties
 
         #region Navigation Properties
+
+        public TrackableCollection<Blog> Blogs;
 
         #endregion Navigation Properties
 

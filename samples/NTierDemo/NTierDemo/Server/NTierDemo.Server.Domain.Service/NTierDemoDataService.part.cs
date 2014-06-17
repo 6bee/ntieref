@@ -17,8 +17,8 @@ namespace NTierDemo.Server.Domain.Service
 
         #region custom interceptors
 
-        [ChangeInterceptor(typeof(Author))]
-        void OnChange(Author entity, UpdateOperations operation)
+        [ChangeInterceptor(typeof(User))]
+        void OnChange(User entity, UpdateOperations operation)
         {
             SetModoficationTimestamps(entity, operation);
         }
@@ -33,12 +33,6 @@ namespace NTierDemo.Server.Domain.Service
         void OnChange(Post entity, UpdateOperations operation)
         {
             SetModoficationTimestamps(entity, operation);
-        }
-
-        [ChangeInterceptor(typeof(PostInfo))]
-        void OnChange(PostInfo entity, UpdateOperations operation)
-        {
-            throw new Exception("Blog post info is read-only and may not be modified");
         }
 
         private void SetModoficationTimestamps(IUpdatableEntity entity, UpdateOperations operation)

@@ -85,6 +85,7 @@ namespace NTierDemo.Common.Domain.Model.NTierDemo
             {
                 if (_blogId != value)
                 {
+                    //RecordOriginalValue("BlogId", _blogId);
                     BlogIdChanging(value);
                     OnPropertyChanging("BlogId", value);
                     var previousValue = _blogId;

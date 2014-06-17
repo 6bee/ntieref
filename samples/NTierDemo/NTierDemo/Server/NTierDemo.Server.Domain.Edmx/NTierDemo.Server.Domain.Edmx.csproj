@@ -103,12 +103,11 @@
       <LastOutputs>
 ..\..\Client\NTierDemo.Client.Domain\INTierDemoDataContext.g.cs
 ..\..\Client\NTierDemo.Client.Domain\NTierDemoDataContext.g.cs
-..\..\Common\NTierDemo.Common.Domain.Model\NTierDemo\Author.g.cs
 ..\..\Common\NTierDemo.Common.Domain.Model\NTierDemo\Blog.g.cs
 ..\..\Common\NTierDemo.Common.Domain.Model\NTierDemo\NTierDemoChangeSet.g.cs
 ..\..\Common\NTierDemo.Common.Domain.Model\NTierDemo\NTierDemoResultSet.g.cs
 ..\..\Common\NTierDemo.Common.Domain.Model\NTierDemo\Post.g.cs
-..\..\Common\NTierDemo.Common.Domain.Model\NTierDemo\PostInfo.g.cs
+..\..\Common\NTierDemo.Common.Domain.Model\NTierDemo\User.g.cs
 ..\..\Common\NTierDemo.Common.Domain.Service\Contracts\INTierDemoDataService.g.cs
 ..\NTierDemo.Server.Domain.Repositories\INTierDemoRepository.g.cs
 ..\NTierDemo.Server.Domain.Repositories\NTierDemoRepository.g.cs
@@ -138,11 +137,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\NTierDemoDB_Jan2014.mdf">
+    <Content Include="App_Data\NTierDemoDB_Jun2014.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\NTierDemoDB_Jan2014_log.ldf">
-      <DependentUpon>NTierDemoDB_Jan2014.mdf</DependentUpon>
+    <Content Include="App_Data\NTierDemoDB_Jun2014_log.ldf">
+      <DependentUpon>NTierDemoDB_Jun2014.mdf</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="NTierDemoModel_NTierEntityGenerator.txt">
