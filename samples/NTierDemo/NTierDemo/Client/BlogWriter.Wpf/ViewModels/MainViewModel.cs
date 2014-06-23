@@ -1,11 +1,6 @@
 ﻿using NTierDemo.Client.Domain;
 using NTierDemo.Common.Domain.Model.NTierDemo;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace BlogWriter.Wpf.ViewModels
 {
@@ -71,9 +66,9 @@ namespace BlogWriter.Wpf.ViewModels
         {
             RegistrationViewModel = null;
         }
-        private void DeactivateUserBlogs(bool isLogoff = true)
+        private void DeactivateUserBlogs(bool isLogOff = true)
         {
-            if (isLogoff)
+            if (isLogOff)
                 UserBlogsViewModel = null;
             else
                 UserBlogsViewModel.IsActive = false;

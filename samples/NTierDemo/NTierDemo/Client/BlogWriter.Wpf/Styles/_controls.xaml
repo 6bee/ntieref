@@ -3,5 +3,9 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Button.xaml" />
         <ResourceDictionary Source="ContentControl.xaml" />
+        <ResourceDictionary Source="SlidingPage.xaml" />
+        <ResourceDictionary Source="TextBox.xaml" />
+        <ResourceDictionary Source="UserControl.xaml" />
+        <ResourceDictionary Source="ViewBox.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

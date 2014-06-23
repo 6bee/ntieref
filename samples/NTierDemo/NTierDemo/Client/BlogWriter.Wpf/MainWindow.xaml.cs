@@ -29,7 +29,7 @@ namespace BlogWriter.Wpf
             Func<INTierDemoDataContext> dataContextFactory = () => 
                 new NTierDemoDataContext()
                 {
-                    // Note: we're required to unset the dispatcher to avoid dead-locking when scheddlung to main thread from background task as we use async/await
+                    // Note: we're required to unset the dispatcher to avoid dead-locking when scheduling from background to main thread as we use async/await
                     //       once a proper .NET 4.5 implementation of the n-tier entity framework we don't need to do this any longer
                     Dispatcher = null
                 };

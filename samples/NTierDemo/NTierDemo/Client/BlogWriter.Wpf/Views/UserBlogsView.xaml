@@ -7,7 +7,8 @@
              xmlns:dp="clr-namespace:BlogWriter.Wpf.DependencyProperties"
              xmlns:v="clr-namespace:BlogWriter.Wpf.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             Style="{StaticResource {x:Type UserControl}}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -21,86 +22,91 @@
 
         <!-- USER'S BLOGS -->
         <ContentControl Style="{StaticResource SlidingPage}" 
-                        dp:ContentControl.IsActive="{Binding OpenedBlog, Converter={StaticResource IsNullConverter}, FallbackValue=True}">
-            <ListView 
-                ItemsSource="{Binding UserBlogs}" 
-                IsSynchronizedWithCurrentItem="True"
-                ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                <ListView.Resources>
-                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
-                        <Setter Property="Background" Value="Transparent" />
-                        <Setter Property="BorderBrush" Value="Transparent" />
-                        <Setter Property="Opacity" Value="0.8" />
-                        <Style.Triggers>
-                            <Trigger Property="IsFocused" Value="True">
-                                <Setter Property="Background" Value="White" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </ListView.Resources>
-                <ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-                        <Setter Property="Margin" Value="2" />
-                        <Setter Property="Padding" Value="0" />
-                        <Style.Triggers>
-                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                                <Setter Property="IsSelected" Value="True" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </ListView.ItemContainerStyle>
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="MouseDoubleClick">
-                        <i:InvokeCommandAction Command="{Binding DataContext.OpenBlogCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Border Width="200" Height="200" Margin="-1" Padding="0" BorderBrush="Gray" BorderThickness="1">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" MinHeight="20" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <TextBox Grid.Row="0" Margin="3" Text="{Binding Title, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" FontWeight="SemiBold" TextWrapping="Wrap">
-                                    <dp:CueBanner.Content>
-                                        <TextBlock Text="&lt;Blog title&gt;" FontStyle="Italic" />
-                                    </dp:CueBanner.Content>
-                                </TextBox>
-                                <TextBox Grid.Row="1" Margin="3" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" TextWrapping="Wrap">
-                                    <dp:CueBanner.Content>
-                                        <TextBlock Text="&lt;Blog description&gt;" FontStyle="Italic" />
-                                    </dp:CueBanner.Content>
-                                </TextBox>
-                                <TextBlock Grid.Row="2" Margin="3">Created <Run Text="{Binding CreatedDate, Mode=OneWay}" /></TextBlock>
-                                <Border Grid.Row="2" Margin="2" Padding="0" HorizontalAlignment="Right" BorderBrush="Gray" BorderThickness="1" ToolTip="Delete">
-                                    <Border.Style>
-                                        <Style TargetType="{x:Type Border}">
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Background" Value="#50FF7200" />
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
-                                    <TextBlock Margin="0" Padding="4 -1 5 -5" Text="x" FontSize="14" FontFamily="Arial Rounded MT Bold" Foreground="Red" />
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="MouseLeftButtonUp">
-                                            <i:InvokeCommandAction Command="{Binding DataContext.DeleteBlogCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                </Border>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                        dp:ContentControl.IsActive="{Binding OpenedBlog, Converter={StaticResource IsNullConverter}, FallbackValue=False}">
+            <Grid>
+                <ListView 
+                    ItemsSource="{Binding UserBlogs}" 
+                    IsSynchronizedWithCurrentItem="True"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListView.Resources>
+                        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="BorderBrush" Value="Transparent" />
+                            <Setter Property="Opacity" Value="0.8" />
+                            <Style.Triggers>
+                                <Trigger Property="IsFocused" Value="True">
+                                    <Setter Property="Background" Value="White" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.Resources>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                            <Setter Property="Margin" Value="2" />
+                            <Setter Property="Padding" Value="0" />
+                            <Style.Triggers>
+                                <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                    <Setter Property="IsSelected" Value="True" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding DataContext.OpenBlogCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Width="200" Height="200" Margin="-1" Padding="0" BorderBrush="Gray" BorderThickness="1">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" MinHeight="20" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <TextBox Grid.Row="0" Margin="3" Text="{Binding Title, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" FontWeight="SemiBold" Style="{StaticResource MultiLineTextBox}">
+                                        <dp:CueBanner.Content>
+                                            <TextBlock Text="&lt;Blog title&gt;" FontStyle="Italic" />
+                                        </dp:CueBanner.Content>
+                                    </TextBox>
+                                    <TextBox Grid.Row="1" Margin="3" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" Style="{StaticResource MultiLineTextBox}">
+                                        <dp:CueBanner.Content>
+                                            <TextBlock Text="&lt;Blog description&gt;" FontStyle="Italic" />
+                                        </dp:CueBanner.Content>
+                                    </TextBox>
+                                    <TextBlock Grid.Row="2" Margin="3">Created <Run Text="{Binding CreatedDate, Mode=OneWay}" /></TextBlock>
+                                    <Border Grid.Row="2" Margin="2" Padding="0" HorizontalAlignment="Right" BorderBrush="Gray" BorderThickness="1" ToolTip="Delete">
+                                        <Border.Style>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="#50FF7200" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock Margin="0" Padding="4 -1 5 -5" Text="x" FontSize="14" FontFamily="Arial Rounded MT Bold" Foreground="Red" />
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseLeftButtonUp">
+                                                <i:InvokeCommandAction Command="{Binding DataContext.DeleteBlogCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <Viewbox Style="{StaticResource Watermark}">
+                    <TextBlock Text="BLOGS" />
+                </Viewbox>
+            </Grid>
         </ContentControl>
         <!-- BLOG POSTS -->
         <ContentControl Style="{StaticResource SlidingPage}">
@@ -123,17 +129,22 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <TextBox Grid.Row="0" Margin="3 3 3 0" Text="{Binding Title, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" FontWeight="SemiBold" TextWrapping="Wrap">
+                        <TextBox Grid.Row="0" Margin="3 3 3 0" Text="{Binding Title, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" FontWeight="SemiBold" Style="{StaticResource MultiLineTextBox}" AcceptsReturn="False">
                             <dp:CueBanner.Content>
                                 <TextBlock Text="&lt;Blog title&gt;" FontStyle="Italic" />
                             </dp:CueBanner.Content>
                         </TextBox>
-                        <TextBox Grid.Row="1" Margin="3 3 3 0" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" TextWrapping="Wrap">
+                        <TextBox Grid.Row="1" Margin="3 3 3 0" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" Style="{StaticResource MultiLineTextBox}">
                             <dp:CueBanner.Content>
                                 <TextBlock Text="&lt;Blog description&gt;" FontStyle="Italic" />
                             </dp:CueBanner.Content>
                         </TextBox>
-                        <ListView Grid.Row="3" Margin="0 3 0 0" Padding="0" BorderBrush="Transparent" BorderThickness="0" ItemsSource="{Binding Posts}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                        <ListView Grid.Row="3" Margin="0 3 0 0" Padding="0" BorderBrush="Transparent" BorderThickness="0" ItemsSource="{Binding Posts}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseDoubleClick">
+                                    <i:InvokeCommandAction Command="{Binding DataContext.OpenPostCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Border BorderBrush="Gray" Margin="-3 -1" Padding="0" BorderThickness="1" HorizontalAlignment="Stretch">
@@ -144,19 +155,18 @@
                                             </Grid.ColumnDefinitions>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="*" MinHeight="20" />
                                                 <RowDefinition Height="Auto" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" Margin="1" Text="{Binding Title}" FontWeight="SemiBold" TextWrapping="Wrap">
-                                            <dp:CueBanner.Content>
-                                                <TextBlock Text="&lt;Post title&gt;" FontStyle="Italic" />
-                                            </dp:CueBanner.Content>
-                                            </TextBlock>
-                                                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Margin="1" Text="{Binding Abstract}" TextWrapping="Wrap">
+                                            <TextBox Grid.Row="0" Margin="1" Text="{Binding Title}" FontWeight="SemiBold" Style="{StaticResource ReadOnlyTextBox}" IsHitTestVisible="False">
+                                                <dp:CueBanner.Content>
+                                                    <TextBlock Text="&lt;Post title&gt;" FontStyle="Italic" />
+                                                </dp:CueBanner.Content>
+                                            </TextBox>
+                                            <TextBox Grid.Row="1" Grid.ColumnSpan="2" Margin="1" Text="{Binding Abstract}" Style="{StaticResource ReadOnlyTextBox}" IsHitTestVisible="False">
                                                 <dp:CueBanner.Content>
                                                     <TextBlock Text="&lt;Abstract&gt;" FontStyle="Italic" />
                                                 </dp:CueBanner.Content>
-                                            </TextBlock>
+                                            </TextBox>
                                             <Border Grid.Row="0" Grid.Column="1" Margin="2" Padding="0" HorizontalAlignment="Right" BorderBrush="Gray" BorderThickness="1" ToolTip="Delete">
                                                 <Border.Style>
                                                     <Style TargetType="{x:Type Border}">
@@ -181,13 +191,11 @@
                                     </Border>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="MouseDoubleClick">
-                                    <i:InvokeCommandAction Command="{Binding DataContext.OpenPostCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
                         </ListView>
                     </Grid>
+                    <Viewbox Style="{StaticResource Watermark}">
+                        <TextBlock Text="POSTS" />
+                    </Viewbox>
                 </Grid>
             </ContentControl.Content>
         </ContentControl>
@@ -204,25 +212,28 @@
                     <Grid Grid.Column="1" DataContext="{Binding OpenedPost}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <TextBox Grid.Row="0" Margin="3 3 3 0" Text="{Binding Title, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" FontWeight="SemiBold" TextWrapping="Wrap">
+                        <TextBox Grid.Row="0" Margin="3 3 3 0" Text="{Binding Title, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" FontWeight="SemiBold" Style="{StaticResource MultiLineTextBox}" AcceptsReturn="False">
                             <dp:CueBanner.Content>
                                 <TextBlock Text="&lt;Post title&gt;" FontStyle="Italic" />
                             </dp:CueBanner.Content>
                         </TextBox>
-                        <TextBox Grid.Row="1" Margin="3 3 3 0" Text="{Binding Abstract, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" TextWrapping="Wrap">
+                        <TextBox MaxHeight="80" Grid.Row="1" Margin="3 3 3 0" Text="{Binding Abstract, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" Style="{StaticResource MultiLineTextBox}">
                             <dp:CueBanner.Content>
                                 <TextBlock Text="&lt;Post abstract&gt;" FontStyle="Italic" />
                             </dp:CueBanner.Content>
                         </TextBox>
-                        <TextBox Grid.Row="2" Margin="3 3 3 0" Text="{Binding Content, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" TextWrapping="Wrap">
+                        <TextBox Grid.Row="2" Margin="3 3 3 0" Text="{Binding Content, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" Style="{StaticResource MultiLineTextBox}">
                             <dp:CueBanner.Content>
                                 <TextBlock Text="&lt;Content&gt;" FontStyle="Italic" />
                             </dp:CueBanner.Content>
                         </TextBox>
                     </Grid>
+                    <Viewbox Style="{StaticResource Watermark}">
+                        <TextBlock Text="POST" />
+                    </Viewbox>
                 </Grid>
             </ContentControl.Content>
         </ContentControl>

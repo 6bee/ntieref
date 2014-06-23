@@ -55,6 +55,8 @@ namespace BlogWriter.Wpf.ViewModels
 
         public Blog OpenedBlog { get; private set; }
 
+        //public Post OpenedPost { get { return _openedPost; } private set { _openedPost = value; } }
+        //private Post _openedPost;
         public Post OpenedPost { get; private set; }
 
         public ICommand LogoutCommand { get; private set; }
