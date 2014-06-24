@@ -857,6 +857,11 @@ namespace NTier.Common.Domain.Model
 
             RecordOriginalValueInEditableEntityChangeTracker(propertyName, oldValue);
 
+            RaisePropertyChanged(propertyName);
+        }
+
+        protected virtual void RaisePropertyChanged(string propertyName)
+        {
             var propertyChanged = PropertyChanged;
             if (propertyChanged != null)
             {
