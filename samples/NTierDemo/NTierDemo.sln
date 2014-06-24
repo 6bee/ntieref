@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{15444A08-394B-4B6C-B54B-AA81C51C008B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogWriter.Wpf", "NTierDemo\Client\BlogWriter.Wpf\BlogWriter.Wpf.csproj", "{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTierDemo.Client.Domain.Test", "NTierDemo\Client\NTierDemo.Client.Domain.Test\NTierDemo.Client.Domain.Test.csproj", "{D740BDB0-F705-4F45-AC1D-168627042F3B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTierDemo.Client.Domain", "NTierDemo\Client\NTierDemo.Client.Domain\NTierDemo.Client.Domain.csproj", "{5D6116A2-D954-4F86-B14B-BB9C65670AF0}"
@@ -47,8 +49,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTierDemo.Server.Domain.Repositories", "NTierDemo\Server\NTierDemo.Server.Domain.Repositories\NTierDemo.Server.Domain.Repositories.csproj", "{3BA4615A-4C09-4BDD-B72E-CD29E1362B69}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTierDemo.Server.Domain.Service", "NTierDemo\Server\NTierDemo.Server.Domain.Service\NTierDemo.Server.Domain.Service.csproj", "{50C69B62-B425-4204-9891-0E77B470F8EE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogWriter.Wpf", "NTierDemo\Client\BlogWriter.Wpf\BlogWriter.Wpf.csproj", "{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_database", "_database", "{33FC39CB-CFB6-483B-9E33-DF49376BAD55}"
 	ProjectSection(SolutionItems) = preProject
