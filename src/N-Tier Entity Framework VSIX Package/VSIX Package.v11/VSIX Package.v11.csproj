@@ -158,7 +158,7 @@
       <Link>ProjectTemplates\Silverlight\NTierEF_SL.zip</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\Packages\Remote.Linq.1.0.2.nupkg">
+    <Content Include="..\lib\Packages\Remote.Linq.2.3.0.nupkg">
       <Link>packages\Remote.Linq.1.0.1.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>

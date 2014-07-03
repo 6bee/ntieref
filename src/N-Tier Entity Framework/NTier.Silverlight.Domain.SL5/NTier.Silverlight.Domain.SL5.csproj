@@ -55,7 +55,7 @@
   <ItemGroup>
     <Reference Include="mscorlib" />
     <Reference Include="Remote.Linq">
-      <HintPath>..\packages\Remote.Linq.1.0.2\lib\sl5\Remote.Linq.dll</HintPath>
+      <HintPath>..\packages\Remote.Linq.2.3.0\lib\sl5\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations, Version=5.0.5.0, Culture=neutral, PublicKeyToken=ddd0da4d3e678217, processorArchitecture=MSIL" />
     <Reference Include="System.Runtime.Serialization" />
@@ -140,17 +140,8 @@
     <Compile Include="..\NTier.Client.Domain\ExceptionEventArgs.cs">
       <Link>Client\ExceptionEventArgs.cs</Link>
     </Compile>
-    <Compile Include="..\NTier.Client.Domain\FilterDescription.cs">
-      <Link>Client\FilterDescription.cs</Link>
-    </Compile>
-    <Compile Include="..\NTier.Client.Domain\FilterDescriptionCollection.cs">
-      <Link>Client\FilterDescriptionCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\NTier.Client.Domain\FilterDescriptionExtensions.cs">
-      <Link>Client\FilterDescriptionExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\NTier.Client.Domain\FilterOperation.cs">
-      <Link>Client\FilterOperation.cs</Link>
+    <Compile Include="..\NTier.Client.Domain\FilterExpressionCollection.cs">
+      <Link>Client\FilterExpressionCollection.cs</Link>
     </Compile>
     <Compile Include="..\NTier.Client.Domain\ICallbackResult.cs">
       <Link>Client\ICallbackResult.cs</Link>
@@ -340,6 +331,12 @@
     </Compile>
     <Compile Include="..\NTier.Common.Domain\Model\ValueObject.cs">
       <Link>Common\Model\ValueObject.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Common\Model\NonSerializedAttribute.cs">
+      <Link>Common\Model\NonSerializedAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Common\Model\SerializableAttribute.cs">
+      <Link>Common\Model\SerializableAttribute.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

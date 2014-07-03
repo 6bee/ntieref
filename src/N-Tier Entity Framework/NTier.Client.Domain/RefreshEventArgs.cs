@@ -7,7 +7,7 @@ namespace NTier.Client.Domain
 {
     public class RefreshEventArgs : EventArgs
     {
-        public SortDescriptionCollection SortDescriptions { get; set; }
-        public FilterDescriptionCollection FilterDescriptions { get; set; }
+        public SortDescriptionCollection SortDescriptions { get; internal set; }
+        public FilterExpressionCollection FilterExpressions { get; internal set; }
     }
 }

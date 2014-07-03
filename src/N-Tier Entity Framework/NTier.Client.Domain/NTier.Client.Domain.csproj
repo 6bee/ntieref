@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Remote.Linq">
-      <HintPath>..\packages\Remote.Linq.1.0.2\lib\net35-client\Remote.Linq.dll</HintPath>
+      <HintPath>..\packages\Remote.Linq.2.3.0\lib\net35-client\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -55,7 +55,7 @@
     </Compile>
     <Compile Include="DataContext`.NET.cs" />
     <Compile Include="DataContext`.cs" />
-    <Compile Include="FilterDescriptionExtensions.cs" />
+    <Compile Include="FilterExpressionCollection.cs" />
     <Compile Include="IDataContext.NET.cs" />
     <Compile Include="IOrderedDataServiceQueryableExtensions.cs" />
     <Compile Include="IDataServiceQueryableExtensions.cs" />
@@ -76,9 +76,6 @@
     <Compile Include="EditableEntityCollectionView.cs" />
     <Compile Include="EntityCollectionView.cs" />
     <Compile Include="ExceptionEventArgs.cs" />
-    <Compile Include="FilterDescription.cs" />
-    <Compile Include="FilterDescriptionCollection.cs" />
-    <Compile Include="FilterOperation.cs" />
     <Compile Include="IDataContext.cs" />
     <Compile Include="IDataLoader.cs" />
     <Compile Include="IEntityCollectionView.cs" />

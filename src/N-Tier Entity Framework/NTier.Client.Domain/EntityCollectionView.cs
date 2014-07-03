@@ -1,17 +1,19 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
+using NTier.Common.Domain.Model;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Globalization;
-using NTier.Common.Domain.Model;
 
 namespace NTier.Client.Domain
 {
     public class EntityCollectionView<T> : ObservableCollection<T>, ICollectionView, IEntityCollectionView<T>, IFilteredCollectionView, IPagedCollectionView, INotifyPropertyChanged 
         where T : Entity
     {
+        private bool _isRefreshSuppressed = false; 
+
         public EntityCollectionView(DataLoader<T> dataLoader = null, bool autoLoad = true)
         {
             this.DataLoader = dataLoader;
@@ -73,19 +75,6 @@ namespace NTier.Client.Domain
 
         protected virtual void OnDataLoaded(object sender, DataLoadedEventArgs<T> e)
         {
-            //if (e.Result != null)
-            //{
-            //    Clear();
-            //    foreach (var item in e.Result)
-            //    {
-            //        var v = item["AddressID"];
-            //        item["SupplierID"] = 0;
-            //        Add(item);
-            //    }
-
-            //    TotalItemCount = (int)e.Result.TotalCount.Value;
-            //}
-            
             var dataLoaded = DataLoaded;
             if (dataLoaded != null)
             {
@@ -194,7 +183,7 @@ namespace NTier.Client.Domain
 
         protected void OnPropertyChanged(string propertyName)
         {
-            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+            OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion INotifyPropertyChanged
@@ -311,16 +300,20 @@ namespace NTier.Client.Domain
 
         private sealed class DeferRefreshObject : IDisposable
         {
-            private readonly ICollectionView CollectionView;
+            private readonly EntityCollectionView<T> _collectionView;
+            private readonly bool _initialValue;
 
-            public DeferRefreshObject(ICollectionView collectionView)
+            public DeferRefreshObject(EntityCollectionView<T> collectionView)
             {
-                this.CollectionView = collectionView;
+                _collectionView = collectionView;
+                _initialValue = _collectionView._isRefreshSuppressed;
+                _collectionView._isRefreshSuppressed = true;
             }
 
             public void Dispose()
             {
-                CollectionView.Refresh();
+                _collectionView._isRefreshSuppressed = _initialValue;
+                _collectionView.Refresh();
             }
         }
 
@@ -337,10 +330,6 @@ namespace NTier.Client.Domain
             {
                 _filter = value;
                 OnPropertyChanged("Filter");
-                //if (!MoveToFirstPage())
-                //{
-                //    Refresh();
-                //}
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
         }
@@ -348,15 +337,12 @@ namespace NTier.Client.Domain
 
         public virtual ObservableCollection<GroupDescription> GroupDescriptions
         {
-            //get { throw new NotImplementedException(); }
-            //get { return null; }
             get { return _groupDescriptions; }
         }
         private ObservableCollection<GroupDescription> _groupDescriptions = new ObservableCollection<GroupDescription>();
 
         public virtual ReadOnlyObservableCollection<object> Groups
         {
-            //get { throw new NotImplementedException(); }
             get { return null; }
         }
 
@@ -534,13 +520,13 @@ namespace NTier.Client.Domain
 
         public virtual void Refresh()
         {
+            if (_isRefreshSuppressed) return;
+
             var refreshing = Refreshing;
             if (refreshing != null)
             {
-                refreshing(this, new RefreshEventArgs() { SortDescriptions = SortDescriptions, FilterDescriptions = FilterDescriptions });
+                refreshing(this, new RefreshEventArgs() { SortDescriptions = SortDescriptions, FilterExpressions = FilterExpressions });
             }
-
-            //this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 
             var dataLoader = DataLoader;
             if (dataLoader != null)
@@ -557,14 +543,13 @@ namespace NTier.Client.Domain
                 {
                     _sortDescriptions = new InnerSortDescriptionCollection();
                     _sortDescriptions.SortCollectionChanged += SortDescriptionsChanged;
-                    //OnPropertyChanged("SortDescriptions");
                 }
                 return _sortDescriptions;
             }
         }
         private InnerSortDescriptionCollection _sortDescriptions;
 
-        private class InnerSortDescriptionCollection : SortDescriptionCollection
+        private sealed class InnerSortDescriptionCollection : SortDescriptionCollection
         {
             public event NotifyCollectionChangedEventHandler SortCollectionChanged
             {
@@ -581,19 +566,15 @@ namespace NTier.Client.Domain
 
         private void SortDescriptionsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            if (SortDescriptions.Count == 0 && MoveToFirstPage())
+            {
+                return;
+            }
             if (e.Action == NotifyCollectionChangedAction.Remove && e.NewStartingIndex == -1 && SortDescriptions.Count > 0)
             {
                 return;
             }
-            if (((e.Action != NotifyCollectionChangedAction.Reset) || (e.NewItems != null)) ||
-                (((e.NewStartingIndex != -1) || (e.OldItems != null)) || (e.OldStartingIndex != -1)))
-            {
-                //if (MoveToFirstPage())
-                //{
-                //    return;
-                //}
-                Refresh();
-            }
+            Refresh();
         }
 
         public System.Collections.IEnumerable SourceCollection
@@ -608,28 +589,27 @@ namespace NTier.Client.Domain
 
         #region IFilteredCollectionView
 
-        public FilterDescriptionCollection FilterDescriptions
-        {
-            get
-            {
-                if (_filterDescriptions == null)
-                {
-                    _filterDescriptions = new FilterDescriptionCollection();
-                    _filterDescriptions.CollectionChanged += FilterDescriptionsChanged;
-                    //OnPropertyChanged("FilterDescriptions");
-                }
-                return _filterDescriptions;
-            }
-        }
-        private FilterDescriptionCollection _filterDescriptions;
+		public FilterExpressionCollection FilterExpressions
+		{
+			get
+			{
+				if (_filterExpressions == null)
+				{
+					_filterExpressions = new FilterExpressionCollection();
+					_filterExpressions.CollectionChanged += FilterCollectionChanged;
+				}
+				return _filterExpressions;
+			}
+		}
+		private FilterExpressionCollection _filterExpressions;
 
         protected bool SuppressFilterCollectionChangedEvent
         {
-            get { return FilterDescriptions.SuppressCollectionChangedEvent; }
-            set { FilterDescriptions.SuppressCollectionChangedEvent = value; }
+			get { return FilterExpressions.SuppressCollectionChangedEvent; }
+			set { FilterExpressions.SuppressCollectionChangedEvent = value; }
         }
 
-        private void FilterDescriptionsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void FilterCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (!MoveToFirstPage())
             {
@@ -677,7 +657,6 @@ namespace NTier.Client.Domain
 
         public int ItemCount
         {
-            //get { return Count; }
             get
             {
                 if (TotalItemCount < 0) return 0;
@@ -702,21 +681,16 @@ namespace NTier.Client.Domain
 
         public bool MoveToPage(int pageIndex)
         {
-            if (pageIndex < 0 || pageIndex >= NumberOfPages)
+            if (pageIndex >= 0 && pageIndex < NumberOfPages && PageIndex != pageIndex)
             {
-                return false;
-            }
+                IsPageChanging = true;
 
-            IsPageChanging = true;
+                var pageChanging = PageChanging;
+                if (pageChanging != null)
+                {
+                    pageChanging(this, new PageChangingEventArgs(pageIndex));
+                }
 
-            var pageChanging = PageChanging;
-            if (pageChanging != null)
-            {
-                pageChanging(this, new PageChangingEventArgs(pageIndex));
-            }
-
-            if (PageIndex != pageIndex)
-            {
                 PageIndex = pageIndex;
                 return true;
             }

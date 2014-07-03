@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using NTier.Common.Domain.Model;
 using NTier.Server.Domain.Repositories.Linq;
-using RLinq = Remote.Linq.Expressions;
+using Remote.Linq;
 
 namespace NTier.Server.Domain.Repositories
 {
@@ -54,7 +54,7 @@ namespace NTier.Server.Domain.Repositories
             return queriable;
         }
 
-        internal static IDomainQueryable<TEntity> ApplyFilters<TEntity>(this IDomainQueryable<TEntity> queriable, IEnumerable<RLinq.LambdaExpression> filterList) where TEntity : Entity
+        internal static IDomainQueryable<TEntity> ApplyFilters<TEntity>(this IDomainQueryable<TEntity> queriable, IEnumerable<Remote.Linq.Expressions.LambdaExpression> filterList) where TEntity : Entity
         {
             if (!ReferenceEquals(filterList, null))
             {
@@ -78,7 +78,7 @@ namespace NTier.Server.Domain.Repositories
             return queriable;
         }
 
-        internal static IDomainQueryable<TEntity> ApplySorting<TEntity>(this IDomainQueryable<TEntity> queriable, IEnumerable<RLinq.SortExpression> sortList) where TEntity : Entity
+        internal static IDomainQueryable<TEntity> ApplySorting<TEntity>(this IDomainQueryable<TEntity> queriable, IEnumerable<Remote.Linq.Expressions.SortExpression> sortList) where TEntity : Entity
         {
             IOrderedDomainQueryable<TEntity> orderedQueriable = null;
 
@@ -91,10 +91,10 @@ namespace NTier.Server.Domain.Repositories
                     {
                         switch (sort.SortDirection)
                         {
-                            case RLinq.SortDirection.Ascending:
+                            case Remote.Linq.Expressions.SortDirection.Ascending:
                                 orderedQueriable = queriable.OrderBy(exp);
                                 break;
-                            case RLinq.SortDirection.Descending:
+                            case Remote.Linq.Expressions.SortDirection.Descending:
                                 orderedQueriable = queriable.OrderByDescending(exp);
                                 break;
                         }
@@ -103,10 +103,10 @@ namespace NTier.Server.Domain.Repositories
                     {
                         switch (sort.SortDirection)
                         {
-                            case RLinq.SortDirection.Ascending:
+                            case Remote.Linq.Expressions.SortDirection.Ascending:
                                 orderedQueriable = orderedQueriable.ThenBy(exp);
                                 break;
-                            case RLinq.SortDirection.Descending:
+                            case Remote.Linq.Expressions.SortDirection.Descending:
                                 orderedQueriable = orderedQueriable.ThenByDescending(exp);
                                 break;
                         }

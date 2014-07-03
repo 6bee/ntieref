@@ -6,6 +6,6 @@ namespace NTier.Client.Domain
 {
     public interface IFilteredCollectionView : ICollectionView
     {
-        FilterDescriptionCollection FilterDescriptions { get; }
+        FilterExpressionCollection FilterExpressions { get; }
     }
 }

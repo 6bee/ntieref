@@ -50,7 +50,7 @@ namespace NTier.Client.Domain
             var propertyName = filterDescription.PropertyName;
             var entityType = typeof(T);
             var filterExpression = CreateFilterExpression(filterDescription, propertyName, entityType);
-            var exp = filterExpression ?? RLinq.Expression.ConstantValue(false);
+            var exp = filterExpression ?? Remote.Linq.Expressions.Expression.Constant(false);
             var parameterExpression = RLinq.Expression.Parameter("i", typeof(T));
             return RLinq.Expression.Lambda(exp, parameterExpression);
         }
@@ -73,7 +73,7 @@ namespace NTier.Client.Domain
                     expression = RLinq.Expression.Binary(expression, filterExpression, RLinq.BinaryOperator.Or);
                 }
             }
-            var exp = expression ?? RLinq.Expression.ConstantValue(false);
+            var exp = expression ?? Remote.Linq.Expressions.Expression.Constant(false);
             var parameterExpression = RLinq.Expression.Parameter("i", typeof(T));
             return RLinq.Expression.Lambda(exp, parameterExpression);
         }
@@ -127,7 +127,7 @@ namespace NTier.Client.Domain
 
             var binaryOperator = filterOperation.ToBinaryOperator();
 
-            var valueExpression = RLinq.Expression.ConstantValue(value);
+            var valueExpression = Remote.Linq.Expressions.Expression.Constant(value);
 
             var filterExpression = RLinq.Expression.Binary(expression, valueExpression, binaryOperator);
             return filterExpression;

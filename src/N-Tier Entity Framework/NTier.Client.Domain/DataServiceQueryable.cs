@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NTier.Common.Domain.Model;
-using RLinq = Remote.Linq.Expressions;
+using Remote.Linq;
 
 namespace NTier.Client.Domain
 {
@@ -16,60 +16,60 @@ namespace NTier.Client.Domain
 
         internal sealed class Filter
         {
-            private readonly LambdaExpression _lambdaExpression;
-            private readonly RLinq.LambdaExpression _queryExpression;
+            private readonly System.Linq.Expressions.LambdaExpression _lambdaExpression;
+            private readonly Remote.Linq.Expressions.LambdaExpression _queryExpression;
 
-            public Filter(LambdaExpression exp)
+            public Filter(System.Linq.Expressions.LambdaExpression exp)
             {
                 _lambdaExpression = exp;
                 _queryExpression = null;
             }
 
-            public Filter(RLinq.LambdaExpression exp)
+            public Filter(Remote.Linq.Expressions.LambdaExpression exp)
             {
                 _queryExpression = exp;
                 _lambdaExpression = null;
             }
 
-            public RLinq.LambdaExpression Expression
+            public Remote.Linq.Expressions.LambdaExpression Expression
             {
-                get { return _queryExpression ?? _lambdaExpression.ToQueryExpression(); }
+                get { return _queryExpression ?? _lambdaExpression.ToRemoteLinqExpression(); }
             }
         }
 
         internal sealed class Sort
         {
             private readonly LambdaExpression _lambdaExpression;
-            private readonly RLinq.SortDirection _orderingDirection;
-            private readonly RLinq.LambdaExpression _queryExpression;
+            private readonly Remote.Linq.Expressions.SortDirection _orderingDirection;
+            private readonly Remote.Linq.Expressions.LambdaExpression _queryExpression;
 
-            public Sort(LambdaExpression exp, RLinq.SortDirection orderingDirection)
+            public Sort(LambdaExpression exp, Remote.Linq.Expressions.SortDirection orderingDirection)
             {
                 _lambdaExpression = exp;
                 _orderingDirection = orderingDirection;
                 _queryExpression = null;
             }
 
-            public Sort(RLinq.LambdaExpression exp, RLinq.SortDirection orderingDirection)
+            public Sort(Remote.Linq.Expressions.LambdaExpression exp, Remote.Linq.Expressions.SortDirection orderingDirection)
             {
                 _queryExpression = exp;
                 _orderingDirection = orderingDirection;
                 _lambdaExpression = null;
             }
 
-            public Sort(RLinq.SortExpression exp)
+            public Sort(Remote.Linq.Expressions.SortExpression exp)
             {
                 _queryExpression = exp.Operand;
                 _orderingDirection = exp.SortDirection;
                 _lambdaExpression = null;
             }
 
-            public RLinq.SortExpression Expression
+            public Remote.Linq.Expressions.SortExpression Expression
             {
                 get
                 {
-                    var expression = _queryExpression ?? _lambdaExpression.ToQueryExpression();
-                    return RLinq.Expression.Sort(expression, _orderingDirection);
+                    var expression = _queryExpression ?? _lambdaExpression.ToRemoteLinqExpression();
+                    return Remote.Linq.Expressions.Expression.Sort(expression, _orderingDirection);
                 }
             }
         }
@@ -201,7 +201,7 @@ namespace NTier.Client.Domain
         }
 
         internal abstract IList<Filter> Filters { get; }
-        protected IEnumerable<RLinq.LambdaExpression> ParentFilters
+        protected IEnumerable<Remote.Linq.Expressions.LambdaExpression> ParentFilters
         {
             get
             {
@@ -214,7 +214,7 @@ namespace NTier.Client.Domain
         }
 
         internal abstract IList<Sort> Sortings { get; }
-        protected IEnumerable<RLinq.SortExpression> ParentSortings
+        protected IEnumerable<Remote.Linq.Expressions.SortExpression> ParentSortings
         {
             get
             {
@@ -319,7 +319,7 @@ namespace NTier.Client.Domain
         {
             var queriable = new OrderedDataServiceQueryable<TEntity>(this);
             queriable.Sortings.Clear();
-            queriable.Sortings.Add(new Sort(orderBy, RLinq.SortDirection.Ascending));
+            queriable.Sortings.Add(new Sort(orderBy, Remote.Linq.Expressions.SortDirection.Ascending));
             return queriable;
         }
 
@@ -333,7 +333,7 @@ namespace NTier.Client.Domain
         {
             var queriable = new OrderedDataServiceQueryable<TEntity>(this);
             queriable.Sortings.Clear();
-            queriable.Sortings.Add(new Sort(orderBy, RLinq.SortDirection.Descending));
+            queriable.Sortings.Add(new Sort(orderBy, Remote.Linq.Expressions.SortDirection.Descending));
             return queriable;
         }
 
@@ -395,7 +395,8 @@ namespace NTier.Client.Domain
         /// </summary>
         public IDataServiceQueryable<TEntity> AsQueryable()
         {
-            return this;
+            var queriable = new DataServiceQueryableImp<TEntity>(this);
+            return queriable;
         }
   
         #endregion Linq operations

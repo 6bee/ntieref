@@ -1,9 +1,10 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
+using NTier.Common.Domain.Model;
+using Remote.Linq;
 using System;
 using System.Linq;
 using System.Windows.Threading;
-using NTier.Common.Domain.Model;
 
 namespace NTier.Client.Domain
 {
@@ -29,37 +30,37 @@ namespace NTier.Client.Domain
             set { _requestDelay = value; }
         }
 
-        // TOOD: get rid of global filgter columns
-        // note: this raises issues due to unknown types/formats/etc.
-        //       instead provide api to allow flexible specification of filtering (i.e. allow for and/or combination)
-        public string[] GlobalFilterColumns
-        {
-            get
-            {
-                if (_globalFilterColumns == null && !_globalFilterColumnsDefined)
-                {
-                    _globalFilterColumnsDefined = true;
+        //// TOOD: get rid of global filgter columns
+        //// note: this raises issues due to unknown types/formats/etc.
+        ////       instead provide api to allow flexible specification of filtering (i.e. allow for and/or combination)
+        //public string[] GlobalFilterColumns
+        //{
+        //    get
+        //    {
+        //        if (_globalFilterColumns == null && !_globalFilterColumnsDefined)
+        //        {
+        //            _globalFilterColumnsDefined = true;
 
-                    _globalFilterColumns = typeof(T).GetProperties()
-                        .Where(p => p.GetCustomAttributes(typeof(SimplePropertyAttribute), true).Length > 0)
-                        .Where(p =>
-                        {
-                            var displayAttributes = p.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.DisplayAttribute), true);
-                            return displayAttributes.Length == 0 || (((System.ComponentModel.DataAnnotations.DisplayAttribute)displayAttributes[0]).GetAutoGenerateField() ?? true);
-                        })
-                        .Select(p => p.Name)
-                        .ToArray();
-                }
-                return _globalFilterColumns;
-            }
-            set
-            {
-                _globalFilterColumnsDefined = true;
-                _globalFilterColumns = value;
-            }
-        }
-        private string[] _globalFilterColumns = null;
-        private bool _globalFilterColumnsDefined = false;
+        //            _globalFilterColumns = typeof(T).GetProperties()
+        //                .Where(p => p.GetCustomAttributes(typeof(SimplePropertyAttribute), true).Length > 0)
+        //                .Where(p =>
+        //                {
+        //                    var displayAttributes = p.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.DisplayAttribute), true);
+        //                    return displayAttributes.Length == 0 || (((System.ComponentModel.DataAnnotations.DisplayAttribute)displayAttributes[0]).GetAutoGenerateField() ?? true);
+        //                })
+        //                .Select(p => p.Name)
+        //                .ToArray();
+        //        }
+        //        return _globalFilterColumns;
+        //    }
+        //    set
+        //    {
+        //        _globalFilterColumnsDefined = true;
+        //        _globalFilterColumns = value;
+        //    }
+        //}
+        //private string[] _globalFilterColumns = null;
+        //private bool _globalFilterColumnsDefined = false;
 
         public override void Load(IEntityCollectionView<T> view)
         {
@@ -110,22 +111,28 @@ namespace NTier.Client.Domain
 
             #region filters
 
-            // column filters
-            foreach (var filterDescription in view.FilterDescriptions.Where(f => !string.IsNullOrEmpty(f.PropertyName)))
-            {
-                var filterExpression = filterDescription.ToExpression<T>();
-                query = query.Where(filterExpression);
-            }
+            //// column filters
+            //foreach (var filterDescription in view.FilterDescriptions.Where(f => !string.IsNullOrEmpty(f.PropertyName)))
+            //{
+            //    var filterExpression = filterDescription.ToExpression<T>();
+            //    query = query.Where(filterExpression);
+            //}
 
-            // global filters
-            var globalFilterColumns = GlobalFilterColumns;
-            if (globalFilterColumns != null && globalFilterColumns.Length > 0)
+            //// global filters
+            //var globalFilterColumns = GlobalFilterColumns;
+            //if (globalFilterColumns != null && globalFilterColumns.Length > 0)
+            //{
+            //    foreach (var filterDescription in view.FilterDescriptions.Where(f => string.IsNullOrEmpty(f.PropertyName)))
+            //    {
+            //        var filterExpression = filterDescription.ToGlobalExpression<T>(globalFilterColumns);
+            //        query = query.Where(filterExpression);
+            //    }
+            //}
+
+            foreach (var filterExpression in view.FilterExpressions)
             {
-                foreach (var filterDescription in view.FilterDescriptions.Where(f => string.IsNullOrEmpty(f.PropertyName)))
-                {
-                    var filterExpression = filterDescription.ToGlobalExpression<T>(globalFilterColumns);
-                    query = query.Where(filterExpression);
-                }
+                var remoteExpression = filterExpression.ToRemoteLinqExpression();
+                query = query.Where(remoteExpression);
             }
 
             #endregion filters

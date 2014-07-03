@@ -66,9 +66,8 @@ namespace NTier.Server.Domain.Repositories.Linq
 
         IDomainQueryable<TEntity> IDomainQueryable<TEntity>.AsQueryable()
         {
-            //var queryable = _queryable.AsQueryable();
-            //return new DomainQueryable<TEntity>(queryable);
-            return this;
+            var queryable = _queryable.AsQueryable();
+            return new DomainQueryable<TEntity>(queryable, _expressionVisitor);
         }
 
         TEntity IDomainQueryable<TEntity>.FirstOrDefault()

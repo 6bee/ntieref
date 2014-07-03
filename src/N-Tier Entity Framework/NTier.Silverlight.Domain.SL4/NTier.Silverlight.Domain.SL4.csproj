@@ -50,7 +50,7 @@
   <ItemGroup>
     <Reference Include="mscorlib" />
     <Reference Include="Remote.Linq">
-      <HintPath>..\packages\Remote.Linq.1.0.2\lib\sl4\Remote.Linq.dll</HintPath>
+      <HintPath>..\packages\Remote.Linq.2.3.0\lib\sl4\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations, Version=2.0.5.0, Culture=neutral, PublicKeyToken=ddd0da4d3e678217, processorArchitecture=MSIL">
       <Private>False</Private>
@@ -108,17 +108,8 @@
     <Compile Include="..\NTier.Client.Domain\ExceptionEventArgs.cs">
       <Link>Client\ExceptionEventArgs.cs</Link>
     </Compile>
-    <Compile Include="..\NTier.Client.Domain\FilterDescription.cs">
-      <Link>Client\FilterDescription.cs</Link>
-    </Compile>
-    <Compile Include="..\NTier.Client.Domain\FilterDescriptionCollection.cs">
-      <Link>Client\FilterDescriptionCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\NTier.Client.Domain\FilterDescriptionExtensions.cs">
-      <Link>Client\FilterDescriptionExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\NTier.Client.Domain\FilterOperation.cs">
-      <Link>Client\FilterOperation.cs</Link>
+    <Compile Include="..\NTier.Client.Domain\FilterExpressionCollection.cs">
+      <Link>Client\FilterExpressionCollection.cs</Link>
     </Compile>
     <Compile Include="..\NTier.Client.Domain\ICallbackResult.cs">
       <Link>Client\ICallbackResult.cs</Link>
@@ -320,6 +311,8 @@
     <Compile Include="System.Collections.Generic\SortedDictionary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="System.ComponentModel\INotifyPropertyChanging.cs" />
+    <Compile Include="Common\Model\NonSerializedAttribute.cs" />
+    <Compile Include="Common\Model\SerializableAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
