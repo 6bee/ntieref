@@ -87,6 +87,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
+"$(SolutionDir)..\N-Tier Entity Framework\.nuget\NuGet.exe" restore "$(SolutionDir)..\N-Tier Entity Framework\N-Tier Entity Framework.sln"
 %SystemRoot%\Microsoft.NET\Framework\v4.0.30319\msbuild "$(SolutionDir)..\N-Tier Entity Framework\N-Tier Entity Framework.sln" /target:Rebuild /p:Configuration=$(Configuration)
 
 REM xcopy /y /d "$(SolutionDir)..\N-Tier Entity Framework\$(OutDir)*" "$(SolutionDir)lib\"
