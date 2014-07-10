@@ -90,9 +90,14 @@ namespace NTier.Client.Domain
         void ClearErrors();
 
         /// <summary>
-        /// Returns true if at least one entity contained in this entity set has changes, false otherwise
+        /// Returns true if one or more entities contained in this entity set have changes, false otherwise
         /// </summary>
         bool HasChanges { get; }
+
+        /// <summary>
+        /// Returns true if all entities contained in this entity set are valid, false otherwise
+        /// </summary>
+        bool IsValid { get; }
 
         /// <summary>
         /// Calls <code>AcceptChanges</code> on all entities contained in this entity set

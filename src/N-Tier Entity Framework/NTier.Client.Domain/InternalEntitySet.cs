@@ -359,9 +359,20 @@ namespace NTier.Client.Domain
             {
                 lock (SyncRoot)
                 {
-                    return _added.Count > 0 
-                        || _removed.Count > 0 
+                    return _added.Count > 0
+                        || _removed.Count > 0
                         || _entitySet.Any(e => e.HasChanges);
+                }
+            }
+        }
+
+        public bool IsValid
+        {
+            get
+            {
+                lock (SyncRoot)
+                {
+                    return this.All(e => e.IsValid);
                 }
             }
         }

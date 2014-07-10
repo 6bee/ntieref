@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using NTier.Common.Domain.Model;
 
@@ -18,7 +19,7 @@ namespace NTier.Client.Domain
         /// <param name="acceptOption">Defines when changes should be accepted locally</param>
         /// <param name="clearErrors">If set to true, all error entries are cleared before saving chnages</param>
         /// <param name="clientInfo">Optional client info object, to be submitted to the server</param>
-        public override void SaveChangesAsync(AcceptOption acceptOption = AcceptOption.Default, bool clearErrors = true, ClientInfo clientInfo = null, Action<Exception> callback = null)
+        public override void SaveChangesAsync(AcceptOption acceptOption = AcceptOption.Default, bool clearErrors = true, bool failOnValidationErrors = true, ClientInfo clientInfo = null, Action<Exception> callback = null)
         {
             if (acceptOption == AcceptOption.Default)
             {
@@ -29,6 +30,11 @@ namespace NTier.Client.Domain
             if (clearErrors)
             {
                 ClearErrors();
+            }
+
+            if (failOnValidationErrors && !IsValid)
+            {
+                throw new ValidationException("Validation failed for one or more entities.");
             }
 
             SubmitChangesAsync(

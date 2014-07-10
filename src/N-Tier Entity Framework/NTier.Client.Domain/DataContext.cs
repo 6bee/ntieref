@@ -165,9 +165,14 @@ namespace NTier.Client.Domain
         private System.Windows.Threading.Dispatcher _dispatcher = null;
 
         /// <summary>
-        /// Gets whether any entity attached to this context has pending changes
+        /// Returns true if one or more entities attached to this context have pending changes, false otherwise
         /// </summary>
         public virtual bool HasChanges { get { return EntitySets.Any(set => set.HasChanges); } }
+
+        /// <summary>
+        /// Returns true if all entities attached to this data contect are valid, false otherwise
+        /// </summary>
+        public virtual bool IsValid { get { return EntitySets.All(set => set.IsValid); } }
 
         #endregion
 

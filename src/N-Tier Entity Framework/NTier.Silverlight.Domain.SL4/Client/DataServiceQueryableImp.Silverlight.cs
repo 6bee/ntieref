@@ -198,6 +198,11 @@ namespace NTier.Client.Domain
                 get { return _entitySet.HasChanges; }
             }
 
+            bool IEntitySet<TEntity>.IsValid
+            {
+                get { return _entitySet.IsValid; }
+            }
+
             bool IEntitySet<TEntity>.IsValidationEnabled
             {
                 get { return _entitySet.IsValidationEnabled; }

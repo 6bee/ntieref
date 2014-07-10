@@ -11,7 +11,7 @@ namespace NTier.Client.Domain
 
         #region Save
 
-        public abstract void SaveChangesAsync(AcceptOption acceptOption = AcceptOption.Default, bool clearErrors = false, ClientInfo clientInfo = null, Action<Exception> callback = null);
+        public abstract void SaveChangesAsync(AcceptOption acceptOption = AcceptOption.Default, bool clearErrors = false, bool failOnValidationErrors = true, ClientInfo clientInfo = null, Action<Exception> callback = null);
 
         #endregion Save
 

@@ -12,8 +12,9 @@ namespace NTier.Client.Domain
         /// </summary>
         /// <param name="acceptOption">Defines when changes should be accepted locally</param>
         /// <param name="clearErrors">If set to true, all error entries are cleared before saving chnages</param>
+        /// <param name="failOnValidationErrors">If set to true, exception is thrown if IsValid=false, otherwise invalid entities are skipped from saving silently</param>
         /// <param name="clientInfo">Optional client info object, to be submitted to the server</param>
-        void SaveChanges(AcceptOption acceptOption = AcceptOption.Default, bool clearErrors = false, ClientInfo clientInfo = null);
+        void SaveChanges(AcceptOption acceptOption = AcceptOption.Default, bool clearErrors = false, bool failOnValidationErrors = true, ClientInfo clientInfo = null);
 
         /// <summary>
         /// Saves pending changes asynchronously
@@ -21,12 +22,13 @@ namespace NTier.Client.Domain
         /// <remarks>Either use the task object returned or subscribe to the SaveChangesCompleted event to check for exeptions of the sync task.</remarks>
         /// <param name="acceptOption">Defines when changes should be accepted locally.</param>
         /// <param name="clearErrors">If set to true, all error entries are cleared before saving chnages.</param>
+        /// <param name="failOnValidationErrors">If set to true, exception is thrown if IsValid=false, otherwise invalid entities are skipped from saving silently</param>
         /// <param name="clientInfo">Optional client info object, to be submitted to the server.</param>
         /// <param name="startImmediately">If set to true, async task is started automatically (has no effect if task sceduler is provided).</param>
         /// <param name="taskScheduler">If privided, async task is started automatically using task sceduler.</param>
         /// <param name="cancellationToken">Optional System.Threading.Tasks.Task.CancellationToken that the async task will observe.</param>
         /// <param name="taskCreationOptions">Optional System.Threading.Tasks.TaskCreationOptions used to customize the task's behavior.</param>
         /// <returns>The task being used for async execution</returns>
-        System.Threading.Tasks.Task SaveChangesAsync(AcceptOption acceptOption = AcceptOption.Default, bool clearErrors = false, ClientInfo clientInfo = null, bool startImmediately = true, System.Threading.Tasks.TaskScheduler taskScheduler = null, CancellationToken cancellationToken = default(CancellationToken), System.Threading.Tasks.TaskCreationOptions taskCreationOptions = System.Threading.Tasks.TaskCreationOptions.None);
+        System.Threading.Tasks.Task SaveChangesAsync(AcceptOption acceptOption = AcceptOption.Default, bool clearErrors = false, bool failOnValidationErrors = true, ClientInfo clientInfo = null, bool startImmediately = true, System.Threading.Tasks.TaskScheduler taskScheduler = null, CancellationToken cancellationToken = default(CancellationToken), System.Threading.Tasks.TaskCreationOptions taskCreationOptions = System.Threading.Tasks.TaskCreationOptions.None);
     }
 }

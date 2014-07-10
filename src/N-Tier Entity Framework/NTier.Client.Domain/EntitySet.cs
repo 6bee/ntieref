@@ -113,8 +113,15 @@ namespace NTier.Client.Domain
                 _detachEntitiesUponNewQueryResult = value;
             }
         }
-
+        /// <summary>
+        /// Returns true if one or more entities contained in this entity set have changes, false otherwise
+        /// </summary>
         public bool HasChanges { get { return _internalEntitySet.HasChanges; } }
+
+        /// <summary>
+        /// Returns true if all entities contained in this entity set are valid, false otherwise
+        /// </summary>
+        public bool IsValid { get { return _internalEntitySet.IsValid; } }
 
         public bool IsValidationEnabled
         {

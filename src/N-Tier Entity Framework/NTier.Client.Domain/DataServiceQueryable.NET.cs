@@ -209,6 +209,11 @@ namespace NTier.Client.Domain
             get { return EntitySet.HasChanges; }
         }
 
+        bool IEntitySet<TEntity>.IsValid
+        {
+            get { return EntitySet.IsValid; }
+        }
+
         void IEntitySet<TEntity>.ClearErrors()
         {
             EntitySet.ClearErrors();

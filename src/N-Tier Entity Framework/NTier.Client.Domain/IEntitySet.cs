@@ -92,9 +92,14 @@ namespace NTier.Client.Domain
         int Count { get; }
 
         /// <summary>
-        /// Returns true if the entity set or any of its entities has changes, false otherwiese
+        /// Returns true if one or more entities contained in this entity set have changes, false otherwise
         /// </summary>
         bool HasChanges { get; }
+
+        /// <summary>
+        /// Returns true if all entities contained in this entity set are valid, false otherwise
+        /// </summary>
+        bool IsValid { get; }
 
         /// <summary>
         /// Get or set whether validation is enabled for all entities attached to this entity set

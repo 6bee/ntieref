@@ -33,9 +33,14 @@ namespace NTier.Client.Domain
         bool DetachEntitiesUponNewQueryResult { get; set; }
 
         /// <summary>
-        /// Gets whether any entity attached to this context has pending changes
+        /// Returns true if one or more entities attached to this context have pending changes, false otherwise
         /// </summary>
         bool HasChanges { get; }
+
+        /// <summary>
+        /// Returns true if all entities attached to this data contect are valid, false otherwise
+        /// </summary>
+        bool IsValid { get; }
 
         /// <summary>
         /// Gets or stes whether validation is enabled on all entities attached to this context. (Returns null if entites contain ambiguous settings.)
