@@ -32,7 +32,7 @@
       <package id="NTierEntityFramework.Server" version="0.0.1" />
       <package id="NTierEntityFramework.Server.EntityFrameworkX_Y" version="0.0.1" />
       <package id="EntityFramework" version="x.y.z" />
-      <package id="Remote.Linq" version="1.0.2" />
+      <package id="Remote.Linq" version="2.3.0" />
     </packages>
   </WizardData>
 </VSTemplate>
