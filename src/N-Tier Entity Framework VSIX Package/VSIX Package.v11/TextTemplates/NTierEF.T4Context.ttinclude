@@ -3,6 +3,7 @@
 <#@ import namespace="System" #>
 <#@ import namespace="System.Diagnostics" #>
 <#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Reflection" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
@@ -68,6 +69,21 @@ public static class T4Context
         TemplateMetadata[MetadataConstants.TT_TEMPLATE_NAME] = "CSharpDbContext.Types";
         TemplateMetadata[MetadataConstants.TT_TEMPLATE_VERSION] = "5.0";
         TemplateMetadata[MetadataConstants.TT_MINIMUM_ENTITY_FRAMEWORK_VERSION] = minimumEntityFrameworkVersion;
+    }
+
+    public static string GetFullPath(string path)
+    {
+        if (Path.IsPathRooted(path))
+        {
+            return path;
+        }
+        else
+        {
+            string templateFile = T4Context.Host.TemplateFile;
+            string workingDirectory = Path.GetDirectoryName(templateFile);
+            string fullPath = Path.Combine(workingDirectory, path);
+            return Path.GetFullPath(fullPath);
+        }
     }
 }
 #>

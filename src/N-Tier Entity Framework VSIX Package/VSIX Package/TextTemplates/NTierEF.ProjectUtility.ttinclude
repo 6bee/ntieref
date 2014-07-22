@@ -3,6 +3,7 @@
 <#@ import namespace="System" #>
 <#@ import namespace="System.Diagnostics" #>
 <#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="EnvDTE" #>
 <#@ import namespace="EnvDTE80" #>
@@ -16,11 +17,11 @@ public class ProjectUtility
 
     public ProjectUtility(string projectName)
     {
-        if (!System.IO.Path.IsPathRooted(projectName))
+        if (!Path.IsPathRooted(projectName))
         {
-            var dir = System.IO.Path.GetDirectoryName(T4Context.Project.FileName);
-            projectName = System.IO.Path.Combine(dir, projectName);
-            projectName = System.IO.Path.GetFullPath(projectName);
+            var dir = Path.GetDirectoryName(T4Context.Project.FileName);
+            projectName = Path.Combine(dir, projectName);
+            projectName = Path.GetFullPath(projectName);
         }
 
         var dte = T4Context.DTE;
@@ -37,7 +38,7 @@ public class ProjectUtility
             return null;
         }
 
-        return System.IO.Path.GetDirectoryName(Project.FullName);
+        return Path.GetDirectoryName(Project.FullName);
     }
 
     public string GetAssemblyPath()
@@ -57,7 +58,7 @@ public class ProjectUtility
         // assembly
         var outputFileName = Project.Properties.Item("OutputFileName").Value.ToString();
 
-        var fullPath = System.IO.Path.Combine(projectPath, outputPath, outputFileName);
+        var fullPath = Path.Combine(projectPath, outputPath, outputFileName);
         return fullPath;
     }
 
@@ -102,6 +103,28 @@ public class ProjectUtility
             }
         }
         return projects;
+    }
+
+    public static string ResolveProjectPath(string projectName)
+    {
+        var dte = T4Context.DTE;
+        var projects = GetProjects(dte);
+
+        var matches = projects
+            .Where(p => string.Equals(p.FullName, projectName, StringComparison.InvariantCultureIgnoreCase))
+            .Select(p => p.FullName)
+            .ToArray();
+
+        if (!matches.Any()) 
+        {
+            var projectFileName = Path.GetFileName(projectName);
+            matches = projects
+                .Where(p => string.Equals(Path.GetFileName(p.FullName), projectFileName, StringComparison.InvariantCultureIgnoreCase))
+                .Select(p => p.FullName)
+                .ToArray();
+        }
+
+        return matches.FirstOrDefault() ?? projectName;
     }
 }
 #>

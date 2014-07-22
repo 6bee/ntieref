@@ -3,6 +3,7 @@
 <#@ import namespace="System" #>
 <#@ import namespace="System.Diagnostics" #>
 <#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Reflection" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
@@ -65,7 +66,22 @@ public static class T4Context
 
     public static void SetTemplateMetadata(string minimumEntityFrameworkVersion = "4.0")
     {
-	    // .NET 4 does not support template metadata
+        // .NET 4 does not support template metadata
+    }
+
+    public static string GetFullPath(string path)
+    {
+        if (Path.IsPathRooted(path))
+        {
+            return path;
+        }
+        else
+        {
+            string templateFile = T4Context.Host.TemplateFile;
+            string workingDirectory = Path.GetDirectoryName(templateFile);
+            string fullPath = Path.Combine(workingDirectory, path);
+            return Path.GetFullPath(fullPath);
+        }
     }
 }
 #>
