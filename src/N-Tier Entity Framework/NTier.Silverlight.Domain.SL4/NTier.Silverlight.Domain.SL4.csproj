@@ -78,6 +78,15 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\NTier.Client.Domain\UpdateException.cs">
+      <Link>Client\UpdateException.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\OptimisticConcurrencyFault.cs">
+      <Link>Common\OptimisticConcurrencyFault.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\UpdateFault.cs">
+      <Link>Common\UpdateFault.cs</Link>
+    </Compile>
     <Compile Include="..\NTier.Client.Domain\DataContext.cs">
       <Link>Client\DataContext.cs</Link>
     </Compile>

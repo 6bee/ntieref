@@ -605,35 +605,11 @@ namespace <#=Namespace#>
 #>
             lock (_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>.SyncRoot)
             {
-                Refresh(_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>, resultSet.<#=EdmUtility.Code.Escape(entitySet)#> == null ? null : resultSet.<#=EdmUtility.Code.Escape(entitySet)#>.Where(e => !resultSet.IsConcurrencyConflict(e)));
+                Refresh(_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>, resultSet.<#=EdmUtility.Code.Escape(entitySet)#>);
             }
 <#+
         }
 #>
-        }
-
-        protected override void HandleConcurrencyConflicts(<#=EdmUtility.ModelName#>ResultSet resultSet)
-        {
-            var entities = new List<StateEntry>();
-
-<#+
-        foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
-        {
-#>
-            lock (_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>.SyncRoot)
-            {
-                if (resultSet.<#=EdmUtility.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts != null)
-                {
-                    entities.AddRange(
-                        resultSet.<#=EdmUtility.Code.Escape(entitySet.ElementType)#>ConcurrencyConflicts
-                            .Select(store => new StateEntry(_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>.FirstOrDefault(local => local.Equals(store)), store)));
-                }
-            }
-<#+
-        }
-#>
-
-            throw new OptimisticConcurrencyException(entities);
         }
 
         #endregion Submit Changes

@@ -1,12 +1,14 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
+using NTier.Common.Domain;
+using NTier.Common.Domain.Model;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
-using NTier.Common.Domain.Model;
 
 namespace NTier.Client.Domain
 {
@@ -39,7 +41,32 @@ namespace NTier.Client.Domain
             }
 
             // submit data
-            var resultSet = SubmitChanges(clientInfo ?? ClientInfo);
+            TResultSet resultSet;
+            try
+            {
+                resultSet = SubmitChanges(clientInfo ?? ClientInfo);
+            }
+            catch (FaultException ex)
+            {
+                var faultExceptionType = ex.GetType();
+                if (faultExceptionType.IsGenericType)
+                {
+                    var detailType = faultExceptionType.GetGenericArguments()[0];
+                    var detailProperty = typeof(FaultException<>).MakeGenericType(detailType).GetProperty("Detail");
+                    var detail = detailProperty.GetValue(ex, null);
+                    if (detail is OptimisticConcurrencyFault)
+                    {
+                        var stateEntries = GetStateEntries(((OptimisticConcurrencyFault)detail).Entities);
+                        throw new OptimisticConcurrencyException(null, stateEntries);
+                    }
+                    if (detail is UpdateFault)
+                    {
+                        var stateEntries = GetStateEntries(((UpdateFault)detail).Entities);
+                        throw new UpdateException(null, stateEntries);
+                    }
+                }
+                throw;
+            }
 
             // accept changes
             switch (acceptOption)
@@ -98,10 +125,10 @@ namespace NTier.Client.Domain
                     throw new Exception(string.Format("This {0} is not implemented: {1}", acceptOption.GetType().Name, acceptOption));
             }
 
-            if (resultSet.HasConcurrencyConflicts)
-            {
-                HandleConcurrencyConflicts(resultSet);
-            }
+            //if (resultSet.HasConcurrencyConflicts)
+            //{
+            //    HandleConcurrencyConflicts(resultSet);
+            //}
         }
 
         /// <summary>

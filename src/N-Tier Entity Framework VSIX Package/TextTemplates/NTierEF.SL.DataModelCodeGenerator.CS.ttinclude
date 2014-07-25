@@ -4,6 +4,8 @@
 <#@ include file="NTierEF.SL.ComplexTypeTT.CS.ttinclude" #>
 <#@ include file="NTierEF.SL.ChangeSetTT.CS.ttinclude" #>
 <#@ include file="NTierEF.SL.ResultSetTT.CS.ttinclude" #>
+<#@ include file="NTierEF.SL.OptimisticConcurrencyFaultTT.CS.ttinclude" #>
+<#@ include file="NTierEF.SL.UpdateFaultTT.CS.ttinclude" #>
 <#+
 // <copyright file="NTierEF.SL.DataModelCodeGenerator.CS.ttinclude" company="Trivadis">
 //     Copyright © Trivadis. All Rights Reserved.
@@ -25,6 +27,8 @@ public class DataModelCodeGenerator : Generator
         this.ComplexTypeTemplate = new ComplexTypeTemplate(this.EdmUtility, modelNamespace);
         this.ChangeSetTemplate = new ChangeSetTemplate(this.EdmUtility, modelNamespace);
         this.ResultSetTemplate = new ResultSetTemplate(this.EdmUtility, modelNamespace);
+        this.OptimisticConcurrencyFaultTemplate = new OptimisticConcurrencyFaultTemplate(this.EdmUtility, modelNamespace);
+        this.UpdateFaultTemplate = new UpdateFaultTemplate(this.EdmUtility, modelNamespace);
     }
 
     /// <summary>
@@ -73,6 +77,24 @@ public class DataModelCodeGenerator : Generator
     public ResultSetTemplate ResultSetTemplate;
 
     /// <summary>
+    /// Gets or sets the template that generates the optimistic concurrency fault type for the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="OptimisticConcurrencyFaultTemplate"/>.
+    /// </remarks>
+    public OptimisticConcurrencyFaultTemplate OptimisticConcurrencyFaultTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates the update fault type for the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="UpdateFaultTemplate"/>.
+    /// </remarks>
+    public UpdateFaultTemplate UpdateFaultTemplate;
+
+    /// <summary>
     /// Generates data access classes.
     /// </summary>
     protected override void RunCore()
@@ -82,6 +104,8 @@ public class DataModelCodeGenerator : Generator
         CreateComplexTypes();
         CreateChangeSet();
         CreateResultSet();
+        CreateOptimisticConcurrencyFault();
+        CreateUpdateFault();
     }
 
     private void CreateEnums()
@@ -137,6 +161,22 @@ public class DataModelCodeGenerator : Generator
         {
             //ResultSetTemplate.File = string.Format(@"Common{1}Model{1}{0}{1}{0}ResultSet.g.cs", EdmUtility.ModelName, System.IO.Path.DirectorySeparatorChar);
             ResultSetTemplate.Render();
+        }
+    }
+
+    private void CreateOptimisticConcurrencyFault()
+    {
+        if (OptimisticConcurrencyFaultTemplate != null)
+        {
+            OptimisticConcurrencyFaultTemplate.Render();
+        }
+    }
+
+    private void CreateUpdateFault()
+    {
+        if (UpdateFaultTemplate != null)
+        {
+            UpdateFaultTemplate.Render();
         }
     }
 }

@@ -84,5 +84,14 @@ namespace NTier.Common.Domain.Model
         {
             return new Error(validationResult.ErrorMessage, validationResult.MemberNames.ToArray());
         }
+
+        /// <summary>
+        /// Returns the message
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("{0}: {1}", Type, Message);
+        }
     }
 }

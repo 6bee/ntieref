@@ -9,6 +9,7 @@
     <NuGetExePath>$(SolutionDir)\..\..\tools\NuGet\NuGet.exe</NuGetExePath>
     <FrameworkDir>$(SolutionDir)\..\N-Tier Entity Framework\</FrameworkDir>
     <FrameworkBinDir>$(FrameworkDir)\bin\$(Configuration)\</FrameworkBinDir>
+    <VersionOption Condition=" '$(Version)' != '' ">-Version $(Version)</VersionOption>
   </PropertyGroup>
 
   <ItemGroup>
@@ -98,7 +99,7 @@
     <CreateItem Include="$(MSBuildThisFileDirectory)\*\**\*.nuspec" AdditionalMetadata="MyMetadata=Hello">
       <Output TaskParameter="Include" ItemName="NuSpecs"/>
     </CreateItem>
-    <Exec Command="&quot;$(NuGetExePath)&quot; pack &quot;%(NuSpecs.Identity)&quot; -OutputDirectory &quot;$(PackagesPath).&quot; -NoPackageAnalysis" />
+    <Exec Command="&quot;$(NuGetExePath)&quot; pack &quot;%(NuSpecs.Identity)&quot; $(VersionOption) -OutputDirectory &quot;$(PackagesPath).&quot; -Exclude &quot;*.nutrans&quot; -NonInteractive -NoPackageAnalysis" />
     
     <CallTarget Targets="CopyFrameworkPackages"/>
     <!--<CallTarget Targets="CopyPackagesToOutputPath"/>-->

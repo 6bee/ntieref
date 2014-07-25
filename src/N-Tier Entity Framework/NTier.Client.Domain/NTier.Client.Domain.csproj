@@ -66,6 +66,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IOrderedDataServiceQueryable.NET.cs" />
+    <Compile Include="OptimisticConcurrencyException.NET.cs" />
+    <Compile Include="UpdateException.NET.cs" />
+    <Compile Include="UpdateException.cs" />
     <Compile Include="OrderedDataServiceQueryable.NET.cs" />
     <Compile Include="DataContext.NET.cs" />
     <Compile Include="DataServiceQueryableImp.NET.cs" />

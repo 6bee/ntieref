@@ -213,10 +213,6 @@ namespace NTier.Client.Domain
 
         protected bool HasSaveChangesCompletedHandler { get { return SaveChangesCompleted != null; } }
 
-        ///// <summary>
-        ///// Applies any server generated values which are not yet applied to their corresponding entities and accepts all chnages of saved entites
-        ///// </summary>
-        //public abstract void AcceptSavedChanges();
 
         /// <summary>
         /// Clears error entries an all entites attached to this context

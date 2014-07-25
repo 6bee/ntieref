@@ -25,13 +25,15 @@
 
     <PropertyGroup Condition=" '$(OS)' == 'Windows_NT'">
         <!-- Windows specific commands -->
-        <NuGetToolsPath>$([System.IO.Path]::Combine($(SolutionDir), ".nuget"))</NuGetToolsPath>
+        <!--<NuGetToolsPath>$([System.IO.Path]::Combine($(SolutionDir), ".nuget"))</NuGetToolsPath>-->
+        <NuGetToolsPath>$([System.IO.Path]::Combine($(SolutionDir), "..", "..", "tools", "NuGet"))</NuGetToolsPath>
         <PackagesConfig>$([System.IO.Path]::Combine($(ProjectDir), "packages.config"))</PackagesConfig>
     </PropertyGroup>
     
     <PropertyGroup Condition=" '$(OS)' != 'Windows_NT'">
         <!-- We need to launch nuget.exe with the mono command if we're not on windows -->
-        <NuGetToolsPath>$(SolutionDir)\.nuget</NuGetToolsPath>
+        <!--<NuGetToolsPath>$(SolutionDir)\.nuget</NuGetToolsPath>-->
+        <NuGetToolsPath>$(SolutionDir)\..\..\tools\Nuget</NuGetToolsPath>
         <PackagesConfig>packages.config</PackagesConfig>
     </PropertyGroup>
     

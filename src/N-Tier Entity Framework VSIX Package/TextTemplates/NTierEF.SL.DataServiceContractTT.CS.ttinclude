@@ -66,7 +66,7 @@ namespace <#=Namespace#>.Contracts
         var isAggregateRoot = !entitySet.ElementType.MetadataProperties.Any(p => p.Name.EndsWith("AggregateRoot") && !bool.Parse(p.Value as string));
         if (!isAggregateRoot) continue;
 #>
-        [OperationContractAttribute(AsyncPattern = true)]
+        [OperationContract(AsyncPattern = true)]
         IAsyncResult BeginGet<#=EdmUtility.Code.Escape(entitySet)#>(ClientInfo clientInfo, Query query, AsyncCallback callback, object asyncState);
         QueryResult<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> EndGet<#=EdmUtility.Code.Escape(entitySet)#>(IAsyncResult result);
 
@@ -74,7 +74,9 @@ namespace <#=Namespace#>.Contracts
     }
 #>
 
-        [OperationContractAttribute(AsyncPattern = true)]
+        [OperationContract(AsyncPattern = true)]
+        [FaultContract(typeof(<#=EdmUtility.ModelName#>UpdateFault))]
+        [FaultContract(typeof(<#=EdmUtility.ModelName#>OptimisticConcurrencyFault))]
         IAsyncResult BeginSubmitChanges(ClientInfo clientInfo, <#=EdmUtility.ModelName#>ChangeSet changeSet, AsyncCallback callback, object asyncState);
         <#=EdmUtility.ModelName#>ResultSet EndSubmitChanges(IAsyncResult result);
     }

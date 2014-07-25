@@ -11,6 +11,7 @@ using System.Reflection;
 
 namespace NTier.Common.Domain.Model
 {
+#pragma warning disable 660, 0661
     [DataContract(IsReference = true)]
     public abstract class ValueObject : INotifyPropertyChanging, INotifyPropertyChanged //, IDataErrorInfo
     {
@@ -84,7 +85,7 @@ namespace NTier.Common.Domain.Model
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public
 #endif
-        void OnDeserializingMethod(StreamingContext context)
+ void OnDeserializingMethod(StreamingContext context)
         {
             _isDeserializing = true;
         }
@@ -94,7 +95,7 @@ namespace NTier.Common.Domain.Model
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public
 #endif
-        void OnDeserializedMethod(StreamingContext context)
+ void OnDeserializedMethod(StreamingContext context)
         {
             _isDeserializing = false;
         }
@@ -159,4 +160,5 @@ namespace NTier.Common.Domain.Model
 
         #endregion Operator overloading
     }
+#pragma warning restore 660, 0661
 }

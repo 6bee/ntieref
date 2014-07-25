@@ -1,20 +1,21 @@
 ﻿<#+
-// <copyright file="NTierEF.ResultSetTT.CS.ttinclude" company="Trivadis">
+// <copyright file="NTierEF.OptimisticConcurrencyFaultTT.CS.ttinclude" company="Trivadis">
 //     Copyright © Trivadis. All Rights Reserved.
 // </copyright>
-public class ResultSetTemplate : Template
+public class OptimisticConcurrencyFaultTemplate : Template
 {
     public EdmUtility EdmUtility { get; set; }
     public string Namespace { get; set; }
+    public string BaseTypeFullName { get; set; }
     public string ModelBaseNamespace { get; set; }
     private string file = null;
     public string File
     {
-        get { return file != null ? file : string.Format(@"{0}\{0}ResultSet.g.cs", EdmUtility.ModelName); }
+        get { return file != null ? file : string.Format(@"{0}\{0}OptimisticConcurrencyFault.g.cs", EdmUtility.ModelName); }
         set { file = value; }
     }
 
-    public ResultSetTemplate(string project = null, EdmUtility edmUtility = null, string defaultNameSpace = null)
+    public OptimisticConcurrencyFaultTemplate(string project = null, EdmUtility edmUtility = null, string defaultNameSpace = null)
     {
         if (!string.IsNullOrWhiteSpace(project))
         {
@@ -22,6 +23,7 @@ public class ResultSetTemplate : Template
         }
         this.EdmUtility = edmUtility;
         this.Namespace = defaultNameSpace;
+        this.BaseTypeFullName = "NTier.Common.Domain.OptimisticConcurrencyFault";
         this.ModelBaseNamespace = "NTier.Common.Domain.Model";
     }
 
@@ -39,6 +41,10 @@ public class ResultSetTemplate : Template
         {
             throw new Exception("Missing property Namespace");
         }
+        if (string.IsNullOrWhiteSpace(BaseTypeFullName))
+        {
+            throw new Exception("Missing property BaseTypeFullName");
+        }
         if (string.IsNullOrWhiteSpace(ModelBaseNamespace))
         {
             throw new Exception("Missing property ModelBaseNamespace");
@@ -52,14 +58,27 @@ public class ResultSetTemplate : Template
     {
         WriteHeader(ModelBaseNamespace);
 #>
-namespace <#= this.Namespace + "." + EdmUtility.ModelName #>
+namespace <#= Namespace + "." + EdmUtility.ModelName #>
 {
-    [DataContract(IsReference = true)]
-    public sealed partial class <#= EdmUtility.ModelName #>ResultSet : <#= EdmUtility.ModelName #>ChangeSet, IResultSet
+    [Serializable]
+    [DataContract]
+    [KnownType("GetKnownTypes")]
+    public partial class <#= EdmUtility.ModelName #>OptimisticConcurrencyFault : <#= BaseTypeFullName #>
     {
-        public <#=EdmUtility.ModelName#>ResultSet(<#= EdmUtility.ModelName #>ChangeSet changeSet)
-            : base(changeSet)
+        public <#= EdmUtility.ModelName #>OptimisticConcurrencyFault(string message, IEnumerable<Entity> entities)
+            : base(message, entities)
         {
+        }
+
+        private static Type[] GetKnownTypes()
+        {
+            var types = typeof(<#= EdmUtility.ModelName #>OptimisticConcurrencyFault).Assembly.GetTypes()
+                .Where(x => x.Namespace == typeof(<#= EdmUtility.ModelName #>OptimisticConcurrencyFault).Namespace)
+                .Where(x => typeof(Entity).IsAssignableFrom(x) )
+                .Where(x => x.IsPublic)
+                .Where(x => !x.IsAbstract)
+                .ToArray();
+            return types;
         }
     }
 }
@@ -80,26 +99,10 @@ namespace <#= this.Namespace + "." + EdmUtility.ModelName #>
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Globalization;
-using System.Reflection;
 using System.Runtime.Serialization;
-<#=String.Join(String.Empty, extraUsings.OrderBy(u => u).Select(u => "using " + u + ";" + Environment.NewLine).ToArray())#>
+<#=String.Join(string.Empty, extraUsings.OrderBy(u => u).Select(u => "using " + u + ";" + Environment.NewLine).ToArray())#>
 <#+
-    }
-
-    private string FirstCaseLow(string value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return value;
-        }
-
-        return value.Substring(0, 1).ToLower() + value.Substring(1, value.Length - 1);
     }
 }
 #>

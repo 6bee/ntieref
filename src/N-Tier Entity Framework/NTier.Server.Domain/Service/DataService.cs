@@ -1,14 +1,15 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
+using NTier.Common.Domain.Model;
+using NTier.Server.Domain.Repositories;
+using NTier.Server.Domain.Repositories.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.ServiceModel;
 using System.Transactions;
-using NTier.Common.Domain.Model;
-using NTier.Server.Domain.Repositories;
-using NTier.Server.Domain.Repositories.Linq;
 
 namespace NTier.Server.Domain.Service
 {
@@ -117,33 +118,76 @@ namespace NTier.Server.Domain.Service
                 return;
             }
 
-            bool allSaved = false;
+
+            var optimisticConcurrencyExceptionEntities = new List<Entity>();
+            var updataeException = new List<Entity>();
+            var allSaved = false;
             while (!allSaved)
             {
                 try
                 {
                     // save changes to database
                     repository.SaveChanges();
-
                     allSaved = true;
                 }
                 catch (OptimisticConcurrencyException ex)
                 {
                     var entities = ex.Entities;
-                    if (ReferenceEquals(null, entities) || entities.Count == 0)
+                    if (entities.Any(x => x.ChangeTracker.State != ObjectState.Added))
                     {
-                        repository.Refresh(RefreshMode.StoreWins, changeSet);
-                        resultSet.AddConcurrencyConflicts(changeSet);
-                        break;
+                        repository.Refresh(RefreshMode.StoreWins, entities.Where(x => x.ChangeTracker.State != ObjectState.Added));
                     }
-                    else
+                    AddExceptionMessageAsErrorEntry(ex, entities);
+                    optimisticConcurrencyExceptionEntities.AddRange(entities);
+                }
+                catch (UpdateException ex)
+                {
+                    var entities = ex.Entities;
+                    if (entities.Any(x => x.ChangeTracker.State != ObjectState.Added))
                     {
-                        repository.Refresh(RefreshMode.StoreWins, entities);
-                        resultSet.AddConcurrencyConflicts(entities);
+                        repository.Refresh(RefreshMode.StoreWins, entities.Where(x => x.ChangeTracker.State != ObjectState.Added));
                     }
+                    AddExceptionMessageAsErrorEntry(ex, entities);
+                    updataeException.AddRange(entities);
                 }
             }
+            if (updataeException.Any())
+            {
+                var message = "Update, insert, or delete statement failed for one or more entities. Transaction was rolled back.";
+                throw CreateUpdateFaultException(message, updataeException.Concat(optimisticConcurrencyExceptionEntities));
+            }
+            if (optimisticConcurrencyExceptionEntities.Any())
+            {
+                var message = "Update, insert, or delete statement failed for one or more entities. Transaction was rolled back.";
+                throw CreateOptimisticConcurrencyFaultException(message, optimisticConcurrencyExceptionEntities);
+            }
         }
+
+        private static void AddExceptionMessageAsErrorEntry(Exception ex, IEnumerable<Entity> entities)
+        {
+            var message = GetInnerMostExceptionMessage(ex);
+            var error = new Error(message);
+            foreach (var entity in entities)
+            {
+                entity.Errors.Add(error);
+            }
+        }
+
+        private static string GetInnerMostExceptionMessage(Exception ex)
+        {
+            if (!ReferenceEquals(null, ex.InnerException))
+            {
+                var message = GetInnerMostExceptionMessage(ex.InnerException);
+                if (!string.IsNullOrEmpty(message))
+                {
+                    return message;
+                }
+            }
+            return ex.Message;
+        }
+
+        protected abstract FaultException CreateOptimisticConcurrencyFaultException(string message, IEnumerable<Entity> entities);
+        protected abstract FaultException CreateUpdateFaultException(string message, IEnumerable<Entity> entities);
 
         #endregion update
 

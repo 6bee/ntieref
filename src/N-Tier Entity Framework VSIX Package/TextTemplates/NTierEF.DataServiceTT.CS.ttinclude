@@ -195,6 +195,16 @@ namespace <#=EdmUtility.Code.EscapeNamespace(Namespace)#>
             return resultSet;
         }
 
+        protected override FaultException CreateUpdateFaultException(string message, IEnumerable<Entity> entities)
+        {
+            return new FaultException<<#=EdmUtility.ModelName#>UpdateFault>(new <#=EdmUtility.ModelName#>UpdateFault(message, entities), "Update error");
+        }
+
+        protected override FaultException CreateOptimisticConcurrencyFaultException(string message, IEnumerable<Entity> entities)
+        {
+            return new FaultException<<#=EdmUtility.ModelName#>OptimisticConcurrencyFault>(new <#=EdmUtility.ModelName#>OptimisticConcurrencyFault(message, entities), "Optimistic concurrency error");
+        }
+
         #endregion update service method
     }
 }

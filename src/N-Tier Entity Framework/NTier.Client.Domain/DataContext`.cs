@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
+using NTier.Common.Domain.Model;
 using System.Collections.Generic;
 using System.Linq;
-using NTier.Common.Domain.Model;
 
 namespace NTier.Client.Domain
 {
@@ -28,16 +28,37 @@ namespace NTier.Client.Domain
         #region Save / Accept / Revert
 
         protected abstract void Refresh(TResultSet exchangeSet);
-        protected abstract void HandleConcurrencyConflicts(TResultSet exchangeSet);
 
-
-        ///// <summary>
-        ///// Applies any server generated values which are not yet applied to their corresponding entities and accepts all chnages of saved entites
-        ///// </summary>
-        //public override void AcceptSavedChanges()
-        //{
-        //    AcceptChanges(true);
-        //}
+        private IEnumerable<StateEntry> GetStateEntries(IEnumerable<Entity> entityList)
+        {
+            var all = base.EntitySets.SelectMany(x => x.OfType<Entity>()).ToArray();
+            var stateEntries = entityList
+                .Select(e =>
+                {
+                    Entity local;
+                    Entity store;
+                    if (e.ChangeTracker.State == ObjectState.Added)
+                    {
+                        // New entities are required to be equal by reference.
+                        // Hence, we're not able to retrieve the local instance.
+                        local = e;
+                        store = null;
+                    }
+                    else
+                    {
+                        // Other are compared by is key equal.
+                        local = all.FirstOrDefault(x => x.Equals(e));
+                        if (!ReferenceEquals(null, local))
+                        {
+                            local.Errors.AddRange(e.Errors);
+                        }
+                        store = e;
+                    }
+                    return new StateEntry(local, store);
+                })
+                .ToList();
+            return stateEntries;
+        }
 
         /// <summary>
         /// Discarts any server generated values which are not yet applied to their corresponding entities

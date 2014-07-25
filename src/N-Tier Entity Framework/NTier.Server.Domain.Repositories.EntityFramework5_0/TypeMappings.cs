@@ -38,7 +38,7 @@ namespace NTier.Server.Domain.Repositories.EntityFramework
 
         private static System.Collections.Generic.IEnumerable<Entity> Map(this IEnumerable<System.Data.Objects.ObjectStateEntry> stateEntries)
         {
-            return ReferenceEquals(null, stateEntries) ? null : stateEntries.OfType<Entity>();
+            return ReferenceEquals(null, stateEntries) ? null : stateEntries.Select(x => x.Entity).OfType<Entity>();
         }
     }
 }

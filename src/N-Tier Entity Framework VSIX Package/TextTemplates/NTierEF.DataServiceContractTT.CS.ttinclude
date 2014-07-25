@@ -77,6 +77,8 @@ namespace <#=Namespace#>.Contracts
     }
 #>
         [OperationContract]
+        [FaultContract(typeof(<#=EdmUtility.ModelName#>UpdateFault))]
+        [FaultContract(typeof(<#=EdmUtility.ModelName#>OptimisticConcurrencyFault))]
         [TransactionFlow(TransactionFlowOption.Allowed)]
         <#=EdmUtility.ModelName#>ResultSet SubmitChanges(ClientInfo clientInfo, <#=EdmUtility.ModelName#>ChangeSet changeSet);
     }

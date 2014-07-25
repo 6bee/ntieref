@@ -4,6 +4,8 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using NTier.Common.Domain.Model;
+using System.ServiceModel;
+using NTier.Common.Domain;
 
 namespace NTier.Client.Domain
 {
@@ -56,26 +58,42 @@ namespace NTier.Client.Domain
                                     if (hasValidationErrors) throw new ServerValidationException();
                                     AcceptChanges(true);
                                     break;
-                                
+
                                 case AcceptOption.None:
                                     // store result in private list
                                     // allowes user to apply result (accept changes) asynchronousely
                                     ResultSets.Add(resultSet);
                                     break;
-                                
+
                                 default:
                                     throw new Exception(string.Format("This {0} is not implemented: {1}", acceptOption.GetType().Name, acceptOption));
                             }
-
-                            if (resultSet.HasConcurrencyConflicts)
-                            {
-                                // handle conflicts on calling thread (I'm not sure if this makes sense)
-                                HandleConcurrencyConflicts(resultSet);
-                            }
                         }
-                        catch (Exception e)
+                        catch (Exception ex)
                         {
-                            error = e;
+                            error = ex;
+                        }
+                    }
+
+                    if (error is FaultException)
+                    {
+                        var ex = (FaultException)error;
+                        var faultExceptionType = ex.GetType();
+                        if (faultExceptionType.IsGenericType)
+                        {
+                            var detailType = faultExceptionType.GetGenericArguments()[0];
+                            var detailProperty = typeof(FaultException<>).MakeGenericType(detailType).GetProperty("Detail");
+                            var detail = detailProperty.GetValue(ex, null);
+                            if (detail is OptimisticConcurrencyFault)
+                            {
+                                var stateEntries = GetStateEntries(((OptimisticConcurrencyFault)detail).Entities);
+                                error = new OptimisticConcurrencyException(null, stateEntries);
+                            }
+                            if (detail is UpdateFault)
+                            {
+                                var stateEntries = GetStateEntries(((UpdateFault)detail).Entities);
+                                error = new UpdateException(null, stateEntries);
+                            }
                         }
                     }
 

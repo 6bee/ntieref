@@ -38,17 +38,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="envdte80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <HintPath>C:\Program Files (x86)\Common Files\Microsoft Shared\MSEnv\PublicAssemblies\envdte80.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>Lib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.TemplateWizardInterface, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.TemplateWizardInterface, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -87,7 +89,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
-"$(SolutionDir)..\N-Tier Entity Framework\.nuget\NuGet.exe" restore "$(SolutionDir)..\N-Tier Entity Framework\N-Tier Entity Framework.sln"
+      <!--
+"$(SolutionDir)..\..\tools\NuGet\NuGet.exe" restore "$(SolutionDir)..\N-Tier Entity Framework\N-Tier Entity Framework.sln"
 %SystemRoot%\Microsoft.NET\Framework\v4.0.30319\msbuild "$(SolutionDir)..\N-Tier Entity Framework\N-Tier Entity Framework.sln" /target:Rebuild /p:Configuration=$(Configuration)
 
 REM xcopy /y /d "$(SolutionDir)..\N-Tier Entity Framework\$(OutDir)*" "$(SolutionDir)lib\"
@@ -98,7 +101,8 @@ REM del "$(SolutionDir)lib\Lib_NET.zip"
 REM "$(SolutionDir)..\..\tools\7zip\7za.exe" a "$(SolutionDir)lib\Lib_SL.zip" "$(SolutionDir)lib\Microsoft.CSharp.dll" "$(SolutionDir)lib\Microsoft.CSharp.xml" "$(SolutionDir)lib\Remote.Linq.SL.dll" "$(SolutionDir)lib\Remote.Linq.SL.pdb" "$(SolutionDir)lib\NTier.Silverlight.Domain.dll" "$(SolutionDir)lib\NTier.Silverlight.Domain.pdb"
 
 REM "$(SolutionDir)..\..\tools\7zip\7za.exe" a "$(SolutionDir)lib\Lib_NET.zip" "$(SolutionDir)lib\Remote.Linq.dll" "$(SolutionDir)lib\Remote.Linq.pdb" "$(SolutionDir)lib\NTier.Client.Domain.dll" "$(SolutionDir)lib\NTier.Client.Domain.pdb" "$(SolutionDir)lib\NTier.Common.Domain.dll" "$(SolutionDir)lib\NTier.Common.Domain.pdb" "$(SolutionDir)lib\NTier.Server.Domain.dll" "$(SolutionDir)lib\NTier.Server.Domain.pdb"
-</PreBuildEvent>
+-->
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -108,11 +112,10 @@ REM "$(SolutionDir)..\..\tools\7zip\7za.exe" a "$(SolutionDir)lib\Lib_NET.zip" "
   </Target>
   -->
   <Target Name="BeforeBuild">
-    <ItemGroup>
-      <ProjectToBuild Include="$(SolutionDir)\NuGet\NuGet.proj">
-        <Properties>Configuration=$(Configuration)</Properties>
-      </ProjectToBuild>
-    </ItemGroup>
-    <MSBuild Projects="@(ProjectToBuild)" />
+    <!-- 
+	<Exec Command="&quot;$(SolutionDir)..\..\tools\NuGet\NuGet.exe&quot; restore &quot;$(SolutionDir)..\N-Tier Entity Framework\N-Tier Entity Framework.sln&quot;" />
+    <MSBuild Projects="$(SolutionDir)..\N-Tier Entity Framework\N-Tier Entity Framework.sln" Targets="Rebuild" Properties="Configuration=$(Configuration)" />
+	-->
+    <MSBuild Projects="$(SolutionDir)\NuGet\NuGet.proj" Targets="RebuildPackages" Properties="Configuration=$(Configuration)" />
   </Target>
 </Project>

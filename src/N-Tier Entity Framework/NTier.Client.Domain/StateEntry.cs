@@ -9,6 +9,7 @@ using NTier.Common.Domain.Model;
 
 namespace NTier.Client.Domain
 {
+    [Serializable]
     public sealed class StateEntry
     {
         public readonly Entity StoreValue;
