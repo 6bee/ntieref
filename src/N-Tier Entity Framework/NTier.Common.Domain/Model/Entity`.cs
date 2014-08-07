@@ -21,24 +21,31 @@ namespace NTier.Common.Domain.Model
 
         private static readonly Lazy<ObjectActivator> _objectActivator = new Lazy<ObjectActivator>(() =>
         {
-            // get constructor by reflection
-            var constructor = typeof(T).GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[0], null);
-
-            if (constructor == null)
+            var type = typeof(T);
+            if (type.IsAbstract)
             {
-                throw new Exception(string.Format("Entity type '{0}' does not implement a parameterless constructor and therefore may not be created using the generic entity factory method.", typeof(T).Name));
+                return () => null;
             }
+            else
+            {
+                // get constructor by reflection
+                var constructor = type.GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[0], null);
 
-            // create a NewExpression that calls the constructor
-            var newExpression = System.Linq.Expressions.Expression.New(constructor);
+                if (constructor == null)
+                {
+                    throw new Exception(string.Format("Entity type '{0}' does not implement a parameterless constructor and therefore may not be created using the generic entity factory method.", typeof(T).Name));
+                }
 
-            // create a lambda with the NewExpression as body
-            var lambdaExpression = System.Linq.Expressions.Expression.Lambda(typeof(ObjectActivator), newExpression);
+                // create a NewExpression that calls the constructor
+                var newExpression = System.Linq.Expressions.Expression.New(constructor);
 
-            // compile it 
-            var compiledObjectActivator = (ObjectActivator)lambdaExpression.Compile();
+                // create a lambda with the NewExpression as body
+                var lambdaExpression = System.Linq.Expressions.Expression.Lambda(typeof(ObjectActivator), newExpression);
 
-            return compiledObjectActivator;
+                // compile it 
+                var compiledObjectActivator = (ObjectActivator)lambdaExpression.Compile();
+                return compiledObjectActivator;
+            }
         });
 #endif
 
