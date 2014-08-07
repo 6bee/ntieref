@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EE3137CE-C84F-4B1F-8882-B64982FDBF07}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TableInheritance.Client.Domain.Test</RootNamespace>
+    <AssemblyName>TableInheritance.Client.Domain.Test</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NTier.Client.Domain, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NTierEntityFramework.Client.1.5.0-beta002\lib\net4-client\NTier.Client.Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="NTier.Common.Domain, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NTierEntityFramework.Common.1.5.0-beta002\lib\net4-client\NTier.Common.Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="Remote.Linq, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Remote.Linq.3.0.0-beta01\lib\net45\Remote.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <!--<ProjectReference Include="..\TableInheritance.Client.Domain.Service.RemoteChannelFactory\TableInheritance.Client.Domain.Service.RemoteChannelFactory.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\TableInheritance.Client.Domain.Service.RemoteChannelFactory\TableInheritance.Client.Domain.Service.RemoteChannelFactory.csproj') ">
+      <Name>TableInheritance.Client.Domain.Service.RemoteChannelFactory</Name>
+    </ProjectReference>-->
+    <ProjectReference Include="..\TableInheritance.Client.Domain\TableInheritance.Client.Domain.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\TableInheritance.Client.Domain\TableInheritance.Client.Domain.csproj') ">
+      <Name>TableInheritance.Client.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\TableInheritance.Common.Domain.Model\TableInheritance.Common.Domain.Model.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\..\Common\TableInheritance.Common.Domain.Model\TableInheritance.Common.Domain.Model.csproj') ">
+      <Name>TableInheritance.Common.Domain.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TableInheritance.Common.Domain.Model\TableInheritance.Common.Domain.Model.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\TableInheritance.Common.Domain.Model\TableInheritance.Common.Domain.Model.csproj') ">
+      <Name>TableInheritance.Common.Domain.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
