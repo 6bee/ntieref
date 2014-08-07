@@ -96,7 +96,7 @@ namespace NTier.Server.Domain.Service
                     if (IsValid(entity))
                     {
                         // apply changes
-                        entitySet.Attach(entity);
+                        entitySet.ApplyChanges(entity);
                     }
                 }
             }

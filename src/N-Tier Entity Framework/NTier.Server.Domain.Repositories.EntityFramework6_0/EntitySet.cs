@@ -27,9 +27,31 @@ namespace NTier.Server.Domain.Repositories.EntityFramework
 
         #region IEntitySet<T>
 
-        public void Attach(TEntity entity)
+        public void ApplyChanges(TEntity entity)
         {
             _objectSet.ApplyChanges(entity);
+        }
+
+        public void Attach(TEntity entity)
+        {
+            _objectSet.Attach(entity);
+        }
+        
+        public void Detach(TEntity entity)
+        {
+            _objectSet.Detach(entity);
+        }
+        
+        public void Add(TEntity entity)
+        {
+            entity.MarkAsAdded();
+            _objectSet.AddObject(entity);
+        }
+        
+        public void Remove(TEntity entity)
+        {
+            entity.MarkAsDeleted();
+            _objectSet.DeleteObject(entity);
         }
 
         public IEntityQueryable<TEntity> AsQueryable()

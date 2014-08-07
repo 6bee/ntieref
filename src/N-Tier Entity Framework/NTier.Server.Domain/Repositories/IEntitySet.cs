@@ -10,10 +10,34 @@ namespace NTier.Server.Domain.Repositories
     public interface IEntitySet<TEntity> : IEnumerable<TEntity> where TEntity : Entity
     {
         /// <summary>
-        /// Attaches an entity to the entity set
+        /// Applies all changes of an entity or entity graph.
+        /// </summary>
+        /// <param name="entity">The entity to be applied</param>
+        void ApplyChanges(TEntity entity);
+
+        /// <summary>
+        /// Attaches an entity or entity graph to the current entity set.
         /// </summary>
         /// <param name="entity">The entity to be attached</param>
         void Attach(TEntity entity);
+
+        /// <summary>
+        /// Detaches the given entity from the current entity set.
+        /// </summary>
+        /// <param name="entity">The entity to be detached</param>
+        void Detach(TEntity entity);
+
+        /// <summary>
+        /// Marks the given entity as new and adds it to the current entity set.
+        /// </summary>
+        /// <param name="entity">The entity to be added</param>
+        void Add(TEntity entity);
+
+        /// <summary>
+        /// Marks the given entity for deletion and ensures it's beeing attached to the current entity set.
+        /// </summary>
+        /// <param name="entity">The entity to be deleted</param>
+        void Remove(TEntity entity);
 
 
         /// <summary>

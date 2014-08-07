@@ -17,9 +17,6 @@ namespace NTier.Server.Domain.Repositories
 
     public interface IInMemoryEntitySet<TEntity> : IEntitySet<TEntity>, IInMemoryEntitySet where TEntity : Entity
     {
-        void Add(TEntity entity);
-        void Update(TEntity entity);
-        void Remove(TEntity entity);
     }
 
     public class InMemoryEntitySet<TEntity> : IInMemoryEntitySet<TEntity> where TEntity : Entity
@@ -60,6 +57,11 @@ namespace NTier.Server.Domain.Repositories
             }
         }
 
+        public void ApplyChanges(TEntity entity)
+        {
+            Attach(entity);
+        }
+
         public void Attach(TEntity entity)
         {
             lock (_source)
@@ -81,6 +83,10 @@ namespace NTier.Server.Domain.Repositories
             }
         }
 
+        public void Detach(TEntity entity)
+        {
+        }
+
         public void Add(TEntity entity)
         {
             var copy = (TEntity)entity.ShallowCopy();
@@ -88,18 +94,6 @@ namespace NTier.Server.Domain.Repositories
             ApplyChangedProperties(copy, entity);
             copy.AcceptChanges();
             _source.Add(copy);
-        }
-
-        public void Update(TEntity entity)
-        {
-            var existing = _source.SingleOrDefault(i => Equals(i, entity));
-            if (!ReferenceEquals(existing, null))
-            {
-                var copy = (TEntity)entity.ShallowCopy();
-                _repository.OnUpdate(copy);
-                ApplyChangedProperties(copy, existing);
-                existing.AcceptChanges();
-            }
         }
 
         public void Remove(TEntity entity)
@@ -110,6 +104,18 @@ namespace NTier.Server.Domain.Repositories
                 var copy = (TEntity)entity.ShallowCopy();
                 _repository.OnDelete(copy);
                 _source.Remove(existing);
+            }
+        }
+
+        private void Update(TEntity entity)
+        {
+            var existing = _source.SingleOrDefault(i => Equals(i, entity));
+            if (!ReferenceEquals(existing, null))
+            {
+                var copy = (TEntity)entity.ShallowCopy();
+                _repository.OnUpdate(copy);
+                ApplyChangedProperties(copy, existing);
+                existing.AcceptChanges();
             }
         }
 

@@ -28,6 +28,14 @@ namespace NTier.Server.Domain.Repositories.Linq
 
         TEntity First(Expression<Func<TEntity, bool>> predicate);
 
+        TEntity LastOrDefault();
+
+        TEntity LastOrDefault(Expression<Func<TEntity, bool>> predicate);
+
+        TEntity Last();
+
+        TEntity Last(Expression<Func<TEntity, bool>> predicate);
+
         TEntity SingleOrDefault();
 
         TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate);

@@ -96,6 +96,32 @@ namespace NTier.Server.Domain.Repositories.Linq
             return entity;
         }
 
+        TEntity IDomainQueryable<TEntity>.LastOrDefault()
+        {
+            var entity = _queryable.LastOrDefault();
+            return entity;
+        }
+
+        TEntity IDomainQueryable<TEntity>.LastOrDefault(Expression<Func<TEntity, bool>> predicate)
+        {
+            predicate = _expressionVisitor(predicate);
+            var entity = _queryable.LastOrDefault(predicate);
+            return entity;
+        }
+
+        TEntity IDomainQueryable<TEntity>.Last()
+        {
+            var entity = _queryable.Last();
+            return entity;
+        }
+
+        TEntity IDomainQueryable<TEntity>.Last(Expression<Func<TEntity, bool>> predicate)
+        {
+            predicate = _expressionVisitor(predicate);
+            var entity = _queryable.Last(predicate);
+            return entity;
+        }
+
         TEntity IDomainQueryable<TEntity>.SingleOrDefault()
         {
             var entity = _queryable.SingleOrDefault();
