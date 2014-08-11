@@ -12,5 +12,7 @@ namespace NTier.Server.Domain.Repositories
 
         void Refresh(RefreshMode refreshMode, IEnumerable<Entity> collection);
         void Refresh(RefreshMode refreshMode, Entity entity);
+
+        IEntitySet<T> GetEntitySet<T>() where T : Entity;
     }
 }

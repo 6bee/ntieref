@@ -130,25 +130,32 @@ namespace NTier.Server.Domain.Service
                     repository.SaveChanges();
                     allSaved = true;
                 }
-                catch (OptimisticConcurrencyException ex)
-                {
-                    var entities = ex.Entities;
-                    if (entities.Any(x => x.ChangeTracker.State != ObjectState.Added))
-                    {
-                        repository.Refresh(RefreshMode.StoreWins, entities.Where(x => x.ChangeTracker.State != ObjectState.Added));
-                    }
-                    AddExceptionMessageAsErrorEntry(ex, entities);
-                    optimisticConcurrencyExceptionEntities.AddRange(entities);
-                }
                 catch (UpdateException ex)
                 {
                     var entities = ex.Entities;
+                    // refresh changed entities from store
                     if (entities.Any(x => x.ChangeTracker.State != ObjectState.Added))
                     {
                         repository.Refresh(RefreshMode.StoreWins, entities.Where(x => x.ChangeTracker.State != ObjectState.Added));
                     }
+                    // remove new entities from repository
+                    if (entities.Any(x => x.ChangeTracker.State == ObjectState.Added))
+                    {
+                        foreach (var entity in entities.Where(x => x.ChangeTracker.State == ObjectState.Added))
+                        {
+                            DetachEntity(repository, entity);
+                        }
+                    }
                     AddExceptionMessageAsErrorEntry(ex, entities);
-                    updataeException.AddRange(entities);
+                    // collect faulted entities
+                    if (ex is OptimisticConcurrencyException)
+                    {
+                        optimisticConcurrencyExceptionEntities.AddRange(entities);
+                    }
+                    else
+                    {
+                        updataeException.AddRange(entities);
+                    }
                 }
             }
             if (updataeException.Any())
@@ -161,6 +168,27 @@ namespace NTier.Server.Domain.Service
                 var message = "Update, insert, or delete statement failed for one or more entities. Transaction was rolled back.";
                 throw CreateOptimisticConcurrencyFaultException(message, optimisticConcurrencyExceptionEntities);
             }
+        }
+
+        private static void DetachEntity(TRepository repository, Entity entity)
+        {
+            var entitySetType = entity.GetType();
+
+            while (entitySetType.BaseType != typeof(Entity))
+            {
+                entitySetType = entitySetType.BaseType;
+            }
+
+            var detachMethod = typeof(DataService<>)
+                .MakeGenericType(typeof(TRepository))
+                .GetMethod("GenericDetachEntity", BindingFlags.Static | BindingFlags.NonPublic)
+                .MakeGenericMethod(entitySetType);
+            detachMethod.Invoke(null, new object[] { repository, entity });
+        }
+
+        private static void GenericDetachEntity<T>(IRepository repository, T entity) where T : Entity
+        {
+            repository.GetEntitySet<T>().Detach(entity);
         }
 
         private static void AddExceptionMessageAsErrorEntry(Exception ex, IEnumerable<Entity> entities)

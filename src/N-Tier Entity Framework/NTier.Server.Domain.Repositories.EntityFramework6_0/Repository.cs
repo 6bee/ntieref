@@ -101,6 +101,12 @@ namespace NTier.Server.Domain.Repositories.EntityFramework
             return new EntitySet<T>(objectSet);
         }
 
+        public IEntitySet<T> GetEntitySet<T>() where T : Entity
+        {
+            var objectSet = CreateObjectSet<T>();
+            return new EntitySet<T>(objectSet);
+        }
+
         #endregion EntitySet factory method
     }
 }

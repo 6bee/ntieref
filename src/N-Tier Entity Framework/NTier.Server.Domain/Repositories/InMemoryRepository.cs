@@ -69,6 +69,11 @@ namespace NTier.Server.Domain.Repositories
             }
         }
 
+        public IEntitySet<T> GetEntitySet<T>() where T : Entity
+        {
+            return (IEntitySet<T>)_entitySets[typeof(T)];
+        }
+
         #region dispose
 
         public void Dispose()
