@@ -8,7 +8,7 @@ using NTier.Common.Domain.Model;
 
 namespace NTier.Client.Domain
 {
-    internal sealed class QueryProvider<TEntity> : IQueryProvider where TEntity : Entity<TEntity>
+    internal sealed class QueryProvider<TEntity> : IQueryProvider where TEntity : Entity
     {
         private DataServiceQueryable<TEntity> _queriable;
         private long? _totalCountInt64 = null;

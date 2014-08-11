@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -15,6 +16,177 @@ namespace NTier.Common.Domain.Model
     [DataContract(IsReference = true)]
     public abstract partial class Entity : IObjectWithChangeTracker, IEditable, INotifyPropertyChanging, INotifyPropertyChanged, IDataErrorInfo
     {
+        #region Metadata: property infos
+
+        private static readonly Dictionary<Type, ReadOnlyCollection<PropertyInfos>> _propertyInfosRegistry = new Dictionary<Type, ReadOnlyCollection<PropertyInfos>>();
+
+        private static ReadOnlyCollection<PropertyInfos> GetPropertyInfos(Type type)
+        {
+            ReadOnlyCollection<PropertyInfos> propertyInfos;
+            lock (_propertyInfosRegistry)
+            {
+                if (!_propertyInfosRegistry.TryGetValue(type, out propertyInfos))
+                {
+                    Dictionary<string, Tuple<PropertyInfo, bool, List<Attribute>>> metadata = new Dictionary<string, Tuple<PropertyInfo, bool, List<Attribute>>>();
+
+                    // define property list based on entity type and collect attributes defined on properties
+                    var properties = type
+                            .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                            .Where(p => p.DeclaringType.IsAssignableFrom(type))
+                            .Where(p => p.DeclaringType != typeof(Entity));
+                    AddMetadata(metadata, properties);
+
+#if !SILVERLIGHT
+                    // collect and append attributes defined on entity's metatdata types
+                    foreach (var metadataTypeAttributes in type.GetCustomAttributes(typeof(MetadataTypeAttribute), true).OfType<MetadataTypeAttribute>())
+                    {
+                        foreach (var member in metadataTypeAttributes.MetadataClassType
+                                .GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                                .Where(m => m.MemberType == MemberTypes.Field || m.MemberType == MemberTypes.Property))
+                        {
+                            var list = metadata.Where(e => e.Key == member.Name).Select(e => e.Value.Item3).SingleOrDefault();
+                            if (list != null)
+                            {
+                                list.AddRange(member.GetCustomAttributes(true).Cast<Attribute>());
+                            }
+                        }
+                    }
+#endif
+                    propertyInfos = metadata.Select(e => new PropertyInfos(e.Key, e.Value.Item1, e.Value.Item2, e.Value.Item3)).ToList().AsReadOnly();
+                    _propertyInfosRegistry.Add(type, propertyInfos);
+                }
+            }
+            return propertyInfos;
+        }
+
+        private static void AddMetadata(Dictionary<string, Tuple<PropertyInfo, bool, List<Attribute>>> metadata, IEnumerable<PropertyInfo> properties, string prefix = null)
+        {
+            foreach (var property in properties)
+            {
+                var propertyName = string.IsNullOrEmpty(prefix) ? property.Name : prefix + property.Name;
+                List<Attribute> list;
+                if (metadata.ContainsKey(propertyName))
+                {
+                    list = metadata[propertyName].Item3;
+                }
+                else
+                {
+                    list = new List<Attribute>();
+                    metadata[propertyName] = new Tuple<PropertyInfo, bool, List<Attribute>>(property, true, list);
+                }
+
+                list.AddRange(property.GetCustomAttributes(true).Cast<Attribute>());
+
+                // add attributes for members of complext properties (value types)
+                if (property.GetCustomAttributes(typeof(ComplexPropertyAttribute), true).Any())
+                {
+                    var valueTypeProerties = property.PropertyType
+                        .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                        .Where(p => p.DeclaringType == property.PropertyType);
+
+                    var complexPropertyPrefix = propertyName + ".";
+                    AddMetadata(metadata, valueTypeProerties, complexPropertyPrefix);
+
+#if !SILVERLIGHT
+                    // collect and append attributes defined on complext properties (value types) metatdata types
+                    foreach (var metadataTypeAttributes in property.PropertyType.GetCustomAttributes(typeof(MetadataTypeAttribute), true).OfType<MetadataTypeAttribute>())
+                    {
+                        foreach (var member in metadataTypeAttributes.MetadataClassType
+                                .GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                                .Where(m => m.MemberType == MemberTypes.Field || m.MemberType == MemberTypes.Property))
+                        {
+                            list = metadata.Where(e => e.Key == (complexPropertyPrefix + member.Name)).Select(e => e.Value.Item3).SingleOrDefault();
+                            if (list != null)
+                            {
+                                list.AddRange(member.GetCustomAttributes(true).Cast<Attribute>());
+                            }
+                        }
+                    }
+#endif
+                }
+            }
+        }
+
+        /// <summary>
+        /// Registers a ValidationAttribute attribute to be included in validation
+        /// </summary>
+        /// <remarks>This method supports registration for dynamic properties.</remarks>
+        /// <param name="entityType">Type of entity for validator to be registered</param>
+        /// <param name="propertyName">The name of the property for which the validator has to be registred</param>
+        /// <param name="validator">The validation attribute</param>
+        /// <exception cref="System.ArgumentNullException">If any parameter is null or the property name is empty.</exception>
+        /// <exception cref="System.ArgumentException">If entity type is not sub-type of Entity.</exception>
+        public static void RegisterValidator(Type entityType, string propertyName, ValidationAttribute validator)
+        {
+            if (ReferenceEquals(null, entityType)) throw new ArgumentNullException("entity type must not be null", "entityType");
+            if (!typeof(Entity).IsAssignableFrom(entityType) || entityType == typeof(Entity)) throw new ArgumentException(string.Format("entity type expected to be sub-type of {0}", typeof(Entity).FullName), "entityType");
+            if (string.IsNullOrEmpty(propertyName)) throw new ArgumentNullException("property name must not be null or empty", "propertyName");
+            if (ReferenceEquals(null, validator)) throw new ArgumentNullException("validation attribute must not be null", "validator");
+
+            lock (_propertyInfosRegistry)
+            {
+                var propertyInfos = GetPropertyInfos(entityType);
+                var propertyInfo = propertyInfos.FirstOrDefault(p => p.Name == propertyName);
+                if (propertyInfo == null)
+                {
+                    propertyInfo = new PropertyInfos(propertyName, null, false, new Attribute[] { validator });
+                    propertyInfos = propertyInfos.Concat(new[] { propertyInfo }).ToList().AsReadOnly();
+                }
+                else
+                {
+                    var attributes = propertyInfo.Attributes.Concat(new Attribute[] { validator });
+                    var newPropertyInfo = new PropertyInfos(propertyInfo.Name, propertyInfo.PropertyInfo, propertyInfo.IsPhysical, attributes);
+                    var newPropertyInfoList = propertyInfos.ToList();
+                    newPropertyInfoList.Remove(propertyInfo);
+                    newPropertyInfoList.Add(newPropertyInfo);
+                    propertyInfos = newPropertyInfoList.AsReadOnly();
+                }
+                _propertyInfosRegistry[entityType] = propertyInfos;
+            }
+        }
+
+        /// <summary>
+        /// Unregisters a ValidationAttribute attribute
+        /// </summary>
+        /// <param name="entityType">Type of entity where validator was registered</param>
+        /// <param name="propertyName">The name of the property on which the validator has been registred</param>
+        /// <param name="validator">The validation attribute</param>
+        /// <returns>Returns true if the validator was successfully unregistered for the property specified, false otherwise.</returns>
+        /// <exception cref="System.ArgumentNullException">If either parameter is null or the property name is empty.</exception>
+        public static bool UnregisterValidator(Type entityType, string propertyName, ValidationAttribute validator)
+        {
+            if (ReferenceEquals(null, entityType)) throw new ArgumentNullException("entity type must not be null", "entityType");
+            if (!typeof(Entity).IsAssignableFrom(entityType) || entityType == typeof(Entity)) throw new ArgumentException(string.Format("entity type expected to be sub-type of {0}", typeof(Entity).FullName), "entityType");
+            if (string.IsNullOrEmpty(propertyName)) throw new ArgumentNullException("property name must not be null or empty", "propertyName");
+            if (ReferenceEquals(null, validator)) throw new ArgumentNullException("validation attribute must not be null", "validator");
+
+            lock (_propertyInfosRegistry)
+            {
+                var propertyInfos = GetPropertyInfos(entityType);
+                var propertyInfo = propertyInfos.FirstOrDefault(p => p.Name == propertyName);
+                if (propertyInfo != null)
+                {
+                    var attributes = propertyInfo.Attributes.ToList();
+                    if (attributes.Remove(validator))
+                    {
+                        var newPropertyInfo = new PropertyInfos(propertyInfo.Name, propertyInfo.PropertyInfo, propertyInfo.IsPhysical, attributes);
+                        var newPropertyInfoList = propertyInfos.ToList();
+                        newPropertyInfoList.Remove(propertyInfo);
+                        newPropertyInfoList.Add(newPropertyInfo);
+                        propertyInfos = newPropertyInfoList.AsReadOnly();
+                    }
+                    _propertyInfosRegistry[entityType] = propertyInfos;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        protected internal IEnumerable<PropertyInfos> PropertyInfos { get { return GetPropertyInfos(GetType()); } }
+
+        #endregion Metadata: property infos
+
         #region Indexer
 
         /// <summary>
@@ -641,8 +813,6 @@ namespace NTier.Common.Domain.Model
 
         #region Validation
 
-        internal protected abstract IEnumerable<PropertyInfos> PropertyInfos { get; }
-
         #region IsValidationEnabled
 
         [DataMember]
@@ -830,7 +1000,69 @@ namespace NTier.Common.Domain.Model
 
         #endregion overridden object methods and operators
 
-        public abstract void Refresh(Entity entity, bool trackChanges = true);
+        #region Refresh
+
+        public virtual void Refresh(Entity entity, bool trackChanges = true, bool preserveExistingChanges = false, ServerGenerationTypes type = ServerGenerationTypes.None)
+        {
+            bool isChangeTrackingEnabled = ChangeTracker.IsChangeTrackingEnabled;
+            try
+            {
+                ChangeTracker.IsChangeTrackingEnabled = trackChanges;
+
+                var properties = PropertyInfos.Where(p => p.IsPhysical && p.Attributes.Any(attribute => attribute is SimplePropertyAttribute || attribute is ComplexPropertyAttribute));
+
+                if (type != ServerGenerationTypes.None)
+                {
+                    properties = properties
+                        .Where(p => p.Attributes.Any(
+                            a =>
+                            {
+                                var attribute = a as ServerGenerationAttribute;
+                                return attribute != null &&
+                                    (
+                                        (attribute.Type & ServerGenerationTypes.Insert) == (type & ServerGenerationTypes.Insert) ||
+                                        (attribute.Type & ServerGenerationTypes.Update) == (type & ServerGenerationTypes.Update)
+                                    );
+                            }
+                        ));
+                }
+
+                // copy properties
+                foreach (var property in properties.Select(e => e.PropertyInfo))
+                {
+                    if (preserveExistingChanges && ChangeTracker.ModifiedProperties.Contains(property.Name))
+                    {
+                        continue;
+                    }
+                    object newValue = property.GetValue(entity, null);
+                    object oldValue = property.GetValue(this, null);
+                    if (!object.Equals(newValue, oldValue))
+                    {
+                        property.SetValue(this, newValue, null);
+                    }
+                }
+
+                // merge errors
+                foreach (var error in entity.Errors)
+                {
+                    Errors.Add(error);
+                    // notify ui
+                    if (error.MemberNames.Any())
+                    {
+                        foreach (var property in error.MemberNames)
+                        {
+                            OnPropertyChanged(property, trackInChangeTracker: false);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                ChangeTracker.IsChangeTrackingEnabled = isChangeTrackingEnabled;
+            }
+        }
+
+        #endregion Refresh
 
         #region INotifyPropertyChanged
 

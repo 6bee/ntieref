@@ -8,13 +8,13 @@ namespace NTier.Client.Domain
 {
     public static class EntitySetExtensions
     {
-        public static ObservableCollection<T> ToObservableCollection<T>(this IEntitySet<T> entitySet, bool reflectChangesOfEntitySet = false) where T : Entity<T>
+        public static ObservableCollection<T> ToObservableCollection<T>(this IEntitySet<T> entitySet, bool reflectChangesOfEntitySet = false) where T : Entity
         {
             var observableCollection = new ObservableEntityCollection<T>(entitySet, reflectChangesOfEntitySet);
             return observableCollection;
         }
 
-        public static EntityCollectionView<T> ToRemoteCollectionView<T>(this IEntitySet<T> entitySet, TimeSpan requestDelay = default(TimeSpan)) where T : Entity<T>
+        public static EntityCollectionView<T> ToRemoteCollectionView<T>(this IEntitySet<T> entitySet, TimeSpan requestDelay = default(TimeSpan)) where T : Entity
         {
             var queryable = entitySet.AsQueryable();
 

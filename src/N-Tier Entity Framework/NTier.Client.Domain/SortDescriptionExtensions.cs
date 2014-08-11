@@ -10,7 +10,7 @@ namespace NTier.Client.Domain
 {
     internal static class SortDescriptionExtensions
     {
-        public static RLinq.SortExpression ToExpression<T>(this SortDescription sortDescription) where T : Entity<T>
+        public static RLinq.SortExpression ToExpression<T>(this SortDescription sortDescription) where T : Entity
         {
             var propertyName = sortDescription.PropertyName;
             var entityType = typeof(T);

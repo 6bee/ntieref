@@ -8,7 +8,7 @@ using System.Windows.Threading;
 
 namespace NTier.Client.Domain
 {
-    public class RemoteDataLoader<T> : DataLoader<T> where T : Entity<T>
+    public class RemoteDataLoader<T> : DataLoader<T> where T : Entity
     {
         protected readonly System.Windows.Threading.Dispatcher Dispatcher;
         protected readonly IDataServiceQueryable<T> Queryable;

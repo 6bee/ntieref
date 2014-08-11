@@ -71,7 +71,6 @@
     <Compile Include="Model\ServerGenerationTypes.cs" />
     <Compile Include="Model\ErrorType.cs" />
     <Compile Include="Model\Error.cs" />
-    <Compile Include="Model\Entity`.cs" />
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Model\ChangeSetExtensions.cs" />
     <Compile Include="Model\ClientInfo.cs" />

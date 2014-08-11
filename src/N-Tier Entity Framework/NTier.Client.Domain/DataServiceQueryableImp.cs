@@ -10,7 +10,7 @@ using NTier.Common.Domain.Model;
 
 namespace NTier.Client.Domain
 {
-    internal partial class DataServiceQueryableImp<TEntity> : DataServiceQueryable<TEntity> where TEntity : Entity<TEntity>
+    internal partial class DataServiceQueryableImp<TEntity> : DataServiceQueryable<TEntity> where TEntity : Entity
     {
         #region Constructor
 

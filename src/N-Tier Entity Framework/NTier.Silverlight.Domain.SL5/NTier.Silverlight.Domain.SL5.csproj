@@ -248,9 +248,6 @@
     <Compile Include="..\NTier.Common.Domain\Model\Entity.cs">
       <Link>Common\Model\Entity.cs</Link>
     </Compile>
-    <Compile Include="..\NTier.Common.Domain\Model\Entity`.cs">
-      <Link>Common\Model\Entity`.cs</Link>
-    </Compile>
     <Compile Include="..\NTier.Common.Domain\Model\EntityList.cs">
       <Link>Common\Model\EntityList.cs</Link>
     </Compile>

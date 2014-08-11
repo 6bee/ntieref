@@ -10,7 +10,7 @@ using Remote.Linq;
 
 namespace NTier.Client.Domain
 {
-    internal abstract partial class DataServiceQueryable<TEntity> : IDataServiceQueryable<TEntity> where TEntity : Entity<TEntity>
+    internal abstract partial class DataServiceQueryable<TEntity> : IDataServiceQueryable<TEntity> where TEntity : Entity
     {
         #region Inner classes
 

@@ -13,7 +13,7 @@ namespace NTier.Client.Domain
 {
     [DebuggerDisplay("Count = {Count}, TotalCount = {TotalCount}")]
     internal sealed partial class EntitySet<TEntity> : IEntitySet<TEntity>, IEnumerable<TEntity>, INotifyCollectionChanged, INotifyPropertyChanged
-        where TEntity : Entity<TEntity>
+        where TEntity : Entity
     {
         #region Private fields
 
@@ -180,7 +180,7 @@ namespace NTier.Client.Domain
         /// <returns>A new instance of this entity sets entity type</returns>
         public TEntity CreateNew(bool add = true)
         {
-            var entity = Entity<TEntity>.CreateNew();
+            var entity = Activator.CreateInstance<TEntity>();
             if (add)
             {
                 Add(entity);

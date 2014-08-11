@@ -72,7 +72,7 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
 <#+
         WriteEntityTypeSerializationInfo(entity);
 #>
-    <#=Accessibility.ForType(entity)#> <#=EdmUtility.Code.SpaceAfter(EdmUtility.Code.AbstractOption(entity))#>partial class <#=EdmUtility.Code.Escape(entity)#><#=EdmUtility.Code.StringBefore(" : ", EdmUtility.Code.Escape(entity.BaseType))#><#=entity.BaseType == null ? " : Entity<" + EdmUtility.Code.Escape(entity) + ">, " : ", "#>INotifyPropertyChanged, INotifyPropertyChanging, IDataErrorInfo
+    <#=Accessibility.ForType(entity)#> <#=EdmUtility.Code.SpaceAfter(EdmUtility.Code.AbstractOption(entity))#>partial class <#=EdmUtility.Code.Escape(entity)#><#=EdmUtility.Code.StringBefore(" : ", EdmUtility.Code.Escape(entity.BaseType))#><#=entity.BaseType == null ? " : Entity, " : ", "#>INotifyPropertyChanged, INotifyPropertyChanging, IDataErrorInfo
     {
         #region Constructor and Initialization
 
@@ -1153,8 +1153,10 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
 #>
         #endregion Association Fixup
 
-        protected override bool IsKeyEqual(<#=EdmUtility.Code.Escape(entity)#> entity)
+        protected override bool IsKeyEqual(Entity other)
         {
+            var entity = other as <#=EdmUtility.Code.Escape(entity)#>;
+            if (ReferenceEquals(null, entity)) return false;
 <#+
         string val;
         var pkList = entity.Properties.Where(p => p.TypeUsage.EdmType is SimpleType && p.DeclaringType == entity && EdmUtility.EF.IsKey(p)).ToList();

@@ -3,22 +3,21 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
+using System.Linq;
 
 namespace NTier.Common.Domain.Model
 {
-    [DebuggerDisplay("{Name} (attributes: {_attributes == null ? 0 : _attributes.Count}, dynamic validators: {_validators == null ? 0 : _validators.Count})")]
+    [DebuggerDisplay("{Name} attributes: {Attributes.Count}")]
     public sealed class PropertyInfos
     {
-        internal PropertyInfos(string name, PropertyInfo propertyInfo, bool isPhysical, ReadOnlyCollection<Attribute> attributes)
+        internal PropertyInfos(string name, PropertyInfo propertyInfo, bool isPhysical, IEnumerable<Attribute> attributes)
         {
             Name = name;
             PropertyInfo = propertyInfo;
             IsPhysical = isPhysical;
-            _attributes = attributes;
+            Attributes = attributes.ToList().AsReadOnly();
         }
 
         /// <summary>
@@ -34,37 +33,7 @@ namespace NTier.Common.Domain.Model
         /// <summary>
         /// Returns a list of attributes including dynamically added ValidationAttribute attributes
         /// </summary>
-        public IEnumerable<Attribute> Attributes
-        {
-            get
-            {
-                if (_validators == null || _validators.Count == 0)
-                {
-                    return _attributes;
-                }
-                else
-                {
-                    return _attributes.Union(_validators.Cast<Attribute>());
-                }
-            }
-        }
-        private readonly ReadOnlyCollection<Attribute> _attributes;
-
-        /// <summary>
-        /// Gets a list of dynamically added ValidationAttribute attributes
-        /// </summary>
-        internal ICollection<ValidationAttribute> Validators
-        {
-            get
-            {
-                if (_validators == null)
-                {
-                    _validators = new List<ValidationAttribute>();
-                }
-                return _validators;
-            }
-        }
-        private List<ValidationAttribute> _validators;
+        public readonly ReadOnlyCollection<Attribute> Attributes;
 
         /// <summary>
         /// Returns true if property if physically implemented, false otherwise.

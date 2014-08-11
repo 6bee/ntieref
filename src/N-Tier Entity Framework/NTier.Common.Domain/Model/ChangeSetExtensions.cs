@@ -5,10 +5,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.Serialization;
-using System.Text;
 
 namespace NTier.Common.Domain.Model
 {
@@ -24,29 +20,22 @@ namespace NTier.Common.Domain.Model
         }
 
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
-        public static IList<Tuple<TEntity,TEntity>> ReduceToModifications<TEntity>(this IList<TEntity> originalList) where TEntity : Entity<TEntity>
+        public static IList<Tuple<TEntity,TEntity>> ReduceToModifications<TEntity>(this IList<TEntity> originalList) where TEntity : Entity
         {
             var entities = new List<Tuple<TEntity, TEntity>>();
-            foreach (var entity in originalList)
+            foreach (var originalEntity in originalList)
             {
-                entities.Add(entity.ReduceToModifications());
+                var reducedEntity = ReduceToModifications(originalEntity);
+                var tuple = new Tuple<TEntity, TEntity>(originalEntity, reducedEntity);
+                entities.Add(tuple);
             }
             return entities;
         }
 
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
-        public static Tuple<TEntity, TEntity> ReduceToModifications<TEntity>(this TEntity originalEntity) where TEntity : Entity<TEntity>
+        public static TEntity ReduceToModifications<TEntity>(TEntity originalEntity) where TEntity : Entity
         {
-            TEntity reducedEntity = Entity<TEntity>.CreateNew();
-            return new Tuple<TEntity, TEntity>(originalEntity, (TEntity)ReduceToModifications(originalEntity, reducedEntity));
-        }
-
-        private static Entity ReduceToModifications(Entity originalEntity, Entity reducedEntity)
-        {
-            if (reducedEntity == null)
-            {
-                reducedEntity = (Entity)Activator.CreateInstance(originalEntity.GetType());
-            }
+            TEntity reducedEntity = (TEntity)Activator.CreateInstance(originalEntity.GetType());
 
             // copy key
             {
@@ -203,7 +192,7 @@ namespace NTier.Common.Domain.Model
                                         {
                                             // in case of directed relation (i.e. only one entity has a relation to the other and the other entity has not relation back) 
                                             // the related entity might not yet be in the change set and has to be specifically created
-                                            changeSetEntity = ReduceToModifications(entity, null);
+                                            changeSetEntity = ReduceToModifications(entity);
                                         }
                                         collection.Add(changeSetEntity);
                                     }
@@ -255,7 +244,7 @@ namespace NTier.Common.Domain.Model
                                     {
                                         // in case of directed relation (i.e. only one entity has a relation to the other and the other entity has not relation back) 
                                         // the related entity might not yet be in the change set and has to be specifically created
-                                        changeSetEntity = ReduceToModifications(entity, null);
+                                        changeSetEntity = ReduceToModifications(entity);
                                     }
                                 }
                                 reducedEntity.SetProperty(property.Key, changeSetEntity, true);
@@ -280,7 +269,7 @@ namespace NTier.Common.Domain.Model
                                 {
                                     // in case of directed relation (i.e. only one entity has a relation to the other and the other entity has not relation back) 
                                     // the related entity might not yet be in the change set and has to be specifically created
-                                    changeSetEntity = ReduceToModifications(entity, null);
+                                    changeSetEntity = ReduceToModifications(entity);
                                 }
                                 if (changeSetEntity != null && !navigationProperty.Contains(changeSetEntity))
                                 {
@@ -309,7 +298,7 @@ namespace NTier.Common.Domain.Model
                                 {
                                     // in case of directed relation (i.e. only one entity has a relation to the other and the other entity has no relation back) 
                                     // the related entity might not yet be in the change set and has to be specifically created
-                                    changeSetEntity = ReduceToModifications(entity, null);
+                                    changeSetEntity = ReduceToModifications(entity);
                                 }
                                 if (changeSetEntity != null)
                                 {

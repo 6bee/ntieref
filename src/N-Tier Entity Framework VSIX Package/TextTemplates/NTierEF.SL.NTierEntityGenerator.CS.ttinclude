@@ -60,8 +60,8 @@ public class NTierEntityGenerator : Generator
         get
         {
             var proj = T4Context.Project.FileName;
-			var defaultNamespace = EdmUtility.GetDefaultNamespace(proj);
-			return defaultNamespace;
+            var defaultNamespace = EdmUtility.GetDefaultNamespace(proj);
+            return defaultNamespace;
             //string projectFileName = System.IO.Path.GetFileNameWithoutExtension(T4Context.Project.FileName);
             //if (!projectFileName.Contains(".Silverlight.Domain.Library"))
             //{

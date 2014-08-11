@@ -10,7 +10,7 @@ using RLinq = Remote.Linq.Expressions;
 
 namespace NTier.Client.Domain
 {
-    internal sealed partial class OrderedDataServiceQueryable<TEntity> : DataServiceQueryable<TEntity>, IOrderedDataServiceQueryable<TEntity> where TEntity : Entity<TEntity>
+    internal sealed partial class OrderedDataServiceQueryable<TEntity> : DataServiceQueryable<TEntity>, IOrderedDataServiceQueryable<TEntity> where TEntity : Entity
     {
         #region Constructor
 

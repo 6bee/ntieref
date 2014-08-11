@@ -24,7 +24,7 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
     [DataContract(IsReference = true)]
     [KnownType(typeof(Customer))]
     [KnownType(typeof(Employee))]
-    public abstract partial class Person : Entity<Person>, INotifyPropertyChanged, INotifyPropertyChanging, IDataErrorInfo
+    public abstract partial class Person : Entity, INotifyPropertyChanged, INotifyPropertyChanging, IDataErrorInfo
     {
         #region Constructor and Initialization
 
@@ -148,8 +148,10 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
 
         #endregion Association Fixup
 
-        protected override bool IsKeyEqual(Person entity)
+        protected override bool IsKeyEqual(Entity other)
         {
+            var entity = other as Person;
+            if (ReferenceEquals(null, entity)) return false;
             return this.Id == entity.Id;
         }
 

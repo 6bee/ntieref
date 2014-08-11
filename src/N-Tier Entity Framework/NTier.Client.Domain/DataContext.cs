@@ -254,7 +254,7 @@ namespace NTier.Client.Domain
 
         #region EntitySet factory method
 
-        protected virtual IEntitySet<TEntity> CreateEntitySet<TEntity>(InternalEntitySet<TEntity> entitySet, AttachDelegate<TEntity> attachDelegate, QueryDelegate<TEntity> queryDelegate) where TEntity : Entity<TEntity>
+        protected virtual IEntitySet<TEntity> CreateEntitySet<TEntity>(InternalEntitySet<TEntity> entitySet, AttachDelegate<TEntity> attachDelegate, QueryDelegate<TEntity> queryDelegate) where TEntity : Entity
         {
             return new EntitySet<TEntity>(this, entitySet, attachDelegate, queryDelegate);
         }
@@ -281,7 +281,7 @@ namespace NTier.Client.Domain
 
         #endregion EntitySet factory method
 
-        protected void Refresh<TEntity>(IInternalEntitySet<TEntity> internalEntitySet, IEnumerable<TEntity> changeSet) where TEntity : Entity<TEntity>
+        protected void Refresh<TEntity>(IInternalEntitySet<TEntity> internalEntitySet, IEnumerable<TEntity> changeSet) where TEntity : Entity
         {
             if (changeSet != null && changeSet.Any())
             {

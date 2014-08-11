@@ -35,11 +35,11 @@
   <ItemGroup>
     <Reference Include="NTier.Client.Domain, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NTierEntityFramework.Client.1.5.0-beta002\lib\net4-client\NTier.Client.Domain.dll</HintPath>
+      <HintPath>..\..\packages\NTierEntityFramework.Client.1.5.0-beta003\lib\net4-client\NTier.Client.Domain.dll</HintPath>
     </Reference>
     <Reference Include="NTier.Common.Domain, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NTierEntityFramework.Common.1.5.0-beta002\lib\net4-client\NTier.Common.Domain.dll</HintPath>
+      <HintPath>..\..\packages\NTierEntityFramework.Common.1.5.0-beta003\lib\net4-client\NTier.Common.Domain.dll</HintPath>
     </Reference>
     <Reference Include="Remote.Linq, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

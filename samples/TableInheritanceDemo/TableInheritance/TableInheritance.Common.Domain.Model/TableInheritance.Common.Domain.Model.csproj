@@ -33,9 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NTier.Common.Domain, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NTierEntityFramework.Common.1.5.0-beta002\lib\net4-client\NTier.Common.Domain.dll</HintPath>
+    <Reference Include="NTier.Common.Domain">
+      <HintPath>..\..\packages\NTierEntityFramework.Common.1.5.0-beta003\lib\net4-client\NTier.Common.Domain.dll</HintPath>
     </Reference>
     <Reference Include="Remote.Linq">
       <HintPath>..\..\packages\Remote.Linq.3.0.0-beta01\lib\net45\Remote.Linq.dll</HintPath>
