@@ -1,14 +1,13 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace NTier.Client.Domain
 {
-    partial class DataServiceQueryableImp<TEntity> : IEnumerable<TEntity>, IQueryable<TEntity>
+    partial class DataServiceQueryableImp<TEntity, TBase> : IEnumerable<TEntity>, IQueryable<TEntity>
     {
-        internal DataServiceQueryableImp(DataServiceQueryable<TEntity> source, IEnumerable<TEntity> enumerable)
+        internal DataServiceQueryableImp(DataServiceQueryable<TEntity, TBase> source, IEnumerable<TBase> enumerable)
             : base(source.EntitySet, source)
         {
             this._enumerable = enumerable;
@@ -16,23 +15,26 @@ namespace NTier.Client.Domain
 
         public override IEnumerator<TEntity> GetEnumerator()
         {
+            IEnumerable<TBase> enumerable;
             if (_enumerable == null)
             {
                 // framework implementation
-                if (EntitySet is EntitySet<TEntity>)
+                if (EntitySet is EntitySet<TBase>)
                 {
-                    return ((EntitySet<TEntity>)EntitySet).Load(this).GetEnumerator();
+                    enumerable = ((EntitySet<TBase>)EntitySet).Load(ClientInfo, Query);
                 }
                 else // client implementation e.g. mock-up
                 {
-                    return EntitySet.GetEnumerator();
+                    enumerable = EntitySet;
                 }
             }
             else // wrapped query
             {
-                return _enumerable.GetEnumerator();
+                enumerable = _enumerable;
             }
+
+            return enumerable.OfType<TEntity>().GetEnumerator();
         }
-        private IEnumerable<TEntity> _enumerable = null;
+        private IEnumerable<TBase> _enumerable = null;
     }
 }

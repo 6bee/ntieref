@@ -11,12 +11,12 @@ namespace NTier.Client.Domain
     public class RemoteDataLoader<T> : DataLoader<T> where T : Entity
     {
         protected readonly System.Windows.Threading.Dispatcher Dispatcher;
-        protected readonly IDataServiceQueryable<T> Queryable;
+        protected readonly IDataServiceQueryable<T, T> Queryable;
         private readonly object TimerLock = new object();
         private DispatcherTimer Timer = null;
         private long RequestId = long.MinValue;
 
-        public RemoteDataLoader(IDataServiceQueryable<T> queryable)
+        public RemoteDataLoader(IDataServiceQueryable<T, T> queryable)
             : base(queryable.EntitySet)
         {
             this.Dispatcher = Deployment.Dispatcher;
@@ -140,7 +140,7 @@ namespace NTier.Client.Domain
             #region sorting
 
             // apply sort descriptors
-            IOrderedDataServiceQueryable<T> sortedQuery = null;
+            IOrderedDataServiceQueryable<T, T> sortedQuery = null;
             foreach (var sortDescription in view.SortDescriptions)
             {
                 var sortExpression = sortDescription.ToExpression<T>();

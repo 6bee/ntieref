@@ -4,11 +4,11 @@ using System;
 
 namespace NTier.Client.Domain
 {
-    partial class OrderedDataServiceQueryable<TEntity>
+    partial class OrderedDataServiceQueryable<TEntity, TBase>
     {
-        public override void ExecuteAsync(Action<ICallbackResult<TEntity>> callback = null)
+        public override void ExecuteAsync(Action<IQueryResult<TEntity, TBase>> callback = null)
         {
-            Parent.ExecuteAsync(callback);
+            _queryable.ExecuteAsync(callback);
         }
     }
 }

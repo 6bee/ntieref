@@ -2,8 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using NTier.Common.Domain.Model;
 
 namespace NTier.Client.Domain
 {

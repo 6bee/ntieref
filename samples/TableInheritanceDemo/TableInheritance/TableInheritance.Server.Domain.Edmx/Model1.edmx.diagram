@@ -10,6 +10,7 @@
         <EntityTypeShape EntityType="TableInheritanceDemoDBModel.Person" Width="1.5" PointX="2.125" PointY="0.5" IsExpanded="true" />
         <InheritanceConnector EntityType="TableInheritanceDemoDBModel.Customer" />
         <InheritanceConnector EntityType="TableInheritanceDemoDBModel.Employee" />
+        <AssociationConnector Association="TableInheritanceDemoDBModel.FK__Employees__Manag__21B6055D" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -134,6 +134,6 @@ namespace NTier.Client.Domain
         /// <summary>
         /// Gets a data service queriable for the specific entity type
         /// </summary>
-        IDataServiceQueryable<TEntity> AsQueryable();
+        IDataServiceQueryable<TEntity, TEntity> AsQueryable();
     }
 }

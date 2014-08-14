@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
+using Remote.Linq.TypeSystem;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using RLinq = Remote.Linq.Expressions;
 
@@ -17,12 +19,12 @@ namespace NTier.Common.Domain.Model
         public Nullable<bool> IncludeTotalCount { get; set; }
 
         [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public IList<string> IncludeList
+        public IEnumerable<string> IncludeList
         {
             get { return _include; }
             set
             {
-                if (ReferenceEquals(value, null) || value.Count == 0)
+                if (ReferenceEquals(value, null) || !value.Any())
                 {
                     _include = null;
                 }
@@ -32,15 +34,15 @@ namespace NTier.Common.Domain.Model
                 }
             }
         }
-        private IList<string> _include = null;
+        private IEnumerable<string> _include = null;
 
         [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public IList<RLinq.LambdaExpression> FilterExpressionList
+        public IEnumerable<RLinq.LambdaExpression> FilterExpressionList
         {
             get { return _filterExpressionList; }
             set
             {
-                if (ReferenceEquals(value, null) || value.Count == 0)
+                if (ReferenceEquals(value, null) || !value.Any())
                 {
                     _filterExpressionList = null;
                 }
@@ -50,15 +52,15 @@ namespace NTier.Common.Domain.Model
                 }
             }
         }
-        private IList<RLinq.LambdaExpression> _filterExpressionList;
+        private IEnumerable<RLinq.LambdaExpression> _filterExpressionList;
 
         [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public IList<RLinq.SortExpression> SortExpressionList
+        public IEnumerable<RLinq.SortExpression> SortExpressionList
         {
             get { return _sortExpressionList; }
             set
             {
-                if (ReferenceEquals(value, null) || value.Count == 0)
+                if (ReferenceEquals(value, null) || !value.Any())
                 {
                     _sortExpressionList = null;
                 }
@@ -68,7 +70,10 @@ namespace NTier.Common.Domain.Model
                 }
             }
         }
-        private IList<RLinq.SortExpression> _sortExpressionList;
+        private IEnumerable<RLinq.SortExpression> _sortExpressionList;
+
+        [DataMember(IsRequired = false, EmitDefaultValue = false)]
+        public TypeInfo OfType { get; set; }
 
         [DataMember(IsRequired = false, EmitDefaultValue = false)]
         public Nullable<int> Skip { get; set; }

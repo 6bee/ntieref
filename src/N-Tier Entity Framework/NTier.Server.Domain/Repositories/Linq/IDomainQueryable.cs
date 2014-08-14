@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
+using NTier.Common.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using NTier.Common.Domain.Model;
 
 namespace NTier.Server.Domain.Repositories.Linq
 {
@@ -15,6 +15,8 @@ namespace NTier.Server.Domain.Repositories.Linq
         IOrderedDomainQueryable<TEntity> OrderBy<TKey>(Expression<Func<TEntity, TKey>> keySelector);
 
         IOrderedDomainQueryable<TEntity> OrderByDescending<TKey>(Expression<Func<TEntity, TKey>> keySelector);
+
+        IDomainQueryable<T> OfType<T>() where T : TEntity;
 
         IDomainQueryable<TEntity> Skip(int count);
 

@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
+using NTier.Common.Domain.Model;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using NTier.Common.Domain.Model;
 
 namespace NTier.Client.Domain
 {

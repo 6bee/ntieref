@@ -16,7 +16,7 @@ namespace NTier.Client.Domain
             var entityType = typeof(T);
             var propertyInfo = entityType.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public);
             var parameterExpression = RLinq.Expression.Parameter("i", typeof(T));
-            var propertyExpression = RLinq.Expression.PropertyAccess(parameterExpression, propertyInfo);
+            var propertyExpression = RLinq.Expression.MakeMemberAccess(parameterExpression, propertyInfo);
             var lambdaExpression = RLinq.Expression.Lambda(propertyExpression, parameterExpression);
             var sortDirection = sortDescription.Direction.Translate();
             var sortExpression = RLinq.Expression.Sort(lambdaExpression, sortDirection);

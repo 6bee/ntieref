@@ -1,12 +1,9 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using NTier.Common.Domain.Model;
 using NTier.Server.Domain.Repositories.Linq;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NTier.Server.Domain.Repositories
 {

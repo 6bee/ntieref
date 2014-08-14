@@ -7,24 +7,24 @@ namespace NTier.Client.Domain
 {
     internal static class IOrderedDataServiceQueryableExtensions
     {
-        public static IOrderedDataServiceQueryable<TEntity> ThenBy<TEntity>(this IOrderedDataServiceQueryable<TEntity> queriable, RLinq.LambdaExpression expression) where TEntity : Entity
+        public static IOrderedDataServiceQueryable<TEntity, TBase> ThenBy<TEntity, TBase>(this IOrderedDataServiceQueryable<TEntity, TBase> queriable, RLinq.LambdaExpression expression) where TEntity : TBase where TBase : Entity
         {
-            var newQueriable = new OrderedDataServiceQueryable<TEntity>((OrderedDataServiceQueryable<TEntity>)queriable);
-            newQueriable.Sortings.Add(new DataServiceQueryable<TEntity>.Sort(expression, RLinq.SortDirection.Ascending));
+            var newQueriable = new OrderedDataServiceQueryable<TEntity, TBase>((OrderedDataServiceQueryable<TEntity, TBase>)queriable);
+            newQueriable.Sortings.Add(new DataServiceQueryable<TEntity, TBase>.Sort(expression, RLinq.SortDirection.Ascending));
             return newQueriable;
         }
 
-        public static IOrderedDataServiceQueryable<TEntity> ThenByDescending<TEntity>(this IOrderedDataServiceQueryable<TEntity> queriable, RLinq.LambdaExpression expression) where TEntity : Entity
+        public static IOrderedDataServiceQueryable<TEntity, TBase> ThenByDescending<TEntity, TBase>(this IOrderedDataServiceQueryable<TEntity, TBase> queriable, RLinq.LambdaExpression expression) where TEntity : TBase where TBase : Entity
         {
-            var newQueriable = new OrderedDataServiceQueryable<TEntity>((OrderedDataServiceQueryable<TEntity>)queriable);
-            newQueriable.Sortings.Add(new DataServiceQueryable<TEntity>.Sort(expression, RLinq.SortDirection.Descending));
+            var newQueriable = new OrderedDataServiceQueryable<TEntity, TBase>((OrderedDataServiceQueryable<TEntity, TBase>)queriable);
+            newQueriable.Sortings.Add(new DataServiceQueryable<TEntity, TBase>.Sort(expression, RLinq.SortDirection.Descending));
             return newQueriable;
         }
 
-        public static IOrderedDataServiceQueryable<TEntity> ThenBy<TEntity>(this IOrderedDataServiceQueryable<TEntity> queriable, RLinq.SortExpression expression) where TEntity : Entity
+        public static IOrderedDataServiceQueryable<TEntity, TBase> ThenBy<TEntity, TBase>(this IOrderedDataServiceQueryable<TEntity, TBase> queriable, RLinq.SortExpression expression) where TEntity : TBase where TBase : Entity
         {
-            var newQueriable = new OrderedDataServiceQueryable<TEntity>((OrderedDataServiceQueryable<TEntity>)queriable);
-            newQueriable.Sortings.Add(new DataServiceQueryable<TEntity>.Sort(expression));
+            var newQueriable = new OrderedDataServiceQueryable<TEntity, TBase>((OrderedDataServiceQueryable<TEntity, TBase>)queriable);
+            newQueriable.Sortings.Add(new DataServiceQueryable<TEntity, TBase>.Sort(expression));
             return newQueriable;
         }
     }

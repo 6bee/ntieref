@@ -27,15 +27,41 @@ namespace NTier.Server.Domain.Service
         /// <returns>The result for the given query</returns>
         protected virtual QueryResult<TEntity> Get<TEntity>(IEntityQueryable<TEntity> entityQueryable, Query query, ClientInfo clientInfo) where TEntity : Entity
         {
+            if (ReferenceEquals(null, query.OfType))
+            {
+                return Query<TEntity, TEntity>(entityQueryable, query, clientInfo);
+            }
+            else
+            {
+                var queryMethod = typeof(DataService<TRepository>)
+                    .GetMethod("Query", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                    .MakeGenericMethod(query.OfType, typeof(TEntity));
+                var result = queryMethod.Invoke(this, new object[] { entityQueryable, query, clientInfo });
+                return (QueryResult<TEntity>)result;
+            }
+        }
+
+        private QueryResult<TBase> Query<TEntity, TBase>(IEntityQueryable<TBase> entityQueryable, Query query, ClientInfo clientInfo)
+            where TEntity : TBase
+            where TBase : Entity
+        {
             List<TEntity> result = null;
             long? totalCount = null;
             if ((query.IncludeData ?? false) || (query.IncludeTotalCount ?? false))
             {
                 // get filters defined by interceptors
+                var basefilters = GetQueryInterceptors<TBase>(clientInfo);
                 var filters = GetQueryInterceptors<TEntity>(clientInfo);
 
-                var queryable = entityQueryable
+                var baseEntityQueryable = entityQueryable
                     .ApplyInclude(query.IncludeList)
+                    .ApplyFilters(basefilters);
+
+                var queryable = typeof(TEntity) == typeof(TBase)
+                    ? (IDomainQueryable<TEntity>)baseEntityQueryable
+                    : baseEntityQueryable.OfType<TEntity>();
+
+                queryable = queryable
                     .ApplyFilters(filters);
 
                 // retrieve data
@@ -65,8 +91,9 @@ namespace NTier.Server.Domain.Service
                     totalCount = q.LongCount();
                 }
             }
-            return new QueryResult<TEntity> { Data = result, TotalCount = totalCount };
+            return new QueryResult<TBase> { Data = result, TotalCount = totalCount };
         }
+        
 
         #endregion query
 

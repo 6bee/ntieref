@@ -1,22 +1,22 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
 using NTier.Common.Domain.Model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NTier.Client.Domain
 {
     partial class EntitySet<TEntity>
     {
-        internal void LoadAsync(DataServiceQueryableImp<TEntity> queryable, AsyncQueryCallback<TEntity> callback)
+        internal void LoadAsync(ClientInfo clientInfo, Query query, AsyncQueryCallback<TEntity> callback)
         {
             //if (_queryDelegate == null)
             //{
             //    throw new Exception(string.Format("There is no query procedure for entity type {0}. Check whether this entity is not a aggregate root and needs to be loaded through its aggregate root.", typeof(TEntity)));
             //}
 
-            _queryDelegate(queryable.ClientInfo, queryable.Query, delegate(QueryResult<TEntity> result, Exception exception)
+            _queryDelegate(clientInfo, query, delegate(QueryResult<TEntity> result, Exception exception)
             {
                 try
                 {

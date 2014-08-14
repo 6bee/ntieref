@@ -5,26 +5,17 @@ using NTier.Common.Domain.Model;
 
 namespace NTier.Client.Domain
 {
-    partial interface IDataServiceQueryable<TEntity>
+    partial interface IDataServiceQueryable<TEntity, TBase>
     {
-        #region Properties
-
-        /// <summary>
-        /// Query specific client info. By default client info of entity set is used.
-        /// </summary>
-        ClientInfo ClientInfo { get; set; }
-
-        #endregion Properties
-
         #region Execute methods
 
-        void ExecuteAsync(Action<ICallbackResult<TEntity>> callback = null);
+        void ExecuteAsync(Action<IQueryResult<TEntity, TBase>> callback = null);
 
         #endregion Execute methods
 
         #region Linq operations
 
-        IDataServiceQueryable<TEntity> AsQueryable();
+        IDataServiceQueryable<TEntity, TBase> AsQueryable();
 
         #endregion Linq operations
     }

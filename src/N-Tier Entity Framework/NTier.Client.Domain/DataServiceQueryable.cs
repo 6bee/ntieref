@@ -1,16 +1,15 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
-using System;
+using NTier.Common.Domain.Model;
+using Remote.Linq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using NTier.Common.Domain.Model;
-using Remote.Linq;
 
 namespace NTier.Client.Domain
 {
-    internal abstract partial class DataServiceQueryable<TEntity> : IDataServiceQueryable<TEntity> where TEntity : Entity
+    internal abstract partial class DataServiceQueryable
     {
         #region Inner classes
 
@@ -74,45 +73,12 @@ namespace NTier.Client.Domain
             }
         }
 
-        protected sealed class CallbackResult : ICallbackResult<TEntity>
-        {
-            private readonly IEntitySet<TEntity> _entitySet;
-            private readonly Exception _exception;
-
-            public CallbackResult(IEntitySet<TEntity> entitySet, Exception exception = null)
-            {
-                this._entitySet = entitySet;
-                this._exception = exception;
-            }
-
-            public Exception Exception
-            {
-                get { return _exception; }
-            }
-
-            public bool IsFaulted
-            {
-                get { return _exception != null; }
-            }
-
-            public IEntitySet<TEntity> EntitySet
-            {
-                get { CheckException(); return _entitySet; }
-            }
-
-            private void CheckException()
-            {
-                if (_exception != null) throw new Exception("Query failed", _exception);
-            }
-        }
-
         #endregion  Inner classes
         
         #region Private fields/properties
 
         private static readonly MethodInfo EnumerableContainsMethodInfo = typeof(System.Linq.Enumerable).GetMethods(BindingFlags.Public | BindingFlags.Static).Single(m => m.Name == "Contains" && m.GetParameters().Length == 2);
-        public IEntitySet<TEntity> EntitySet { get; private set; }
-        protected readonly DataServiceQueryable<TEntity> Parent;
+        protected readonly DataServiceQueryable Parent;
 
         #endregion Private fields/properties
 
@@ -120,11 +86,9 @@ namespace NTier.Client.Domain
 
         partial void Initialize();
 
-        protected DataServiceQueryable(IEntitySet<TEntity> entitySet, DataServiceQueryable<TEntity> parent)
+        protected DataServiceQueryable(DataServiceQueryable parent)
         {
-            this.EntitySet = entitySet;
             this.Parent = parent;
-
             Initialize();
         }
 
@@ -135,33 +99,7 @@ namespace NTier.Client.Domain
         /// <summary>
         /// Query specific client info. By default client info of entity set is used.
         /// </summary>
-        public ClientInfo ClientInfo
-        {
-            get
-            {
-                // return client info if set
-                if (_isClientInfoSetOnQuery)
-                {
-                    return _clientInfo;
-                }
-
-                // return parent client info
-                if (Parent != null)
-                {
-                    return Parent.ClientInfo;
-                }
-
-                // ultimate parent returns client info of entity set
-                return EntitySet.ClientInfo;
-            }
-            set
-            {
-                _clientInfo = value;
-                _isClientInfoSetOnQuery = true;
-            }
-        }
-        private ClientInfo _clientInfo = null;
-        private bool _isClientInfoSetOnQuery = false;
+        public abstract ClientInfo ClientInfo { get; internal set; }
 
         internal abstract bool? QueryTotalCount { get; set; }
         protected bool? ParentQueryTotalCount
@@ -228,6 +166,20 @@ namespace NTier.Client.Domain
 
         protected bool IsSortingReset { set; get; }
 
+        internal abstract Remote.Linq.TypeSystem.TypeInfo OfTypeValue { get; set; }
+        internal Remote.Linq.TypeSystem.TypeInfo ParentOfTypeValue
+        {
+            get
+            {
+                var value = OfTypeValue;
+                if (!ReferenceEquals(null, Parent) && ReferenceEquals(null, value))
+                {
+                    value = Parent.ParentOfTypeValue;
+                }
+                return value;
+            }
+        }
+
         internal abstract int? SkipValue { get; set; }
         protected int? ParentSkipValue
         {
@@ -257,148 +209,5 @@ namespace NTier.Client.Domain
         }
 
         #endregion Query properties
-
-        #region Linq operations
-
-        public IDataServiceQueryable<TEntity> Where(Expression<Func<TEntity, bool>> where)
-        {
-            var queriable = new DataServiceQueryableImp<TEntity>(this);
-            queriable.Filters.Add(new Filter(where));
-            return queriable;
-        }
-
-        public IDataServiceQueryable<TEntity> WhereIn<TValue>(Expression<Func<TEntity, TValue>> propertySelector, params TValue[] values)
-        {
-            return WhereIn(propertySelector, values, false);
-        }
-
-        public IDataServiceQueryable<TEntity> WhereIn<TValue>(Expression<Func<TEntity, TValue>> propertySelector, IEnumerable<TValue> values)
-        {
-            return WhereIn(propertySelector, values, false);
-        }
-
-        public IDataServiceQueryable<TEntity> WhereNotIn<TValue>(Expression<Func<TEntity, TValue>> propertySelector, params TValue[] values)
-        {
-            return WhereIn(propertySelector, values, true);
-        }
-
-        public IDataServiceQueryable<TEntity> WhereNotIn<TValue>(Expression<Func<TEntity, TValue>> propertySelector, IEnumerable<TValue> values)
-        {
-            return WhereIn(propertySelector, values, true);
-        }
-
-        private IDataServiceQueryable<TEntity> WhereIn<TValue>(Expression<Func<TEntity, TValue>> propertySelector, IEnumerable<TValue> values, bool doNegate)
-        {
-            //if (!values.Any())
-            //{
-            //    return Where(e => false);
-            //}
-
-            var queriable = new DataServiceQueryableImp<TEntity>(this);
-
-            var collectionExpression = Expression.Constant(values);
-            var compareExpression = Expression.Call(null, EnumerableContainsMethodInfo.MakeGenericMethod(typeof(TValue)), collectionExpression, propertySelector.Body) as Expression;
-            if (doNegate)
-            {
-                compareExpression = Expression.MakeUnary(ExpressionType.Not, compareExpression, typeof(bool));
-            }
-            var parameter = propertySelector.Parameters[0];
-            var lambdaExpression = Expression.Lambda<Func<TEntity, bool>>(compareExpression, parameter);
-            queriable.Filters.Add(new Filter(lambdaExpression));
-
-            return queriable;
-        }
-
-        public IOrderedDataServiceQueryable<TEntity> OrderBy<TKey>(Expression<Func<TEntity, TKey>> orderBy)
-        {
-            return OrderBy((LambdaExpression)orderBy);
-        }
-        
-        // implementation for IQueriable
-        internal IOrderedDataServiceQueryable<TEntity> OrderBy(LambdaExpression orderBy)
-        {
-            var queriable = new OrderedDataServiceQueryable<TEntity>(this);
-            queriable.Sortings.Clear();
-            queriable.Sortings.Add(new Sort(orderBy, Remote.Linq.Expressions.SortDirection.Ascending));
-            return queriable;
-        }
-
-        public IOrderedDataServiceQueryable<TEntity> OrderByDescending<TKey>(Expression<Func<TEntity, TKey>> orderBy)
-        {
-            return OrderByDescending((LambdaExpression)orderBy);
-        }
-
-        // implementation for IQueriable
-        internal IOrderedDataServiceQueryable<TEntity> OrderByDescending(LambdaExpression orderBy)
-        {
-            var queriable = new OrderedDataServiceQueryable<TEntity>(this);
-            queriable.Sortings.Clear();
-            queriable.Sortings.Add(new Sort(orderBy, Remote.Linq.Expressions.SortDirection.Descending));
-            return queriable;
-        }
-
-        public IDataServiceQueryable<TEntity> Include(string include)
-        {
-            var queriable = new DataServiceQueryableImp<TEntity>(this);
-            queriable.IncludeValues.Add(include);
-            return queriable;
-        }
-
-        public IDataServiceQueryable<TEntity> Skip(int number)
-        {
-            var queriable = new DataServiceQueryableImp<TEntity>(this);
-            queriable.SkipValue = number;
-            return queriable;
-        }
-
-        public IDataServiceQueryable<TEntity> Take(int number)
-        {
-            var queriable = new DataServiceQueryableImp<TEntity>(this);
-            queriable.TakeValue = number;
-            return queriable;
-        }
-
-        public IDataServiceQueryable<TEntity> SetClientInfo(ClientInfo clientInfo)
-        {
-            var queriable = new DataServiceQueryableImp<TEntity>(this);
-            queriable.ClientInfo = clientInfo;
-            return queriable;
-        }
-
-        public IDataServiceQueryable<TEntity> IncludeTotalCount()
-        {
-            var queriable = new DataServiceQueryableImp<TEntity>(this);
-            queriable.QueryTotalCount = true;
-            return queriable;
-        }
-
-        public IDataServiceQueryable<TEntity> IncludeData(bool includeData = true)
-        {
-            var queriable = new DataServiceQueryableImp<TEntity>(this);
-            queriable.QueryData = includeData;
-            return queriable;
-        }
-
-        /// <summary>
-        /// Prepares a query to get the total record count but no data
-        /// </summary>
-        public IDataServiceQueryable<TEntity> GetCount()
-        {
-            var queriable = new DataServiceQueryableImp<TEntity>(this);
-            queriable.QueryData = false;
-            queriable.QueryTotalCount = true;
-            return queriable;
-        }
-
-        /// <summary>
-        /// Gets a data service queriable for the specific entity type
-        /// </summary>
-        public IDataServiceQueryable<TEntity> AsQueryable()
-        {
-            var queriable = new DataServiceQueryableImp<TEntity>(this);
-            return queriable;
-        }
-  
-        #endregion Linq operations
     }
 }

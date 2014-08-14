@@ -1,15 +1,14 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
 
 namespace NTier.Client.Domain
 {
-    partial class OrderedDataServiceQueryable<TEntity>
+    partial class OrderedDataServiceQueryable<TEntity, TBase>
     {
         public override IEnumerator<TEntity> GetEnumerator()
         {
-            return Parent.GetEnumerator();
+            return _queryable.GetEnumerator();
         }
     }
 }

@@ -1,20 +1,22 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
+using NTier.Common.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using NTier.Common.Domain.Model;
 
 namespace NTier.Client.Domain
 {
-    internal sealed class QueryProvider<TEntity> : IQueryProvider where TEntity : Entity
+    internal sealed class QueryProvider<TEntity, TBase> : IQueryProvider
+        where TEntity : TBase
+        where TBase : Entity
     {
-        private DataServiceQueryable<TEntity> _queriable;
+        private DataServiceQueryable<TEntity, TBase> _queriable;
         private long? _totalCountInt64 = null;
         private int? _totalCountInt32 = null;
 
-        internal QueryProvider(DataServiceQueryable<TEntity> queriable)
+        internal QueryProvider(DataServiceQueryable<TEntity, TBase> queriable)
         {
             _queriable = queriable;
         }
@@ -23,14 +25,7 @@ namespace NTier.Client.Domain
         {
             if (typeof(TElement) != typeof(TEntity))
             {
-                //if (typeof(Entity).IsAssignableFrom(typeof(TElement)))
-                //{
                 return new QueryTypeMapper<TElement>(this, expression);
-                //}
-                //else
-                //{
-                //    throw new Exception(string.Format("Invalid Type: {0}. Expected {1}.", typeof(TElement).FullName, typeof(TEntity).FullName));
-                //}
             }
 
             ParseExpression(expression);
@@ -65,7 +60,7 @@ namespace NTier.Client.Domain
                 case "Where":
                     {
                         var exp = (Expression<Func<TEntity, bool>>)((UnaryExpression)expression.Arguments[1]).Operand;
-                        _queriable = (DataServiceQueryable<TEntity>)_queriable.Where(exp);
+                        _queriable = (DataServiceQueryable<TEntity, TBase>)_queriable.Where(exp);
                     }
                     break;
 
@@ -74,11 +69,11 @@ namespace NTier.Client.Domain
                         if (expression.Arguments.Count > 1)
                         {
                             var exp = (Expression<Func<TEntity, bool>>)((UnaryExpression)expression.Arguments[1]).Operand;
-                            _queriable = new DataServiceQueryableImp<TEntity>(_queriable, new[] { _queriable.First(exp) });
+                            _queriable = new DataServiceQueryableImp<TEntity, TBase>(_queriable, new[] { _queriable.First(exp) });
                         }
                         else
                         {
-                            _queriable = new DataServiceQueryableImp<TEntity>(_queriable, new[] { _queriable.First() });
+                            _queriable = new DataServiceQueryableImp<TEntity, TBase>(_queriable, new[] { _queriable.First() });
                         }
                     }
                     break;
@@ -88,11 +83,11 @@ namespace NTier.Client.Domain
                         if (expression.Arguments.Count > 1)
                         {
                             var exp = (Expression<Func<TEntity, bool>>)((UnaryExpression)expression.Arguments[1]).Operand;
-                            _queriable = new DataServiceQueryableImp<TEntity>(_queriable, new[] { _queriable.FirstOrDefault(exp) });
+                            _queriable = new DataServiceQueryableImp<TEntity, TBase>(_queriable, new[] { _queriable.FirstOrDefault(exp) });
                         }
                         else
                         {
-                            _queriable = new DataServiceQueryableImp<TEntity>(_queriable, new[] { _queriable.FirstOrDefault() });
+                            _queriable = new DataServiceQueryableImp<TEntity, TBase>(_queriable, new[] { _queriable.FirstOrDefault() });
                         }
                     }
                     break;
@@ -102,11 +97,11 @@ namespace NTier.Client.Domain
                         if (expression.Arguments.Count > 1)
                         {
                             var exp = (Expression<Func<TEntity, bool>>)((UnaryExpression)expression.Arguments[1]).Operand;
-                            _queriable = new DataServiceQueryableImp<TEntity>(_queriable, new[] { _queriable.Single(exp) });
+                            _queriable = new DataServiceQueryableImp<TEntity, TBase>(_queriable, new[] { _queriable.Single(exp) });
                         }
                         else
                         {
-                            _queriable = new DataServiceQueryableImp<TEntity>(_queriable, new[] { _queriable.Single() });
+                            _queriable = new DataServiceQueryableImp<TEntity, TBase>(_queriable, new[] { _queriable.Single() });
                         }
                     }
                     break;
@@ -116,11 +111,11 @@ namespace NTier.Client.Domain
                         if (expression.Arguments.Count > 1)
                         {
                             var exp = (Expression<Func<TEntity, bool>>)((UnaryExpression)expression.Arguments[1]).Operand;
-                            _queriable = new DataServiceQueryableImp<TEntity>(_queriable, new[] { _queriable.SingleOrDefault(exp) });
+                            _queriable = new DataServiceQueryableImp<TEntity, TBase>(_queriable, new[] { _queriable.SingleOrDefault(exp) });
                         }
                         else
                         {
-                            _queriable = new DataServiceQueryableImp<TEntity>(_queriable, new[] { _queriable.SingleOrDefault() });
+                            _queriable = new DataServiceQueryableImp<TEntity, TBase>(_queriable, new[] { _queriable.SingleOrDefault() });
                         }
                     }
                     break;
@@ -128,42 +123,42 @@ namespace NTier.Client.Domain
                 case "OrderBy":
                     {
                         var exp = (UnaryExpression)expression.Arguments[1];
-                        _queriable = (DataServiceQueryable<TEntity>)_queriable.OrderBy((LambdaExpression)exp.Operand);
+                        _queriable = (DataServiceQueryable<TEntity, TBase>)_queriable.OrderBy((LambdaExpression)exp.Operand);
                     }
                     break;
 
                 case "OrderByDescending":
                     {
                         var exp = (UnaryExpression)expression.Arguments[1];
-                        _queriable = (DataServiceQueryable<TEntity>)_queriable.OrderByDescending((LambdaExpression)exp.Operand);
+                        _queriable = (DataServiceQueryable<TEntity, TBase>)_queriable.OrderByDescending((LambdaExpression)exp.Operand);
                     }
                     break;
 
                 case "ThenBy":
                     {
                         var exp = (UnaryExpression)expression.Arguments[1];
-                        _queriable = (DataServiceQueryable<TEntity>)((OrderedDataServiceQueryable<TEntity>)_queriable).ThenBy((LambdaExpression)exp.Operand);
+                        _queriable = (DataServiceQueryable<TEntity, TBase>)((OrderedDataServiceQueryable<TEntity, TBase>)_queriable).ThenBy((LambdaExpression)exp.Operand);
                     }
                     break;
 
                 case "ThenByDescending":
                     {
                         var exp = (UnaryExpression)expression.Arguments[1];
-                        _queriable = (DataServiceQueryable<TEntity>)((OrderedDataServiceQueryable<TEntity>)_queriable).ThenByDescending((LambdaExpression)exp.Operand);
+                        _queriable = (DataServiceQueryable<TEntity, TBase>)((OrderedDataServiceQueryable<TEntity, TBase>)_queriable).ThenByDescending((LambdaExpression)exp.Operand);
                     }
                     break;
 
                 case "Skip":
                     {
                         var exp = (ConstantExpression)expression.Arguments[1];
-                        _queriable = (DataServiceQueryable<TEntity>)_queriable.Skip((int)exp.Value);
+                        _queriable = (DataServiceQueryable<TEntity, TBase>)_queriable.Skip((int)exp.Value);
                     }
                     break;
 
                 case "Take":
                     {
                         var exp = (ConstantExpression)expression.Arguments[1];
-                        _queriable = (DataServiceQueryable<TEntity>)_queriable.Take((int)exp.Value);
+                        _queriable = (DataServiceQueryable<TEntity, TBase>)_queriable.Take((int)exp.Value);
                     }
                     break;
 
@@ -204,26 +199,6 @@ namespace NTier.Client.Domain
 
         public TResult Execute<TResult>(Expression expression)
         {
-            //ParseExpression(expression);
-
-            //if (typeof(TResult) == typeof(IEnumerable<TEntity>))
-            //{
-            //    return (TResult)(IEnumerable<TEntity>)_queriable;
-            //}
-            //if (typeof(TResult) == typeof(TEntity))
-            //{
-            //    return (TResult)(object)_queriable.FirstOrDefault();
-            //}
-            //if (typeof(TResult) == typeof(int) && _totalCountInt32.HasValue)
-            //{
-            //    return (TResult)(object)_totalCountInt32;
-            //}
-            //if (typeof(TResult) == typeof(long) && _totalCountInt64.HasValue)
-            //{
-            //    return (TResult)(object)_totalCountInt64;
-            //}
-            //return default(TResult); // null
-
             return (TResult)Execute(expression, typeof(TResult));
         }
 
@@ -262,10 +237,10 @@ namespace NTier.Client.Domain
 
         private sealed class QueryTypeMapper<TElement> : IQueryable<TElement>
         {
-            private readonly QueryProvider<TEntity> OuterProvider;
+            private readonly QueryProvider<TEntity, TBase> OuterProvider;
             private readonly IList<Tuple<System.Reflection.PropertyInfo, bool>> Properties;
 
-            public QueryTypeMapper(QueryProvider<TEntity> provider, Expression expression)
+            public QueryTypeMapper(QueryProvider<TEntity, TBase> provider, Expression expression)
             {
                 this.OuterProvider = provider;
                 this.Provider = new QueryProvider(this);
@@ -286,7 +261,7 @@ namespace NTier.Client.Domain
                 string includeString = string.Join(".", this.Properties.Where(p => p.Item2 /* isEntity */).Select(p => p.Item1.Name /* property name */));
                 if (!string.IsNullOrEmpty(includeString))
                 {
-                    this.OuterProvider._queriable = (DataServiceQueryable<TEntity>)this.OuterProvider._queriable.Include(includeString);
+                    this.OuterProvider._queriable = (DataServiceQueryable<TEntity, TBase>)this.OuterProvider._queriable.Include(includeString);
                 }
             }
 

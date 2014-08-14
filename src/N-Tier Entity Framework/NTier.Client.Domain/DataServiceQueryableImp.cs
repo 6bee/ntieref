@@ -1,26 +1,33 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
-using System;
+using NTier.Common.Domain.Model;
+using Remote.Linq.TypeSystem;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using NTier.Common.Domain.Model;
 
 namespace NTier.Client.Domain
 {
-    internal partial class DataServiceQueryableImp<TEntity> : DataServiceQueryable<TEntity> where TEntity : Entity
+    internal partial class DataServiceQueryableImp<TEntity, TBase> : DataServiceQueryable<TEntity, TBase>
+        where TEntity : TBase
+        where TBase : Entity
     {
         #region Constructor
 
-        internal DataServiceQueryableImp(IEntitySet<TEntity> source)
+        internal DataServiceQueryableImp(IEntitySet<TBase> source)
             : base(source, null)
         {
         }
 
-        internal DataServiceQueryableImp(DataServiceQueryable<TEntity> source)
+        internal DataServiceQueryableImp(DataServiceQueryable<TEntity, TBase> source)
             : base(source.EntitySet, source)
+        {
+        }
+
+        internal DataServiceQueryableImp(IEntitySet<TBase> source, DataServiceQueryable parent)
+            : base(source, parent)
         {
         }
 
@@ -40,8 +47,9 @@ namespace NTier.Client.Domain
                     IncludeList = ParentIncludeValues.ToList(),
                     FilterExpressionList = ParentFilters.ToList(),
                     SortExpressionList = ParentSortings.ToList(),
+                    OfType = ParentOfTypeValue,
                     Skip = ParentSkipValue,
-                    Take = ParentTakeValue
+                    Take = ParentTakeValue,
                 };
             }
         }
@@ -91,6 +99,7 @@ namespace NTier.Client.Domain
         }
         private IList<Sort> _sortings;
 
+        internal override TypeInfo OfTypeValue { get; set; }
 
         private int? _skipValue = null;
         internal override int? SkipValue

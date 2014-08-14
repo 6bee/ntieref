@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -9,25 +10,34 @@ using NTier.Common.Domain.Model;
 
 namespace NTier.Client.Domain
 {
-    partial class DataServiceQueryableImp<TEntity>
+    partial class DataServiceQueryableImp<TEntity, TBase>
     {
         #region ExecuteAsync
 
-        public override void ExecuteAsync(Action<ICallbackResult<TEntity>> callback = null)
+        public override void ExecuteAsync(Action<IQueryResult<TEntity, TBase>> callback = null)
         {
             var dispatcher = Deployment.Dispatcher;
 
             // framework implementation
-            if (EntitySet is EntitySet<TEntity>)
+            if (EntitySet is EntitySet<TBase>)
             {
-                ((EntitySet<TEntity>)EntitySet).LoadAsync
+                ((EntitySet<TBase>)EntitySet).LoadAsync
                 (
-                    this,
-                    delegate(IEnumerable<TEntity> data, long? totalCount, Exception exception)
+                    ClientInfo,
+                    Query,
+                    delegate(IEnumerable<TBase> data, long? totalCount, Exception exception)
                     {
                         if (callback != null)
                         {
-                            var result = new CallbackResult(exception != null ? null : new QueryResultEntitySet(EntitySet, data, totalCount), exception);
+                            QueryResult result;
+                            if (ReferenceEquals(null, exception))
+                            {
+                                result = new QueryResult(EntitySet, data.OfType<TEntity>(), QueryTotalCount.GetValueOrDefault(false) ? totalCount : default(long?));
+                            }
+                            else
+                            {
+                                result = new QueryResult(exception);
+                            }
 
                             // call back on calling thread
                             dispatcher.BeginInvoke(delegate
@@ -42,7 +52,7 @@ namespace NTier.Client.Domain
             {
                 if (callback != null)
                 {
-                    var result = new CallbackResult(new QueryResultEntitySet(EntitySet, EntitySet, EntitySet.TotalCount), null);
+                    var result = new QueryResult(EntitySet, EntitySet.OfType<TEntity>(), EntitySet.TotalCount);
 
                     // call back on calling thread
                     dispatcher.BeginInvoke(delegate
@@ -149,9 +159,9 @@ namespace NTier.Client.Domain
                 return entity;
             }
 
-            IDataServiceQueryable<TEntity> IEntitySet<TEntity>.AsQueryable()
+            IDataServiceQueryable<TEntity, TEntity> IEntitySet<TEntity>.AsQueryable()
             {
-                var queryable = new DataServiceQueryableImp<TEntity>(this);
+                var queryable = new DataServiceQueryableImp<TEntity, TEntity>(_entitySet);
                 return queryable;
             }
 

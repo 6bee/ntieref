@@ -22,6 +22,7 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
 {
     [Serializable]
     [DataContract(IsReference = true)]
+    [KnownType(typeof(Employee))]
     public partial class Employee : Person, INotifyPropertyChanged, INotifyPropertyChanging, IDataErrorInfo
     {
         #region Constructor and Initialization
@@ -43,7 +44,6 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-        [ServerGeneration(ServerGenerationTypes.Insert | ServerGenerationTypes.Update)]
         [SimpleProperty]
         public global::System.DateTime EntryDate
         {
@@ -66,6 +66,40 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
         partial void EntryDateChanging(global::System.DateTime newValue);
         partial void EntryDateChanged(global::System.DateTime previousValue);
 
+        [DataMember]
+#if !CLIENT_PROFILE
+        [RoundtripOriginal]
+#endif
+        [SimpleProperty]
+        public Nullable<global::System.Int64> ManagerId
+        {
+            get { return _managerId; }
+            set
+            {
+                if (_managerId != value)
+                {
+                    //RecordOriginalValue("ManagerId", _managerId);
+                    ManagerIdChanging(value);
+                    OnPropertyChanging("ManagerId", value);
+                    if (!IsDeserializing)
+                    {
+                        if (Manager != null && Manager.Id != value)
+                        {
+                            Manager = null;
+                        }
+                    }
+                    var previousValue = _managerId;
+                    _managerId = value;
+                    OnPropertyChanged("ManagerId", previousValue, value);
+                    ManagerIdChanged(previousValue);
+                }
+            }
+        }
+        private Nullable<global::System.Int64> _managerId;
+
+        partial void ManagerIdChanging(Nullable<global::System.Int64> newValue);
+        partial void ManagerIdChanged(Nullable<global::System.Int64> previousValue);
+
         #endregion Simple Properties
 
         #region Complex Properties
@@ -74,6 +108,70 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
 
         #region Navigation Properties
 
+        [DataMember]
+        [NavigationProperty]
+        public TrackableCollection<Employee> Employees
+        {
+            get
+            {
+                if (_employees == null)
+                {
+                    _employees = new TrackableCollection<Employee>();
+                    _employees.CollectionChanged += FixupEmployees;
+                }
+                return _employees;
+            }
+            set
+            {
+                if (!object.ReferenceEquals(_employees, value))
+                {
+                    if (!IsDeserializing && ChangeTracker.IsChangeTrackingEnabled)
+                    {
+                        throw new InvalidOperationException("Cannot set the FixupChangeTrackingCollection when ChangeTracking is enabled");
+                    }
+
+                    if (_employees != null)
+                    {
+                       _employees.CollectionChanged -= FixupEmployees;
+                    }
+
+                    _employees = value;
+
+                    if (_employees != null)
+                    {
+                        _employees.CollectionChanged += FixupEmployees;
+                    }
+
+                    OnPropertyChanged("Employees", trackInChangeTracker: false);
+                }
+            }
+        }
+        private TrackableCollection<Employee> _employees;
+
+        [DataMember]
+        [NavigationProperty]
+        public Employee Manager
+        {
+            get { return _manager; }
+            set
+            {
+                if (!object.ReferenceEquals(_manager, value))
+                {
+                    ManagerChanging(value);
+                    OnPropertyChanging("Manager", value);
+                    var previousValue = _manager;
+                    _manager = value;
+                    FixupManager(previousValue);
+                    OnPropertyChanged("Manager", previousValue, value, isNavigationProperty: true);
+                    ManagerChanged(previousValue);
+                }
+            }
+        }
+        private Employee _manager;
+
+        partial void ManagerChanging(Employee newValue);
+        partial void ManagerChanged(Employee previousValue);
+
         #endregion Navigation Properties
 
         #region ChangeTracking
@@ -81,11 +179,96 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
         protected override void ClearNavigationProperties()
         {
             base.ClearNavigationProperties();
+            Employees.Clear();
+            Manager = null;
         }
 
         #endregion ChangeTracking
 
         #region Association Fixup
+
+        private void FixupManager(Employee previousValue, bool skipKeys = false)
+        {
+            if (IsDeserializing)
+            {
+                return;
+            }
+
+            if (previousValue != null && previousValue.Employees.Contains(this))
+            {
+                previousValue.Employees.Remove(this);
+            }
+
+            if (Manager != null)
+            {
+                if (!Manager.Employees.Contains(this))
+                {
+                    Manager.Employees.Add(this);
+                }
+
+                ManagerId = Manager.Id;
+            }
+            else if (!skipKeys)
+            {
+                ManagerId = null;
+            }
+
+            if (ChangeTracker.IsChangeTrackingEnabled)
+            {
+                if (ChangeTracker.OriginalValues.ContainsKey("Manager")
+                    && object.ReferenceEquals(ChangeTracker.OriginalValues["Manager"], Manager))
+                {
+                    //ChangeTracker.OriginalValues.Remove("Manager");
+                }
+                else
+                {
+                    //RecordOriginalValue("Manager", previousValue);
+                }
+                if (Manager != null && !Manager.ChangeTracker.IsChangeTrackingEnabled)
+                {
+                    Manager.StartTracking();
+                }
+            }
+        }
+
+        private void FixupEmployees(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (IsDeserializing)
+            {
+                return;
+            }
+
+            if (e.NewItems != null)
+            {
+                foreach (Employee item in e.NewItems)
+                {
+                    item.Manager = this;
+                    if (ChangeTracker.IsChangeTrackingEnabled)
+                    {
+                        if (!item.ChangeTracker.IsChangeTrackingEnabled)
+                        {
+                            item.StartTracking();
+                        }
+                        RecordAdditionToCollectionProperties("Employees", item);
+                    }
+                }
+            }
+
+            if (e.OldItems != null)
+            {
+                foreach (Employee item in e.OldItems)
+                {
+                    if (object.ReferenceEquals(item.Manager, this))
+                    {
+                        item.Manager = null;
+                    }
+                    if (ChangeTracker.IsChangeTrackingEnabled)
+                    {
+                        RecordRemovalFromCollectionProperties("Employees", item);
+                    }
+                }
+            }
+        }
 
         #endregion Association Fixup
     }

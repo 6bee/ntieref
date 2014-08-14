@@ -1,13 +1,12 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
+using NTier.Common.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using NTier.Common.Domain.Model;
 
 namespace NTier.Client.Domain
 {
@@ -198,19 +197,19 @@ namespace NTier.Client.Domain
             _internalEntitySet.AcceptChanges();
         }
 
-        public static explicit operator DataServiceQueryable<TEntity>(EntitySet<TEntity> entitySet)
+        public static explicit operator DataServiceQueryable<TEntity, TEntity>(EntitySet<TEntity> entitySet)
         {
-            return (DataServiceQueryable<TEntity>)entitySet.AsQueryable();
+            return (DataServiceQueryable<TEntity, TEntity>)entitySet.AsQueryable();
         }
 
-        public IDataServiceQueryable<TEntity> AsQueryable()
+        public IDataServiceQueryable<TEntity, TEntity> AsQueryable()
         {
             if (_queryDelegate == null)
             {
                 throw new Exception(string.Format("There is no query procedure for entity type '{0}'. Check whether this entity is not a aggregate root and needs to be loaded through its aggregate root.", typeof(TEntity)));
             }
 
-            var queryable = new DataServiceQueryableImp<TEntity>(this);
+            var queryable = new DataServiceQueryableImp<TEntity, TEntity>(this);
             return queryable;
         }
 

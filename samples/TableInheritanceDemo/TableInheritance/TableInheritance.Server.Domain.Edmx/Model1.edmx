@@ -17,7 +17,8 @@
             <PropertyRef Name="PersonId" />
           </Key>
           <Property Name="PersonId" Type="bigint" Nullable="false" />
-          <Property Name="EntryDate" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="EntryDate" Type="datetime" Nullable="false" />
+          <Property Name="ManagerId" Type="bigint" />
         </EntityType>
         <EntityType Name="People">
           <Key>
@@ -36,6 +37,18 @@
             </Principal>
             <Dependent Role="Customers">
               <PropertyRef Name="PersonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Employees__Manag__21B6055D">
+          <End Role="Employees" Type="Self.Employees" Multiplicity="0..1" />
+          <End Role="Employees1" Type="Self.Employees" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="PersonId" />
+            </Principal>
+            <Dependent Role="Employees1">
+              <PropertyRef Name="ManagerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -59,6 +72,10 @@
             <End Role="People" EntitySet="People" />
             <End Role="Customers" EntitySet="Customers" />
           </AssociationSet>
+          <AssociationSet Name="FK__Employees__Manag__21B6055D" Association="Self.FK__Employees__Manag__21B6055D">
+            <End Role="Employees" EntitySet="Employees" />
+            <End Role="Employees1" EntitySet="Employees" />
+          </AssociationSet>
           <AssociationSet Name="FK__Employees__Perso__15502E78" Association="Self.FK__Employees__Perso__15502E78">
             <End Role="People" EntitySet="People" />
             <End Role="Employees" EntitySet="Employees" />
@@ -72,7 +89,10 @@
           <Property Name="CustomerStatus" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Employee" BaseType="TableInheritanceDemoDBModel.Person">
-          <Property Name="EntryDate" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" Precision="3" />
+          <Property Name="EntryDate" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="None" Precision="3" />
+          <Property Name="ManagerId" Type="Int64" />
+          <NavigationProperty Name="Employees" Relationship="TableInheritanceDemoDBModel.FK__Employees__Manag__21B6055D" FromRole="Employee" ToRole="Employee1" />
+          <NavigationProperty Name="Manager" Relationship="TableInheritanceDemoDBModel.FK__Employees__Manag__21B6055D" FromRole="Employee1" ToRole="Employee" />
         </EntityType>
         <EntityType Name="Person" Abstract="true">
           <Key>
@@ -84,7 +104,23 @@
         </EntityType>
         <EntityContainer Name="TableInheritanceDemoDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="People" EntityType="Self.Person" />
+          <AssociationSet Name="FK__Employees__Manag__21B6055D" Association="TableInheritanceDemoDBModel.FK__Employees__Manag__21B6055D">
+            <End Role="Employee" EntitySet="People" />
+            <End Role="Employee1" EntitySet="People" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="FK__Employees__Manag__21B6055D">
+          <End Type="TableInheritanceDemoDBModel.Employee" Role="Employee" Multiplicity="0..1" />
+          <End Type="TableInheritanceDemoDBModel.Employee" Role="Employee1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee1">
+              <PropertyRef Name="ManagerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -107,6 +143,7 @@
             </EntityTypeMapping>
             <EntityTypeMapping TypeName="IsTypeOf(TableInheritanceDemoDBModel.Employee)">
               <MappingFragment StoreEntitySet="Employees">
+                <ScalarProperty Name="ManagerId" ColumnName="ManagerId" />
                 <ScalarProperty Name="Id" ColumnName="PersonId" />
                 <ScalarProperty Name="EntryDate" ColumnName="EntryDate" />
               </MappingFragment>

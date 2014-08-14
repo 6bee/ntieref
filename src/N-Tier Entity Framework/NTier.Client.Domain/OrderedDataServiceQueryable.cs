@@ -1,22 +1,26 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
+using NTier.Common.Domain.Model;
+using Remote.Linq.TypeSystem;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Linq.Expressions;
-using NTier.Common.Domain.Model;
 using RLinq = Remote.Linq.Expressions;
 
 namespace NTier.Client.Domain
 {
-    internal sealed partial class OrderedDataServiceQueryable<TEntity> : DataServiceQueryable<TEntity>, IOrderedDataServiceQueryable<TEntity> where TEntity : Entity
+    internal sealed partial class OrderedDataServiceQueryable<TEntity, TBase> : DataServiceQueryable<TEntity, TBase>, IOrderedDataServiceQueryable<TEntity, TBase> 
+        where TEntity : TBase
+        where TBase : Entity
     {
+        private readonly DataServiceQueryable<TEntity, TBase> _queryable;
+
         #region Constructor
 
-        internal OrderedDataServiceQueryable(DataServiceQueryable<TEntity> queryable)
+        internal OrderedDataServiceQueryable(DataServiceQueryable<TEntity, TBase> queryable)
             : base(queryable.EntitySet, queryable)
         {
+            _queryable = queryable;
         }
 
         #endregion Constructor
@@ -49,6 +53,12 @@ namespace NTier.Client.Domain
         {
             get { return Parent.Sortings; }
         }
+        
+        internal override TypeInfo OfTypeValue
+        {
+            get { return Parent.OfTypeValue; }
+            set { Parent.OfTypeValue = value; }
+        }
 
         internal override int? SkipValue
         {
@@ -66,28 +76,28 @@ namespace NTier.Client.Domain
 
         #region Linq operations
 
-        public IOrderedDataServiceQueryable<TEntity> ThenBy<TKey>(Expression<Func<TEntity, TKey>> orderBy)
+        public IOrderedDataServiceQueryable<TEntity, TBase> ThenBy<TKey>(Expression<Func<TEntity, TKey>> orderBy)
         {
             return ThenBy((LambdaExpression)orderBy);
         }
 
         // implementation for IQueriable
-        internal IOrderedDataServiceQueryable<TEntity> ThenBy(LambdaExpression orderBy)
+        internal IOrderedDataServiceQueryable<TEntity, TBase> ThenBy(LambdaExpression orderBy)
         {
-            var queriable = new OrderedDataServiceQueryable<TEntity>(this);
+            var queriable = new OrderedDataServiceQueryable<TEntity, TBase>(this);
             queriable.Sortings.Add(new Sort(orderBy, RLinq.SortDirection.Ascending));
             return queriable;
         }
 
-        public IOrderedDataServiceQueryable<TEntity> ThenByDescending<TKey>(Expression<Func<TEntity, TKey>> orderBy)
+        public IOrderedDataServiceQueryable<TEntity, TBase> ThenByDescending<TKey>(Expression<Func<TEntity, TKey>> orderBy)
         {
             return this.ThenByDescending((LambdaExpression)orderBy);
         }
 
         // implementation for IQueriable
-        internal IOrderedDataServiceQueryable<TEntity> ThenByDescending(LambdaExpression orderBy)
+        internal IOrderedDataServiceQueryable<TEntity, TBase> ThenByDescending(LambdaExpression orderBy)
         {
-            var queriable = new OrderedDataServiceQueryable<TEntity>(this);
+            var queriable = new OrderedDataServiceQueryable<TEntity, TBase>(this);
             queriable.Sortings.Add(new Sort(orderBy, RLinq.SortDirection.Descending));
             return queriable;
         }

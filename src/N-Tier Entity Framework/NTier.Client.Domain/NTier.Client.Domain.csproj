@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Remote.Linq">
-      <HintPath>..\packages\Remote.Linq.2.3.0\lib\net35-client\Remote.Linq.dll</HintPath>
+      <HintPath>..\packages\Remote.Linq.3.0.0\lib\net35-client\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -55,6 +55,8 @@
     </Compile>
     <Compile Include="DataContext`.NET.cs" />
     <Compile Include="DataContext`.cs" />
+    <Compile Include="DataServiceQueryable`.QueryResult.cs" />
+    <Compile Include="DataServiceQueryable`.cs" />
     <Compile Include="FilterExpressionCollection.cs" />
     <Compile Include="IDataContext.NET.cs" />
     <Compile Include="IOrderedDataServiceQueryableExtensions.cs" />
@@ -72,7 +74,7 @@
     <Compile Include="OrderedDataServiceQueryable.NET.cs" />
     <Compile Include="DataContext.NET.cs" />
     <Compile Include="DataServiceQueryableImp.NET.cs" />
-    <Compile Include="DataServiceQueryable.NET.cs" />
+    <Compile Include="DataServiceQueryable`.NET.cs" />
     <Compile Include="IOrderedDataServiceQueryable.cs" />
     <Compile Include="IDataServiceQueryable.cs" />
     <Compile Include="DataLoader.cs" />
@@ -96,7 +98,7 @@
     <Compile Include="DataContext.cs" />
     <Compile Include="DataServiceQueryableImp.cs" />
     <Compile Include="DataServiceQueryable.cs" />
-    <Compile Include="ICallbackResult.cs" />
+    <Compile Include="IQueryResult.cs" />
     <Compile Include="MergeOption.cs" />
     <Compile Include="ObservableEntityCollection.cs" />
     <Compile Include="EntitySetExtensions.cs" />

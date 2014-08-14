@@ -10,7 +10,7 @@ namespace NTier.Common.Domain.Model
     public class QueryResult<TEntity> where TEntity : Entity
     {
         [DataMember]
-        public IList<TEntity> Data { get; set; }
+        public IEnumerable<TEntity> Data { get; set; }
 
         [DataMember]
         public Nullable<long> TotalCount { get; set; }

@@ -52,6 +52,13 @@ namespace NTier.Server.Domain.Repositories.Linq
             return new OrderedDomainQueryable<TEntity>(queryable, _expressionVisitor);
         }
 
+        IDomainQueryable<T> IDomainQueryable<TEntity>.OfType<T>() //where T : TEntity
+        {
+            var oftype = _queryable.OfType<T>();
+            // Note: type specific queries in case of table inheritance doesn't currently support expression visitor
+            return new DomainQueryable<T>(oftype, /*_expressionVisitor*/null);
+        }
+
         IDomainQueryable<TEntity> IDomainQueryable<TEntity>.Skip(int count)
         {
             var queryable = _queryable.Skip(count);

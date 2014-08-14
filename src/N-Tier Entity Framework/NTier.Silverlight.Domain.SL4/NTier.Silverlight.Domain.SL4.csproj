@@ -50,7 +50,7 @@
   <ItemGroup>
     <Reference Include="mscorlib" />
     <Reference Include="Remote.Linq">
-      <HintPath>..\packages\Remote.Linq.2.3.0\lib\sl4\Remote.Linq.dll</HintPath>
+      <HintPath>..\packages\Remote.Linq.3.0.0\lib\sl4\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations, Version=2.0.5.0, Culture=neutral, PublicKeyToken=ddd0da4d3e678217, processorArchitecture=MSIL">
       <Private>False</Private>
@@ -99,6 +99,12 @@
     <Compile Include="..\NTier.Client.Domain\DataServiceQueryable.cs">
       <Link>Client\DataServiceQueryable.cs</Link>
     </Compile>
+    <Compile Include="..\NTier.Client.Domain\DataServiceQueryable`.cs">
+      <Link>Client\DataServiceQueryable`.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\DataServiceQueryable`.QueryResult.cs">
+      <Link>Client\DataServiceQueryable`.QueryResult.cs</Link>
+    </Compile>
     <Compile Include="..\NTier.Client.Domain\DataServiceQueryableImp.cs">
       <Link>Client\DataServiceQueryableImp.cs</Link>
     </Compile>
@@ -119,9 +125,6 @@
     </Compile>
     <Compile Include="..\NTier.Client.Domain\FilterExpressionCollection.cs">
       <Link>Client\FilterExpressionCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\NTier.Client.Domain\ICallbackResult.cs">
-      <Link>Client\ICallbackResult.cs</Link>
     </Compile>
     <Compile Include="..\NTier.Client.Domain\IDataContext.cs">
       <Link>Client\IDataContext.cs</Link>
@@ -155,6 +158,9 @@
     </Compile>
     <Compile Include="..\NTier.Client.Domain\IOrderedDataServiceQueryableExtensions.cs">
       <Link>Client\IOrderedDataServiceQueryableExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\IQueryResult.cs">
+      <Link>Client\IQueryResult.cs</Link>
     </Compile>
     <Compile Include="..\NTier.Client.Domain\IRemoteCollectionView.cs">
       <Link>Client\IRemoteCollectionView.cs</Link>
@@ -307,7 +313,7 @@
     <Compile Include="Client\AsyncQueryCallback.cs" />
     <Compile Include="Client\DataContext.Silverlight.cs" />
     <Compile Include="Client\DataContext`.Silverlight.cs" />
-    <Compile Include="Client\DataServiceQueryable.Silverlight.cs" />
+    <Compile Include="Client\DataServiceQueryable`.Silverlight.cs" />
     <Compile Include="Client\DataServiceQueryableImp.Silverlight.cs" />
     <Compile Include="Client\Deployment.cs" />
     <Compile Include="Client\EntitySet.Silverlight.cs" />

@@ -14,6 +14,15 @@ namespace TableInheritance.Server.Domain.Edmx
     
     public partial class Employee : Person
     {
+        public Employee()
+        {
+            this.Employees = new HashSet<Employee>();
+        }
+    
         public System.DateTime EntryDate { get; set; }
+        public Nullable<long> ManagerId { get; set; }
+    
+        public virtual ICollection<Employee> Employees { get; set; }
+        public virtual Employee Manager { get; set; }
     }
 }
