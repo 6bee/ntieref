@@ -74,21 +74,38 @@ namespace NTier.Common.Domain.Model
 
                 case ObjectState.Modified:
                     {
-                        // copy changed properties (simple and complex properties only)
-                        var properties = originalEntity.PropertyInfos
-                            .Where(p => p.IsPhysical && 
-                                        p.Attributes.Any(attribute => attribute is SimplePropertyAttribute || attribute is ComplexPropertyAttribute) &&
-                                        originalEntity.ChangeTracker.ModifiedProperties.Contains(p.Name) && 
+                        // copy changed properties (simple)
+                        var simpleProperties = originalEntity.PropertyInfos
+                            .Where(p => p.IsPhysical &&
+                                        p.Attributes.Any(attribute => attribute is SimplePropertyAttribute) &&
+                                        originalEntity.ChangeTracker.ModifiedProperties.Contains(p.Name) &&
                                         originalEntity.ChangeTracker.OriginalValues.ContainsKey(p.Name))
                             .Select(p => p.PropertyInfo);
-
-                        foreach (var property in properties)
+                        foreach (var property in simpleProperties)
                         {
                             var value = property.GetValue(originalEntity, null);
                             property.SetValue(reducedEntity, value, null);
 
                             reducedEntity.ChangeTracker.ModifiedProperties.Add(property.Name);
                             reducedEntity.ChangeTracker.OriginalValues[property.Name] = originalEntity.ChangeTracker.OriginalValues[property.Name];
+                        }
+
+                        // copy changed properties (complex)
+                        var complexProperties = originalEntity.PropertyInfos
+                            .Where(p => p.IsPhysical &&
+                                        p.Attributes.Any(attribute => attribute is ComplexPropertyAttribute) &&
+                                        originalEntity.ChangeTracker.ModifiedProperties.Contains(p.Name))
+                            .Select(p => p.PropertyInfo);
+                        foreach (var property in complexProperties)
+                        {
+                            var value = property.GetValue(originalEntity, null);
+                            property.SetValue(reducedEntity, value, null);
+
+                            reducedEntity.ChangeTracker.ModifiedProperties.Add(property.Name);
+                            foreach (var propertyName in originalEntity.ChangeTracker.OriginalValues.Keys.Where(x => x.StartsWith(string.Format("{0}.", property.Name))))
+                            {
+                                reducedEntity.ChangeTracker.OriginalValues[propertyName] = originalEntity.ChangeTracker.OriginalValues[propertyName];
+                            }
                         }
                     }
                     break;
@@ -224,7 +241,7 @@ namespace NTier.Common.Domain.Model
                         // copy changed navigation properties (relations and foreign keys)
 
                         // single relation
-                        var physicalProperties = originalEntity.PropertyInfos.Where(p => p.IsPhysical && !p.Name.Contains('.')).ToDictionary(p => p.Name);
+                        var physicalProperties = originalEntity.PropertyInfos.Where(p => p.IsPhysical && p.Attributes.Any(attribute => attribute is NavigationPropertyAttribute)).ToDictionary(p => p.Name);
                         foreach (var property in originalEntity.ChangeTracker.OriginalValues.Where(p => physicalProperties.ContainsKey(p.Key)))
                         {
                             if (!reducedEntity.ChangeTracker.OriginalValues.ContainsKey(property.Key))
