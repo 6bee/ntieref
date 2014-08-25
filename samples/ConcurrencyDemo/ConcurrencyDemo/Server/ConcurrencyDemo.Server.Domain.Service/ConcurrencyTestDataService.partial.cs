@@ -14,7 +14,7 @@ namespace ConcurrencyDemo.Server.Domain.Service
                 case UpdateOperations.Add:
                 case UpdateOperations.Change:
                     entity.ChangedDate = DateTime.Now;
-                    entity.Key = Guid.NewGuid(); // setting next value for concurency column, check is based on original value
+                    entity.Key = Guid.NewGuid(); // setting next value for concurrency column, check is based on original value
                     break;
             }
         }
