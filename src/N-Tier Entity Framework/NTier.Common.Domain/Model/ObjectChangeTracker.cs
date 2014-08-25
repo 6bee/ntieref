@@ -29,9 +29,6 @@ namespace NTier.Common.Domain.Model
 
         #region Events
 
-        //[field: NonSerialized]
-        //public event EventHandler<ObjectStateChangingEventArgs> ObjectStateChanging;
-
         #region INotifyPropertyChanged
 
         [field: NonSerialized]
@@ -52,21 +49,12 @@ namespace NTier.Common.Domain.Model
 
         #endregion Events
 
-        //private void OnObjectStateChanging(ObjectState newState)
-        //{
-        //    var objectStateChanging = ObjectStateChanging;
-        //    if (objectStateChanging != null)
-        //    {
-        //        objectStateChanging(this, new ObjectStateChangingEventArgs(newState));
-        //    }
-        //}
-
         internal void OnPropertyChanged(string propertyName)
         {
-#if !SILVERLIGHT
-            if (IsChangeTrackingEnabled)
-#else
+#if SILVERLIGHT
             if (IsChangeTrackingEnabled && _objectState != ObjectState.Added)
+#else
+            if (IsChangeTrackingEnabled)
 #endif
             {
                 if (!ModifiedProperties.Contains(propertyName))
@@ -84,7 +72,6 @@ namespace NTier.Common.Domain.Model
             {
                 if (_objectState != value && (_isDeserializing || (_isChangeTrackingEnabled ?? true)))
                 {
-                    //OnObjectStateChanging(value);
                     _objectState = value;
                     RaisePropertyChanged("State");
                 }
@@ -96,18 +83,18 @@ namespace NTier.Common.Domain.Model
         {
             get
             {
-#if !SILVERLIGHT
-                return (_isChangeTrackingEnabled.HasValue && _isChangeTrackingEnabled.Value) || (!_isChangeTrackingEnabled.HasValue && _objectState != ObjectState.Added);
-#else
+#if SILVERLIGHT
                 return _isChangeTrackingEnabled ?? true;
+#else
+                return (_isChangeTrackingEnabled.HasValue && _isChangeTrackingEnabled.Value) || (!_isChangeTrackingEnabled.HasValue && _objectState != ObjectState.Added);
 #endif
             }
             set
             {
-#if !SILVERLIGHT
-                if (!_isChangeTrackingEnabled.HasValue || _isChangeTrackingEnabled.Value != value)
-#else
+#if SILVERLIGHT
                 if ((_isChangeTrackingEnabled ?? true) != value)
+#else
+                if (!_isChangeTrackingEnabled.HasValue || _isChangeTrackingEnabled.Value != value)
 #endif
                 {
                     _isChangeTrackingEnabled = value;
@@ -216,7 +203,6 @@ namespace NTier.Common.Domain.Model
         // to collection properties
         public void AcceptChanges()
         {
-            //OnObjectStateChanging(ObjectState.Unchanged);
             ModifiedProperties.Clear();
             OriginalValues.Clear();
             ObjectsAddedToCollectionProperties.Clear();

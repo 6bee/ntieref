@@ -48,6 +48,11 @@ namespace NTier.Client.Domain
         bool? IsValidationEnabled { get; set; }
 
         /// <summary>
+        ///  Gets or sets whether server validation exceptions are suppressed
+        /// </summary>
+        bool IsServerValidationExceptionSuppressed { get; set; }
+
+        /// <summary>
         /// Clears error entries an all entites attached to this context
         /// </summary>
         void ClearErrors();

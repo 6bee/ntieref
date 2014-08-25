@@ -343,7 +343,6 @@ namespace NTier.Common.Domain.Model
                 if (_changeTracker == null)
                 {
                     _changeTracker = new ObjectChangeTracker();
-                    //_changeTracker.ObjectStateChanging += HandleObjectStateChanging;
                     _changeTracker.PropertyChanged += changeTracker_PropertyChanged;
                 }
                 return _changeTracker;
@@ -352,31 +351,18 @@ namespace NTier.Common.Domain.Model
             {
                 if (_changeTracker != null)
                 {
-                    //_changeTracker.ObjectStateChanging -= HandleObjectStateChanging;
                     _changeTracker.PropertyChanged -= changeTracker_PropertyChanged;
                 }
-
                 _changeTracker = value;
-
                 if (_changeTracker != null)
                 {
-                    //_changeTracker.ObjectStateChanging += HandleObjectStateChanging;
                     _changeTracker.PropertyChanged += changeTracker_PropertyChanged;
                 }
-
                 OnPropertyChanged("ChangeTracker", trackInChangeTracker: false);
             }
         }
         [NonSerialized]
         private ObjectChangeTracker _changeTracker;
-
-        //private void HandleObjectStateChanging(object sender, ObjectStateChangingEventArgs e)
-        //{
-        //    if (e.NewState == ObjectState.Deleted)
-        //    {
-        //        ClearNavigationProperties();
-        //    }
-        //}
 
         private void changeTracker_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -970,13 +956,18 @@ namespace NTier.Common.Domain.Model
 
         public override bool Equals(object obj)
         {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
             return obj is Entity && Equals((Entity)obj);
         }
 
         public bool Equals(Entity entity)
         {
-            return !object.ReferenceEquals(entity, null)
-                && (object.ReferenceEquals(this, entity) || (ChangeTracker.State != ObjectState.Added && entity.ChangeTracker.State != ObjectState.Added && IsKeyEqual(entity)));
+            if (ReferenceEquals(null, entity)) return false;
+            if (ReferenceEquals(this, entity)) return true;
+            return ChangeTracker.State != ObjectState.Added
+                && entity.ChangeTracker.State != ObjectState.Added
+                && IsKeyEqual(entity);
         }
 
         protected abstract bool IsKeyEqual(Entity entity);
@@ -1075,11 +1066,10 @@ namespace NTier.Common.Domain.Model
 
             if (trackInChangeTracker && ChangeTracker.IsChangeTrackingEnabled)
             {
-                if (ChangeTracker.State != ObjectState.Added && ChangeTracker.State != ObjectState.Deleted)
+                if (ChangeTracker.State == ObjectState.Unchanged)
                 {
                     ChangeTracker.State = ObjectState.Modified;
                 }
-
                 if (!isNavigationProperty)
                 {
                     ChangeTracker.OnPropertyChanged(propertyName);
@@ -1106,7 +1096,7 @@ namespace NTier.Common.Domain.Model
         {
             if (ChangeTracker.IsChangeTrackingEnabled)
             {
-                if (ChangeTracker.State != ObjectState.Added && ChangeTracker.State != ObjectState.Deleted)
+                if (ChangeTracker.State == ObjectState.Unchanged)
                 {
                     ChangeTracker.State = ObjectState.Modified;
                 }

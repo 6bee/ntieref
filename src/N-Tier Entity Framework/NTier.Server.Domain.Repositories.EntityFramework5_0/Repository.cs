@@ -42,15 +42,6 @@ namespace NTier.Server.Domain.Repositories.EntityFramework
             if (entity != null)
             {
                 entity.IsValidationEnabled = true;
-                //bool changeTrackingEnabled = entity.ChangeTracker.IsChangeTrackingEnabled;
-                //try
-                //{
-                //    entity.MarkAsUnchanged();
-                //}
-                //finally
-                //{
-                //    entity.ChangeTracker.IsChangeTrackingEnabled = changeTrackingEnabled;
-                //}
                 entity.ChangeTracker.State = ObjectState.Unchanged;
                 entity.ChangeTracker.IsChangeTrackingEnabled = false;
                 this.StoreReferenceKeyValues(entity);
