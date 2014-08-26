@@ -1,44 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
-    <Metadata>
-        <Identity Id="NTierEntityFramework.Trivadis.168a8207-278d-4137-b65c-481ca94fc8f8" Version="1.5" Language="en-US" Publisher="Trivadis" />
-        <DisplayName>N-Tier Entity Framework VS2012</DisplayName>
-        <Description xml:space="preserve">The N-Tier Entity Framework extends Microsoft's Entity Framework (EF) to provide support for n-tier solutions. The framework aims to provide the richness of EF in a distributed architecture while keeping its simplicity.</Description>
-        <MoreInfo>http://ntieref.codeplex.com/</MoreInfo>
-        <License>license.txt</License>
-        <GettingStartedGuide>http://ntieref.codeplex.com/</GettingStartedGuide>
-        <Icon>favicon.ico</Icon>
-        <PreviewImage>preview.png</PreviewImage>
-        <Tags>Entity Framework, Code Generator, code generation, T4, C#, data access, C# Code Generator, DAL, data access layer, DDD, Domain Driven Design, N-Tier Entity Framework, N-Tier EF, ntieref </Tags>
-    </Metadata>
-    <Installation AllUsers="true">
-        <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[11.0,12.0)" />
-        <InstallationTarget Version="[11.0,12.0)" Id="Microsoft.VisualStudio.Premium" />
-        <InstallationTarget Version="[11.0,12.0)" Id="Microsoft.VisualStudio.Ultimate" />
-    </Installation>
-    <Dependencies>
-        <!--<Dependency d:Source="Installed" Id="T4Toolbox" DisplayName="T4 Toolbox" Version="[11.4,12.0)" d:InstallSource="Download" Location="http://visualstudiogallery.msdn.microsoft.com/7f9bd62f-2505-4aa4-9378-ee7830371684" CanAutoDownload="true" IsRequired="true" />
+  <Metadata>
+    <Identity Id="NTierEntityFramework.Trivadis.168a8207-278d-4137-b65c-481ca94fc8f8" Version="1.5" Language="en-US" Publisher="Trivadis" />
+    <DisplayName>N-Tier Entity Framework VS2012</DisplayName>
+    <Description xml:space="preserve">The N-Tier Entity Framework extends Microsoft's Entity Framework (EF) to provide support for n-tier solutions. The framework aims to provide the richness of EF in a distributed architecture while keeping its simplicity.</Description>
+    <MoreInfo>http://ntieref.codeplex.com/</MoreInfo>
+    <License>license.txt</License>
+    <GettingStartedGuide>http://ntieref.codeplex.com/</GettingStartedGuide>
+    <Icon>favicon.ico</Icon>
+    <PreviewImage>preview.png</PreviewImage>
+    <Tags>Entity Framework, Code Generator, code generation, T4, C#, data access, C# Code Generator, DAL, data access layer, DDD, Domain Driven Design, N-Tier Entity Framework, N-Tier EF, ntieref </Tags>
+  </Metadata>
+  <Installation AllUsers="true">
+    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[11.0,12.0)" />
+    <InstallationTarget Version="[11.0,12.0)" Id="Microsoft.VisualStudio.Premium" />
+    <InstallationTarget Version="[11.0,12.0)" Id="Microsoft.VisualStudio.Ultimate" />
+  </Installation>
+  <Dependencies>
+    <!--<Dependency d:Source="Installed" Id="T4Toolbox" DisplayName="T4 Toolbox" Version="[11.4,12.0)" d:InstallSource="Download" Location="http://visualstudiogallery.msdn.microsoft.com/7f9bd62f-2505-4aa4-9378-ee7830371684" CanAutoDownload="true" IsRequired="true" />
         <Dependency d:Source="Installed" Id="NuPackToolsVsix.Microsoft.67e54e40-0ae3-42c5-a949-fddf5739e7a5" DisplayName="NuGet Package Manager" Version="[1.7.30402.9028,3.0)" d:InstallSource="Download" Location="http://visualstudiogallery.msdn.microsoft.com/27077b70-9dad-4c64-adcf-c7cf6bc9970c" CanAutoDownload="true" IsRequired="true" />
         <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="4.5" />-->
-    </Dependencies>
-    <References>
-        <Reference Id="NuPackToolsVsix.Microsoft.67e54e40-0ae3-42c5-a949-fddf5739e7a5" MinVersion="1.7.30402.9028">
-            <Name>NuGet Package Manager</Name>
-            <MoreInfoUrl>http://docs.nuget.org/</MoreInfoUrl>
-        </Reference>
-        <Reference Id="T4Toolbox" MinVersion="11.4">
-            <Name>T4 Toolbox</Name>
-            <MoreInfoUrl>http://visualstudiogallery.msdn.microsoft.com/7f9bd62f-2505-4aa4-9378-ee7830371684</MoreInfoUrl>
-        </Reference>
-    </References>
-    <Assets>
-        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="ProjectTemplateWizard" Path="|ProjectTemplateWizard|" AssemblyName="|ProjectTemplateWizard;AssemblyName|" />
-        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="File" Path="Additional.pkgdef" />
-        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="EntityDataModelToolsExtensions" Path="|EntityDataModelToolsExtensions|" />
-        <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="File" Path="ProjectTemplates" d:TargetPath="ProjectTemplates\Windows\NTierEF.zip" />
-        <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="File" Path="ProjectTemplates" d:TargetPath="ProjectTemplates\Silverlight\NTierEFSL.zip" />
-        <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\Code Generation\DomainServiceGenerator.zip" />
-        <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\Code Generation\NTierEntityGenerator.zip" />
-        <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\Silverlight\SilverlightGenerator.zip" />
-    </Assets>
+  </Dependencies>
+  <References>
+    <Reference Id="NuPackToolsVsix.Microsoft.67e54e40-0ae3-42c5-a949-fddf5739e7a5" MinVersion="1.7.30402.9028">
+      <Name>NuGet Package Manager</Name>
+      <MoreInfoUrl>http://docs.nuget.org/</MoreInfoUrl>
+    </Reference>
+    <Reference Id="T4Toolbox" MinVersion="11.4">
+      <Name>T4 Toolbox</Name>
+      <MoreInfoUrl>http://visualstudiogallery.msdn.microsoft.com/7f9bd62f-2505-4aa4-9378-ee7830371684</MoreInfoUrl>
+    </Reference>
+  </References>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="ProjectTemplateWizard" Path="|ProjectTemplateWizard|" AssemblyName="|ProjectTemplateWizard;AssemblyName|" />
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="File" Path="Additional.pkgdef" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="EntityDataModelToolsExtensions" Path="|EntityDataModelToolsExtensions|" />
+    <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="File" Path="ProjectTemplates" d:TargetPath="ProjectTemplates\Windows\NTierEF.zip" />
+    <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="File" Path="ProjectTemplates" d:TargetPath="ProjectTemplates\Silverlight\NTierEFSL.zip" />
+    <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\Code Generation\DomainServiceGenerator.zip" />
+    <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\Code Generation\NTierEntityGenerator.zip" />
+    <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\Silverlight\SilverlightGenerator.zip" />
+  </Assets>
 </PackageManifest>

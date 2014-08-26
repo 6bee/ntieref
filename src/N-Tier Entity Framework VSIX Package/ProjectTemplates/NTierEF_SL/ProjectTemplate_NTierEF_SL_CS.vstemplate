@@ -31,8 +31,8 @@
   </WizardExtension>
   <WizardData>
     <packages repository="extension" repositoryId="NTierEntityFramework.Trivadis.x">
-      <package id="NTierEntityFramework.Silverlight" version="0.0.1" />
-      <package id="Remote.Linq" version="2.3.0" />
+      <package id="NTierEntityFramework.Silverlight" version="1.5.0" />
+      <!--<package id="Remote.Linq" version="3.0.0" />-->
     </packages>
   </WizardData>
 </VSTemplate>

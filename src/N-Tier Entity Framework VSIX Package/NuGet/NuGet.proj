@@ -20,11 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ClientDomain         Include="$(FrameworkBinDir)**\NTier.Client.Domain.*" />
-    <CommonDomain         Include="$(FrameworkBinDir)**\NTier.Common.Domain.*" />
-    <ServerDomain         Include="$(FrameworkBinDir)**\NTier.Server.Domain.*" Exclude="$(FrameworkBinDir)**\NTier.Server.Domain.Repositories.*" />
+    <!--<ClientDomain         Include="$(FrameworkBinDir)**\NTier.Client.Domain.*" />-->
+    <!--<CommonDomain         Include="$(FrameworkBinDir)**\NTier.Common.Domain.*" />-->
+    <!--<ServerDomain         Include="$(FrameworkBinDir)**\NTier.Server.Domain.*" Exclude="$(FrameworkBinDir)**\NTier.Server.Domain.Repositories.*" />-->
     <ServerDomainEF5      Include="$(FrameworkBinDir)EF5\**\NTier.Server.Domain.Repositories.EntityFramework.*" />
-    <ServerDomainEF6      Include="$(FrameworkBinDir)EF6\**\NTier.Server.Domain.Repositories.EntityFramework.*" />
+    <!--<ServerDomainEF6      Include="$(FrameworkBinDir)EF6\**\NTier.Server.Domain.Repositories.EntityFramework.*" />-->
     <Silverlight4Domain   Include="$(FrameworkBinDir)**\SL4\NTier.Silverlight.Domain.*" />
     <Silverlight5Domain   Include="$(FrameworkBinDir)**\SL5\NTier.Silverlight.Domain.*" />
     <T4Include            Include="$(SolutionDir)\TextTemplates\NTierEF.*.ttinclude" Exclude="$(SolutionDir)\TextTemplates\NTierEF.SL.*.ttinclude;$(SolutionDir)\TextTemplates\NTierEF.DomainService*.ttinclude" />
@@ -38,6 +38,22 @@
     <WcfRiaT4Include      Include="$(SolutionDir)\TextTemplates\NTierEF.DomainService*.ttinclude" />
     <WcfRiaT4Include      Include="$(SolutionDir)\TextTemplates\NTierEF.EF.Utility.CS.ttinclude" />
     <T4Tools              Include="$(MSBuildThisFileDirectory)\tools\*" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <ClientDomainPojectName>NTier.Client.Domain</ClientDomainPojectName>
+    <CommonDomainPojectName>NTier.Common.Domain</CommonDomainPojectName>
+    <ServerDomainPojectName>NTier.Server.Domain</ServerDomainPojectName>
+    <ServerDomainEF5RepoPojectName>NTier.Server.Domain.Repositories.EntityFramework5_0</ServerDomainEF5RepoPojectName>
+    <ServerDomainEF6RepoPojectName>NTier.Server.Domain.Repositories.EntityFramework6_0</ServerDomainEF6RepoPojectName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkProjects   Include="$(FrameworkDir)\$(ClientDomainPojectName)\*.csproj" />
+    <FrameworkProjects   Include="$(FrameworkDir)\$(CommonDomainPojectName)\*.csproj" />
+    <FrameworkProjects   Include="$(FrameworkDir)\$(ServerDomainPojectName)\*.csproj" />
+    <FrameworkProjects   Include="$(FrameworkDir)\$(ServerDomainEF5RepoPojectName)\*.csproj" />
+    <FrameworkProjects   Include="$(FrameworkDir)\$(ServerDomainEF6RepoPojectName)\*.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -64,16 +80,6 @@
 
   <Target Name="Clean">	
     <!-- remove resource directories -->
-    <!--
-    <RemoveDir Directories="$(MSBuildThisFileDirectory)\Client\lib\" />
-    <RemoveDir Directories="$(MSBuildThisFileDirectory)\Common\lib\" />
-    <RemoveDir Directories="$(MSBuildThisFileDirectory)\Server\lib\" />
-    <RemoveDir Directories="$(MSBuildThisFileDirectory)\Silverlight\lib\" />
-    <RemoveDir Directories="$(MSBuildThisFileDirectory)\Silverlight\content\" />
-    <RemoveDir Directories="$(MSBuildThisFileDirectory)\T4\content\" />
-    <RemoveDir Directories="$(MSBuildThisFileDirectory)\WcfRia\content\" />
-    <Exec Command="echo %(ResourceDirectories.Identity)" />
-    -->
     <RemoveDir Condition=" Exists('%(ResourceDirectories.Identity)') "  Directories="%(ResourceDirectories.Identity)" />
     
     <!-- delete nupkg files -->
@@ -100,6 +106,7 @@
       <Output TaskParameter="Include" ItemName="NuSpecs"/>
     </CreateItem>
     <Exec Command="&quot;$(NuGetExePath)&quot; pack &quot;%(NuSpecs.Identity)&quot; $(VersionOption) -OutputDirectory &quot;$(PackagesPath).&quot; -Exclude &quot;*.nutrans&quot; -NonInteractive -NoPackageAnalysis" />
+    <Exec Command="&quot;$(NuGetExePath)&quot; pack &quot;%(FrameworkProjects.Identity)&quot; $(VersionOption) -Build -Symbols -Properties Configuration=Release -OutputDirectory &quot;$(PackagesPath).&quot; -NonInteractive -NoPackageAnalysis" />
     
     <CallTarget Targets="CopyFrameworkPackages"/>
     <!--<CallTarget Targets="CopyPackagesToOutputPath"/>-->
@@ -125,12 +132,12 @@
   </Target>
 
   <Target Name="PrepareResources">
-    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Client\lib\net4-client" SourceFiles="@(ClientDomain)" />
-    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Common\lib\net4-client" SourceFiles="@(CommonDomain)" />
-    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Server\lib\net4-client" SourceFiles="@(ServerDomain)" />
+    <!--<Copy DestinationFolder="$(MSBuildThisFileDirectory)\Client\lib\net4-client" SourceFiles="@(ClientDomain)" />-->
+    <!--<Copy DestinationFolder="$(MSBuildThisFileDirectory)\Common\lib\net4-client" SourceFiles="@(CommonDomain)" />-->
+    <!--<Copy DestinationFolder="$(MSBuildThisFileDirectory)\Server\lib\net4-client" SourceFiles="@(ServerDomain)" />-->
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Server.EF4\lib\net4-client" SourceFiles="@(ServerDomainEF5)" />
-    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Server.EF5\lib\net4-client" SourceFiles="@(ServerDomainEF5)" />
-    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Server.EF6\lib\net4-client" SourceFiles="@(ServerDomainEF6)" />
+    <!--<Copy DestinationFolder="$(MSBuildThisFileDirectory)\Server.EF5\lib\net4-client" SourceFiles="@(ServerDomainEF5)" />-->
+    <!--<Copy DestinationFolder="$(MSBuildThisFileDirectory)\Server.EF6\lib\net4-client" SourceFiles="@(ServerDomainEF6)" />-->
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\lib\sl4" SourceFiles="@(Silverlight4Domain)" />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\lib\sl5" SourceFiles="@(Silverlight5Domain)" />
     <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\content\T4" SourceFiles="@(SilverlightT4Dll)" />
@@ -152,12 +159,13 @@
   <Target Name="PrepareNuSpecs">
     <ItemGroup>
       <Transforms Include="$(MSBuildThisFileDirectory)\**\*.nutrans" />
+      <Transforms Include="$(FrameworkDir)\**\*.nutrans" />
     </ItemGroup>
 
     <!-- Transform Nuspecs -->
     <TransformXmlHierarchy
       Source="%(Transforms.Identity)"
-      Destination="$(MSBuildThisFileDirectory)\%(Transforms.RecursiveDir)%(Transforms.Filename).nuspec"
+      Destination="%(Transforms.RootDir)%(Transforms.Directory)%(Transforms.Filename).nuspec"
       TaskDirectory="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\Web\" />
   </Target>
 

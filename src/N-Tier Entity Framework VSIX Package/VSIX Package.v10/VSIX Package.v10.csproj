@@ -5,6 +5,12 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <PropertyGroup>
+    <EFVersion Condition=" '$(EFVersion)' == '' ">5.0.0</EFVersion>
+    <EFProviderVersion Condition=" '$(EFProviderVersion)' == '' ">5_0</EFProviderVersion>
+    <NugetPackageVersion Condition=" '$(NugetPackageVersion)' == '' ">0.0.1</NugetPackageVersion>
+    <VsixFileVersion Condition=" '$(VsixVersion)' != '' ">_V$(VsixVersion)</VsixFileVersion>
+  </PropertyGroup>
+  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
@@ -13,7 +19,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NTierEntityFramework</RootNamespace>
-    <AssemblyName>N-Tier Entity Framework %28VS2010%29</AssemblyName>
+    <AssemblyName>N-Tier Entity Framework %28VS2010%29$(VsixFileVersion)</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <GeneratePkgDefFile>false</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>false</IncludeAssemblyInVSIXContainer>
@@ -104,56 +110,56 @@
       <Link>ProjectT\Silverlight\NTierEF_SL.zip</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\Packages\NTierEntityFramework.Client.0.0.1.nupkg">
-      <Link>packages\NTierEntityFramework.Client.0.0.1.nupkg</Link>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Client.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.Client.$(NugetPackageVersion).nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\Packages\NTierEntityFramework.Common.0.0.1.nupkg">
-      <Link>packages\NTierEntityFramework.Common.0.0.1.nupkg</Link>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Common.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.Common.$(NugetPackageVersion).nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\Packages\NTierEntityFramework.Server.0.0.1.nupkg">
-      <Link>packages\NTierEntityFramework.Server.0.0.1.nupkg</Link>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Server.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.Server.$(NugetPackageVersion).nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\Packages\NTierEntityFramework.Server.EntityFramework4_0.0.0.1.nupkg">
-      <Link>packages\NTierEntityFramework.Server.EntityFramework4_0.0.0.1.nupkg</Link>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Server.EntityFramework4_0.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.Server.EntityFramework4_0.$(NugetPackageVersion).nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\Packages\NTierEntityFramework.Server.EntityFramework5_0.0.0.1.nupkg">
-      <Link>packages\NTierEntityFramework.Server.EntityFramework5_0.0.0.1.nupkg</Link>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Server.EntityFramework5_0.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.Server.EntityFramework5_0.$(NugetPackageVersion).nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\Packages\NTierEntityFramework.Server.EntityFramework6_0.0.0.1.nupkg">
-      <Link>packages\NTierEntityFramework.Server.EntityFramework6_0.0.0.1.nupkg</Link>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Server.EntityFramework6_0.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.Server.EntityFramework6_0.$(NugetPackageVersion).nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\Packages\NTierEntityFramework.Silverlight.0.0.1.nupkg">
-      <Link>packages\NTierEntityFramework.Silverlight.0.0.1.nupkg</Link>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Silverlight.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.Silverlight.$(NugetPackageVersion).nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\Packages\NTierEntityFramework.T4.0.0.1.nupkg">
-      <Link>packages\NTierEntityFramework.T4.0.0.1.nupkg</Link>
+    <Content Include="..\lib\Packages\NTierEntityFramework.T4.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.T4.$(NugetPackageVersion).nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\Packages\NTierEntityFramework.T4.EntityFramework4_0.0.0.1.nupkg">
-      <Link>packages\NTierEntityFramework.T4.EntityFramework4_0.0.0.1.nupkg</Link>
+    <Content Include="..\lib\Packages\NTierEntityFramework.T4.EntityFramework4_0.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.T4.EntityFramework4_0.$(NugetPackageVersion).nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\Packages\NTierEntityFramework.T4.EntityFramework5_0.0.0.1.nupkg">
-      <Link>packages\NTierEntityFramework.T4.EntityFramework5_0.0.0.1.nupkg</Link>
+    <Content Include="..\lib\Packages\NTierEntityFramework.T4.EntityFramework5_0.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.T4.EntityFramework5_0.$(NugetPackageVersion).nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\Packages\NTierEntityFramework.T4.EntityFramework6_0.0.0.1.nupkg">
-      <Link>packages\NTierEntityFramework.T4.EntityFramework6_0.0.0.1.nupkg</Link>
+    <Content Include="..\lib\Packages\NTierEntityFramework.T4.EntityFramework6_0.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.T4.EntityFramework6_0.$(NugetPackageVersion).nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\Packages\NTierEntityFramework.WcfRia.0.0.1.nupkg">
-      <Link>packages\NTierEntityFramework.WcfRia.0.0.1.nupkg</Link>
+    <Content Include="..\lib\Packages\NTierEntityFramework.WcfRia.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.WcfRia.$(NugetPackageVersion).nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\Packages\Remote.Linq.2.3.0.nupkg">
-      <Link>packages\Remote.Linq.1.0.1.nupkg</Link>
+    <Content Include="..\lib\Packages\Remote.Linq.3.0.0.nupkg">
+      <Link>packages\Remote.Linq.3.0.0.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="..\lib\Packages\EntityFramework.4.3.1.nupkg">
@@ -207,13 +213,11 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <PropertyGroup>
-    <EFVersion Condition=" '$(EFVersion)' == '' ">5.0.0</EFVersion>
-    <EFProviderVersion Condition=" '$(EFProviderVersion)' == '' ">5_0</EFProviderVersion>
-  </PropertyGroup>
   <Target Name="BeforeBuild">
     <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchVsixId" Properties="VsixGuid=511fbfbd-0acc-4ee5-ab92-62b02544c118" />
     <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchEFPackageVersions" Properties="EFProviderVersion=$(EFProviderVersion);EFVersion=$(EFVersion)" />
+    <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="NugetPackageVersion" Properties="NugetPackageVersion=$(NugetPackageVersion)" Condition="'$(NugetPackageVersion)' != ''" />
+    <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchVsixVersion" Properties="VsixVersion=$(VsixVersion)" Condition="'$(VsixVersion)' != ''" />
     <ItemGroup>
       <ProjectToBuild Include="$(SolutionDir)\ProjectTemplates\ProjectTemplates.proj" />
       <ProjectToBuild Include="$(SolutionDir)\ItemTemplates\ItemTemplates.proj" />

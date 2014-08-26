@@ -113,9 +113,9 @@ REM "$(SolutionDir)..\..\tools\7zip\7za.exe" a "$(SolutionDir)lib\Lib_NET.zip" "
   -->
   <Target Name="BeforeBuild">
     <!-- 
-	<Exec Command="&quot;$(SolutionDir)..\..\tools\NuGet\NuGet.exe&quot; restore &quot;$(SolutionDir)..\N-Tier Entity Framework\N-Tier Entity Framework.sln&quot;" />
+    <Exec Command="&quot;$(SolutionDir)..\..\tools\NuGet\NuGet.exe&quot; restore &quot;$(SolutionDir)..\N-Tier Entity Framework\N-Tier Entity Framework.sln&quot;" />
     <MSBuild Projects="$(SolutionDir)..\N-Tier Entity Framework\N-Tier Entity Framework.sln" Targets="Rebuild" Properties="Configuration=$(Configuration)" />
-	-->
-    <MSBuild Projects="$(SolutionDir)\NuGet\NuGet.proj" Targets="RebuildPackages" Properties="Configuration=$(Configuration)" />
+    -->
+    <MSBuild Projects="$(SolutionDir)\NuGet\NuGet.proj" Targets="RebuildPackages" Properties="Configuration=$(Configuration);Version=$(NugetPackageVersion)" />
   </Target>
 </Project>
