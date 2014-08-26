@@ -49,10 +49,10 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\..\Common\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj') ">
+    <ProjectReference Include="..\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj') ">
       <Name>$safesolutionname$.Common.Domain.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj') ">
+    <ProjectReference Include="..\..\Common\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\..\Common\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj') ">
       <Name>$safesolutionname$.Common.Domain.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\$safesolutionname$.Server.Domain.Edmx\$safesolutionname$.Server.Domain.Edmx.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\$safesolutionname$.Server.Domain.Edmx\$safesolutionname$.Server.Domain.Edmx.csproj') ">

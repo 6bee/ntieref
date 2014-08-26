@@ -53,16 +53,13 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <!--<ProjectReference Include="..\$safesolutionname$.Client.Domain.Service.RemoteChannelFactory\$safesolutionname$.Client.Domain.Service.RemoteChannelFactory.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\$safesolutionname$.Client.Domain.Service.RemoteChannelFactory\$safesolutionname$.Client.Domain.Service.RemoteChannelFactory.csproj') ">
-      <Name>$safesolutionname$.Client.Domain.Service.RemoteChannelFactory</Name>
-    </ProjectReference>-->
     <ProjectReference Include="..\$safesolutionname$.Client.Domain\$safesolutionname$.Client.Domain.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\$safesolutionname$.Client.Domain\$safesolutionname$.Client.Domain.csproj') ">
       <Name>$safesolutionname$.Client.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Common\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\..\Common\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj') ">
+    <ProjectReference Include="..\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj') ">
       <Name>$safesolutionname$.Common.Domain.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj') ">
+    <ProjectReference Include="..\..\Common\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\..\Common\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj') ">
       <Name>$safesolutionname$.Common.Domain.Model</Name>
     </ProjectReference>
   </ItemGroup>
