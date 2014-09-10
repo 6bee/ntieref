@@ -115,5 +115,10 @@ namespace NTier.Client.Domain
         /// Setting also applies the value on all entities corrently contained in this entity set
         /// </summary>
         bool IsValidationEnabled { get; set; }
+
+        /// <summary>
+        /// Returns entites contained in the entity set, including entities marked as deleted.
+        /// </summary>
+        System.Collections.IEnumerable GetAllEntities();
     }
 }

@@ -320,6 +320,11 @@ namespace NTier.Client.Domain
             }
         }
 
+        System.Collections.IEnumerable IInternalEntitySet.GetAllEntities()
+        {
+            return GetAllEntities();
+        }
+
         public IEnumerator<TEntity> GetEnumerator()
         {
             foreach (var entity in _entitySet)

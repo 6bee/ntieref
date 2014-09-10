@@ -31,7 +31,7 @@ namespace NTier.Client.Domain
 
         private IEnumerable<StateEntry> GetStateEntries(IEnumerable<Entity> entityList)
         {
-            var all = base.EntitySets.SelectMany(x => x.OfType<Entity>()).ToArray();
+            var all = EntitySets.SelectMany(x => x.GetAllEntities().OfType<Entity>()).ToArray();
             var stateEntries = entityList
                 .Select(e =>
                 {
