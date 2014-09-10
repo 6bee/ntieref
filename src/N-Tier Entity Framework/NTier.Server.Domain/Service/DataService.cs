@@ -93,7 +93,7 @@ namespace NTier.Server.Domain.Service
             }
             return new QueryResult<TBase> { Data = result, TotalCount = totalCount };
         }
-        
+
 
         #endregion query
 
@@ -145,26 +145,26 @@ namespace NTier.Server.Domain.Service
                 return;
             }
 
-
             var optimisticConcurrencyExceptionEntities = new List<Entity>();
-            var updataeException = new List<Entity>();
+            var updateException = new List<Entity>();
             var allSaved = false;
             while (!allSaved)
             {
                 try
                 {
-                    // save changes to database
                     repository.SaveChanges();
                     allSaved = true;
                 }
                 catch (UpdateException ex)
                 {
                     var entities = ex.Entities;
+
                     // refresh changed entities from store
                     if (entities.Any(x => x.ChangeTracker.State != ObjectState.Added))
                     {
                         repository.Refresh(RefreshMode.StoreWins, entities.Where(x => x.ChangeTracker.State != ObjectState.Added));
                     }
+
                     // remove new entities from repository
                     if (entities.Any(x => x.ChangeTracker.State == ObjectState.Added))
                     {
@@ -173,7 +173,9 @@ namespace NTier.Server.Domain.Service
                             DetachEntity(repository, entity);
                         }
                     }
+
                     AddExceptionMessageAsErrorEntry(ex, entities);
+
                     // collect faulted entities
                     if (ex is OptimisticConcurrencyException)
                     {
@@ -181,15 +183,17 @@ namespace NTier.Server.Domain.Service
                     }
                     else
                     {
-                        updataeException.AddRange(entities);
+                        updateException.AddRange(entities);
                     }
                 }
             }
-            if (updataeException.Any())
+
+            if (updateException.Any())
             {
                 var message = "Update, insert, or delete statement failed for one or more entities. Transaction was rolled back.";
-                throw CreateUpdateFaultException(message, updataeException.Concat(optimisticConcurrencyExceptionEntities));
+                throw CreateUpdateFaultException(message, updateException.Concat(optimisticConcurrencyExceptionEntities));
             }
+
             if (optimisticConcurrencyExceptionEntities.Any())
             {
                 var message = "Update, insert, or delete statement failed for one or more entities. Transaction was rolled back.";
@@ -238,6 +242,7 @@ namespace NTier.Server.Domain.Service
                     return message;
                 }
             }
+
             return ex.Message;
         }
 
@@ -291,6 +296,7 @@ namespace NTier.Server.Domain.Service
                             }
                         }
                     }
+
                     return _sinleton;
                 }
             }
@@ -313,6 +319,7 @@ namespace NTier.Server.Domain.Service
                         }
                     }
                 }
+
                 return _dict[dataServiceType];
             }
 
@@ -331,6 +338,7 @@ namespace NTier.Server.Domain.Service
                         }
                     }
                 }
+
                 return interceptors[entityType];
             }
 
@@ -422,6 +430,7 @@ namespace NTier.Server.Domain.Service
                 {
                     filter = (Expression<Func<TEntity, bool>>)interceptor.Invoke(this, new object[] { clientInfo });
                 }
+
                 list.Add(filter);
             }
 
