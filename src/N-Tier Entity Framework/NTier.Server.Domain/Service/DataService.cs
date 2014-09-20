@@ -100,6 +100,20 @@ namespace NTier.Server.Domain.Service
         #region update
 
         /// <summary>
+        /// Returns true if SaveChanges should throw on first UpdateException. 
+        /// Overriding this property allows to set value to false and let SaveChanges continue in case of an Exception
+        /// in order to collect all potential isses and throw only after processing all entities.
+        /// </summary>
+        /// <remarks>
+        /// There's an issue when setting this to false, i.e. potential reporting of Exception for valid Entities 
+        /// due to processing order or dependency to other faulted entities.
+        /// </remarks>
+        protected virtual bool ThrowOnFirstUpdateException
+        {
+            get { return true; }
+        }
+
+        /// <summary>
         /// Executes change interceptors and applies changes to the objects set for each entity contained in the change set
         /// </summary>
         protected virtual void ApplyChanges<TEntity>(TRepository repository, IEntitySet<TEntity> entitySet, IChangeSet changeSet, IList<TEntity> entityChangeSet, ClientInfo clientInfo) where TEntity : Entity
@@ -184,6 +198,11 @@ namespace NTier.Server.Domain.Service
                     else
                     {
                         updateException.AddRange(entities);
+                    }
+
+                    if (ThrowOnFirstUpdateException)
+                    {
+                        break;
                     }
                 }
             }
