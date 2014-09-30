@@ -218,11 +218,9 @@
     <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchEFPackageVersions" Properties="EFProviderVersion=$(EFProviderVersion);EFVersion=$(EFVersion)" />
     <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="NugetPackageVersion" Properties="NugetPackageVersion=$(NugetPackageVersion)" Condition="'$(NugetPackageVersion)' != ''" />
     <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchVsixVersion" Properties="VsixVersion=$(VsixVersion)" Condition="'$(VsixVersion)' != ''" />
-    <ItemGroup>
-      <ProjectToBuild Include="$(SolutionDir)\ProjectTemplates\ProjectTemplates.proj" />
-      <ProjectToBuild Include="$(SolutionDir)\ItemTemplates\ItemTemplates.proj" />
-    </ItemGroup>
-    <MSBuild Projects="@(ProjectToBuild)" Targets="Clean;Build" />
+    <MSBuild Projects="$(ProjectDir)..\ProjectTemplates\ProjectTemplates.proj" Targets="Clean;Build" />
+    <MSBuild Projects="$(ProjectDir)..\ProjectTemplates_Patches\patch_pre_vs12.0.proj" Targets="Patch" />
+    <MSBuild Projects="$(ProjectDir)..\ItemTemplates\ItemTemplates.proj" Targets="Clean;Build" />
     <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchEFPackageVersions" Properties="EFProviderVersion=X_Y;EFVersion=x.y.z" />
     <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchVsixId" Properties="VsixGuid=x" />
   </Target>

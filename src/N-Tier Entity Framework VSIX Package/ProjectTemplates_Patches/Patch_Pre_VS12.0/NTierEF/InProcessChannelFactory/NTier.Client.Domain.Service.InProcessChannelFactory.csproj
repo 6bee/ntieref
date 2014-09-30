@@ -3,21 +3,19 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{$guid1$}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>$safeprojectname$</RootNamespace>
-    <AssemblyName>$safeprojectname$</AssemblyName>
-    <ProjectTypeGuids>{3D9AD99F-2412-4246-B90B-4EAA41C64699};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <StartArguments>/client:"WcfTestClient.exe"</StartArguments>
+    <RootNamespace>$safesolutionname$.Client.Domain.Service.ChannelFactory</RootNamespace>
+    <AssemblyName>$safesolutionname$.Client.Domain.Service.InProcessChannelFactory</AssemblyName>
     <TargetFrameworkVersion>v$targetframeworkversion$</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
     $if$ ($targetframeworkversion$ == 4.0)
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     $else$
     <TargetFrameworkProfile></TargetFrameworkProfile>
-    <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
     $endif$
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -39,44 +37,26 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Transactions" />
+    <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj">
+    <ProjectReference Include="..\..\Common\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj">
       <Name>$safesolutionname$.Common.Domain.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\$safesolutionname$.Common.Domain.Service\$safesolutionname$.Common.Domain.Service.csproj">
+    <ProjectReference Include="..\..\Common\$safesolutionname$.Common.Domain.Service\$safesolutionname$.Common.Domain.Service.csproj">
       <Name>$safesolutionname$.Common.Domain.Service</Name>
     </ProjectReference>
-    <ProjectReference Include="..\$safesolutionname$.Server.Domain.Repositories\$safesolutionname$.Server.Domain.Repositories.csproj">
-      <Name>$safesolutionname$.Server.Domain.Repositories</Name>
+    <ProjectReference Include="..\..\Server\$safesolutionname$.Server.Domain.Service\$safesolutionname$.Server.Domain.Service.csproj">
+      <Name>$safesolutionname$.Server.Domain.Service</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ProjectExtensions>
-    <VisualStudio>
-      <FlavorProperties GUID="{3D9AD99F-2412-4246-B90B-4EAA41C64699}">
-        <WcfProjectProperties>
-          <AutoStart>False</AutoStart>
-        </WcfProjectProperties>
-      </FlavorProperties>
-    </VisualStudio>
-  </ProjectExtensions>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

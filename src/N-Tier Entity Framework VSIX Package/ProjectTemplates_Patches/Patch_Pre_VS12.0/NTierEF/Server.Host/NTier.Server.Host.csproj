@@ -68,13 +68,13 @@
     <ProjectReference Include="..\$safesolutionname$.Server.Domain.Edmx\$safesolutionname$.Server.Domain.Edmx.csproj">
       <Name>$safesolutionname$.Server.Domain.Edmx</Name>
     </ProjectReference>
-    <ProjectReference Include="..\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj">
+    <ProjectReference Include="..\..\Common\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj">
       <Name>$safesolutionname$.Common.Domain.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\$safesolutionname$.Server.Domain.Repositories\$safesolutionname$.Server.Domain.Repositories.csproj">
       <Name>$safesolutionname$.Server.Domain.Repositories</Name>
     </ProjectReference>
-    <ProjectReference Include="..\$safesolutionname$.Common.Domain.Service\$safesolutionname$.Common.Domain.Service.csproj">
+    <ProjectReference Include="..\..\Common\$safesolutionname$.Common.Domain.Service\$safesolutionname$.Common.Domain.Service.csproj">
       <Name>$safesolutionname$.Common.Domain.Service</Name>
     </ProjectReference>
     <ProjectReference Include="..\$safesolutionname$.Server.Domain.Service\$safesolutionname$.Server.Domain.Service.csproj">

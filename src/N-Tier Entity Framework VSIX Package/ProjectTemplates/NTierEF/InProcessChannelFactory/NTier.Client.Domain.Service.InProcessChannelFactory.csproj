@@ -43,22 +43,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj') ">
+    <ProjectReference Include="..\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj">
       <Name>$safesolutionname$.Common.Domain.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Common\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\..\Common\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj') ">
-      <Name>$safesolutionname$.Common.Domain.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\$safesolutionname$.Common.Domain.Service\$safesolutionname$.Common.Domain.Service.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\$safesolutionname$.Common.Domain.Service\$safesolutionname$.Common.Domain.Service.csproj') ">
+    <ProjectReference Include="..\$safesolutionname$.Common.Domain.Service\$safesolutionname$.Common.Domain.Service.csproj">
       <Name>$safesolutionname$.Common.Domain.Service</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Common\$safesolutionname$.Common.Domain.Service\$safesolutionname$.Common.Domain.Service.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\..\Common\$safesolutionname$.Common.Domain.Service\$safesolutionname$.Common.Domain.Service.csproj') ">
-      <Name>$safesolutionname$.Common.Domain.Service</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\$safesolutionname$.Server.Domain.Service\$safesolutionname$.Server.Domain.Service.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\$safesolutionname$.Server.Domain.Service\$safesolutionname$.Server.Domain.Service.csproj') ">
-      <Name>$safesolutionname$.Server.Domain.Service</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Server\$safesolutionname$.Server.Domain.Service\$safesolutionname$.Server.Domain.Service.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\..\Server\$safesolutionname$.Server.Domain.Service\$safesolutionname$.Server.Domain.Service.csproj') ">
+    <ProjectReference Include="..\$safesolutionname$.Server.Domain.Service\$safesolutionname$.Server.Domain.Service.csproj">
       <Name>$safesolutionname$.Server.Domain.Service</Name>
     </ProjectReference>
   </ItemGroup>

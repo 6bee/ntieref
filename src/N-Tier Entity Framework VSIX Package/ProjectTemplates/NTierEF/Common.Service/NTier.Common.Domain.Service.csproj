@@ -46,7 +46,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj') ">
+    <ProjectReference Include="..\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj">
       <Name>$safesolutionname$.Common.Domain.Model</Name>
     </ProjectReference>
   </ItemGroup>

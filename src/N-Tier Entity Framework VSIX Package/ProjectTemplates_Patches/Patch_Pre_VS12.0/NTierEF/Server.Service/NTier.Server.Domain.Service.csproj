@@ -54,10 +54,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj">
+    <ProjectReference Include="..\..\Common\$safesolutionname$.Common.Domain.Model\$safesolutionname$.Common.Domain.Model.csproj">
       <Name>$safesolutionname$.Common.Domain.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\$safesolutionname$.Common.Domain.Service\$safesolutionname$.Common.Domain.Service.csproj">
+    <ProjectReference Include="..\..\Common\$safesolutionname$.Common.Domain.Service\$safesolutionname$.Common.Domain.Service.csproj">
       <Name>$safesolutionname$.Common.Domain.Service</Name>
     </ProjectReference>
     <ProjectReference Include="..\$safesolutionname$.Server.Domain.Repositories\$safesolutionname$.Server.Domain.Repositories.csproj">

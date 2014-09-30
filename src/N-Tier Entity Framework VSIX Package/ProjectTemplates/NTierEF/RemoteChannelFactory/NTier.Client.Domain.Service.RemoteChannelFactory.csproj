@@ -44,10 +44,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\$safesolutionname$.Common.Domain.Service\$safesolutionname$.Common.Domain.Service.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\$safesolutionname$.Common.Domain.Service\$safesolutionname$.Common.Domain.Service.csproj') ">
-      <Name>$safesolutionname$.Common.Domain.Service</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Common\$safesolutionname$.Common.Domain.Service\$safesolutionname$.Common.Domain.Service.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\..\Common\$safesolutionname$.Common.Domain.Service\$safesolutionname$.Common.Domain.Service.csproj') ">
+    <ProjectReference Include="..\$safesolutionname$.Common.Domain.Service\$safesolutionname$.Common.Domain.Service.csproj">
       <Name>$safesolutionname$.Common.Domain.Service</Name>
     </ProjectReference>
   </ItemGroup>
