@@ -27,5 +27,41 @@ namespace TableInheritance.Client.Domain
 
         #endregion People
 
+        #region Addresses
+
+        IEntitySet<Address> Addresses { get; }
+
+        void Add(Address entity);
+        void Delete(Address entity);
+        void Attach(Address entity);
+        void AttachAsModified(Address entity, Address original);
+        void Detach(Address entity);
+
+        #endregion Addresses
+
+        #region Demographics
+
+        IEntitySet<Demographic> Demographics { get; }
+
+        void Add(Demographic entity);
+        void Delete(Demographic entity);
+        void Attach(Demographic entity);
+        void AttachAsModified(Demographic entity, Demographic original);
+        void Detach(Demographic entity);
+
+        #endregion Demographics
+
+        #region EmployeeRoles
+
+        IEntitySet<EmployeeRole> EmployeeRoles { get; }
+
+        void Add(EmployeeRole entity);
+        void Delete(EmployeeRole entity);
+        void Attach(EmployeeRole entity);
+        void AttachAsModified(EmployeeRole entity, EmployeeRole original);
+        void Detach(EmployeeRole entity);
+
+        #endregion EmployeeRoles
+
     }
 }

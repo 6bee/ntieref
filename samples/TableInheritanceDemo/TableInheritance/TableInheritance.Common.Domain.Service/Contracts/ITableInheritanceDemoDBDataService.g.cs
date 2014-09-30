@@ -25,6 +25,15 @@ namespace TableInheritance.Common.Domain.Service.Contracts
         QueryResult<Person> GetPeople(ClientInfo clientInfo, Query query);
 
         [OperationContract]
+        QueryResult<Address> GetAddresses(ClientInfo clientInfo, Query query);
+
+        [OperationContract]
+        QueryResult<Demographic> GetDemographics(ClientInfo clientInfo, Query query);
+
+        [OperationContract]
+        QueryResult<EmployeeRole> GetEmployeeRoles(ClientInfo clientInfo, Query query);
+
+        [OperationContract]
         [FaultContract(typeof(TableInheritanceDemoDBUpdateFault))]
         [FaultContract(typeof(TableInheritanceDemoDBOptimisticConcurrencyFault))]
         [TransactionFlow(TransactionFlowOption.Allowed)]

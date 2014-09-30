@@ -54,6 +54,9 @@ namespace TableInheritance.Server.Domain.Service
 
         partial void PreProcessing(ClientInfo clientInfo, ref Query query, ITableInheritanceDemoDBRepository repository);
         partial void PostProcessing(ClientInfo clientInfo, Query query, ref QueryResult<Person> result, ITableInheritanceDemoDBRepository repository);
+        partial void PostProcessing(ClientInfo clientInfo, Query query, ref QueryResult<Address> result, ITableInheritanceDemoDBRepository repository);
+        partial void PostProcessing(ClientInfo clientInfo, Query query, ref QueryResult<Demographic> result, ITableInheritanceDemoDBRepository repository);
+        partial void PostProcessing(ClientInfo clientInfo, Query query, ref QueryResult<EmployeeRole> result, ITableInheritanceDemoDBRepository repository);
 
         [OperationBehavior(Impersonation = ImpersonationOption.Allowed)]
         public QueryResult<Person> GetPeople(ClientInfo clientInfo, Query query)
@@ -62,6 +65,42 @@ namespace TableInheritance.Server.Domain.Service
             {
                 PreProcessing(clientInfo, ref query, dataRepository);
                 var result = Get(dataRepository.People.AsNoTrackingQueryable(), query, clientInfo);
+                PostProcessing(clientInfo, query, ref result, dataRepository);
+                return result;
+            }
+        }
+
+        [OperationBehavior(Impersonation = ImpersonationOption.Allowed)]
+        public QueryResult<Address> GetAddresses(ClientInfo clientInfo, Query query)
+        {
+            using (var dataRepository = _repositoryFactory(clientInfo))
+            {
+                PreProcessing(clientInfo, ref query, dataRepository);
+                var result = Get(dataRepository.Addresses.AsNoTrackingQueryable(), query, clientInfo);
+                PostProcessing(clientInfo, query, ref result, dataRepository);
+                return result;
+            }
+        }
+
+        [OperationBehavior(Impersonation = ImpersonationOption.Allowed)]
+        public QueryResult<Demographic> GetDemographics(ClientInfo clientInfo, Query query)
+        {
+            using (var dataRepository = _repositoryFactory(clientInfo))
+            {
+                PreProcessing(clientInfo, ref query, dataRepository);
+                var result = Get(dataRepository.Demographics.AsNoTrackingQueryable(), query, clientInfo);
+                PostProcessing(clientInfo, query, ref result, dataRepository);
+                return result;
+            }
+        }
+
+        [OperationBehavior(Impersonation = ImpersonationOption.Allowed)]
+        public QueryResult<EmployeeRole> GetEmployeeRoles(ClientInfo clientInfo, Query query)
+        {
+            using (var dataRepository = _repositoryFactory(clientInfo))
+            {
+                PreProcessing(clientInfo, ref query, dataRepository);
+                var result = Get(dataRepository.EmployeeRoles.AsNoTrackingQueryable(), query, clientInfo);
                 PostProcessing(clientInfo, query, ref result, dataRepository);
                 return result;
             }
@@ -88,6 +127,9 @@ namespace TableInheritance.Server.Domain.Service
 
                     // apply chnages to repository
                     ApplyChanges(dataRepository, dataRepository.People, changeSet, changeSet.People, clientInfo);
+                    ApplyChanges(dataRepository, dataRepository.Addresses, changeSet, changeSet.Addresses, clientInfo);
+                    ApplyChanges(dataRepository, dataRepository.Demographics, changeSet, changeSet.Demographics, clientInfo);
+                    ApplyChanges(dataRepository, dataRepository.EmployeeRoles, changeSet, changeSet.EmployeeRoles, clientInfo);
 
                     // optional custom processing
                     BeforeSaving(clientInfo, ref changeSet, dataRepository);

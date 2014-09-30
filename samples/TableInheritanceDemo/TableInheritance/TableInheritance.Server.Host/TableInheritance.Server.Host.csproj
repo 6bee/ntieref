@@ -43,9 +43,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Remote.Linq, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Remote.Linq, Version=3.2.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Remote.Linq.3.0.0-beta01\lib\net45\Remote.Linq.dll</HintPath>
+      <HintPath>..\..\packages\Remote.Linq.3.2.2\lib\net45\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -80,25 +80,19 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TableInheritance.Server.Domain.Edmx\TableInheritance.Server.Domain.Edmx.csproj" Condition=" Exists('..\TableInheritance.Server.Domain.Edmx\TableInheritance.Server.Domain.Edmx.csproj') ">
+    <ProjectReference Include="..\TableInheritance.Server.Domain.Edmx\TableInheritance.Server.Domain.Edmx.csproj">
       <Name>TableInheritance.Server.Domain.Edmx</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Common\TableInheritance.Common.Domain.Model\TableInheritance.Common.Domain.Model.csproj" Condition=" Exists('..\..\Common\TableInheritance.Common.Domain.Model\TableInheritance.Common.Domain.Model.csproj') ">
+    <ProjectReference Include="..\TableInheritance.Common.Domain.Model\TableInheritance.Common.Domain.Model.csproj">
       <Name>TableInheritance.Common.Domain.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TableInheritance.Common.Domain.Model\TableInheritance.Common.Domain.Model.csproj" Condition=" Exists('..\TableInheritance.Common.Domain.Model\TableInheritance.Common.Domain.Model.csproj') ">
-      <Name>TableInheritance.Common.Domain.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TableInheritance.Server.Domain.Repositories\TableInheritance.Server.Domain.Repositories.csproj" Condition=" Exists('..\TableInheritance.Server.Domain.Repositories\TableInheritance.Server.Domain.Repositories.csproj') ">
+    <ProjectReference Include="..\TableInheritance.Server.Domain.Repositories\TableInheritance.Server.Domain.Repositories.csproj">
       <Name>TableInheritance.Server.Domain.Repositories</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Common\TableInheritance.Common.Domain.Service\TableInheritance.Common.Domain.Service.csproj" Condition=" Exists('..\..\Common\TableInheritance.Common.Domain.Service\TableInheritance.Common.Domain.Service.csproj') ">
+    <ProjectReference Include="..\TableInheritance.Common.Domain.Service\TableInheritance.Common.Domain.Service.csproj">
       <Name>TableInheritance.Common.Domain.Service</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TableInheritance.Common.Domain.Service\TableInheritance.Common.Domain.Service.csproj" Condition=" Exists('..\TableInheritance.Common.Domain.Service\TableInheritance.Common.Domain.Service.csproj') ">
-      <Name>TableInheritance.Common.Domain.Service</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TableInheritance.Server.Domain.Service\TableInheritance.Server.Domain.Service.csproj" Condition=" Exists('..\TableInheritance.Server.Domain.Service\TableInheritance.Server.Domain.Service.csproj') ">
+    <ProjectReference Include="..\TableInheritance.Server.Domain.Service\TableInheritance.Server.Domain.Service.csproj">
       <Name>TableInheritance.Server.Domain.Service</Name>
     </ProjectReference>
   </ItemGroup>

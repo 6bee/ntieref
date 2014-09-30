@@ -24,6 +24,7 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
     [DataContract(IsReference = true)]
     [KnownType(typeof(Customer))]
     [KnownType(typeof(Employee))]
+    [KnownType(typeof(Address))]
     public abstract partial class Person : Entity, INotifyPropertyChanged, INotifyPropertyChanging, IDataErrorInfo
     {
         #region Constructor and Initialization
@@ -55,7 +56,6 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
             {
                 if (_id != value)
                 {
-                    //if (!IsDeserializing && ChangeTracker.IsChangeTrackingEnabled)
                     if (!IsDeserializing && ChangeTracker.State != ObjectState.Added)
                     {
                         throw new InvalidOperationException("The property 'Id' is part of the object's key and cannot be changed. Changes to key properties can only be made when the object is not being tracked or is in the Added state.");
@@ -126,6 +126,39 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
         partial void LastNameChanging(global::System.String newValue);
         partial void LastNameChanged(global::System.String previousValue);
 
+        [DataMember]
+#if !CLIENT_PROFILE
+        [RoundtripOriginal]
+#endif
+        [SimpleProperty]
+        public Nullable<global::System.Int64> HomeAddressId
+        {
+            get { return _homeAddressId; }
+            set
+            {
+                if (_homeAddressId != value)
+                {
+                    HomeAddressIdChanging(value);
+                    OnPropertyChanging("HomeAddressId", value);
+                    if (!IsDeserializing)
+                    {
+                        if (Address1 != null && Address1.Id != value)
+                        {
+                            Address1 = null;
+                        }
+                    }
+                    var previousValue = _homeAddressId;
+                    _homeAddressId = value;
+                    OnPropertyChanged("HomeAddressId", previousValue, value);
+                    HomeAddressIdChanged(previousValue);
+                }
+            }
+        }
+        private Nullable<global::System.Int64> _homeAddressId;
+
+        partial void HomeAddressIdChanging(Nullable<global::System.Int64> newValue);
+        partial void HomeAddressIdChanged(Nullable<global::System.Int64> previousValue);
+
         #endregion Simple Properties
 
         #region Complex Properties
@@ -134,17 +167,86 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
 
         #region Navigation Properties
 
+        [DataMember]
+        [NavigationProperty]
+        public Address Address1
+        {
+            get { return _address1; }
+            set
+            {
+                if (!ReferenceEquals(_address1, value))
+                {
+                    Address1Changing(value);
+                    OnPropertyChanging("Address1", value);
+                    var previousValue = _address1;
+                    _address1 = value;
+                    FixupAddress1(previousValue);
+                    OnPropertyChanged("Address1", previousValue, value, isNavigationProperty: true);
+                    Address1Changed(previousValue);
+                }
+            }
+        }
+        private Address _address1;
+
+        partial void Address1Changing(Address newValue);
+        partial void Address1Changed(Address previousValue);
+
         #endregion Navigation Properties
 
         #region ChangeTracking
 
         protected override void ClearNavigationProperties()
         {
+            Address1 = null;
         }
 
         #endregion ChangeTracking
 
         #region Association Fixup
+
+        private void FixupAddress1(Address previousValue, bool skipKeys = false)
+        {
+            if (IsDeserializing)
+            {
+                return;
+            }
+
+            if (previousValue != null && previousValue.People.Contains(this))
+            {
+                previousValue.People.Remove(this);
+            }
+
+            if (Address1 != null)
+            {
+                if (!Address1.People.Contains(this))
+                {
+                    Address1.People.Add(this);
+                }
+
+                HomeAddressId = Address1.Id;
+            }
+            else if (!skipKeys)
+            {
+                HomeAddressId = null;
+            }
+
+            if (ChangeTracker.IsChangeTrackingEnabled)
+            {
+                if (ChangeTracker.OriginalValues.ContainsKey("Address1")
+                    && ReferenceEquals(ChangeTracker.OriginalValues["Address1"], Address1))
+                {
+                    //ChangeTracker.OriginalValues.Remove("Address1");
+                }
+                else
+                {
+                    //RecordOriginalValue("Address1", previousValue);
+                }
+                if (Address1 != null && !Address1.ChangeTracker.IsChangeTrackingEnabled)
+                {
+                    Address1.StartTracking();
+                }
+            }
+        }
 
         #endregion Association Fixup
 

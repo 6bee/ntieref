@@ -26,6 +26,12 @@ namespace TableInheritance.Server.Domain.Repositories
 
         IEntitySet<Person> People { get; }
 
+        IEntitySet<Address> Addresses { get; }
+
+        IEntitySet<Demographic> Demographics { get; }
+
+        IEntitySet<EmployeeRole> EmployeeRoles { get; }
+
         #endregion EntitySets
     }
 }

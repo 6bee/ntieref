@@ -12,19 +12,17 @@ namespace TableInheritance.Server.Domain.Edmx
     using System;
     using System.Collections.Generic;
     
-    public partial class Employee : Person
+    public partial class EmployeeRole
     {
-        public Employee()
+        public EmployeeRole()
         {
             this.Employees = new HashSet<Employee>();
         }
     
-        public System.DateTime EntryDate { get; set; }
-        public Nullable<long> ManagerId { get; set; }
-        public Nullable<long> RoleId { get; set; }
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
     
         public virtual ICollection<Employee> Employees { get; set; }
-        public virtual Employee Manager { get; set; }
-        public virtual EmployeeRole EmployeeRole { get; set; }
     }
 }

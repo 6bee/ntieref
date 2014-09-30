@@ -43,19 +43,19 @@
     </Reference>
     <Reference Include="NTier.Common.Domain, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NTierEntityFramework.Common.1.5.0-beta003\lib\net4-client\NTier.Common.Domain.dll</HintPath>
+      <HintPath>..\..\packages\NTierEntityFramework.Common.1.5.0\lib\net40-Client\NTier.Common.Domain.dll</HintPath>
     </Reference>
     <Reference Include="NTier.Server.Domain, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NTierEntityFramework.Server.1.5.0-beta003\lib\net4-client\NTier.Server.Domain.dll</HintPath>
+      <HintPath>..\..\packages\NTierEntityFramework.Server.1.5.0\lib\net40-Client\NTier.Server.Domain.dll</HintPath>
     </Reference>
     <Reference Include="NTier.Server.Domain.Repositories.EntityFramework, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NTierEntityFramework.Server.EntityFramework6_0.1.5.0-beta003\lib\net4-client\NTier.Server.Domain.Repositories.EntityFramework.dll</HintPath>
+      <HintPath>..\..\packages\NTierEntityFramework.Server.EntityFramework6_0.1.5.0\lib\net40-Client\NTier.Server.Domain.Repositories.EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Remote.Linq, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Remote.Linq, Version=3.2.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Remote.Linq.3.0.0-beta01\lib\net45\Remote.Linq.dll</HintPath>
+      <HintPath>..\..\packages\Remote.Linq.3.2.2\lib\net45\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -74,19 +74,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\TableInheritance.Common.Domain.Model\TableInheritance.Common.Domain.Model.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\..\Common\TableInheritance.Common.Domain.Model\TableInheritance.Common.Domain.Model.csproj') ">
+    <ProjectReference Include="..\TableInheritance.Common.Domain.Model\TableInheritance.Common.Domain.Model.csproj">
       <Name>TableInheritance.Common.Domain.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TableInheritance.Common.Domain.Model\TableInheritance.Common.Domain.Model.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\TableInheritance.Common.Domain.Model\TableInheritance.Common.Domain.Model.csproj') ">
-      <Name>TableInheritance.Common.Domain.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TableInheritance.Server.Domain.Repositories\TableInheritance.Server.Domain.Repositories.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\TableInheritance.Server.Domain.Repositories\TableInheritance.Server.Domain.Repositories.csproj') ">
+    <ProjectReference Include="..\TableInheritance.Server.Domain.Repositories\TableInheritance.Server.Domain.Repositories.csproj">
       <Name>TableInheritance.Server.Domain.Repositories</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Common\TableInheritance.Common.Domain.Service\TableInheritance.Common.Domain.Service.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\..\Common\TableInheritance.Common.Domain.Service\TableInheritance.Common.Domain.Service.csproj') ">
-      <Name>TableInheritance.Common.Domain.Service</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TableInheritance.Common.Domain.Service\TableInheritance.Common.Domain.Service.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\TableInheritance.Common.Domain.Service\TableInheritance.Common.Domain.Service.csproj') ">
+    <ProjectReference Include="..\TableInheritance.Common.Domain.Service\TableInheritance.Common.Domain.Service.csproj">
       <Name>TableInheritance.Common.Domain.Service</Name>
     </ProjectReference>
   </ItemGroup>

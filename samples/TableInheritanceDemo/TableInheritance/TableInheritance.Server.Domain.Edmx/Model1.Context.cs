@@ -26,5 +26,8 @@ namespace TableInheritance.Server.Domain.Edmx
         }
     
         public virtual DbSet<Person> People { get; set; }
+        public virtual DbSet<Address> Addresses { get; set; }
+        public virtual DbSet<Demographic> Demographics { get; set; }
+        public virtual DbSet<EmployeeRole> EmployeeRoles { get; set; }
     }
 }

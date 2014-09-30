@@ -14,6 +14,16 @@ namespace TableInheritance.Server.Domain.Edmx
     
     public partial class Customer : Person
     {
+        public Customer()
+        {
+            this.Demographics = new HashSet<Demographic>();
+        }
+    
         public int CustomerStatus { get; set; }
+        public Nullable<long> DefaultShipmentAddressId { get; set; }
+    
+        public virtual Address Address { get; set; }
+        public virtual Demographic Demographic { get; set; }
+        public virtual ICollection<Demographic> Demographics { get; set; }
     }
 }

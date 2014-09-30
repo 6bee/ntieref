@@ -22,6 +22,8 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
 {
     [Serializable]
     [DataContract(IsReference = true)]
+    [KnownType(typeof(Address))]
+    [KnownType(typeof(Demographic))]
     public partial class Customer : Person, INotifyPropertyChanged, INotifyPropertyChanging, IDataErrorInfo
     {
         #region Constructor and Initialization
@@ -65,6 +67,39 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
         partial void CustomerStatusChanging(global::System.Int32 newValue);
         partial void CustomerStatusChanged(global::System.Int32 previousValue);
 
+        [DataMember]
+#if !CLIENT_PROFILE
+        [RoundtripOriginal]
+#endif
+        [SimpleProperty]
+        public Nullable<global::System.Int64> DefaultShipmentAddressId
+        {
+            get { return _defaultShipmentAddressId; }
+            set
+            {
+                if (_defaultShipmentAddressId != value)
+                {
+                    DefaultShipmentAddressIdChanging(value);
+                    OnPropertyChanging("DefaultShipmentAddressId", value);
+                    if (!IsDeserializing)
+                    {
+                        if (Address != null && Address.Id != value)
+                        {
+                            Address = null;
+                        }
+                    }
+                    var previousValue = _defaultShipmentAddressId;
+                    _defaultShipmentAddressId = value;
+                    OnPropertyChanged("DefaultShipmentAddressId", previousValue, value);
+                    DefaultShipmentAddressIdChanged(previousValue);
+                }
+            }
+        }
+        private Nullable<global::System.Int64> _defaultShipmentAddressId;
+
+        partial void DefaultShipmentAddressIdChanging(Nullable<global::System.Int64> newValue);
+        partial void DefaultShipmentAddressIdChanged(Nullable<global::System.Int64> previousValue);
+
         #endregion Simple Properties
 
         #region Complex Properties
@@ -73,6 +108,94 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
 
         #region Navigation Properties
 
+        [DataMember]
+        [NavigationProperty]
+        public Address Address
+        {
+            get { return _address; }
+            set
+            {
+                if (!ReferenceEquals(_address, value))
+                {
+                    AddressChanging(value);
+                    OnPropertyChanging("Address", value);
+                    var previousValue = _address;
+                    _address = value;
+                    FixupAddress(previousValue);
+                    OnPropertyChanged("Address", previousValue, value, isNavigationProperty: true);
+                    AddressChanged(previousValue);
+                }
+            }
+        }
+        private Address _address;
+
+        partial void AddressChanging(Address newValue);
+        partial void AddressChanged(Address previousValue);
+
+        [DataMember]
+        [NavigationProperty]
+        public Demographic Demographic
+        {
+            get { return _demographic; }
+            set
+            {
+                if (!ReferenceEquals(_demographic, value))
+                {
+                    DemographicChanging(value);
+                    OnPropertyChanging("Demographic", value);
+                    var previousValue = _demographic;
+                    _demographic = value;
+                    FixupDemographic(previousValue);
+                    OnPropertyChanged("Demographic", previousValue, value, isNavigationProperty: true);
+                    DemographicChanged(previousValue);
+                }
+            }
+        }
+        private Demographic _demographic;
+
+        partial void DemographicChanging(Demographic newValue);
+        partial void DemographicChanged(Demographic previousValue);
+
+        [DataMember]
+        [NavigationProperty]
+        public TrackableCollection<Demographic> Demographics
+        {
+            get
+            {
+                if (_demographics == null)
+                {
+                    _demographics = new TrackableCollection<Demographic>();
+                    _demographics.CollectionChanged += FixupDemographics;
+                }
+                return _demographics;
+            }
+            set
+            {
+                if (!ReferenceEquals(_demographics, value))
+                {
+                    if (!IsDeserializing && ChangeTracker.IsChangeTrackingEnabled)
+                    {
+                        throw new InvalidOperationException("Cannot set the FixupChangeTrackingCollection when ChangeTracking is enabled");
+                    }
+
+                    if (_demographics != null)
+                    {
+                       _demographics.CollectionChanged -= FixupDemographics;
+                    }
+
+                    _demographics = value;
+
+                    if (_demographics != null)
+                    {
+                        _demographics.CollectionChanged += FixupDemographics;
+                    }
+
+                    OnPropertyChanged("Demographics", trackInChangeTracker: false);
+                }
+            }
+        }
+        private TrackableCollection<Demographic> _demographics;
+
         #endregion Navigation Properties
 
         #region ChangeTracking
@@ -80,11 +203,153 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
         protected override void ClearNavigationProperties()
         {
             base.ClearNavigationProperties();
+            Address = null;
+            Demographic = null;
+            Demographics.Clear();
         }
 
         #endregion ChangeTracking
 
         #region Association Fixup
+
+        private void FixupAddress(Address previousValue, bool skipKeys = false)
+        {
+            if (IsDeserializing)
+            {
+                return;
+            }
+
+            if (previousValue != null && previousValue.Customers.Contains(this))
+            {
+                previousValue.Customers.Remove(this);
+            }
+
+            if (Address != null)
+            {
+                if (!Address.Customers.Contains(this))
+                {
+                    Address.Customers.Add(this);
+                }
+
+                DefaultShipmentAddressId = Address.Id;
+            }
+            else if (!skipKeys)
+            {
+                DefaultShipmentAddressId = null;
+            }
+
+            if (ChangeTracker.IsChangeTrackingEnabled)
+            {
+                if (ChangeTracker.OriginalValues.ContainsKey("Address")
+                    && ReferenceEquals(ChangeTracker.OriginalValues["Address"], Address))
+                {
+                    //ChangeTracker.OriginalValues.Remove("Address");
+                }
+                else
+                {
+                    //RecordOriginalValue("Address", previousValue);
+                }
+                if (Address != null && !Address.ChangeTracker.IsChangeTrackingEnabled)
+                {
+                    Address.StartTracking();
+                }
+            }
+        }
+
+        private void FixupDemographic(Demographic previousValue)
+        {
+            // This is the principal end in an association that performs cascade deletes.
+            // Update the event listener to refer to the new dependent.
+            if (previousValue != null)
+            {
+                ChangeTracker.PropertyChanged -= previousValue.HandleCascadeDelete;
+            }
+
+            if (Demographic != null)
+            {
+                ChangeTracker.PropertyChanged += Demographic.HandleCascadeDelete;
+            }
+
+            if (IsDeserializing)
+            {
+                return;
+            }
+
+            if (previousValue != null && ReferenceEquals(previousValue.Customer, this))
+            {
+                previousValue.Customer = null;
+            }
+
+            if (Demographic != null)
+            {
+                Demographic.Customer = this;
+            }
+
+            if (ChangeTracker.IsChangeTrackingEnabled)
+            {
+                if (ChangeTracker.OriginalValues.ContainsKey("Demographic")
+                    && ReferenceEquals(ChangeTracker.OriginalValues["Demographic"], Demographic))
+                {
+                    //ChangeTracker.OriginalValues.Remove("Demographic");
+                }
+                else
+                {
+                    //RecordOriginalValue("Demographic", previousValue);
+                    // This is the principal end of an identifying association, so the dependent must be deleted when the relationship is removed.
+                    // If the current state of the dependent is Added, the relationship can be changed without causing the dependent to be deleted.
+                    if (previousValue != null && previousValue.ChangeTracker.State != ObjectState.Added)
+                    {
+                        previousValue.MarkAsDeleted();
+                    }
+                }
+                if (Demographic != null && !Demographic.ChangeTracker.IsChangeTrackingEnabled)
+                {
+                    Demographic.StartTracking();
+                }
+            }
+        }
+
+        private void FixupDemographics(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (IsDeserializing)
+            {
+                return;
+            }
+
+            if (e.NewItems != null)
+            {
+                foreach (Demographic item in e.NewItems)
+                {
+                    if (!item.Customers.Contains(this))
+                    {
+                        item.Customers.Add(this);
+                    }
+                    if (ChangeTracker.IsChangeTrackingEnabled)
+                    {
+                        if (!item.ChangeTracker.IsChangeTrackingEnabled)
+                        {
+                            item.StartTracking();
+                        }
+                        RecordAdditionToCollectionProperties("Demographics", item);
+                    }
+                }
+            }
+
+            if (e.OldItems != null)
+            {
+                foreach (Demographic item in e.OldItems)
+                {
+                    if (item.Customers.Contains(this))
+                    {
+                        item.Customers.Remove(this);
+                    }
+                    if (ChangeTracker.IsChangeTrackingEnabled)
+                    {
+                        RecordRemovalFromCollectionProperties("Demographics", item);
+                    }
+                }
+            }
+        }
 
         #endregion Association Fixup
     }

@@ -23,6 +23,7 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
     [Serializable]
     [DataContract(IsReference = true)]
     [KnownType(typeof(Employee))]
+    [KnownType(typeof(EmployeeRole))]
     public partial class Employee : Person, INotifyPropertyChanged, INotifyPropertyChanging, IDataErrorInfo
     {
         #region Constructor and Initialization
@@ -78,7 +79,6 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
             {
                 if (_managerId != value)
                 {
-                    //RecordOriginalValue("ManagerId", _managerId);
                     ManagerIdChanging(value);
                     OnPropertyChanging("ManagerId", value);
                     if (!IsDeserializing)
@@ -99,6 +99,39 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
 
         partial void ManagerIdChanging(Nullable<global::System.Int64> newValue);
         partial void ManagerIdChanged(Nullable<global::System.Int64> previousValue);
+
+        [DataMember]
+#if !CLIENT_PROFILE
+        [RoundtripOriginal]
+#endif
+        [SimpleProperty]
+        public Nullable<global::System.Int64> RoleId
+        {
+            get { return _roleId; }
+            set
+            {
+                if (_roleId != value)
+                {
+                    RoleIdChanging(value);
+                    OnPropertyChanging("RoleId", value);
+                    if (!IsDeserializing)
+                    {
+                        if (EmployeeRole != null && EmployeeRole.Id != value)
+                        {
+                            EmployeeRole = null;
+                        }
+                    }
+                    var previousValue = _roleId;
+                    _roleId = value;
+                    OnPropertyChanged("RoleId", previousValue, value);
+                    RoleIdChanged(previousValue);
+                }
+            }
+        }
+        private Nullable<global::System.Int64> _roleId;
+
+        partial void RoleIdChanging(Nullable<global::System.Int64> newValue);
+        partial void RoleIdChanged(Nullable<global::System.Int64> previousValue);
 
         #endregion Simple Properties
 
@@ -123,7 +156,7 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
             }
             set
             {
-                if (!object.ReferenceEquals(_employees, value))
+                if (!ReferenceEquals(_employees, value))
                 {
                     if (!IsDeserializing && ChangeTracker.IsChangeTrackingEnabled)
                     {
@@ -155,7 +188,7 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
             get { return _manager; }
             set
             {
-                if (!object.ReferenceEquals(_manager, value))
+                if (!ReferenceEquals(_manager, value))
                 {
                     ManagerChanging(value);
                     OnPropertyChanging("Manager", value);
@@ -172,6 +205,30 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
         partial void ManagerChanging(Employee newValue);
         partial void ManagerChanged(Employee previousValue);
 
+        [DataMember]
+        [NavigationProperty]
+        public EmployeeRole EmployeeRole
+        {
+            get { return _employeeRole; }
+            set
+            {
+                if (!ReferenceEquals(_employeeRole, value))
+                {
+                    EmployeeRoleChanging(value);
+                    OnPropertyChanging("EmployeeRole", value);
+                    var previousValue = _employeeRole;
+                    _employeeRole = value;
+                    FixupEmployeeRole(previousValue);
+                    OnPropertyChanged("EmployeeRole", previousValue, value, isNavigationProperty: true);
+                    EmployeeRoleChanged(previousValue);
+                }
+            }
+        }
+        private EmployeeRole _employeeRole;
+
+        partial void EmployeeRoleChanging(EmployeeRole newValue);
+        partial void EmployeeRoleChanged(EmployeeRole previousValue);
+
         #endregion Navigation Properties
 
         #region ChangeTracking
@@ -181,6 +238,7 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
             base.ClearNavigationProperties();
             Employees.Clear();
             Manager = null;
+            EmployeeRole = null;
         }
 
         #endregion ChangeTracking
@@ -216,7 +274,7 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
             if (ChangeTracker.IsChangeTrackingEnabled)
             {
                 if (ChangeTracker.OriginalValues.ContainsKey("Manager")
-                    && object.ReferenceEquals(ChangeTracker.OriginalValues["Manager"], Manager))
+                    && ReferenceEquals(ChangeTracker.OriginalValues["Manager"], Manager))
                 {
                     //ChangeTracker.OriginalValues.Remove("Manager");
                 }
@@ -227,6 +285,50 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
                 if (Manager != null && !Manager.ChangeTracker.IsChangeTrackingEnabled)
                 {
                     Manager.StartTracking();
+                }
+            }
+        }
+
+        private void FixupEmployeeRole(EmployeeRole previousValue, bool skipKeys = false)
+        {
+            if (IsDeserializing)
+            {
+                return;
+            }
+
+            if (previousValue != null && previousValue.Employees.Contains(this))
+            {
+                previousValue.Employees.Remove(this);
+            }
+
+            if (EmployeeRole != null)
+            {
+                if (!EmployeeRole.Employees.Contains(this))
+                {
+                    EmployeeRole.Employees.Add(this);
+                }
+
+                RoleId = EmployeeRole.Id;
+            }
+            else if (!skipKeys)
+            {
+                RoleId = null;
+            }
+
+            if (ChangeTracker.IsChangeTrackingEnabled)
+            {
+                if (ChangeTracker.OriginalValues.ContainsKey("EmployeeRole")
+                    && ReferenceEquals(ChangeTracker.OriginalValues["EmployeeRole"], EmployeeRole))
+                {
+                    //ChangeTracker.OriginalValues.Remove("EmployeeRole");
+                }
+                else
+                {
+                    //RecordOriginalValue("EmployeeRole", previousValue);
+                }
+                if (EmployeeRole != null && !EmployeeRole.ChangeTracker.IsChangeTrackingEnabled)
+                {
+                    EmployeeRole.StartTracking();
                 }
             }
         }
@@ -258,7 +360,7 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
             {
                 foreach (Employee item in e.OldItems)
                 {
-                    if (object.ReferenceEquals(item.Manager, this))
+                    if (ReferenceEquals(item.Manager, this))
                     {
                         item.Manager = null;
                     }

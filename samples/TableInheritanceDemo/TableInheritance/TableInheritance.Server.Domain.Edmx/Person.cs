@@ -17,5 +17,8 @@ namespace TableInheritance.Server.Domain.Edmx
         public long Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public Nullable<long> HomeAddressId { get; set; }
+    
+        public virtual Address Address1 { get; set; }
     }
 }

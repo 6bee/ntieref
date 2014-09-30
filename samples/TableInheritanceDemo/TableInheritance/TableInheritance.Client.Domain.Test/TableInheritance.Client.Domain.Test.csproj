@@ -37,15 +37,15 @@
   <ItemGroup>
     <Reference Include="NTier.Client.Domain, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NTierEntityFramework.Client.1.5.0-beta003\lib\net4-client\NTier.Client.Domain.dll</HintPath>
+      <HintPath>..\..\packages\NTierEntityFramework.Client.1.5.0\lib\net40-Client\NTier.Client.Domain.dll</HintPath>
     </Reference>
     <Reference Include="NTier.Common.Domain, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NTierEntityFramework.Common.1.5.0-beta003\lib\net4-client\NTier.Common.Domain.dll</HintPath>
+      <HintPath>..\..\packages\NTierEntityFramework.Common.1.5.0\lib\net40-Client\NTier.Common.Domain.dll</HintPath>
     </Reference>
-    <Reference Include="Remote.Linq, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Remote.Linq, Version=3.2.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Remote.Linq.3.0.0-beta01\lib\net45\Remote.Linq.dll</HintPath>
+      <HintPath>..\..\packages\Remote.Linq.3.2.2\lib\net45\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -60,19 +60,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <!--<ProjectReference Include="..\TableInheritance.Client.Domain.Service.RemoteChannelFactory\TableInheritance.Client.Domain.Service.RemoteChannelFactory.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\TableInheritance.Client.Domain.Service.RemoteChannelFactory\TableInheritance.Client.Domain.Service.RemoteChannelFactory.csproj') ">
       <Name>TableInheritance.Client.Domain.Service.RemoteChannelFactory</Name>
     </ProjectReference>-->
-    <ProjectReference Include="..\TableInheritance.Client.Domain\TableInheritance.Client.Domain.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\TableInheritance.Client.Domain\TableInheritance.Client.Domain.csproj') ">
+    <ProjectReference Include="..\TableInheritance.Client.Domain\TableInheritance.Client.Domain.csproj">
       <Name>TableInheritance.Client.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Common\TableInheritance.Common.Domain.Model\TableInheritance.Common.Domain.Model.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\..\Common\TableInheritance.Common.Domain.Model\TableInheritance.Common.Domain.Model.csproj') ">
-      <Name>TableInheritance.Common.Domain.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TableInheritance.Common.Domain.Model\TableInheritance.Common.Domain.Model.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\TableInheritance.Common.Domain.Model\TableInheritance.Common.Domain.Model.csproj') ">
+    <ProjectReference Include="..\TableInheritance.Common.Domain.Model\TableInheritance.Common.Domain.Model.csproj">
       <Name>TableInheritance.Common.Domain.Model</Name>
     </ProjectReference>
   </ItemGroup>

@@ -25,19 +25,37 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
     {
         #region Constructor
 
-        public TableInheritanceDemoDBChangeSet(IEnumerable<Person> people)
+        public TableInheritanceDemoDBChangeSet(IEnumerable<Person> people, IEnumerable<Address> addresses, IEnumerable<Demographic> demographics, IEnumerable<EmployeeRole> employeeRoles)
         {
             // retrieve changes sets (modified entities)
             var personChangeSet = people.GetChangeSet();
+            var addressChangeSet = addresses.GetChangeSet();
+            var demographicChangeSet = demographics.GetChangeSet();
+            var employeeRoleChangeSet = employeeRoles.GetChangeSet();
 
             // reduce entities (copy changed values)
             var peopleMap = personChangeSet.ReduceToModifications();
+            var addressesMap = addressChangeSet.ReduceToModifications();
+            var demographicsMap = demographicChangeSet.ReduceToModifications();
+            var employeeRolesMap = employeeRoleChangeSet.ReduceToModifications();
+
+            // fixup relations (replaces related entities with reduced entites)
+            this.FixupRelations(
+                this.Union(peopleMap.CastToEntityTuple(), addressesMap.CastToEntityTuple(), demographicsMap.CastToEntityTuple(), employeeRolesMap.CastToEntityTuple()),
+                this.Union(personChangeSet, addressChangeSet, demographicChangeSet, employeeRoleChangeSet)
+            );
             if (peopleMap.Count > 0) this.People = peopleMap.Select(e => e.Item2).ToList();
+            if (addressesMap.Count > 0) this.Addresses = addressesMap.Select(e => e.Item2).ToList();
+            if (demographicsMap.Count > 0) this.Demographics = demographicsMap.Select(e => e.Item2).ToList();
+            if (employeeRolesMap.Count > 0) this.EmployeeRoles = employeeRolesMap.Select(e => e.Item2).ToList();
         }
 
         protected TableInheritanceDemoDBChangeSet(TableInheritanceDemoDBChangeSet changeSet)
         {
             this.People = changeSet.People;
+            this.Addresses = changeSet.Addresses;
+            this.Demographics = changeSet.Demographics;
+            this.EmployeeRoles = changeSet.EmployeeRoles;
         }
 
         #endregion Constructor
@@ -47,6 +65,15 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
         [DataMember]
         public List<Person> People { get; private set; }
 
+        [DataMember]
+        public List<Address> Addresses { get; private set; }
+
+        [DataMember]
+        public List<Demographic> Demographics { get; private set; }
+
+        [DataMember]
+        public List<EmployeeRole> EmployeeRoles { get; private set; }
+
         #endregion DataMember
 
         #region IsEmpty
@@ -55,7 +82,10 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
         {
             get
             {
-                return People == null;
+                return People == null &&
+                    Addresses == null &&
+                    Demographics == null &&
+                    EmployeeRoles == null;
             }
         }
 
@@ -68,6 +98,30 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
             if (People != null && People.Count > 0)
             {
                 foreach (var item in People)
+                {
+                    yield return item;
+                }
+            }
+
+            if (Addresses != null && Addresses.Count > 0)
+            {
+                foreach (var item in Addresses)
+                {
+                    yield return item;
+                }
+            }
+
+            if (Demographics != null && Demographics.Count > 0)
+            {
+                foreach (var item in Demographics)
+                {
+                    yield return item;
+                }
+            }
+
+            if (EmployeeRoles != null && EmployeeRoles.Count > 0)
+            {
+                foreach (var item in EmployeeRoles)
                 {
                     yield return item;
                 }

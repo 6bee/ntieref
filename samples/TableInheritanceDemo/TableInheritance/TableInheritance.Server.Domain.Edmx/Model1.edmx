@@ -5,18 +5,53 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="TableInheritanceDemoDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Addresses">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Street" Type="nvarchar" MaxLength="50" />
+          <Property Name="Zip" Type="nvarchar" MaxLength="20" />
+          <Property Name="City" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="CustomerDemographics">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+            <PropertyRef Name="DemographicId" />
+          </Key>
+          <Property Name="CustomerId" Type="bigint" Nullable="false" />
+          <Property Name="DemographicId" Type="bigint" Nullable="false" />
+        </EntityType>
         <EntityType Name="Customers">
           <Key>
             <PropertyRef Name="PersonId" />
           </Key>
           <Property Name="PersonId" Type="bigint" Nullable="false" />
           <Property Name="CustomerStatus" Type="int" Nullable="false" />
+          <Property Name="DefaultShipmentAddressId" Type="bigint" />
+        </EntityType>
+        <EntityType Name="Demographics">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" Nullable="false" />
+          <Property Name="Key" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Value" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="EmployeeRoles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="250" />
         </EntityType>
         <EntityType Name="Employees">
           <Key>
             <PropertyRef Name="PersonId" />
           </Key>
           <Property Name="PersonId" Type="bigint" Nullable="false" />
+          <Property Name="RoleId" Type="bigint" />
           <Property Name="EntryDate" Type="datetime" Nullable="false" />
           <Property Name="ManagerId" Type="bigint" />
         </EntityType>
@@ -27,8 +62,45 @@
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
           <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="HomeAddressId" Type="bigint" />
         </EntityType>
-        <Association Name="FK__Customers__Perso__1273C1CD">
+        <Association Name="FK__CustomerD__Custo__21B6055D">
+          <End Role="Customers" Type="Self.Customers" Multiplicity="1" />
+          <End Role="CustomerDemographics" Type="Self.CustomerDemographics" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="PersonId" />
+            </Principal>
+            <Dependent Role="CustomerDemographics">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CustomerD__Demog__22AA2996">
+          <End Role="Demographics" Type="Self.Demographics" Multiplicity="1" />
+          <End Role="CustomerDemographics" Type="Self.CustomerDemographics" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Demographics">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CustomerDemographics">
+              <PropertyRef Name="DemographicId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Customers__Defau__164452B1">
+          <End Role="Addresses" Type="Self.Addresses" Multiplicity="0..1" />
+          <End Role="Customers" Type="Self.Customers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Addresses">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Customers">
+              <PropertyRef Name="DefaultShipmentAddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Customers__Perso__15502E78">
           <End Role="People" Type="Self.People" Multiplicity="1" />
           <End Role="Customers" Type="Self.Customers" Multiplicity="0..1" />
           <ReferentialConstraint>
@@ -40,7 +112,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Employees__Manag__21B6055D">
+        <Association Name="FK__Demographics__Id__1FCDBCEB">
+          <End Role="Customers" Type="Self.Customers" Multiplicity="1" />
+          <End Role="Demographics" Type="Self.Demographics" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="PersonId" />
+            </Principal>
+            <Dependent Role="Demographics">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Employees__Manag__1CF15040">
           <End Role="Employees" Type="Self.Employees" Multiplicity="0..1" />
           <End Role="Employees1" Type="Self.Employees" Multiplicity="*" />
           <ReferentialConstraint>
@@ -52,7 +136,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Employees__Perso__15502E78">
+        <Association Name="FK__Employees__Perso__1B0907CE">
           <End Role="People" Type="Self.People" Multiplicity="1" />
           <End Role="Employees" Type="Self.Employees" Multiplicity="0..1" />
           <ReferentialConstraint>
@@ -64,21 +148,73 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__Employees__RoleI__1BFD2C07">
+          <End Role="EmployeeRoles" Type="Self.EmployeeRoles" Multiplicity="0..1" />
+          <End Role="Employees" Type="Self.Employees" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmployeeRoles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employees">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__People__HomeAddr__1273C1CD">
+          <End Role="Addresses" Type="Self.Addresses" Multiplicity="0..1" />
+          <End Role="People" Type="Self.People" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Addresses">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="People">
+              <PropertyRef Name="HomeAddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="TableInheritanceDemoDBModelStoreContainer">
+          <EntitySet Name="Addresses" EntityType="Self.Addresses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CustomerDemographics" EntityType="Self.CustomerDemographics" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Customers" EntityType="Self.Customers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Demographics" EntityType="Self.Demographics" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmployeeRoles" EntityType="Self.EmployeeRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employees" EntityType="Self.Employees" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="People" EntityType="Self.People" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__Customers__Perso__1273C1CD" Association="Self.FK__Customers__Perso__1273C1CD">
+          <AssociationSet Name="FK__CustomerD__Custo__21B6055D" Association="Self.FK__CustomerD__Custo__21B6055D">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="CustomerDemographics" EntitySet="CustomerDemographics" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CustomerD__Demog__22AA2996" Association="Self.FK__CustomerD__Demog__22AA2996">
+            <End Role="Demographics" EntitySet="Demographics" />
+            <End Role="CustomerDemographics" EntitySet="CustomerDemographics" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Customers__Defau__164452B1" Association="Self.FK__Customers__Defau__164452B1">
+            <End Role="Addresses" EntitySet="Addresses" />
+            <End Role="Customers" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Customers__Perso__15502E78" Association="Self.FK__Customers__Perso__15502E78">
             <End Role="People" EntitySet="People" />
             <End Role="Customers" EntitySet="Customers" />
           </AssociationSet>
-          <AssociationSet Name="FK__Employees__Manag__21B6055D" Association="Self.FK__Employees__Manag__21B6055D">
+          <AssociationSet Name="FK__Demographics__Id__1FCDBCEB" Association="Self.FK__Demographics__Id__1FCDBCEB">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="Demographics" EntitySet="Demographics" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Employees__Manag__1CF15040" Association="Self.FK__Employees__Manag__1CF15040">
             <End Role="Employees" EntitySet="Employees" />
             <End Role="Employees1" EntitySet="Employees" />
           </AssociationSet>
-          <AssociationSet Name="FK__Employees__Perso__15502E78" Association="Self.FK__Employees__Perso__15502E78">
+          <AssociationSet Name="FK__Employees__Perso__1B0907CE" Association="Self.FK__Employees__Perso__1B0907CE">
             <End Role="People" EntitySet="People" />
             <End Role="Employees" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Employees__RoleI__1BFD2C07" Association="Self.FK__Employees__RoleI__1BFD2C07">
+            <End Role="EmployeeRoles" EntitySet="EmployeeRoles" />
+            <End Role="Employees" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK__People__HomeAddr__1273C1CD" Association="Self.FK__People__HomeAddr__1273C1CD">
+            <End Role="Addresses" EntitySet="Addresses" />
+            <End Role="People" EntitySet="People" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -87,12 +223,18 @@
       <Schema Namespace="TableInheritanceDemoDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Customer" BaseType="TableInheritanceDemoDBModel.Person">
           <Property Name="CustomerStatus" Type="Int32" Nullable="false" />
+          <Property Name="DefaultShipmentAddressId" Type="Int64" />
+          <NavigationProperty Name="Address" Relationship="TableInheritanceDemoDBModel.FK__Customers__Defau__164452B1" FromRole="Customer" ToRole="Address" />
+          <NavigationProperty Name="Demographic" Relationship="TableInheritanceDemoDBModel.FK__Demographics__Id__1FCDBCEB" FromRole="Customer" ToRole="Demographic" />
+          <NavigationProperty Name="Demographics" Relationship="TableInheritanceDemoDBModel.CustomerDemographics" FromRole="Customer" ToRole="Demographic" />
         </EntityType>
         <EntityType Name="Employee" BaseType="TableInheritanceDemoDBModel.Person">
           <Property Name="EntryDate" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="None" Precision="3" />
           <Property Name="ManagerId" Type="Int64" />
           <NavigationProperty Name="Employees" Relationship="TableInheritanceDemoDBModel.FK__Employees__Manag__21B6055D" FromRole="Employee" ToRole="Employee1" />
           <NavigationProperty Name="Manager" Relationship="TableInheritanceDemoDBModel.FK__Employees__Manag__21B6055D" FromRole="Employee1" ToRole="Employee" />
+          <Property Name="RoleId" Type="Int64" />
+          <NavigationProperty Name="EmployeeRole" Relationship="TableInheritanceDemoDBModel.FK__Employees__RoleI__1BFD2C07" FromRole="Employee" ToRole="EmployeeRole" />
         </EntityType>
         <EntityType Name="Person" Abstract="true">
           <Key>
@@ -101,12 +243,37 @@
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="HomeAddressId" Type="Int64" />
+          <NavigationProperty Name="Address1" Relationship="TableInheritanceDemoDBModel.FK__People__HomeAddr__1273C1CD" FromRole="Person" ToRole="Address" />
         </EntityType>
         <EntityContainer Name="TableInheritanceDemoDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="People" EntityType="Self.Person" />
           <AssociationSet Name="FK__Employees__Manag__21B6055D" Association="TableInheritanceDemoDBModel.FK__Employees__Manag__21B6055D">
             <End Role="Employee" EntitySet="People" />
             <End Role="Employee1" EntitySet="People" />
+          </AssociationSet>
+          <EntitySet Name="Addresses" EntityType="TableInheritanceDemoDBModel.Address" />
+          <EntitySet Name="Demographics" EntityType="TableInheritanceDemoDBModel.Demographic" />
+          <EntitySet Name="EmployeeRoles" EntityType="TableInheritanceDemoDBModel.EmployeeRole" />
+          <AssociationSet Name="FK__Customers__Defau__164452B1" Association="TableInheritanceDemoDBModel.FK__Customers__Defau__164452B1">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="Customer" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="FK__People__HomeAddr__1273C1CD" Association="TableInheritanceDemoDBModel.FK__People__HomeAddr__1273C1CD">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="Person" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Demographics__Id__1FCDBCEB" Association="TableInheritanceDemoDBModel.FK__Demographics__Id__1FCDBCEB">
+            <End Role="Customer" EntitySet="People" />
+            <End Role="Demographic" EntitySet="Demographics" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Employees__RoleI__1BFD2C07" Association="TableInheritanceDemoDBModel.FK__Employees__RoleI__1BFD2C07">
+            <End Role="EmployeeRole" EntitySet="EmployeeRoles" />
+            <End Role="Employee" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="CustomerDemographics" Association="TableInheritanceDemoDBModel.CustomerDemographics">
+            <End Role="Customer" EntitySet="People" />
+            <End Role="Demographic" EntitySet="Demographics" />
           </AssociationSet>
         </EntityContainer>
         <Association Name="FK__Employees__Manag__21B6055D">
@@ -121,6 +288,88 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Address">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Street" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Zip" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Customers" Relationship="TableInheritanceDemoDBModel.FK__Customers__Defau__164452B1" FromRole="Address" ToRole="Customer" />
+          <NavigationProperty Name="People" Relationship="TableInheritanceDemoDBModel.FK__People__HomeAddr__1273C1CD" FromRole="Address" ToRole="Person" />
+        </EntityType>
+        <EntityType Name="Demographic">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" />
+          <Property Name="Key" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Customer" Relationship="TableInheritanceDemoDBModel.FK__Demographics__Id__1FCDBCEB" FromRole="Demographic" ToRole="Customer" />
+          <NavigationProperty Name="Customers" Relationship="TableInheritanceDemoDBModel.CustomerDemographics" FromRole="Demographic" ToRole="Customer" />
+        </EntityType>
+        <EntityType Name="EmployeeRole">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Employees" Relationship="TableInheritanceDemoDBModel.FK__Employees__RoleI__1BFD2C07" FromRole="EmployeeRole" ToRole="Employee" />
+        </EntityType>
+        <Association Name="FK__Customers__Defau__164452B1">
+          <End Type="TableInheritanceDemoDBModel.Address" Role="Address" Multiplicity="0..1" />
+          <End Type="TableInheritanceDemoDBModel.Customer" Role="Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="DefaultShipmentAddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__People__HomeAddr__1273C1CD">
+          <End Type="TableInheritanceDemoDBModel.Address" Role="Address" Multiplicity="0..1" />
+          <End Type="TableInheritanceDemoDBModel.Person" Role="Person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Person">
+              <PropertyRef Name="HomeAddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Demographics__Id__1FCDBCEB">
+          <End Type="TableInheritanceDemoDBModel.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="TableInheritanceDemoDBModel.Demographic" Role="Demographic" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Demographic">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Employees__RoleI__1BFD2C07">
+          <End Type="TableInheritanceDemoDBModel.EmployeeRole" Role="EmployeeRole" Multiplicity="0..1" />
+          <End Type="TableInheritanceDemoDBModel.Employee" Role="Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmployeeRole">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CustomerDemographics">
+          <End Type="TableInheritanceDemoDBModel.Customer" Role="Customer" Multiplicity="*" />
+          <End Type="TableInheritanceDemoDBModel.Demographic" Role="Demographic" Multiplicity="*" />
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -130,6 +379,7 @@
           <EntitySetMapping Name="People">
             <EntityTypeMapping TypeName="IsTypeOf(TableInheritanceDemoDBModel.Person)">
               <MappingFragment StoreEntitySet="People">
+                <ScalarProperty Name="HomeAddressId" ColumnName="HomeAddressId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
@@ -137,18 +387,56 @@
             </EntityTypeMapping>
             <EntityTypeMapping TypeName="IsTypeOf(TableInheritanceDemoDBModel.Customer)">
               <MappingFragment StoreEntitySet="Customers">
+                <ScalarProperty Name="DefaultShipmentAddressId" ColumnName="DefaultShipmentAddressId" />
                 <ScalarProperty Name="Id" ColumnName="PersonId" />
                 <ScalarProperty Name="CustomerStatus" ColumnName="CustomerStatus" />
               </MappingFragment>
             </EntityTypeMapping>
             <EntityTypeMapping TypeName="IsTypeOf(TableInheritanceDemoDBModel.Employee)">
               <MappingFragment StoreEntitySet="Employees">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
                 <ScalarProperty Name="ManagerId" ColumnName="ManagerId" />
                 <ScalarProperty Name="Id" ColumnName="PersonId" />
                 <ScalarProperty Name="EntryDate" ColumnName="EntryDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Addresses">
+            <EntityTypeMapping TypeName="TableInheritanceDemoDBModel.Address">
+              <MappingFragment StoreEntitySet="Addresses">
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Zip" ColumnName="Zip" />
+                <ScalarProperty Name="Street" ColumnName="Street" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Demographics">
+            <EntityTypeMapping TypeName="TableInheritanceDemoDBModel.Demographic">
+              <MappingFragment StoreEntitySet="Demographics">
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmployeeRoles">
+            <EntityTypeMapping TypeName="TableInheritanceDemoDBModel.EmployeeRole">
+              <MappingFragment StoreEntitySet="EmployeeRoles">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="CustomerDemographics" TypeName="TableInheritanceDemoDBModel.CustomerDemographics" StoreEntitySet="CustomerDemographics">
+            <EndProperty Name="Demographic">
+              <ScalarProperty Name="Id" ColumnName="DemographicId" />
+            </EndProperty>
+            <EndProperty Name="Customer">
+              <ScalarProperty Name="Id" ColumnName="CustomerId" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

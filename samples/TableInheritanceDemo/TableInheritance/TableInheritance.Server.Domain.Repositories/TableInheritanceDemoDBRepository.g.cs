@@ -52,6 +52,24 @@ namespace TableInheritance.Server.Domain.Repositories
         }
         private IEntitySet<Person> _people;
 
+        public IEntitySet<Address> Addresses
+        {
+            get { return _addresses  ?? (_addresses = CreateEntitySet<Address>("Addresses")); }
+        }
+        private IEntitySet<Address> _addresses;
+
+        public IEntitySet<Demographic> Demographics
+        {
+            get { return _demographics  ?? (_demographics = CreateEntitySet<Demographic>("Demographics")); }
+        }
+        private IEntitySet<Demographic> _demographics;
+
+        public IEntitySet<EmployeeRole> EmployeeRoles
+        {
+            get { return _employeeRoles  ?? (_employeeRoles = CreateEntitySet<EmployeeRole>("EmployeeRoles")); }
+        }
+        private IEntitySet<EmployeeRole> _employeeRoles;
+
         #endregion EntitySets
     }
 }
