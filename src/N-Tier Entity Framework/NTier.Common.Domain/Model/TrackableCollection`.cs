@@ -321,7 +321,7 @@ namespace NTier.Common.Domain.Model
             {
                 throw new ArgumentNullException("obj");
             }
-            if (obj.GetType() != typeof(T))
+            if (!(obj is T))
             {
                 throw new ArgumentException(string.Format("Argument expected to be of type {0} and got type {1}.", typeof(T).FullName, obj.GetType().FullName));
             }
