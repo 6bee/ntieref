@@ -864,7 +864,7 @@ namespace NTier.Common.Domain.Model
                 var errors = PropertyInfos
                     .Where(p => p.Attributes.Any(a => a is SimplePropertyAttribute || a is ComplexPropertyAttribute || a is NavigationPropertyAttribute))
                     .Select(p => ((IDataErrorInfo)this)[p.Name])
-                    .Where(err => err != null)
+                    .Where(err => !string.IsNullOrEmpty(err))
                     .ToArray();
 
                 if (errors.Length > 0)
@@ -872,7 +872,7 @@ namespace NTier.Common.Domain.Model
                     errorMessage = string.Join("\n", errors);
                 }
 
-                return errorMessage;
+                return errorMessage ?? string.Empty;
             }
         }
 
@@ -889,7 +889,7 @@ namespace NTier.Common.Domain.Model
                 if (!PropertyInfos.Any(p => p.Name == propertyName))
                 {
                     //throw new ArgumentException(string.Format("Property {1} does not exist on entity type {0}.", GetType().Name, propertyName));
-                    return null;
+                    return string.Empty;
                 }
 
                 // includes server side validation results
@@ -921,13 +921,14 @@ namespace NTier.Common.Domain.Model
                         {
                             sb.AppendLine();
                         }
+
                         sb.Append(error.ErrorMessage);
                     }
 
                     return sb.ToString();
                 }
 
-                return null;
+                return string.Empty;
             }
         }
         #endregion
@@ -944,9 +945,9 @@ namespace NTier.Common.Domain.Model
         {
             get
             {
-                return !Errors.Any(e => e.IsError) &&
-                    ((IDataErrorInfo)this).Error == null &&
-                    PropertyInfos.All(p => ((IDataErrorInfo)this)[p.Name] == null);
+                return !Errors.Any(e => e.IsError)
+                    && string.IsNullOrEmpty(((IDataErrorInfo)this).Error)
+                    && PropertyInfos.All(p => string.IsNullOrEmpty(((IDataErrorInfo)this)[p.Name]));
             }
         }
 
