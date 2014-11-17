@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Entity.Core.EntityClient;
 using System.Data.Entity.Core.Objects;
 using NTier.Common.Domain.Model;
+using System;
 
 namespace NTier.Server.Domain.Repositories.EntityFramework
 {
@@ -105,6 +106,28 @@ namespace NTier.Server.Domain.Repositories.EntityFramework
         {
             var objectSet = CreateObjectSet<T>();
             return new EntitySet<T>(objectSet);
+        }
+
+        public virtual Type GetEntitySetType(Type entityType)
+        {
+            if (ReferenceEquals(null, entityType))
+            {
+                throw new ArgumentNullException("entityType");
+            }
+
+            if (!typeof(Entity).IsAssignableFrom(entityType))
+            {
+                throw new ArgumentException(string.Format("Type '{0}' is not a subtype of '{1}'.", entityType.FullName, typeof(Entity).FullName), "entityType");
+            }
+
+            var entitySetType = entityType;
+
+            while (entitySetType.BaseType != typeof(Entity))
+            {
+                entitySetType = entitySetType.BaseType;
+            }
+
+            return entitySetType;
         }
 
         #endregion EntitySet factory method

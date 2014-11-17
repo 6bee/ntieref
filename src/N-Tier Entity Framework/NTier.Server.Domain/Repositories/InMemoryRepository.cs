@@ -74,6 +74,28 @@ namespace NTier.Server.Domain.Repositories
             return (IEntitySet<T>)_entitySets[typeof(T)];
         }
 
+        public virtual Type GetEntitySetType(Type entityType)
+        {
+            if (ReferenceEquals(null, entityType))
+            {
+                throw new ArgumentNullException("entityType");
+            }
+
+            if (!typeof(Entity).IsAssignableFrom(entityType))
+            {
+                throw new ArgumentException(string.Format("Type '{0}' is not a subtype of '{1}'.", entityType.FullName, typeof(Entity).FullName), "entityType");
+            }
+
+            var entitySetType = entityType;
+
+            while (entitySetType.BaseType != typeof(Entity))
+            {
+                entitySetType = entitySetType.BaseType;
+            }
+
+            return entitySetType;
+        }
+
         #region dispose
 
         public void Dispose()

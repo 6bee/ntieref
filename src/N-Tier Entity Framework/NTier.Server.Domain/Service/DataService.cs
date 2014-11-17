@@ -222,12 +222,7 @@ namespace NTier.Server.Domain.Service
 
         private static void DetachEntity(TRepository repository, Entity entity)
         {
-            var entitySetType = entity.GetType();
-
-            while (entitySetType.BaseType != typeof(Entity))
-            {
-                entitySetType = entitySetType.BaseType;
-            }
+            var entitySetType = repository.GetEntitySetType(entity.GetType());
 
             var detachMethod = typeof(DataService<>)
                 .MakeGenericType(typeof(TRepository))
