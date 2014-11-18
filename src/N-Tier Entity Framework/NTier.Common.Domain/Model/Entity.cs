@@ -343,7 +343,7 @@ namespace NTier.Common.Domain.Model
                 if (_changeTracker == null)
                 {
                     _changeTracker = new ObjectChangeTracker();
-                    _changeTracker.PropertyChanged += changeTracker_PropertyChanged;
+                    _changeTracker.PropertyChanged += ChangeTracker_PropertyChanged;
                 }
                 return _changeTracker;
             }
@@ -351,12 +351,12 @@ namespace NTier.Common.Domain.Model
             {
                 if (_changeTracker != null)
                 {
-                    _changeTracker.PropertyChanged -= changeTracker_PropertyChanged;
+                    _changeTracker.PropertyChanged -= ChangeTracker_PropertyChanged;
                 }
                 _changeTracker = value;
                 if (_changeTracker != null)
                 {
-                    _changeTracker.PropertyChanged += changeTracker_PropertyChanged;
+                    _changeTracker.PropertyChanged += ChangeTracker_PropertyChanged;
                 }
                 OnPropertyChanged("ChangeTracker", trackInChangeTracker: false);
             }
@@ -364,7 +364,7 @@ namespace NTier.Common.Domain.Model
         [NonSerialized]
         private ObjectChangeTracker _changeTracker;
 
-        private void changeTracker_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void ChangeTracker_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "State" && ChangeTracker.State == ObjectState.Deleted)
             {
@@ -1089,7 +1089,11 @@ namespace NTier.Common.Domain.Model
             if (propertyChanged != null)
             {
                 propertyChanged(this, new PropertyChangedEventArgs(propertyName));
-                propertyChanged(this, new PropertyChangedEventArgs("HasChanges"));
+
+                if (propertyName != "HasChanges")
+                {
+                    propertyChanged(this, new PropertyChangedEventArgs("HasChanges"));
+                }
             }
         }
 
