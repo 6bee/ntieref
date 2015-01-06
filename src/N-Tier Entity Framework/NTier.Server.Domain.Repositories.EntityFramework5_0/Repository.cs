@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
+using NTier.Common.Domain.Model;
+using System;
 using System.Collections.Generic;
 using System.Data.EntityClient;
 using System.Data.Objects;
-using NTier.Common.Domain.Model;
-using System;
 
 namespace NTier.Server.Domain.Repositories.EntityFramework
 {
@@ -89,14 +89,14 @@ namespace NTier.Server.Domain.Repositories.EntityFramework
 
         protected virtual IEntitySet<T> CreateEntitySet<T>(string entitySetName) where T : Entity
         {
-            var objectSet = CreateObjectSet<T>(entitySetName);
+            var objectSet = ReferenceEquals(null, entitySetName) ? CreateObjectSet<T>() : CreateObjectSet<T>(entitySetName);
             return new EntitySet<T>(objectSet);
         }
 
         public IEntitySet<T> GetEntitySet<T>() where T : Entity
         {
-            var objectSet = CreateObjectSet<T>();
-            return new EntitySet<T>(objectSet);
+            var entitySet = CreateEntitySet<T>(null);
+            return entitySet;
         }
 
         public virtual Type GetEntitySetType(Type entityType)
