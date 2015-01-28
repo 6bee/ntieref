@@ -13,7 +13,7 @@
 // </copyright>
 public class ProjectUtility
 {
-    private readonly Project Project;
+    private readonly Project _project;
 
     public ProjectUtility(string projectName)
     {
@@ -25,25 +25,33 @@ public class ProjectUtility
         }
 
         var dte = T4Context.DTE;
-        this.Project = GetProjects(dte).FirstOrDefault(p => string.Equals(p.FullName, projectName, StringComparison.InvariantCultureIgnoreCase));
 
-        Debug.WriteLine(string.Format("ProjectUtility::ctor - Project: '{0}'", this.Project == null ? string.Format("null ({0})", projectName) : this.Project.FullName));
+        _project = GetProjects(dte).FirstOrDefault(p => string.Equals(GetProjectFullNameOrNull(p), projectName, StringComparison.InvariantCultureIgnoreCase));
+
+        Debug.WriteLine(string.Format("ProjectUtility::ctor - Project: '{0}'", _project == null ? string.Format("null ({0})", projectName) : _project.FullName));
     }
 
     public string GetProjectDirectory()
     {
-        if (Project == null)
+        if (_project == null)
         {
             Debug.Fail("Project is null");
             return null;
         }
 
-        return Path.GetDirectoryName(Project.FullName);
+        var fullName = GetProjectFullNameOrNull(_project);
+        if (fullName == null)
+        {
+            Debug.Fail("Project has no fullname");
+            return null;
+        }
+
+        return Path.GetDirectoryName(fullName);
     }
 
     public string GetAssemblyPath()
     {
-        if (Project == null)
+        if (_project == null)
         {
             Debug.Fail("Project is null");
             return null;
@@ -53,10 +61,10 @@ public class ProjectUtility
         var projectPath = GetProjectDirectory();
 
         // output path
-        var outputPath = Project.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value.ToString();
+        var outputPath = _project.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value.ToString();
 
         // assembly
-        var outputFileName = Project.Properties.Item("OutputFileName").Value.ToString();
+        var outputFileName = _project.Properties.Item("OutputFileName").Value.ToString();
 
         var fullPath = Path.Combine(projectPath, outputPath, outputFileName);
         return fullPath;
@@ -108,23 +116,38 @@ public class ProjectUtility
     public static string ResolveProjectPath(string projectName)
     {
         var dte = T4Context.DTE;
-        var projects = GetProjects(dte);
+        var projectNames = GetProjects(dte)
+            .Select(GetProjectFullNameOrNull)
+            .ToArray();;
 
-        var matches = projects
-            .Where(p => string.Equals(p.FullName, projectName, StringComparison.InvariantCultureIgnoreCase))
-            .Select(p => p.FullName)
+        var matches = projectNames
+            .Where(fullName => string.Equals(fullName, projectName, StringComparison.InvariantCultureIgnoreCase))
             .ToArray();
 
         if (!matches.Any()) 
         {
             var projectFileName = Path.GetFileName(projectName);
-            matches = projects
-                .Where(p => string.Equals(Path.GetFileName(p.FullName), projectFileName, StringComparison.InvariantCultureIgnoreCase))
-                .Select(p => p.FullName)
+            matches = projectNames
+                .Where(fullName => string.Equals(Path.GetFileName(fullName), projectFileName, StringComparison.InvariantCultureIgnoreCase))
                 .ToArray();
         }
 
         return matches.FirstOrDefault() ?? projectName;
+    }
+
+    public static string GetProjectFullNameOrNull(Project project)
+    {
+        string fullName;
+        try
+        {
+            fullName = project.FullName;
+        }
+        catch
+        {
+            fullName = null;
+        }
+
+        return fullName;
     }
 }
 #>
