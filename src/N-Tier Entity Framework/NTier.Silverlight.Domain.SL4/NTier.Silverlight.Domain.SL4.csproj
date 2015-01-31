@@ -231,6 +231,9 @@
     <Compile Include="..\NTier.Common.Domain\Model\ExtendedPropertiesDictionary.cs">
       <Link>Common\Model\ExtendedPropertiesDictionary.cs</Link>
     </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ForeignKeyPropertyAttribute.cs">
+      <Link>Common\Model\ForeignKeyPropertyAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\NTier.Common.Domain\Model\IChangeSet.cs">
       <Link>Common\Model\IChangeSet.cs</Link>
     </Compile>

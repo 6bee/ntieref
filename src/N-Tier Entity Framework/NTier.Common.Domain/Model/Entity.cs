@@ -1009,12 +1009,22 @@ namespace NTier.Common.Domain.Model
                         .Where(p => p.Attributes.Any(
                             a =>
                             {
-                                var attribute = a as ServerGenerationAttribute;
-                                return attribute != null &&
+                                if (a is ForeignKeyPropertyAttribute)
+                                {
+                                    return true;
+                                }
+
+                                var serverGenerationAttribute = a as ServerGenerationAttribute;
+                                if (serverGenerationAttribute != null &&
                                     (
-                                        (attribute.Type & ServerGenerationTypes.Insert) == (type & ServerGenerationTypes.Insert) ||
-                                        (attribute.Type & ServerGenerationTypes.Update) == (type & ServerGenerationTypes.Update)
-                                    );
+                                        (serverGenerationAttribute.Type & ServerGenerationTypes.Insert) == (type & ServerGenerationTypes.Insert) ||
+                                        (serverGenerationAttribute.Type & ServerGenerationTypes.Update) == (type & ServerGenerationTypes.Update)
+                                    ))
+                                {
+                                    return true;
+                                }
+
+                                return false;
                             }
                         ));
                 }

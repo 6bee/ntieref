@@ -53,6 +53,7 @@
     </Compile>
     <Compile Include="Model\ITrackableCollection.cs" />
     <Compile Include="Model\ITrackableCollection`.cs" />
+    <Compile Include="Model\ForeignKeyPropertyAttribute.cs" />
     <Compile Include="Model\TrackableCollection`.cs" />
     <Compile Include="Model\ObjectWithChangeTrackerExtensions.cs" />
     <Compile Include="Model\ObjectStateChangingEventArgs.cs" />
