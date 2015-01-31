@@ -26,7 +26,11 @@ namespace IntegrationTest.Server.Domain.Service
                 {
                     category.Errors.Add(new Error("ClientInfo is null"));
                 }
-                else if (clientInfo == null || string.IsNullOrEmpty(clientInfo["TestString"] as string))
+                else if (!string.IsNullOrEmpty(clientInfo["ForceDelete"] as string))
+                {
+                    // the multi related entity delete case opt out here
+                }
+                else if (string.IsNullOrEmpty(clientInfo["TestString"] as string))
                 {
                     category.Errors.Add(new Error("Test string could not be found in ClientInfo"));
                 }

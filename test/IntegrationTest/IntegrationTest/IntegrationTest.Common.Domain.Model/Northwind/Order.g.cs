@@ -79,6 +79,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
+        [ForeignKeyProperty]
         [SimpleProperty]
         public global::System.String CustomerID
         {
@@ -112,6 +113,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
+        [ForeignKeyProperty]
         [SimpleProperty]
         public Nullable<global::System.Int32> EmployeeID
         {
@@ -223,6 +225,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
+        [ForeignKeyProperty]
         [SimpleProperty]
         public Nullable<global::System.Int32> ShipVia
         {

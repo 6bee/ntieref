@@ -470,6 +470,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
+        [ForeignKeyProperty]
         [SimpleProperty]
         public Nullable<global::System.Int32> ReportsTo
         {

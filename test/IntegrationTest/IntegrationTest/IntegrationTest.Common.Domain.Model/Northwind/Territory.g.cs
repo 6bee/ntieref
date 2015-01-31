@@ -103,6 +103,7 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
+        [ForeignKeyProperty]
         [SimpleProperty]
         public global::System.Int32 RegionID
         {

@@ -100,15 +100,25 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-<#+if(edmProperty.MetadataProperties.Any(p => p.Name.EndsWith("StoreGeneratedPattern"))){
-    string pattern = MapStoreGeneratedPattern(edmProperty.MetadataProperties.First(p => p.Name.EndsWith("StoreGeneratedPattern")).Value as string);
-    if (!string.IsNullOrEmpty(pattern)){
-#>
+<#+
+        if(edmProperty.MetadataProperties.Any(p => p.Name.EndsWith("StoreGeneratedPattern")))
+        {
+            string pattern = MapStoreGeneratedPattern(edmProperty.MetadataProperties.First(p => p.Name.EndsWith("StoreGeneratedPattern")).Value as string);
+            if (!string.IsNullOrEmpty(pattern))
+            {#>
         [ServerGeneration(<#=pattern#>)]
-<#+}}#>
-<#+if(edmProperty.TypeUsage.Facets.Any(f => f.Name == "ConcurrencyMode" && f.Value.ToString() == "Fixed")){#>
+<#+         }
+        }#>
+<#+
+        bool hasDependentProperties = entity.NavigationProperties.Any(np => np.GetDependentProperties().Contains(edmProperty));
+        if (hasDependentProperties)
+        {
+#>
+        [ForeignKeyProperty]
+<#+     }#>
+<#+     if(edmProperty.TypeUsage.Facets.Any(f => f.Name == "ConcurrencyMode" && f.Value.ToString() == "Fixed")){#>
         [ConcurrencyProperty]
-<#+}#>
+<#+     }#>
         [SimpleProperty]
         <#=Accessibility.ForProperty(edmProperty)#> <#=EdmUtility.Code.Escape(edmProperty.TypeUsage)#> <#=EdmUtility.Code.Escape(edmProperty)#>
         {
@@ -150,8 +160,6 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
                     <#=EdmUtility.Code.Escape(edmProperty)#>Changing(value);
                     OnPropertyChanging("<#=edmProperty.Name#>", value);
 <#+
-
-        bool hasDependentProperties = entity.NavigationProperties.Where(np=>np.GetDependentProperties().Contains(edmProperty)).Any();
         if (hasDependentProperties)
         {
 #>

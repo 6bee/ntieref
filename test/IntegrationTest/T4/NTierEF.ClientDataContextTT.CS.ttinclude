@@ -363,7 +363,7 @@ namespace <#=Namespace#>
             {
                 foreach (var item in entity.<#=EdmUtility.Code.Escape(navProperty)#>.ToArray())
                 {
-                    var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
+                    var existingRelatedEntity = <#=CastIfRequired(navProperty)#>AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
 <#+
                 if (inverse != null)
                 {
@@ -444,7 +444,7 @@ namespace <#=Namespace#>
             // attach related entity to context
             if (entity.<#=EdmUtility.Code.Escape(navProperty)#> != null)
             {
-                var existingRelatedEntity = AttachWithRelations(entity.<#=EdmUtility.Code.Escape(navProperty)#>, insertMode, mergeOption, referenceTrackingList);
+                var existingRelatedEntity = <#=CastIfRequired(navProperty)#>AttachWithRelations(entity.<#=EdmUtility.Code.Escape(navProperty)#>, insertMode, mergeOption, referenceTrackingList);
 <#+
                 if (inverse != null)
                 {
@@ -660,6 +660,27 @@ using System.Transactions;
         }
 
         return value.Substring(0, 1).ToLower() + value.Substring(1, value.Length - 1);
+    }
+
+    private string CastIfRequired(EdmType edmType, string value = null)
+    {
+        if (ReferenceEquals(null, edmType.BaseType))
+        {
+            return value ?? string.Empty;
+        }
+        
+        if (string.IsNullOrEmpty(value))
+        {
+            return string.Format("({0})", edmType.Name);
+        }
+        
+        return string.Format("(({0}){1})", edmType.Name, value);
+    }
+
+    private string CastIfRequired(NavigationProperty navProperty, string value = null)
+    {
+        var edmType = navProperty.ToEndMember.GetEntityType();
+        return CastIfRequired(edmType, value);
     }
 }
 #>

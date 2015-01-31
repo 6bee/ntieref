@@ -13,6 +13,7 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -25,7 +26,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -49,24 +49,37 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NTier.Client.Domain, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NTierEntityFramework.Client.1.5.0\lib\net40-Client\NTier.Client.Domain.dll</HintPath>
+      <HintPath>..\..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="NTier.Common.Domain, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NTierEntityFramework.Common.1.5.0\lib\net40-Client\NTier.Common.Domain.dll</HintPath>
+      <HintPath>..\..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="NTier.Server.Domain, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NTier.Client.Domain, Version=1.5.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NTierEntityFramework.Server.1.5.0\lib\net40-Client\NTier.Server.Domain.dll</HintPath>
+      <HintPath>..\..\packages\NTierEntityFramework.Client.1.5.2\lib\net40-Client\NTier.Client.Domain.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework">
+    <Reference Include="NTier.Common.Domain, Version=1.5.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NTierEntityFramework.Common.1.5.2\lib\net40-Client\NTier.Common.Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="NTier.Server.Domain, Version=1.5.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NTierEntityFramework.Server.1.5.2\lib\net40-Client\NTier.Server.Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="NTier.Server.Domain.Repositories.EntityFramework, Version=1.5.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NTierEntityFramework.Server.EntityFramework6_0.1.5.2\lib\net40-Client\NTier.Server.Domain.Repositories.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.6.3.13283, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="Remote.Linq, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Remote.Linq, Version=3.2.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Remote.Linq.3.0.0\lib\net45\Remote.Linq.dll</HintPath>
+      <HintPath>..\..\packages\Remote.Linq.3.2.5\lib\net45\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -82,6 +95,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeleteOrderTests.cs" />
     <Compile Include="ChangeTrackerStateTests.cs" />
     <Compile Include="ClientInfoTests.cs" />
     <Compile Include="ComplexPropertyValidationTests.cs" />
@@ -125,6 +139,10 @@
       <Project>{339f263f-335a-45a1-b504-ec4b5862319a}</Project>
       <Name>IntegrationTest.Server.Domain.Edmx</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\IntegrationTest\IntegrationTest.Server.Domain.Repositories\IntegrationTest.Server.Domain.Repositories.csproj">
+      <Project>{4cab1e9a-9daa-40c0-9375-fb39fd268266}</Project>
+      <Name>IntegrationTest.Server.Domain.Repositories</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\IntegrationTest\IntegrationTest.Server.Domain.Service\IntegrationTest.Server.Domain.Service.csproj">
       <Project>{c194113e-c6a4-4d2d-aee8-742d54cde21c}</Project>
       <Name>IntegrationTest.Server.Domain.Service</Name>
@@ -152,6 +170,16 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\IntegrationTest\IntegrationTest.Server.Domain.Edmx\NORTHWND.MDF">
+      <Link>App_Data\NORTHWND.MDF</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\IntegrationTest\IntegrationTest.Server.Domain.Edmx\NORTHWND_log.ldf">
+      <Link>App_Data\NORTHWND_log.ldf</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -18,7 +18,11 @@
     //NTierEntityGenerator.InProcessChannelFactoryProject = @"..\<project folder>\<project name>.csproj";
     
     //var generator = new NTierEntityGenerator(this);
-    var generator = new NTierEntityGenerator(this, @"Northwind.edmx");
+    var generator = new NTierEntityGenerator(this, @"Northwind.edmx")
+    {
+        DataServiceHostTemplate = null
+    };
+
     generator.Run();
 #>
 Generates code in different projects. See Northwind.tt.log for list of generated files.

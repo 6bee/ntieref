@@ -48,7 +48,7 @@ namespace UnitTests
             }
         }
 
-        [Test, Ignore("Deadlocking")]
+        [Test]//, Ignore("Deadlocking")]
         public void Commit()
         {
             string initialValue = null;
