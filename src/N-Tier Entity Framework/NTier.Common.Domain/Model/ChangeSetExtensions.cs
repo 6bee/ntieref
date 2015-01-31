@@ -29,6 +29,7 @@ namespace NTier.Common.Domain.Model
                 var tuple = new Tuple<TEntity, TEntity>(originalEntity, reducedEntity);
                 entities.Add(tuple);
             }
+
             return entities;
         }
 
@@ -73,6 +74,7 @@ namespace NTier.Common.Domain.Model
                     break;
 
                 case ObjectState.Modified:
+                case ObjectState.Deleted:
                     {
                         // copy changed properties (simple)
                         var simpleProperties = originalEntity.PropertyInfos
@@ -81,6 +83,7 @@ namespace NTier.Common.Domain.Model
                                         originalEntity.ChangeTracker.ModifiedProperties.Contains(p.Name) &&
                                         originalEntity.ChangeTracker.OriginalValues.ContainsKey(p.Name))
                             .Select(p => p.PropertyInfo);
+
                         foreach (var property in simpleProperties)
                         {
                             var value = property.GetValue(originalEntity, null);
@@ -96,6 +99,7 @@ namespace NTier.Common.Domain.Model
                                         p.Attributes.Any(attribute => attribute is ComplexPropertyAttribute) &&
                                         originalEntity.ChangeTracker.ModifiedProperties.Contains(p.Name))
                             .Select(p => p.PropertyInfo);
+
                         foreach (var property in complexProperties)
                         {
                             var value = property.GetValue(originalEntity, null);
@@ -110,7 +114,6 @@ namespace NTier.Common.Domain.Model
                     }
                     break;
 
-                case ObjectState.Deleted:
                 case ObjectState.Unchanged:
                     break;
 
@@ -211,6 +214,7 @@ namespace NTier.Common.Domain.Model
                                             // the related entity might not yet be in the change set and has to be specifically created
                                             changeSetEntity = ReduceToModifications(entity);
                                         }
+
                                         collection.Add(changeSetEntity);
                                     }
                                 }
@@ -237,6 +241,7 @@ namespace NTier.Common.Domain.Model
                     break;
 
                 case ObjectState.Modified:
+                case ObjectState.Deleted:
                     {
                         // copy changed navigation properties (relations and foreign keys)
 
@@ -247,24 +252,48 @@ namespace NTier.Common.Domain.Model
                             if (!reducedEntity.ChangeTracker.OriginalValues.ContainsKey(property.Key))
                             {
                                 // lookup reduced version of current value (entity)
-                                Entity changeSetEntity = null;
-                                // get current value (entity)
-                                var entity = (Entity)originalEntity.GetProperty(property.Key, true);
-                                if (entity != null)
+                                Entity currentChangeSetEntity = null;
                                 {
-                                    var entry = transmissionChangeSet.FirstOrDefault(e => e.Item1.Equals(entity));
-                                    if (entry != null)
+                                    // get current value (entity)
+                                    var entity = (Entity)originalEntity.GetProperty(property.Key, true);
+                                    if (entity != null)
                                     {
-                                        changeSetEntity = entry.Item2;
-                                    }
-                                    else
-                                    {
-                                        // in case of directed relation (i.e. only one entity has a relation to the other and the other entity has not relation back) 
-                                        // the related entity might not yet be in the change set and has to be specifically created
-                                        changeSetEntity = ReduceToModifications(entity);
+                                        var entry = transmissionChangeSet.FirstOrDefault(e => e.Item1.Equals(entity));
+                                        if (entry != null)
+                                        {
+                                            currentChangeSetEntity = entry.Item2;
+                                        }
+                                        else
+                                        {
+                                            // in case of directed relation (i.e. only one entity has a relation to the other and the other entity has not relation back) 
+                                            // the related entity might not yet be in the change set and has to be specifically created
+                                            currentChangeSetEntity = ReduceToModifications(entity);
+                                        }
                                     }
                                 }
-                                reducedEntity.SetProperty(property.Key, changeSetEntity, true);
+
+                                Entity originalChangeSetEntity = null;
+                                {
+                                    // get current value (entity)
+                                    var entity = (Entity)originalEntity.ChangeTracker.OriginalValues[property.Key];
+                                    if (entity != null)
+                                    {
+                                        var entry = transmissionChangeSet.FirstOrDefault(e => e.Item1.Equals(entity));
+                                        if (entry != null)
+                                        {
+                                            originalChangeSetEntity = entry.Item2;
+                                        }
+                                        else
+                                        {
+                                            // in case of directed relation (i.e. only one entity has a relation to the other and the other entity has not relation back) 
+                                            // the related entity might not yet be in the change set and has to be specifically created
+                                            originalChangeSetEntity = ReduceToModifications(entity);
+                                        }
+                                    }
+                                }
+
+                                reducedEntity.SetProperty(property.Key, currentChangeSetEntity, true);
+                                reducedEntity.ChangeTracker.OriginalValues[property.Key] = originalChangeSetEntity;
                             }
                         }
 
@@ -288,13 +317,19 @@ namespace NTier.Common.Domain.Model
                                     // the related entity might not yet be in the change set and has to be specifically created
                                     changeSetEntity = ReduceToModifications(entity);
                                 }
+
                                 if (changeSetEntity != null && !navigationProperty.Contains(changeSetEntity))
                                 {
                                     navigationProperty.Add(changeSetEntity);
                                     objectList.Add(changeSetEntity);
                                 }
                             }
-                            if (reducedEntity.ChangeTracker.ObjectsAddedToCollectionProperties.ContainsKey(relation.Key)) continue;
+
+                            if (reducedEntity.ChangeTracker.ObjectsAddedToCollectionProperties.ContainsKey(relation.Key))
+                            {
+                                continue;
+                            }
+
                             reducedEntity.ChangeTracker.ObjectsAddedToCollectionProperties.Add(relation.Key, objectList);
                         }
 
@@ -317,17 +352,16 @@ namespace NTier.Common.Domain.Model
                                     // the related entity might not yet be in the change set and has to be specifically created
                                     changeSetEntity = ReduceToModifications(entity);
                                 }
+
                                 if (changeSetEntity != null)
                                 {
                                     objectList.Add(changeSetEntity);
                                 }
                             }
+
                             reducedEntity.ChangeTracker.ObjectsRemovedFromCollectionProperties.Add(relation.Key, objectList);
                         }
                     }
-                    break;
-
-                case ObjectState.Deleted:
                     break;
 
                 default:
