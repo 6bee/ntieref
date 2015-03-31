@@ -2,9 +2,9 @@
 
 using NTier.Common.Domain.Model;
 using Remote.Linq;
+using Remote.Linq.ExpressionVisitors;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 
 namespace NTier.Client.Domain
@@ -32,17 +32,17 @@ namespace NTier.Client.Domain
 
             public Remote.Linq.Expressions.LambdaExpression Expression
             {
-                get { return _queryExpression ?? _lambdaExpression.ToRemoteLinqExpression(); }
+                get { return GetOrCreateRemoteExpression(_queryExpression, _lambdaExpression); }
             }
         }
 
         internal sealed class Sort
         {
-            private readonly LambdaExpression _lambdaExpression;
+            private readonly System.Linq.Expressions.LambdaExpression _lambdaExpression;
             private readonly Remote.Linq.Expressions.SortDirection _orderingDirection;
             private readonly Remote.Linq.Expressions.LambdaExpression _queryExpression;
 
-            public Sort(LambdaExpression exp, Remote.Linq.Expressions.SortDirection orderingDirection)
+            public Sort(System.Linq.Expressions.LambdaExpression exp, Remote.Linq.Expressions.SortDirection orderingDirection)
             {
                 _lambdaExpression = exp;
                 _orderingDirection = orderingDirection;
@@ -67,14 +67,14 @@ namespace NTier.Client.Domain
             {
                 get
                 {
-                    var expression = _queryExpression ?? _lambdaExpression.ToRemoteLinqExpression();
+                    var expression = GetOrCreateRemoteExpression(_queryExpression, _lambdaExpression);
                     return Remote.Linq.Expressions.Expression.Sort(expression, _orderingDirection);
                 }
             }
         }
 
         #endregion  Inner classes
-        
+
         #region Private fields/properties
 
         private static readonly MethodInfo EnumerableContainsMethodInfo = typeof(System.Linq.Enumerable).GetMethods(BindingFlags.Public | BindingFlags.Static).Single(m => m.Name == "Contains" && m.GetParameters().Length == 2);
@@ -93,7 +93,7 @@ namespace NTier.Client.Domain
         }
 
         #endregion Constructor
-        
+
         #region Query properties
 
         /// <summary>
@@ -209,5 +209,10 @@ namespace NTier.Client.Domain
         }
 
         #endregion Query properties
+
+        private static Remote.Linq.Expressions.LambdaExpression GetOrCreateRemoteExpression(Remote.Linq.Expressions.LambdaExpression remoteExpression, System.Linq.Expressions.LambdaExpression systemExpression)
+        {
+            return remoteExpression ?? systemExpression.ToRemoteLinqExpression().ReplaceGenericQueryArgumentsByNonGenericArguments();
+        }
     }
 }

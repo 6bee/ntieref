@@ -35,7 +35,7 @@ namespace NTier.Server.Domain.Service
             {
                 var queryMethod = typeof(DataService<TRepository>)
                     .GetMethod("Query", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                    .MakeGenericMethod(query.OfType, typeof(TEntity));
+                    .MakeGenericMethod(query.OfType.Type, typeof(TEntity));
                 var result = queryMethod.Invoke(this, new object[] { entityQueryable, query, clientInfo });
                 return (QueryResult<TEntity>)result;
             }

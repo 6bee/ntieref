@@ -3,10 +3,10 @@
 using NTier.Common.Domain.Model;
 using NTier.Server.Domain.Repositories.Linq;
 using Remote.Linq;
+using Remote.Linq.ExpressionVisitors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace NTier.Server.Domain.Repositories
 {
@@ -21,6 +21,7 @@ namespace NTier.Server.Domain.Repositories
                     queriable = queriable.Include(include);
                 }
             }
+
             return queriable;
         }
 
@@ -30,13 +31,15 @@ namespace NTier.Server.Domain.Repositories
             {
                 var filters =
                     from f in filterList
-                    select f.ToLinqExpression<TEntity, bool>();
+                    select f.ReplaceNonGenericQueryArgumentsByGenericArguments().ToLinqExpression<TEntity, bool>();
+
                 queriable = queriable.ApplyFilters(filters);
             }
+
             return queriable;
         }
 
-        internal static IDomainQueryable<TEntity> ApplyFilters<TEntity>(this IDomainQueryable<TEntity> queriable, IEnumerable<Expression<Func<TEntity, bool>>> filters) where TEntity : Entity
+        internal static IDomainQueryable<TEntity> ApplyFilters<TEntity>(this IDomainQueryable<TEntity> queriable, IEnumerable<System.Linq.Expressions.Expression<Func<TEntity, bool>>> filters) where TEntity : Entity
         {
             if (!ReferenceEquals(filters, null))
             {
@@ -45,6 +48,7 @@ namespace NTier.Server.Domain.Repositories
                     queriable = queriable.Where(filter);
                 }
             }
+
             return queriable;
         }
 
@@ -56,7 +60,7 @@ namespace NTier.Server.Domain.Repositories
             {
                 foreach (var sort in sortList)
                 {
-                    var exp = sort.Operand.ToLinqExpression();
+                    var exp = sort.Operand.ReplaceNonGenericQueryArgumentsByGenericArguments().ToLinqExpression();
                     if (ReferenceEquals(orderedQueriable, null))
                     {
                         switch (sort.SortDirection)
@@ -64,6 +68,7 @@ namespace NTier.Server.Domain.Repositories
                             case Remote.Linq.Expressions.SortDirection.Ascending:
                                 orderedQueriable = queriable.OrderBy(exp);
                                 break;
+
                             case Remote.Linq.Expressions.SortDirection.Descending:
                                 orderedQueriable = queriable.OrderByDescending(exp);
                                 break;
@@ -76,6 +81,7 @@ namespace NTier.Server.Domain.Repositories
                             case Remote.Linq.Expressions.SortDirection.Ascending:
                                 orderedQueriable = orderedQueriable.ThenBy(exp);
                                 break;
+
                             case Remote.Linq.Expressions.SortDirection.Descending:
                                 orderedQueriable = orderedQueriable.ThenByDescending(exp);
                                 break;
@@ -83,6 +89,7 @@ namespace NTier.Server.Domain.Repositories
                     }
                 }
             }
+
             return orderedQueriable ?? queriable;
         }
     }

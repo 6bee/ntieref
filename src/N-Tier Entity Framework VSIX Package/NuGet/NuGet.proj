@@ -10,6 +10,7 @@
     <FrameworkDir>$(SolutionDir)\..\N-Tier Entity Framework\</FrameworkDir>
     <FrameworkBinDir>$(FrameworkDir)\bin\$(Configuration)\</FrameworkBinDir>
     <VersionOption Condition=" '$(Version)' != '' ">-Version $(Version)</VersionOption>
+	<Symbols>-Symbols</Symbols>
   </PropertyGroup>
 
   <ItemGroup>
@@ -106,7 +107,7 @@
       <Output TaskParameter="Include" ItemName="NuSpecs"/>
     </CreateItem>
     <Exec Command="&quot;$(NuGetExePath)&quot; pack &quot;%(NuSpecs.Identity)&quot; $(VersionOption) -OutputDirectory &quot;$(PackagesPath).&quot; -Exclude &quot;*.nutrans&quot; -NonInteractive -NoPackageAnalysis" />
-    <Exec Command="&quot;$(NuGetExePath)&quot; pack &quot;%(FrameworkProjects.Identity)&quot; $(VersionOption) -Build -Symbols -Properties Configuration=Release -OutputDirectory &quot;$(PackagesPath).&quot; -NonInteractive -NoPackageAnalysis" />
+    <Exec Command="&quot;$(NuGetExePath)&quot; pack &quot;%(FrameworkProjects.Identity)&quot; $(VersionOption) -Build $(Symbols) -Properties Configuration=Release -OutputDirectory &quot;$(PackagesPath).&quot; -NonInteractive -NoPackageAnalysis" />
     
     <CallTarget Targets="CopyFrameworkPackages"/>
     <!--<CallTarget Targets="CopyPackagesToOutputPath"/>-->
