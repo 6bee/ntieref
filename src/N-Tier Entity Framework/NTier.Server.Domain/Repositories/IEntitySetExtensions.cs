@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace NTier.Server.Domain.Repositories
 {
-    public static class IEntitySetExtensions
+    internal static class IEntitySetExtensions
     {
         internal static IEntityQueryable<TEntity> ApplyInclude<TEntity>(this IEntityQueryable<TEntity> queriable, IEnumerable<string> includeList) where TEntity : Entity
         {

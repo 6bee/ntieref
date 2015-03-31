@@ -45,7 +45,7 @@ namespace NTier.Server.Domain.Service
             where TEntity : TBase
             where TBase : Entity
         {
-            List<TEntity> result = null;
+            IEnumerable<TEntity> result = null;
             long? totalCount = null;
             if ((query.IncludeData ?? false) || (query.IncludeTotalCount ?? false))
             {
@@ -62,14 +62,13 @@ namespace NTier.Server.Domain.Service
                     : baseEntityQueryable.OfType<TEntity>();
 
                 queryable = queryable
-                    .ApplyFilters(filters);
+                    .ApplyFilters(filters)
+                    .ApplyFilters(query.FilterExpressionList);
 
                 // retrieve data
                 if (query.IncludeData ?? false)
                 {
-                    var q = queryable
-                        .ApplyFilters(query.FilterExpressionList)
-                        .ApplySorting(query.SortExpressionList);
+                    var q = queryable.ApplySorting(query.SortExpressionList);
 
                     if (query.Skip.HasValue && query.Skip.Value > 0)
                     {
@@ -81,19 +80,28 @@ namespace NTier.Server.Domain.Service
                         q = q.Take(query.Take.Value);
                     }
 
-                    result = q.ToList();
+                    result = ExecuteDataQuery<TEntity>(q);
                 }
 
                 // retrieve count
                 if (query.IncludeTotalCount ?? false)
                 {
-                    var q = queryable.ApplyFilters(query.FilterExpressionList);
-                    totalCount = q.LongCount();
+                    totalCount = ExecuteCountQuery<TEntity>(queryable);
                 }
             }
+
             return new QueryResult<TBase> { Data = result, TotalCount = totalCount };
         }
 
+        protected virtual IEnumerable<TEntity> ExecuteDataQuery<TEntity>(IDomainQueryable<TEntity> queryable) where TEntity : Entity
+        {
+            return queryable.ToList();
+        }
+
+        protected virtual long ExecuteCountQuery<TEntity>(IDomainQueryable<TEntity> queryable) where TEntity : Entity
+        {
+            return queryable.LongCount();
+        }
 
         #endregion query
 

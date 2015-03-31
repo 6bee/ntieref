@@ -11,14 +11,9 @@ namespace NTier.Server.Domain.Repositories.Linq
     public class DomainQueryable<TEntity> : IDomainQueryable<TEntity> 
         where TEntity : Entity
     {
-        #region Private fields
-
         private readonly IQueryable<TEntity> _queryable;
+
         private readonly Func<Expression<Func<TEntity, bool>>, Expression<Func<TEntity, bool>>> _expressionVisitor;
-
-        #endregion Private fields
-
-        #region Constructor
 
         public DomainQueryable(IQueryable<TEntity> queryable, Func<Expression<Func<TEntity, bool>>, Expression<Func<TEntity, bool>>> expressionVisitor = null)
         {
@@ -26,7 +21,20 @@ namespace NTier.Server.Domain.Repositories.Linq
             _expressionVisitor = expressionVisitor == null ? e => e : expressionVisitor;
         }
 
-        #endregion Constructor
+        public Type ElementType
+        {
+            get { return _queryable.ElementType; }
+        }
+
+        public Expression Expression
+        {
+            get { return _queryable.Expression; }
+        }
+
+        public IQueryProvider Provider
+        {
+            get { return _queryable.Provider; }
+        }
 
         protected Func<Expression<Func<TEntity, bool>>, Expression<Func<TEntity, bool>>> ExpressionVisitor
         {
@@ -55,7 +63,7 @@ namespace NTier.Server.Domain.Repositories.Linq
         IDomainQueryable<T> IDomainQueryable<TEntity>.OfType<T>() //where T : TEntity
         {
             var oftype = _queryable.OfType<T>();
-            // Note: type specific queries in case of table inheritance doesn't currently support expression visitor
+            // Note: type specific queries in case of table inheritance don't currently support expression visitor
             return new DomainQueryable<T>(oftype, /*_expressionVisitor*/null);
         }
 
