@@ -4,7 +4,7 @@
     <id xdt:Transform="Insert">NTierEntityFramework.Silverlight</id>
     <description xdt:Transform="Insert">N-Tier Entity Framework Silverlight client base library and T4 code generation templates.</description>
     <dependencies xdt:Transform="Insert">
-      <dependency id="Remote.Linq" version="[4.1.0-beta002,)" />
+      <dependency id="Remote.Linq" version="[4.1.0-beta004,)" />
     </dependencies>
   </metadata>
 </package>

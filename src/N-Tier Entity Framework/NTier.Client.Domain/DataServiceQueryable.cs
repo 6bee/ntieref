@@ -212,7 +212,11 @@ namespace NTier.Client.Domain
 
         private static Remote.Linq.Expressions.LambdaExpression GetOrCreateRemoteExpression(Remote.Linq.Expressions.LambdaExpression remoteExpression, System.Linq.Expressions.LambdaExpression systemExpression)
         {
-            return remoteExpression ?? systemExpression.ToRemoteLinqExpression().ReplaceGenericQueryArgumentsByNonGenericArguments();
+            return remoteExpression ??
+                systemExpression
+                    .ResolveDynamicPropertySelectors(throwOnInvalidProperty: true)
+                    .ToRemoteLinqExpression()
+                    .ReplaceGenericQueryArgumentsByNonGenericArguments();
         }
     }
 }
