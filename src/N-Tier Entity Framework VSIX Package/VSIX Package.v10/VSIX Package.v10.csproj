@@ -158,8 +158,8 @@
       <Link>packages\NTierEntityFramework.WcfRia.$(NugetPackageVersion).nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\Packages\Remote.Linq.3.0.0.nupkg">
-      <Link>packages\Remote.Linq.3.0.0.nupkg</Link>
+    <Content Include="..\lib\Packages\Remote.Linq.4.1.0.nupkg">
+      <Link>packages\Remote.Linq.4.1.0.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="..\lib\Packages\EntityFramework.4.3.1.nupkg">
