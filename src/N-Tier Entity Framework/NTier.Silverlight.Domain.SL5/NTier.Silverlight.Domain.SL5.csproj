@@ -119,6 +119,9 @@
     <Compile Include="..\NTier.Common.Domain\UpdateFault.cs">
       <Link>Common\UpdateFault.cs</Link>
     </Compile>
+    <Compile Include="..\NTier.Client.Domain\ChangeSetFactory.cs">
+      <Link>Client\ChangeSetFactory.cs</Link>
+    </Compile>
     <Compile Include="..\NTier.Client.Domain\DataContext.cs">
       <Link>Client\DataContext.cs</Link>
     </Compile>
@@ -229,9 +232,6 @@
     </Compile>
     <Compile Include="..\NTier.Client.Domain\StateEntry.cs">
       <Link>Client\StateEntry.cs</Link>
-    </Compile>
-    <Compile Include="..\NTier.Common.Domain\Model\ChangeSetExtensions.cs">
-      <Link>Common\Model\ChangeSetExtensions.cs</Link>
     </Compile>
     <Compile Include="..\NTier.Common.Domain\Model\ClientInfo.cs">
       <Link>Common\Model\ClientInfo.cs</Link>

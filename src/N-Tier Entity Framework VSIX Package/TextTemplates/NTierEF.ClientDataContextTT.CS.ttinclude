@@ -91,6 +91,9 @@ namespace <#=Namespace#>
         #region Fields
 
         private readonly Func<I<#=EdmUtility.ModelName#>DataService> _dataServiceFactory;
+
+        private readonly Func<I<#=EdmUtility.ModelName#>ChangeSetFactory> _changeSetFactoryProvider;
+
 <#+
         foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
         {
@@ -106,9 +109,12 @@ namespace <#=Namespace#>
 
         partial void Initialize();
 
-        public <#=EdmUtility.ModelName#>DataContext(Func<I<#=EdmUtility.ModelName#>DataService> dataServiceFactory)
+        public <#=EdmUtility.ModelName#>DataContext(Func<I<#=EdmUtility.ModelName#>DataService> dataServiceFactory, Func<I<#=EdmUtility.ModelName#>ChangeSetFactory> changeSetFactoryProvider = null)
         {
             _dataServiceFactory = dataServiceFactory;
+
+            _changeSetFactoryProvider = changeSetFactoryProvider ?? (() => new <#=EdmUtility.ModelName#>ChangeSetFactory());
+
 <#+
         foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
         {
@@ -117,16 +123,17 @@ namespace <#=Namespace#>
 <#+
         }
 #>
+
             Initialize();
         }
 
-        public <#=EdmUtility.ModelName#>DataContext(IChannelFactory<I<#=EdmUtility.ModelName#>DataService> channelFactory)
-            : this(channelFactory.CreateChannel)
+        public <#=EdmUtility.ModelName#>DataContext(IChannelFactory<I<#=EdmUtility.ModelName#>DataService> channelFactory, Func<I<#=EdmUtility.ModelName#>ChangeSetFactory> changeSetFactoryProvider = null)
+            : this(channelFactory.CreateChannel, changeSetFactoryProvider)
         {
         }
 
-        public <#=EdmUtility.ModelName#>DataContext(string endpointConfigurationName = "<#=EdmUtility.ModelName#>DataService")
-            : this(CreateChannelFactory(endpointConfigurationName).CreateChannel)
+        public <#=EdmUtility.ModelName#>DataContext(string endpointConfigurationName = "<#=EdmUtility.ModelName#>DataService", Func<I<#=EdmUtility.ModelName#>ChangeSetFactory> changeSetFactoryProvider = null)
+            : this(CreateChannelFactory(endpointConfigurationName).CreateChannel, changeSetFactoryProvider)
         {
         }
 
@@ -587,11 +594,12 @@ namespace <#=Namespace#>
             {
                 <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#> = _<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>.GetAllEntities();
             }
+
 <#+
         }
 #>
             // get reduced change set
-            var changeSet = new <#=EdmUtility.ModelName#>ChangeSet(
+            var changeSet = _changeSetFactoryProvider().CreateChangeSet(
                 <#=string.Join(", " + Environment.NewLine + "                ", EdmUtility.Container.BaseEntitySets.OfType<EntitySet>().Select(e => FirstCaseLow(EdmUtility.Code.Escape(e))).ToArray())#>);
 
             return changeSet;
@@ -607,6 +615,7 @@ namespace <#=Namespace#>
             {
                 Refresh(_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>, resultSet.<#=EdmUtility.Code.Escape(entitySet)#>);
             }
+
 <#+
         }
 #>

@@ -4,7 +4,7 @@
     <id xdt:Transform="Insert">NTierEntityFramework.Server.EntityFramework6_0</id>
     <description xdt:Transform="Insert">EF6 provider for N-Tier Entity Framework.</description>
     <dependencies xdt:Transform="Insert">
-      <dependency id="NTierEntityFramework.Server" version="[1.6.0,1.7)" />
+      <dependency id="NTierEntityFramework.Server" version="[1.7.0-beta001,1.8)" />
       <dependency id="EntityFramework" version="[6.0,7.0)" />
     </dependencies>
   </metadata>

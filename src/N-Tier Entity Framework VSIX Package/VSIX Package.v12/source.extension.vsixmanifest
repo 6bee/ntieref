@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="NTierEntityFramework.Trivadis.6faf798b-bc7c-430f-95ed-3cb26f66f56b" Version="1.6" Language="en-US" Publisher="Trivadis" />
+    <Identity Id="NTierEntityFramework.Trivadis.6faf798b-bc7c-430f-95ed-3cb26f66f56b" Version="1.7" Language="en-US" Publisher="Trivadis" />
     <DisplayName>N-Tier Entity Framework VS2013</DisplayName>
     <Description xml:space="preserve">The N-Tier Entity Framework extends Microsoft's Entity Framework (EF) to provide support for n-tier solutions. The framework aims to provide the richness of EF in a distributed architecture while keeping its simplicity.</Description>
     <MoreInfo>http://ntieref.codeplex.com/</MoreInfo>

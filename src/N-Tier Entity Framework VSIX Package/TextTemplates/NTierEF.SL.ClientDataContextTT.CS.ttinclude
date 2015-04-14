@@ -79,6 +79,8 @@ namespace <#=Namespace#>
 
         private readonly ChannelFactory<I<#=EdmUtility.ModelName#>DataService> ChannelFactory;
 
+        private readonly Func<I<#=EdmUtility.ModelName#>ChangeSetFactory> _changeSetFactoryProvider;
+
 <#+
         foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
         {
@@ -94,8 +96,10 @@ namespace <#=Namespace#>
 
         partial void Initialize();
 
-        private <#=EdmUtility.ModelName#>DataContext(bool dummyParameter)
+        private <#=EdmUtility.ModelName#>DataContext(Func<I<#=EdmUtility.ModelName#>ChangeSetFactory> changeSetFactoryProvider)
         {
+            _changeSetFactoryProvider = changeSetFactoryProvider ?? (() => new <#=EdmUtility.ModelName#>ChangeSetFactory());
+
 <#+
         foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
         {
@@ -106,8 +110,8 @@ namespace <#=Namespace#>
 #>
         }
 
-        public <#=EdmUtility.ModelName#>DataContext(string endpointConfigurationName = "<#=EdmUtility.ModelName#>DataService", string relativeUri = null)
-            : this(true)
+        public <#=EdmUtility.ModelName#>DataContext(string endpointConfigurationName = "<#=EdmUtility.ModelName#>DataService", string relativeUri = null, Func<I<#=EdmUtility.ModelName#>ChangeSetFactory> changeSetFactoryProvider = null)
+            : this(changeSetFactoryProvider)
         {
             this.ChannelFactory = new ChannelFactory<I<#=EdmUtility.ModelName#>DataService>(endpointConfigurationName);
 
@@ -119,8 +123,8 @@ namespace <#=Namespace#>
             Initialize();
         }
 
-        public <#=EdmUtility.ModelName#>DataContext(Binding binding, EndpointAddress remoteAddress)
-            : this(true)
+        public <#=EdmUtility.ModelName#>DataContext(Binding binding, EndpointAddress remoteAddress, Func<I<#=EdmUtility.ModelName#>ChangeSetFactory> changeSetFactoryProvider = null)
+            : this(changeSetFactoryProvider)
         {
             this.ChannelFactory = new ChannelFactory<I<#=EdmUtility.ModelName#>DataService>(binding, remoteAddress);
             Initialize();
@@ -566,7 +570,7 @@ namespace <#=Namespace#>
 #>
 
             // get reduced change set
-            var changeSet = new <#=EdmUtility.ModelName#>ChangeSet(
+            var changeSet = _changeSetFactoryProvider().CreateChangeSet(
                 <#=string.Join(", " + Environment.NewLine + "                ", EdmUtility.Container.BaseEntitySets.OfType<EntitySet>().Select(e => FirstCaseLow(EdmUtility.Code.Escape(e))).ToArray())#>);
 
             return changeSet;

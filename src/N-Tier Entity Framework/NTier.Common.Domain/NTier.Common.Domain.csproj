@@ -73,7 +73,6 @@
     <Compile Include="Model\ErrorType.cs" />
     <Compile Include="Model\Error.cs" />
     <Compile Include="ObjectExtensions.cs" />
-    <Compile Include="Model\ChangeSetExtensions.cs" />
     <Compile Include="Model\ClientInfo.cs" />
     <Compile Include="Model\ComplexPropertyAttribute.cs" />
     <Compile Include="Model\NavigationPropertyAttribute.cs" />

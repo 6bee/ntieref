@@ -1,28 +1,32 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
+using NTier.Common.Domain.Model;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace NTier.Common.Domain.Model
+namespace NTier.Client.Domain
 {
-    [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
-    public static class ChangeSetExtensions
+    public abstract class ChangeSetFactory
     {
-        [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
-        public static IList<TEntity> GetChangeSet<TEntity>(this IEnumerable<TEntity> source, bool includeOnlyValid = true) where TEntity : Entity
+        /// <summary>
+        /// Retursn modified entities
+        /// </summary>
+        protected virtual IList<TEntity> GetChangeSet<TEntity>(IEnumerable<TEntity> source, bool includeOnlyValid = true) where TEntity : Entity
         {
             return (source ?? new List<TEntity>())
                  .Where(e => e.HasChanges && (e.IsValid || !includeOnlyValid || e.ChangeTracker.State == ObjectState.Deleted))
                  .ToList();
         }
 
-        [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
-        public static IList<Tuple<TEntity,TEntity>> ReduceToModifications<TEntity>(this IList<TEntity> originalList) where TEntity : Entity
+        /// <summary>
+        /// Copy changed values
+        /// </summary>
+        protected virtual IList<Tuple<TEntity, TEntity>> ReduceToModifications<TEntity>(IList<TEntity> originalList) where TEntity : Entity
         {
             var entities = new List<Tuple<TEntity, TEntity>>();
+
             foreach (var originalEntity in originalList)
             {
                 var reducedEntity = ReduceToModifications(originalEntity);
@@ -33,8 +37,10 @@ namespace NTier.Common.Domain.Model
             return entities;
         }
 
-        [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
-        public static TEntity ReduceToModifications<TEntity>(TEntity originalEntity) where TEntity : Entity
+        /// <summary>
+        /// Copy changed values
+        /// </summary>
+        protected virtual TEntity ReduceToModifications<TEntity>(TEntity originalEntity) where TEntity : Entity
         {
             TEntity reducedEntity = (TEntity)Activator.CreateInstance(originalEntity.GetType());
 
@@ -147,35 +153,35 @@ namespace NTier.Common.Domain.Model
             return reducedEntity;
         }
 
-        [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
-        public static IEnumerable<Entity> Union(this IChangeSet source, params IEnumerable<Entity>[] entitySets)
+        protected virtual IEnumerable<Entity> Union(params IEnumerable<Entity>[] entitySets)
         {
             return entitySets.SelectMany(e => e).Cast<Entity>();
         }
 
-        [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
-        public static IEnumerable<Tuple<Entity, Entity>> Union(this IChangeSet source, params IEnumerable<Tuple<Entity, Entity>>[] entitySets)
+        protected virtual IEnumerable<Tuple<Entity, Entity>> Union(params IEnumerable<Tuple<Entity, Entity>>[] entitySets)
         {
             return entitySets.SelectMany(e => e);
         }
 
-        [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
-        public static IEnumerable<Tuple<Entity, Entity>> CastToEntityTuple<TEntity>(this IEnumerable<Tuple<TEntity, TEntity>> tupleList) where TEntity : Entity
+        protected virtual IEnumerable<Tuple<Entity, Entity>> CastToEntityTuple<TEntity>(IEnumerable<Tuple<TEntity, TEntity>> tupleList) where TEntity : Entity
         {
             return tupleList.Select(e => new Tuple<Entity, Entity>(e.Item1, e.Item2));
         }
 
-        [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
-        public static void FixupRelations(this IChangeSet source, IEnumerable<Tuple<Entity, Entity>> reducedEntitySet, IEnumerable<Entity> originalChangeSet)
+        /// <summary>
+        /// Replaces related entities with their corresponding clones from the reduced entity set
+        /// </summary>
+        /// <param name="reducedEntitySet"></param>
+        /// <param name="originalChangeSet"></param>
+        protected virtual void FixupRelations(IEnumerable<Tuple<Entity, Entity>> reducedEntitySet, IEnumerable<Entity> originalChangeSet)
         {
             foreach (var entity in reducedEntitySet)
             {
-                entity.FixupRelations(reducedEntitySet, originalChangeSet);
+                FixupRelations(entity, reducedEntitySet, originalChangeSet);
             }
         }
 
-        [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
-        private static void FixupRelations<TEntity>(this Tuple<TEntity, TEntity> transmissionEntityTuple, IEnumerable<Tuple<TEntity, TEntity>> transmissionChangeSet, IEnumerable<TEntity> originalChangeSet) where TEntity : Entity
+        private void FixupRelations<TEntity>(Tuple<TEntity, TEntity> transmissionEntityTuple, IEnumerable<Tuple<TEntity, TEntity>> transmissionChangeSet, IEnumerable<TEntity> originalChangeSet) where TEntity : Entity
         {
             TEntity originalEntity = transmissionEntityTuple.Item1;
             TEntity reducedEntity = transmissionEntityTuple.Item2;

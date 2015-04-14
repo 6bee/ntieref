@@ -46,7 +46,7 @@ public class ReflectionUtils
                 string name = propertyInfo.GetType().GetField("Name").GetValue(propertyInfo) as string;
                 if (name == propertyName)
                 {
-                    var attributes = propertyInfo.GetType().GetProperty("Attributes").GetValue(propertyInfo, null) as IEnumerable<Attribute>;
+                    var attributes = propertyInfo.GetType().GetField("Attributes").GetValue(propertyInfo) as IEnumerable<Attribute>;
                     if(attributes != null)
                     {
                         foreach (var attr in attributes)

@@ -28,8 +28,8 @@
   </WizardExtension>
   <WizardData>
     <packages repository="extension" repositoryId="NTierEntityFramework.Trivadis.x">
-      <package id="NTierEntityFramework.Client" version="1.6.0" />
-      <package id="NTierEntityFramework.Common" version="1.6.0" />
+      <package id="NTierEntityFramework.Client" version="1.7.0-beta001" />
+      <package id="NTierEntityFramework.Common" version="1.7.0-beta001" />
       <package id="Remote.Linq" version="4.1.0" />
     </packages>
   </WizardData>
