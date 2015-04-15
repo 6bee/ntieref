@@ -12,7 +12,7 @@
 <#@ include file="NTierEF.ClientDataContextTT.CS.ttinclude" #>
 <#@ include file="NTierEF.ChangeSetFactoryInterfaceTT.CS.ttinclude" #>
 <#@ include file="NTierEF.ChangeSetFactoryTT.CS.ttinclude" #>
-<#@ include file="NTierEF.RemoteChannelFactoryTT.CS.ttinclude" #>z
+<#@ include file="NTierEF.RemoteChannelFactoryTT.CS.ttinclude" #>
 <#@ include file="NTierEF.InProcessChannelFactoryTT.CS.ttinclude" #>
 <#+
 // <copyright file="NTierEF.NTierEntityGen.CS.ttinclude" company="Trivadis">

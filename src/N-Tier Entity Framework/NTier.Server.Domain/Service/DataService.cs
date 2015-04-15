@@ -126,7 +126,7 @@ namespace NTier.Server.Domain.Service
         /// </summary>
         protected virtual void ApplyChanges<TEntity>(TRepository repository, IEntitySet<TEntity> entitySet, IChangeSet changeSet, IList<TEntity> entityChangeSet, ClientInfo clientInfo) where TEntity : Entity
         {
-            // apply chnages to repository
+            // apply changes to repository
             if (entityChangeSet != null && entityChangeSet.Count > 0)
             {
                 foreach (var entity in entityChangeSet.ToArray())
