@@ -15,10 +15,10 @@
 <#@ include file="NTierEF.RemoteChannelFactoryTT.CS.ttinclude" #>
 <#@ include file="NTierEF.InProcessChannelFactoryTT.CS.ttinclude" #>
 <#+
-// <copyright file="NTierEF.NTierEntityGen.CS.ttinclude" company="Trivadis">
+// <copyright file="NTierEF.NTierEntityGenerator.CS.ttinclude" company="Trivadis">
 //     Copyright © Trivadis. All Rights Reserved.
 // </copyright>
-public class NTierEntityGenerator : Generator
+public partial class NTierEntityGenerator : Generator
 {
     // project configuration: this section has to be configured according your project
     private const string DefaultDataModelProject = @"..\..\Common\{0}.Common.Domain.Model\{0}.Common.Domain.Model.csproj";
@@ -43,6 +43,8 @@ public class NTierEntityGenerator : Generator
 
         this.EdmUtility = new EdmUtility(textTransformation, modelFile);
 
+        BeforeInitializing(modelFile);
+
         this.DataModelCodeGenerator = new DataModelCodeGenerator(DataModelProject, this.EdmUtility, DataModelNamespace);
         this.RepositoryInterfaceTemplate = new RepositoryInterfaceTemplate(RepositoryProject, this.EdmUtility, RepositoryNamespace, DataModelNamespace);
         this.RepositoryTemplate = new RepositoryTemplate(RepositoryProject, this.EdmUtility, RepositoryNamespace, DataModelNamespace);
@@ -55,9 +57,18 @@ public class NTierEntityGenerator : Generator
         this.ChangeSetFactoryInterfaceTemplate = new ChangeSetFactoryInterfaceTemplate(ClientLibraryProject, this.EdmUtility, ClientLibraryNamespace, DataModelNamespace);
         //this.RemoteChannelFactoryTemplate = new RemoteChannelFactoryTemplate(RemoteChannelFactoryProject, this.EdmUtility, RemoteChannelFactoryNamespace, DataServiceContractNamespace);
         //this.InProcessChannelFactoryTemplate = new InProcessChannelFactoryTemplate(InProcessChannelFactoryProject, this.EdmUtility, InProcessChannelFactoryNamespace, DataServiceContractNamespace, DataServiceNamespace);
+
+        OnInitializing();
     }
 
-    #region project default namespaces
+    partial void BeforeInitializing(string modelFilePath);
+
+    partial void OnInitializing();
+
+    partial void OnCodeGenerating();
+
+    partial void OnCodeGenerated();
+
     private static string EntityModelNamespace { get { return EdmUtility.GetDefaultNamespace(); } }
     private static string DataModelNamespace { get { return EdmUtility.GetDefaultNamespace(DataModelProject); } }
     private static string RepositoryNamespace { get { return EdmUtility.GetDefaultNamespace(RepositoryProject); } }
@@ -67,9 +78,7 @@ public class NTierEntityGenerator : Generator
     private static string ClientLibraryNamespace { get { return EdmUtility.GetDefaultNamespace(ClientLibraryProject); } }
     private static string RemoteChannelFactoryNamespace { get { return EdmUtility.GetDefaultNamespace(RemoteChannelFactoryProject); } }
     private static string InProcessChannelFactoryNamespace { get { return EdmUtility.GetDefaultNamespace(InProcessChannelFactoryProject); } }
-    #endregion
 
-    #region project files
     private static string DefaultProjectBaseName
     {
         get
@@ -139,9 +148,7 @@ public class NTierEntityGenerator : Generator
         get { return ProjectUtility.ResolveProjectPath(T4Context.GetFullPath(_inProcessChannelFactoryProject ?? string.Format(DefaultInProcessChannelFactoryProject, DefaultProjectBaseName))); }
     }
     private static string _inProcessChannelFactoryProject = null;
-    #endregion
 
-    #region code generators
     /// <summary>
     /// Gets or sets the generator that generates the model classes of the entity model.
     /// </summary>
@@ -250,9 +257,6 @@ public class NTierEntityGenerator : Generator
     /// </remarks>
     public ChangeSetFactoryTemplate ChangeSetFactoryTemplate;
 
-    #endregion
-
-    #region generation methods
     /// <summary>
     /// Generates data access classes.
     /// </summary>
@@ -263,6 +267,8 @@ public class NTierEntityGenerator : Generator
             // No EntityContainer exists in the model, so no code may be generated
             return;
         }
+
+        OnCodeGenerating();
 
         CreateDataModel();
         CreateRepositoryInterface();
@@ -276,6 +282,8 @@ public class NTierEntityGenerator : Generator
         CreateChangeSetFactory();
         CreateRemoteChannelFactory();
         CreateInProcessChannelFactory();
+
+        OnCodeGenerated();
     }
 
     private void CreateDataModel()
@@ -373,6 +381,5 @@ public class NTierEntityGenerator : Generator
             InProcessChannelFactoryTemplate.Render();
         }
     }
-    #endregion
 }
 #>
