@@ -9,7 +9,7 @@
 <#@ include file="NTierEF.SL.ChangeSetFactoryInterfaceTT.CS.ttinclude" #>
 <#@ include file="NTierEF.SL.ChangeSetFactoryTT.CS.ttinclude" #>
 <#+
-// <copyright file="NTierEF.SL.NTierEntityGen.CS.ttinclude" company="Trivadis">
+// <copyright file="NTierEF.SL.NTierEntityGenerator.CS.ttinclude" company="Trivadis">
 //     Copyright © Trivadis. All Rights Reserved.
 // </copyright>
 public class NTierEntityGenerator : Generator
@@ -41,7 +41,10 @@ public class NTierEntityGenerator : Generator
         {
             this.BaseNamespace = DefaultProjectBaseName;
         }
+
         this.EdmUtility = new EdmUtility(textTransformation, modelFile);
+
+        BeforeInitializing(modelFile);
 
         this.DataModelCodeGenerator = new DataModelCodeGenerator(this.EdmUtility, DataModelProject, DataModelNamespace);
         this.DataServiceContractTemplate = new DataServiceContractTemplate(this.EdmUtility, DataServiceContractNamespace, DataModelNamespace);
@@ -49,16 +52,23 @@ public class NTierEntityGenerator : Generator
         this.ClientDataContextTemplate = new ClientDataContextTemplate(this.EdmUtility, ClientLibraryNamespace, DataModelNamespace, DataServiceContractNamespace);
         this.ChangeSetFactoryInterfaceTemplate = new ChangeSetFactoryInterfaceTemplate(this.EdmUtility, ClientLibraryNamespace, DataModelNamespace);
         this.ChangeSetFactoryTemplate = new ChangeSetFactoryTemplate(this.EdmUtility, ClientLibraryNamespace, DataModelNamespace);
+ 
+        OnInitializing();
     }
 
-    #region project default namespaces
+    partial void BeforeInitializing(string modelFilePath);
+
+    partial void OnInitializing();
+
+    partial void OnCodeGenerating();
+
+    partial void OnCodeGenerated();
+
     private static string SilverlightLibraryNamespace { get { return EdmUtility.GetDefaultNamespace(); } }
     private static string DataModelNamespace { get { return EdmUtility.GetDefaultNamespace(DataModelProject); } }
     private static string DataServiceContractNamespace { get { return EdmUtility.GetDefaultNamespace(DataServiceContractProject); } }
     private static string ClientLibraryNamespace { get { return EdmUtility.GetDefaultNamespace(ClientLibraryProject); } }
-    #endregion
 
-    #region project files
     private static string DefaultProjectBaseName
     {
         get
@@ -102,9 +112,7 @@ public class NTierEntityGenerator : Generator
         get { return ProjectUtility.ResolveProjectPath(T4Context.GetFullPath(_edmxProject ?? string.Format(DefaultEdmxProject, DefaultProjectBaseName))); }
     }
     private static string _edmxProject = null;
-    #endregion
 
-    #region code generators
     /// <summary>
     /// Gets or sets the generator that generates the model classes of the entity model.
     /// </summary>
@@ -158,9 +166,7 @@ public class NTierEntityGenerator : Generator
     /// with your custom version derived from <see cref="ChangeSetFactoryTemplate"/>.
     /// </remarks>
     public ChangeSetFactoryTemplate ChangeSetFactoryTemplate;
-    #endregion
 
-    #region generation methods
     /// <summary>
     /// Generates data access classes.
     /// </summary>
@@ -172,12 +178,16 @@ public class NTierEntityGenerator : Generator
             return;
         }
 
+        OnCodeGenerating();
+
         CreateDataModel();
         CreateDataServiceContract();
         CreateClientDataContextInterface();
         CreateClientDataContext();
         CreateChangeSetFactoryInterface();
         CreateChangeSetFactory();
+
+        OnCodeGenerated();
     }
 
     private void CreateDataModel()
@@ -227,6 +237,5 @@ public class NTierEntityGenerator : Generator
             ChangeSetFactoryTemplate.Render();
         }
     }
-    #endregion
 }
 #>
