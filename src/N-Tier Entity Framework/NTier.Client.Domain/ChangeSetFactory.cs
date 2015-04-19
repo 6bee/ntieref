@@ -11,7 +11,7 @@ namespace NTier.Client.Domain
     public abstract class ChangeSetFactory
     {
         /// <summary>
-        /// Retursn modified entities
+        /// Returns modified entities
         /// </summary>
         protected virtual IList<TEntity> GetChangeSet<TEntity>(IEnumerable<TEntity> source, bool includeOnlyValid = true) where TEntity : Entity
         {
