@@ -10,12 +10,26 @@ namespace NTier.Client.Domain
 {
     public abstract class ChangeSetFactory
     {
+        protected sealed class EntityTuple<T>
+        {
+            public EntityTuple(T entity, T reducedEntity)
+            {
+                Entity = entity;
+                ReducedEntity = reducedEntity;
+            }
+
+            public T Entity { get; set; }
+
+            public T ReducedEntity { get; set; }
+        }
+
+
         /// <summary>
         /// Returns modified entities
         /// </summary>
         protected virtual IList<TEntity> GetChangeSet<TEntity>(IEnumerable<TEntity> source, bool includeOnlyValid = true) where TEntity : Entity
         {
-            return (source ?? new List<TEntity>())
+            return (source ?? Enumerable.Empty<TEntity>())
                  .Where(e => e.HasChanges && (e.IsValid || !includeOnlyValid || e.ChangeTracker.State == ObjectState.Deleted))
                  .ToList();
         }
@@ -23,14 +37,14 @@ namespace NTier.Client.Domain
         /// <summary>
         /// Copy changed values
         /// </summary>
-        protected virtual IList<Tuple<TEntity, TEntity>> ReduceToModifications<TEntity>(IList<TEntity> originalList) where TEntity : Entity
+        protected virtual IList<EntityTuple<TEntity>> ReduceToModifications<TEntity>(IList<TEntity> originalList) where TEntity : Entity
         {
-            var entities = new List<Tuple<TEntity, TEntity>>();
+            var entities = new List<EntityTuple<TEntity>>();
 
             foreach (var originalEntity in originalList)
             {
                 var reducedEntity = ReduceToModifications(originalEntity);
-                var tuple = new Tuple<TEntity, TEntity>(originalEntity, reducedEntity);
+                var tuple = new EntityTuple<TEntity>(originalEntity, reducedEntity);
                 entities.Add(tuple);
             }
 
@@ -153,85 +167,82 @@ namespace NTier.Client.Domain
             return reducedEntity;
         }
 
-        protected virtual IEnumerable<Entity> Union(params IEnumerable<Entity>[] entitySets)
+        protected IEnumerable<EntityTuple<Entity>> CastToEntityTuple<TEntity>(IEnumerable<EntityTuple<TEntity>> tupleList) where TEntity : Entity
         {
-            return entitySets.SelectMany(e => e).Cast<Entity>();
-        }
-
-        protected virtual IEnumerable<Tuple<Entity, Entity>> Union(params IEnumerable<Tuple<Entity, Entity>>[] entitySets)
-        {
-            return entitySets.SelectMany(e => e);
-        }
-
-        protected virtual IEnumerable<Tuple<Entity, Entity>> CastToEntityTuple<TEntity>(IEnumerable<Tuple<TEntity, TEntity>> tupleList) where TEntity : Entity
-        {
-            return tupleList.Select(e => new Tuple<Entity, Entity>(e.Item1, e.Item2));
+            return tupleList.Select(e => new EntityTuple<Entity>(e.Entity, e.ReducedEntity));
         }
 
         /// <summary>
         /// Replaces related entities with their corresponding clones from the reduced entity set
         /// </summary>
-        /// <param name="reducedEntitySet"></param>
-        /// <param name="originalChangeSet"></param>
-        protected virtual void FixupRelations(IEnumerable<Tuple<Entity, Entity>> reducedEntitySet, IEnumerable<Entity> originalChangeSet)
+        /// <param name="transmissionEntitySets"></param>
+        protected virtual void FixupRelations(params IEnumerable<EntityTuple<Entity>>[] transmissionEntitySets)
         {
-            foreach (var entity in reducedEntitySet)
+            var flatTransmissionSet = transmissionEntitySets.SelectMany(e => e).ToList();
+
+            foreach (var entityTuple in flatTransmissionSet)
             {
-                FixupRelations(entity, reducedEntitySet, originalChangeSet);
+                FixupRelations(entityTuple, flatTransmissionSet);
             }
         }
 
-        private void FixupRelations<TEntity>(Tuple<TEntity, TEntity> transmissionEntityTuple, IEnumerable<Tuple<TEntity, TEntity>> transmissionChangeSet, IEnumerable<TEntity> originalChangeSet) where TEntity : Entity
+        /// <summary>
+        /// Modifies the EntityTuple.ReducedEntity by replacing related entities with their corresponding clones from the reduced entity set
+        /// </summary>
+        /// <param name="entityTuple"></param>
+        /// <param name="flatTransmissionSet"></param>
+        protected virtual void FixupRelations(EntityTuple<Entity> entityTuple, IEnumerable<EntityTuple<Entity>> flatTransmissionSet)
         {
-            TEntity originalEntity = transmissionEntityTuple.Item1;
-            TEntity reducedEntity = transmissionEntityTuple.Item2;
+            Entity entity = entityTuple.Entity;
+            Entity reducedEntity = entityTuple.ReducedEntity;
 
             switch (reducedEntity.ChangeTracker.State)
             {
                 case ObjectState.Added:
                     {
                         // copy navigation properties
-                        var navigationProperties = originalEntity.PropertyInfos
+                        var navigationProperties = entity.PropertyInfos
                             .Where(p => p.IsPhysical && p.Attributes.Any(attribute => attribute is NavigationPropertyAttribute))
                             .Select(p => p.PropertyInfo);
 
                         foreach (var navigationProperty in navigationProperties)
                         {
-                            var property = navigationProperty.GetValue(originalEntity, null);
+                            var referencedInstance = navigationProperty.GetValue(entity, null);
 
-                            if (property is ITrackableCollection)
+                            var referencedEntityCollection = referencedInstance as ITrackableCollection;
+                            if (!ReferenceEquals(null, referencedEntityCollection))
                             {
-                                if (((ITrackableCollection)property).Count > 0)
+                                if (referencedEntityCollection.Count > 0)
                                 {
                                     var collection = navigationProperty.GetValue(reducedEntity, null) as ITrackableCollection;
 
-                                    foreach (Entity entity in (ITrackableCollection)property)
+                                    foreach (Entity referencedEntity in referencedEntityCollection)
                                     {
                                         // lookup reduced version of current value (entity)
                                         Entity changeSetEntity;
-                                        var entry = transmissionChangeSet.FirstOrDefault(e => e.Item1.Equals(entity));
+                                        var entry = flatTransmissionSet.FirstOrDefault(e => e.Entity.Equals(referencedEntity));
                                         if (entry != null)
                                         {
-                                            changeSetEntity = entry.Item2;
+                                            changeSetEntity = entry.ReducedEntity;
                                         }
                                         else
                                         {
                                             // in case of directed relation (i.e. only one entity has a relation to the other and the other entity has not relation back) 
                                             // the related entity might not yet be in the change set and has to be specifically created
-                                            changeSetEntity = ReduceToModifications(entity);
+                                            changeSetEntity = ReduceToModifications(referencedEntity);
                                         }
 
                                         collection.Add(changeSetEntity);
                                     }
                                 }
                             }
-                            else if (property is Entity)
+                            else if (referencedInstance is Entity)
                             {
                                 // lookup reduced version of current value (entity)
-                                var entry = transmissionChangeSet.FirstOrDefault(e => e.Item1.Equals(property));
+                                var entry = flatTransmissionSet.FirstOrDefault(e => e.Entity.Equals(referencedInstance));
                                 if (entry != null)
                                 {
-                                    navigationProperty.SetValue(reducedEntity, entry.Item2, null);
+                                    navigationProperty.SetValue(reducedEntity, entry.ReducedEntity, null);
                                 }
                             }
                         }
@@ -239,7 +250,7 @@ namespace NTier.Client.Domain
                     break;
 
                 case ObjectState.Unchanged:
-                    if (originalEntity.HasChanges)
+                    if (entity.HasChanges)
                     {
                         // there are changes in relations
                         goto case ObjectState.Modified;
@@ -252,8 +263,8 @@ namespace NTier.Client.Domain
                         // copy changed navigation properties (relations and foreign keys)
 
                         // single relation
-                        var physicalProperties = originalEntity.PropertyInfos.Where(p => p.IsPhysical && p.Attributes.Any(attribute => attribute is NavigationPropertyAttribute)).ToDictionary(p => p.Name);
-                        foreach (var property in originalEntity.ChangeTracker.OriginalValues.Where(p => physicalProperties.ContainsKey(p.Key)))
+                        var physicalProperties = entity.PropertyInfos.Where(p => p.IsPhysical && p.Attributes.Any(attribute => attribute is NavigationPropertyAttribute)).ToDictionary(p => p.Name);
+                        foreach (var property in entity.ChangeTracker.OriginalValues.Where(p => physicalProperties.ContainsKey(p.Key)))
                         {
                             if (!reducedEntity.ChangeTracker.OriginalValues.ContainsKey(property.Key))
                             {
@@ -261,19 +272,19 @@ namespace NTier.Client.Domain
                                 Entity currentChangeSetEntity = null;
                                 {
                                     // get current value (entity)
-                                    var entity = (Entity)originalEntity.GetProperty(property.Key, true);
-                                    if (entity != null)
+                                    var currentEntity = (Entity)entity.GetProperty(property.Key, true);
+                                    if (currentEntity != null)
                                     {
-                                        var entry = transmissionChangeSet.FirstOrDefault(e => e.Item1.Equals(entity));
+                                        var entry = flatTransmissionSet.FirstOrDefault(e => e.Entity.Equals(currentEntity));
                                         if (entry != null)
                                         {
-                                            currentChangeSetEntity = entry.Item2;
+                                            currentChangeSetEntity = entry.ReducedEntity;
                                         }
                                         else
                                         {
                                             // in case of directed relation (i.e. only one entity has a relation to the other and the other entity has not relation back) 
                                             // the related entity might not yet be in the change set and has to be specifically created
-                                            currentChangeSetEntity = ReduceToModifications(entity);
+                                            currentChangeSetEntity = ReduceToModifications(currentEntity);
                                         }
                                     }
                                 }
@@ -281,19 +292,19 @@ namespace NTier.Client.Domain
                                 Entity originalChangeSetEntity = null;
                                 {
                                     // get current value (entity)
-                                    var entity = (Entity)originalEntity.ChangeTracker.OriginalValues[property.Key];
-                                    if (entity != null)
+                                    var currentEntity = (Entity)entity.ChangeTracker.OriginalValues[property.Key];
+                                    if (currentEntity != null)
                                     {
-                                        var entry = transmissionChangeSet.FirstOrDefault(e => e.Item1.Equals(entity));
+                                        var entry = flatTransmissionSet.FirstOrDefault(e => e.Entity.Equals(currentEntity));
                                         if (entry != null)
                                         {
-                                            originalChangeSetEntity = entry.Item2;
+                                            originalChangeSetEntity = entry.ReducedEntity;
                                         }
                                         else
                                         {
                                             // in case of directed relation (i.e. only one entity has a relation to the other and the other entity has not relation back) 
                                             // the related entity might not yet be in the change set and has to be specifically created
-                                            originalChangeSetEntity = ReduceToModifications(entity);
+                                            originalChangeSetEntity = ReduceToModifications(currentEntity);
                                         }
                                     }
                                 }
@@ -304,24 +315,24 @@ namespace NTier.Client.Domain
                         }
 
                         // relation added to collection
-                        foreach (var relation in originalEntity.ChangeTracker.ObjectsAddedToCollectionProperties)
+                        foreach (var relation in entity.ChangeTracker.ObjectsAddedToCollectionProperties)
                         {
                             var navigationProperty = reducedEntity.GetType().GetProperty(relation.Key).GetValue(reducedEntity, null) as ITrackableCollection;
                             var objectList = new EntityList();
-                            foreach (var entity in relation.Value)
+                            foreach (var referencedEntity in relation.Value)
                             {
                                 // lookup reduced version of current value (entity)
                                 Entity changeSetEntity;
-                                var entry = transmissionChangeSet.FirstOrDefault(e => e.Item1.Equals(entity));
+                                var entry = flatTransmissionSet.FirstOrDefault(e => e.Entity.Equals(referencedEntity));
                                 if (entry != null)
                                 {
-                                    changeSetEntity = entry.Item2;
+                                    changeSetEntity = entry.ReducedEntity;
                                 }
                                 else
                                 {
                                     // in case of directed relation (i.e. only one entity has a relation to the other and the other entity has not relation back) 
                                     // the related entity might not yet be in the change set and has to be specifically created
-                                    changeSetEntity = ReduceToModifications(entity);
+                                    changeSetEntity = ReduceToModifications(referencedEntity);
                                 }
 
                                 if (changeSetEntity != null && !navigationProperty.Contains(changeSetEntity))
@@ -340,23 +351,23 @@ namespace NTier.Client.Domain
                         }
 
                         // relation removed from collection
-                        foreach (var relation in originalEntity.ChangeTracker.ObjectsRemovedFromCollectionProperties)
+                        foreach (var relation in entity.ChangeTracker.ObjectsRemovedFromCollectionProperties)
                         {
                             var objectList = new EntityList();
-                            foreach (var entity in relation.Value)
+                            foreach (var referencedEntity in relation.Value)
                             {
                                 // lookup reduced version of current value (entity)
                                 Entity changeSetEntity;
-                                var entry = transmissionChangeSet.FirstOrDefault(e => e.Item1.Equals(entity));
+                                var entry = flatTransmissionSet.FirstOrDefault(e => e.Entity.Equals(referencedEntity));
                                 if (entry != null)
                                 {
-                                    changeSetEntity = entry.Item2;
+                                    changeSetEntity = entry.ReducedEntity;
                                 }
                                 else
                                 {
                                     // in case of directed relation (i.e. only one entity has a relation to the other and the other entity has no relation back) 
                                     // the related entity might not yet be in the change set and has to be specifically created
-                                    changeSetEntity = ReduceToModifications(entity);
+                                    changeSetEntity = ReduceToModifications(referencedEntity);
                                 }
 
                                 if (changeSetEntity != null)

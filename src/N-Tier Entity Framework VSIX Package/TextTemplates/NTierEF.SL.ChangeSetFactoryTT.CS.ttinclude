@@ -85,8 +85,7 @@ namespace <#= this.Namespace #>
 
             // fixup relations (replaces related entities with reduced entites)
             FixupRelations(
-                Union(<#=string.Join(", ", EdmUtility.Container.BaseEntitySets.OfType<EntitySet>().Select(e => "CastToEntityTuple(" + FirstCaseLow(EdmUtility.Code.Escape(e)) + "Map)").ToArray())#>),
-                Union(<#=string.Join(", ", EdmUtility.Container.BaseEntitySets.OfType<EntitySet>().Select(e => FirstCaseLow(EdmUtility.Code.Escape(e.ElementType)) + "ChangeSet").ToArray())#>)
+                <#=string.Join(", \n                ", EdmUtility.Container.BaseEntitySets.OfType<EntitySet>().Select(e => "CastToEntityTuple(" + FirstCaseLow(EdmUtility.Code.Escape(e)) + "Map)").ToArray())#>
             );
 <#+
     }
@@ -98,7 +97,7 @@ namespace <#= this.Namespace #>
     foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
     {
 #>
-            if (<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>Map.Count > 0) changeSet.<#=EdmUtility.Code.Escape(entitySet)#> = <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>Map.Select(e => e.Item2).ToList();
+            if (<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>Map.Count > 0) changeSet.<#=EdmUtility.Code.Escape(entitySet)#> = <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>Map.Select(e => e.ReducedEntity).ToList();
 <#+
     }
 #>
