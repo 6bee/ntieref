@@ -11,7 +11,7 @@
 // <copyright file="NTierEF.DataModelCodeGenerator.CS.ttinclude" company="Trivadis">
 //     Copyright © Trivadis. All Rights Reserved.
 // </copyright>
-public class DataModelCodeGenerator : Generator
+public partial class DataModelCodeGenerator : Generator
 {
     private readonly EdmUtility EdmUtility;
     private readonly string DataModelProject = string.Empty;

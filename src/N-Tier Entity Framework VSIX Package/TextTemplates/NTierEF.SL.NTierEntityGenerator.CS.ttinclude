@@ -12,7 +12,7 @@
 // <copyright file="NTierEF.SL.NTierEntityGenerator.CS.ttinclude" company="Trivadis">
 //     Copyright © Trivadis. All Rights Reserved.
 // </copyright>
-public class NTierEntityGenerator : Generator
+public partial class NTierEntityGenerator : Generator
 {
     // project configuration: this section has to be configured according your project
     private const string DefaultClientLibraryProject = @"..\..\Client\{0}.Client.Domain\{0}.Client.Domain.csproj";

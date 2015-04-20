@@ -10,7 +10,7 @@
 // <copyright file="NTierEF.SL.DataModelCodeGenerator.CS.ttinclude" company="Trivadis">
 //     Copyright © Trivadis. All Rights Reserved.
 // </copyright>
-public class DataModelCodeGenerator : Generator
+public partial class DataModelCodeGenerator : Generator
 {
     private readonly EdmUtility EdmUtility;
     private readonly ReflectionUtils ReflectionUtils;
@@ -22,6 +22,8 @@ public class DataModelCodeGenerator : Generator
         var dataModelProjectUtility = new ProjectUtility(dataModelProject);
         this.ReflectionUtils = new ReflectionUtils(dataModelProjectUtility.GetAssemblyPath());
 
+        BeforeInitializing();
+
         this.EnumTemplate = new EnumTemplate(this.EdmUtility, modelNamespace);
         this.EntityTemplate = new EntityTemplate(this.EdmUtility, this.ReflectionUtils, modelNamespace);
         this.ComplexTypeTemplate = new ComplexTypeTemplate(this.EdmUtility, modelNamespace);
@@ -29,7 +31,17 @@ public class DataModelCodeGenerator : Generator
         this.ResultSetTemplate = new ResultSetTemplate(this.EdmUtility, modelNamespace);
         this.OptimisticConcurrencyFaultTemplate = new OptimisticConcurrencyFaultTemplate(this.EdmUtility, modelNamespace);
         this.UpdateFaultTemplate = new UpdateFaultTemplate(this.EdmUtility, modelNamespace);
+
+        OnInitializing(modelNamespace);
     }
+
+    partial void BeforeInitializing();
+
+    partial void OnInitializing(string modelNamespace);
+
+    partial void OnCodeGenerating();
+
+    partial void OnCodeGenerated();
 
     /// <summary>
     /// Gets or sets the template that generates the enum types of the entity model.
@@ -99,6 +111,8 @@ public class DataModelCodeGenerator : Generator
     /// </summary>
     protected override void RunCore()
     {
+        OnCodeGenerating();
+
         CreateEnums();
         CreateEntities();
         CreateComplexTypes();
@@ -106,6 +120,8 @@ public class DataModelCodeGenerator : Generator
         CreateResultSet();
         CreateOptimisticConcurrencyFault();
         CreateUpdateFault();
+
+        OnCodeGenerated();
     }
 
     private void CreateEnums()
