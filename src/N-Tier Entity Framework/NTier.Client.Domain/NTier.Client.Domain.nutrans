@@ -5,7 +5,7 @@
     <description xdt:Transform="Insert">N-Tier Entity Framework client base library.</description>
     <dependencies xdt:Transform="Insert">
       <dependency id="Remote.Linq" version="[4.1.0,)" />
-      <dependency id="NTierEntityFramework.Common" version="[1.7.0-beta001,1.8)" />
+      <dependency id="NTierEntityFramework.Common" version="[1.7.0-beta002,1.8)" />
     </dependencies>
   </metadata>
 </package>
