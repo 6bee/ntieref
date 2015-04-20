@@ -37,14 +37,14 @@ namespace NTier.Client.Domain
         /// <summary>
         /// Copy changed values
         /// </summary>
-        protected virtual IList<EntityTuple<TEntity>> ReduceToModifications<TEntity>(IList<TEntity> originalList) where TEntity : Entity
+        protected virtual IList<EntityTuple<TEntity>> ReduceToModifications<TEntity>(IList<TEntity> source) where TEntity : Entity
         {
             var entities = new List<EntityTuple<TEntity>>();
 
-            foreach (var originalEntity in originalList)
+            foreach (var entity in source)
             {
-                var reducedEntity = ReduceToModifications(originalEntity);
-                var tuple = new EntityTuple<TEntity>(originalEntity, reducedEntity);
+                var reducedEntity = ReduceToModifications(entity);
+                var tuple = new EntityTuple<TEntity>(entity, reducedEntity);
                 entities.Add(tuple);
             }
 
@@ -54,25 +54,25 @@ namespace NTier.Client.Domain
         /// <summary>
         /// Copy changed values
         /// </summary>
-        protected virtual TEntity ReduceToModifications<TEntity>(TEntity originalEntity) where TEntity : Entity
+        protected virtual TEntity ReduceToModifications<TEntity>(TEntity entity) where TEntity : Entity
         {
-            TEntity reducedEntity = (TEntity)Activator.CreateInstance(originalEntity.GetType());
+            TEntity reducedEntity = (TEntity)Activator.CreateInstance(entity.GetType());
 
             // copy key
             {
-                var pkProperties = originalEntity.PropertyInfos
+                var pkProperties = entity.PropertyInfos
                     .Where(p => p.Attributes.Any(attribute => attribute is KeyAttribute))
                     .Select(p => p.PropertyInfo);
 
                 foreach (var property in pkProperties)
                 {
-                    object value = property.GetValue(originalEntity, null);
+                    object value = property.GetValue(entity, null);
                     property.SetValue(reducedEntity, value, null);
                 }
             }
 
             // configure change tracker
-            reducedEntity.ChangeTracker.State = originalEntity.ChangeTracker.State;
+            reducedEntity.ChangeTracker.State = entity.ChangeTracker.State;
             reducedEntity.ChangeTracker.IsChangeTrackingEnabled = false;
 
             // copy modified properties
@@ -81,13 +81,13 @@ namespace NTier.Client.Domain
                 case ObjectState.Added:
                     {
                         // copy all properties (simple and complex properties only)
-                        var properties = originalEntity.PropertyInfos
+                        var properties = entity.PropertyInfos
                             .Where(p => p.Attributes.Any(attribute => attribute is SimplePropertyAttribute || attribute is ComplexPropertyAttribute))
                             .Select(p => p.PropertyInfo);
 
                         foreach (var property in properties)
                         {
-                            object value = property.GetValue(originalEntity, null);
+                            object value = property.GetValue(entity, null);
                             property.SetValue(reducedEntity, value, null);
                         }
                     }
@@ -97,38 +97,38 @@ namespace NTier.Client.Domain
                 case ObjectState.Deleted:
                     {
                         // copy changed properties (simple)
-                        var simpleProperties = originalEntity.PropertyInfos
+                        var simpleProperties = entity.PropertyInfos
                             .Where(p => p.IsPhysical &&
                                         p.Attributes.Any(attribute => attribute is SimplePropertyAttribute) &&
-                                        originalEntity.ChangeTracker.ModifiedProperties.Contains(p.Name) &&
-                                        originalEntity.ChangeTracker.OriginalValues.ContainsKey(p.Name))
+                                        entity.ChangeTracker.ModifiedProperties.Contains(p.Name) &&
+                                        entity.ChangeTracker.OriginalValues.ContainsKey(p.Name))
                             .Select(p => p.PropertyInfo);
 
                         foreach (var property in simpleProperties)
                         {
-                            var value = property.GetValue(originalEntity, null);
+                            var value = property.GetValue(entity, null);
                             property.SetValue(reducedEntity, value, null);
 
                             reducedEntity.ChangeTracker.ModifiedProperties.Add(property.Name);
-                            reducedEntity.ChangeTracker.OriginalValues[property.Name] = originalEntity.ChangeTracker.OriginalValues[property.Name];
+                            reducedEntity.ChangeTracker.OriginalValues[property.Name] = entity.ChangeTracker.OriginalValues[property.Name];
                         }
 
                         // copy changed properties (complex)
-                        var complexProperties = originalEntity.PropertyInfos
+                        var complexProperties = entity.PropertyInfos
                             .Where(p => p.IsPhysical &&
                                         p.Attributes.Any(attribute => attribute is ComplexPropertyAttribute) &&
-                                        originalEntity.ChangeTracker.ModifiedProperties.Contains(p.Name))
+                                        entity.ChangeTracker.ModifiedProperties.Contains(p.Name))
                             .Select(p => p.PropertyInfo);
 
                         foreach (var property in complexProperties)
                         {
-                            var value = property.GetValue(originalEntity, null);
+                            var value = property.GetValue(entity, null);
                             property.SetValue(reducedEntity, value, null);
 
                             reducedEntity.ChangeTracker.ModifiedProperties.Add(property.Name);
-                            foreach (var propertyName in originalEntity.ChangeTracker.OriginalValues.Keys.Where(x => x.StartsWith(string.Format("{0}.", property.Name))))
+                            foreach (var propertyName in entity.ChangeTracker.OriginalValues.Keys.Where(x => x.StartsWith(string.Format("{0}.", property.Name))))
                             {
-                                reducedEntity.ChangeTracker.OriginalValues[propertyName] = originalEntity.ChangeTracker.OriginalValues[propertyName];
+                                reducedEntity.ChangeTracker.OriginalValues[propertyName] = entity.ChangeTracker.OriginalValues[propertyName];
                             }
                         }
                     }
@@ -146,19 +146,19 @@ namespace NTier.Client.Domain
             {
                 using (reducedEntity.ChangeTrackingPrevention())
                 {
-                    var properties = originalEntity.PropertyInfos
+                    var properties = entity.PropertyInfos
                         .Where(p => p.IsPhysical &&
-                                    ((originalEntity.ChangeTracker.State == ObjectState.Modified &&
+                                    ((entity.ChangeTracker.State == ObjectState.Modified &&
                                      p.Attributes.Any(attribute => (attribute is IncludeOnUpdateAttribute || attribute is ConcurrencyPropertyAttribute) &&
-                                                              !originalEntity.ChangeTracker.ModifiedProperties.Contains(p.Name))) ||
-                                    (originalEntity.ChangeTracker.State == ObjectState.Deleted &&
+                                                              !entity.ChangeTracker.ModifiedProperties.Contains(p.Name))) ||
+                                    (entity.ChangeTracker.State == ObjectState.Deleted &&
                                      p.Attributes.Any(attribute => attribute is IncludeOnDeleteAttribute || attribute is ConcurrencyPropertyAttribute))))
                         .Select(p => p.PropertyInfo);
 
                     foreach (var property in properties)
                     {
                         // TODO: in case of delete --> copy original value
-                        object value = property.GetValue(originalEntity, null);
+                        object value = property.GetValue(entity, null);
                         property.SetValue(reducedEntity, value, null);
                     }
                 }
