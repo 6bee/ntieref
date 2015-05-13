@@ -46,6 +46,14 @@ namespace ConcurrencyDemo.Client.Domain.Test
 
             entityC.Value = string.Format("[2] updated payload at {0}", DateTime.Now);
             ctx.SaveChanges();
+
+
+            var newContext = new ConcurrencyTestDataContext();
+
+            entityC.Value = string.Format("[3] updated payload at {0} via new data context", DateTime.Now);
+            newContext.Attach(entityC);
+
+            newContext.SaveChanges();
         }
     }
 }
