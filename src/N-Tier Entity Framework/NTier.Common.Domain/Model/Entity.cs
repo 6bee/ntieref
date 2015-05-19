@@ -957,15 +957,36 @@ namespace NTier.Common.Domain.Model
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
             return obj is Entity && Equals((Entity)obj);
         }
 
-        public bool Equals(Entity entity)
+        public virtual bool Equals(Entity entity)
         {
-            if (ReferenceEquals(null, entity)) return false;
-            if (ReferenceEquals(this, entity)) return true;
+            if (ReferenceEquals(null, entity))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, entity))
+            {
+                return true;
+            }
+
+            if (GetType() != entity.GetType())
+            {
+                return false;
+            }
+
             return ChangeTracker.State != ObjectState.Added
                 && entity.ChangeTracker.State != ObjectState.Added
                 && IsKeyEqual(entity);
