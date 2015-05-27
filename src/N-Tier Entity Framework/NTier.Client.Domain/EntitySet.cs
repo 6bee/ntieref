@@ -25,6 +25,9 @@ namespace NTier.Client.Domain
         // attach delegate (registers entities into context)
         private readonly DataContext.AttachDelegate<TEntity> _attachDelegate;
 
+        // detach delegate (unregisters event handlers within context)
+        private readonly DataContext.DetachDelegate<TEntity> _detachDelegate;
+
         // query delegate (queries data from service)
         private readonly DataContext.QueryDelegate<TEntity> _queryDelegate;
 
@@ -36,11 +39,12 @@ namespace NTier.Client.Domain
         /// Constructor for a readonly entity set. <br />
         /// Calls to Add, Delete, Attach, AttachAsModified, and Detach will throw exceptions.
         /// </summary>
-        public EntitySet(IDataContext dataContext, InternalEntitySet<TEntity> entitySet, DataContext.AttachDelegate<TEntity> attachDelegate, DataContext.QueryDelegate<TEntity> queryDelegate)
+        public EntitySet(IDataContext dataContext, InternalEntitySet<TEntity> entitySet, DataContext.AttachDelegate<TEntity> attachDelegate, DataContext.DetachDelegate<TEntity> detachDelegate, DataContext.QueryDelegate<TEntity> queryDelegate)
         {
             this._dataContext = dataContext;
             this._internalEntitySet = entitySet;
             this._attachDelegate = attachDelegate;
+            this._detachDelegate = detachDelegate;
             this._queryDelegate = queryDelegate;
         }
 
@@ -159,17 +163,27 @@ namespace NTier.Client.Domain
             {
                 original = existing;
             }
+
             original.Refresh(entity);
         }
 
         public void Detach(TEntity entity)
         {
             _internalEntitySet.Detach(entity);
+            
+            _detachDelegate(entity);
         }
 
         public void DetachAll()
         {
+            var entities = _internalEntitySet.GetAllEntities();
+            
             _internalEntitySet.DetachAll();
+
+            foreach (var entity in entities)
+            {
+                _detachDelegate(entity);
+            }
         }
 
         /// <summary>

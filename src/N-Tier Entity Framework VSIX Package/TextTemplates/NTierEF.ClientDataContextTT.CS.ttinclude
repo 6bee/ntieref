@@ -102,6 +102,15 @@ namespace <#=Namespace#>
 <#+
         }
 #>
+ 
+<#+
+        foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
+        {
+#>
+        private IEntitySet<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>EntitySet;
+<#+
+        }
+#>
 
         #endregion Fields
 
@@ -200,12 +209,12 @@ namespace <#=Namespace#>
             {
                 if (ReferenceEquals(null, <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>EntitySet))
                 {
-                    <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>EntitySet = CreateEntitySet<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>>(_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>, AttachWithRelations, <#= isAggregateRoot ? "Get" + EdmUtility.Code.Escape(entitySet) : "null" #>);
+                    <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>EntitySet = CreateEntitySet<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>>(_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>, AttachWithRelations, OnDetach, <#= isAggregateRoot ? "Get" + EdmUtility.Code.Escape(entitySet) : "null" #>);
                 }
+
                 return <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>EntitySet;
             }
         }
-        private IEntitySet<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>EntitySet;
 
 <#+
             // expose public methods to get and set merge option of private entity set (for non-root entities)
@@ -326,7 +335,19 @@ namespace <#=Namespace#>
             #endregion
 
             #region attach relations recursively
+            
 <#+
+        if (entitySet.ElementType.NavigationProperties.Any(np => np.DeclaringType == entitySet.ElementType && np.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many))
+        {
+#>
+            // register entity's property changed event if entity is new to context
+            if (ReferenceEquals(null, existingEntity))
+            {
+                entity.PropertyChanged += On_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>_propertyChanged;
+            }
+<#+
+        }
+
         foreach (NavigationProperty navProperty in entitySet.ElementType.NavigationProperties.Where(np => np.DeclaringType == entitySet.ElementType))
         {
             NavigationProperty inverse = EdmUtility.EF.Inverse(navProperty);
@@ -338,80 +359,75 @@ namespace <#=Namespace#>
             {
 #>
 
-            // register relation's collection changed event if entity is new to context
-            if (ReferenceEquals(null, existingEntity))
+            if (!ReferenceEquals(null, entity.<#=EdmUtility.Code.Escape(navProperty)#>))
             {
-                entity.<#=EdmUtility.Code.Escape(navProperty)#>.CollectionChanged += (s, e) =>
+                // register relation's collection changed event if entity is new to context
+                if (ReferenceEquals(null, existingEntity))
                 {
-                    if (entity.IsChangeTrackingPrevented) return;
+                    entity.<#=EdmUtility.Code.Escape(navProperty)#>.CollectionChanged += On_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>_<#=FirstCaseLow(EdmUtility.Code.Escape(navProperty))#>_collectionChanged;
+                }
 
-                    if (!ReferenceEquals(null, e.NewItems))
+                // attach related entities to context
+                if (entity.<#=EdmUtility.Code.Escape(navProperty)#>.Count > 0)
+                {
+                    foreach (var item in entity.<#=EdmUtility.Code.Escape(navProperty)#>.ToArray())
                     {
-                        foreach (<#=EdmUtility.Code.Escape(navProperty.ToEndMember.GetEntityType())#> item in e.NewItems)
-                        {
-                            Attach(item);
-                        }
-                    }
-                };
-            }
-
-            // attach related entities to context
-            if (entity.<#=EdmUtility.Code.Escape(navProperty)#>.Count > 0)
-            {
-                foreach (var item in entity.<#=EdmUtility.Code.Escape(navProperty)#>.ToArray())
-                {
-                    var existingRelatedEntity = <#=CastIfRequired(navProperty)#>AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
+                        var existingRelatedEntity = <#=CastIfRequired(navProperty)#>AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
 <#+
                 if (inverse != null)
                 {
 #>
-                    // update relation if entity is new to context or relation is new to entity
-                    if (ReferenceEquals(null, existingEntity) || !existingEntity.<#=EdmUtility.Code.Escape(navProperty)#>.Contains(item))
-                    {
-                        if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, item))
+
+                        // update relation if entity is new to context or relation is new to entity
+                        if (ReferenceEquals(null, existingEntity) || !existingEntity.<#=EdmUtility.Code.Escape(navProperty)#>.Contains(item))
                         {
-                            // check merge options
-                            if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("<#=EdmUtility.Code.Escape(inverse)#>")))
+                            if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, item))
                             {
-                                using (entity.ChangeTrackingPrevention())
+                                // check merge options
+                                if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("<#=EdmUtility.Code.Escape(inverse)#>")))
                                 {
-                                    entity.<#=EdmUtility.Code.Escape(navProperty)#>.Replace(item, existingRelatedEntity);
-                                }
+                                    using (entity.ChangeTrackingPrevention())
+                                    {
+                                        entity.<#=EdmUtility.Code.Escape(navProperty)#>.Replace(item, existingRelatedEntity);
+                                    }
 <#+
                     if (inverse.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many)
                     {
 #>
 
-                                using (existingRelatedEntity.ChangeTrackingPrevention())
-                                {
-                                    var entityToReplace = existingRelatedEntity.<#=EdmUtility.Code.Escape(inverse)#>.FirstOrDefault(e => e.Equals(entity));
-                                    if (!ReferenceEquals(null, entityToReplace))
+                                    using (existingRelatedEntity.ChangeTrackingPrevention())
                                     {
-                                        using (entityToReplace.ChangeTrackingPrevention())
+                                        var entityToReplace = existingRelatedEntity.<#=EdmUtility.Code.Escape(inverse)#>.FirstOrDefault(e => e.Equals(entity));
+                                        if (!ReferenceEquals(null, entityToReplace))
                                         {
-                                            existingRelatedEntity.<#=EdmUtility.Code.Escape(inverse)#>.Remove(entityToReplace);
+                                            using (entityToReplace.ChangeTrackingPrevention())
+                                            {
+                                                existingRelatedEntity.<#=EdmUtility.Code.Escape(inverse)#>.Remove(entityToReplace);
+                                            }
                                         }
+
+                                        existingRelatedEntity.<#=EdmUtility.Code.Escape(inverse)#>.Add(entity);
                                     }
-                                    existingRelatedEntity.<#=EdmUtility.Code.Escape(inverse)#>.Add(entity);
-                                }
 <#+
                     }
                     else
                     {
 #>
-                                using (existingRelatedEntity.ChangeTrackingPrevention())
-                                {
-                                    existingRelatedEntity.<#=EdmUtility.Code.Escape(inverse)#> = entity;
-                                }
+
+                                    using (existingRelatedEntity.ChangeTrackingPrevention())
+                                    {
+                                        existingRelatedEntity.<#=EdmUtility.Code.Escape(inverse)#> = entity;
+                                    }
 <#+
                     }
 #>
+                                }
                             }
                         }
-                    }
 <#+
                 }
 #>
+                    }
                 }
             }
 <#+
@@ -419,24 +435,6 @@ namespace <#=Namespace#>
             else
             {
 #>
-
-            // register entity's property changed event if entity is new to context
-            if (ReferenceEquals(null, existingEntity))
-            {
-                entity.PropertyChanged += (s, e) =>
-                {
-                    if (entity.IsChangeTrackingPrevented) return;
-
-                    if (e.PropertyName == "<#=EdmUtility.Code.Escape(navProperty)#>")
-                    {
-                        var relation = entity[e.PropertyName] as <#=EdmUtility.Code.Escape(navProperty.ToEndMember.GetEntityType())#>;
-                        if (!ReferenceEquals(null, relation))
-                        {
-                            Attach(relation);
-                        }
-                    }
-                };
-            }
 
             // attach related entity to context
             if (!ReferenceEquals(null, entity.<#=EdmUtility.Code.Escape(navProperty)#>))
@@ -446,6 +444,7 @@ namespace <#=Namespace#>
                 if (inverse != null)
                 {
 #>
+
                 // update relation if entity is new to context or relation is new to entity
                 if (ReferenceEquals(null, existingEntity) || !entity.<#=EdmUtility.Code.Escape(navProperty)#>.Equals(existingEntity.<#=EdmUtility.Code.Escape(navProperty)#>))
                 {
@@ -473,6 +472,7 @@ namespace <#=Namespace#>
                                         existingRelatedEntity.<#=EdmUtility.Code.Escape(inverse)#>.Remove(entityToReplace);
                                     }
                                 }
+
                                 existingRelatedEntity.<#=EdmUtility.Code.Escape(inverse)#>.Add(entity);
                             }
 <#+
@@ -526,6 +526,85 @@ namespace <#=Namespace#>
 
             return existingEntity;
         }
+
+        private void OnDetach(<#=EdmUtility.Code.Escape(entitySet.ElementType)#> entity)
+        {
+<#+
+        if (entitySet.ElementType.NavigationProperties.Any(np => np.DeclaringType == entitySet.ElementType && np.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many))
+        {
+#>
+            entity.PropertyChanged -= On_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>_propertyChanged;
+
+<#+
+        }
+
+        foreach (NavigationProperty navProperty in entitySet.ElementType.NavigationProperties.Where(np => np.DeclaringType == entitySet.ElementType && np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many))
+        {
+#>
+            if (!ReferenceEquals(null, entity.<#=EdmUtility.Code.Escape(navProperty)#>))
+            {
+                entity.<#=EdmUtility.Code.Escape(navProperty)#>.CollectionChanged -= On_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>_<#=FirstCaseLow(EdmUtility.Code.Escape(navProperty))#>_collectionChanged;
+            }
+
+<#+
+        }
+#>
+        }
+<#+
+        if (entitySet.ElementType.NavigationProperties.Any(np => np.DeclaringType == entitySet.ElementType && np.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many))
+        {
+#>
+
+        private void On_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>_propertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var entity = sender as <#=EdmUtility.Code.Escape(entitySet.ElementType)#>;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+<#+
+        foreach (NavigationProperty navProperty in entitySet.ElementType.NavigationProperties.Where(np => np.DeclaringType == entitySet.ElementType && np.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many))
+        {
+#>
+
+            if (e.PropertyName == "<#=EdmUtility.Code.Escape(navProperty)#>")
+            {
+                var relation = entity[e.PropertyName] as <#=EdmUtility.Code.Escape(navProperty.ToEndMember.GetEntityType())#>;
+                if (!ReferenceEquals(null, relation))
+                {
+                    Attach(relation);
+                }
+            }
+<#+
+        }
+#>
+        }
+<#+
+        }
+
+        foreach (NavigationProperty navProperty in entitySet.ElementType.NavigationProperties.Where(np => np.DeclaringType == entitySet.ElementType && np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many))
+        {
+#>
+
+        private void On_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>_<#=FirstCaseLow(EdmUtility.Code.Escape(navProperty))#>_collectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var entity = sender as <#=EdmUtility.Code.Escape(entitySet.ElementType)#>;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (!ReferenceEquals(null, e.NewItems))
+            {
+                foreach (<#=EdmUtility.Code.Escape(navProperty.ToEndMember.GetEntityType())#> item in e.NewItems)
+                {
+                    Attach(item);
+                }
+            }
+        }
+<#+
+        }
+#>
 
         #endregion <#=EdmUtility.Code.Escape(entitySet)#>
 
@@ -632,6 +711,7 @@ namespace <#=Namespace#>
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;

@@ -1156,7 +1156,7 @@ namespace NTier.Common.Domain.Model
             if (_isDeserializing) return;
 
 #if !SILVERLIGHT
-            // note: due to a limitaion of ef4 ChangeTracker.IsChangeTrackingEnabled has to be true to perform validation
+            // note: due to a limitaion of EF ChangeTracker.IsChangeTrackingEnabled has to be true to perform validation
             // the limitation is that it is not possible to know when materializaion starts and _isDeserializing can not be set to true for object materialization
             if (ChangeTracker.IsChangeTrackingEnabled)
 #endif

@@ -14,6 +14,8 @@ namespace NTier.Client.Domain
 
         internal protected delegate TEntity AttachDelegate<TEntity>(TEntity entity, InsertMode insertMode /*= InsertMode.Attach*/, MergeOption mergeOption = MergeOption.AppendOnly, List<object> referenceTrackingList = null) where TEntity : Entity;
 
+        internal protected delegate void DetachDelegate<TEntity>(TEntity entity) where TEntity : Entity;
+
         internal protected enum InsertMode
         {
             Add,
@@ -254,9 +256,9 @@ namespace NTier.Client.Domain
 
         #region EntitySet factory method
 
-        protected virtual IEntitySet<TEntity> CreateEntitySet<TEntity>(InternalEntitySet<TEntity> entitySet, AttachDelegate<TEntity> attachDelegate, QueryDelegate<TEntity> queryDelegate) where TEntity : Entity
+        protected virtual IEntitySet<TEntity> CreateEntitySet<TEntity>(InternalEntitySet<TEntity> entitySet, AttachDelegate<TEntity> attachDelegate, DetachDelegate<TEntity> detachDelegate, QueryDelegate<TEntity> queryDelegate) where TEntity : Entity
         {
-            return new EntitySet<TEntity>(this, entitySet, attachDelegate, queryDelegate);
+            return new EntitySet<TEntity>(this, entitySet, attachDelegate, detachDelegate, queryDelegate);
         }
 
         protected InternalEntitySet<TEntity> CreateAndRegisterInternalEntitySet<TEntity>() where TEntity:Entity
