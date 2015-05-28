@@ -43,9 +43,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Remote.Linq, Version=3.2.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Remote.Linq.3.2.5\lib\net45\Remote.Linq.dll</HintPath>
+    <Reference Include="Remote.Linq">
+      <HintPath>..\..\packages\Remote.Linq.4.1.2\lib\net45\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />

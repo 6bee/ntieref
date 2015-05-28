@@ -33,13 +33,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NTier.Common.Domain, Version=1.5.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NTierEntityFramework.Common.1.5.2\lib\net40-Client\NTier.Common.Domain.dll</HintPath>
+    <Reference Include="NTier.Common.Domain">
+      <HintPath>..\..\packages\NTierEntityFramework.Common.1.8.0-alpha001\lib\net40-Client\NTier.Common.Domain.dll</HintPath>
     </Reference>
-    <Reference Include="Remote.Linq, Version=3.2.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Remote.Linq.3.2.5\lib\net45\Remote.Linq.dll</HintPath>
+    <Reference Include="Remote.Linq">
+      <HintPath>..\..\packages\Remote.Linq.4.1.2\lib\net45\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

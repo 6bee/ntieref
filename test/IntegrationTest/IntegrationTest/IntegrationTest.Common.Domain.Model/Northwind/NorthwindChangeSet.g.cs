@@ -8,13 +8,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Globalization;
-using System.Reflection;
 using System.Runtime.Serialization;
 using NTier.Common.Domain.Model;
 
@@ -23,55 +17,8 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
     [DataContract(IsReference = true)]
     public partial class NorthwindChangeSet : IChangeSet
     {
-        #region Constructor
-
-        public NorthwindChangeSet(IEnumerable<Category> categories, IEnumerable<DemographicGroup> demographicGroups, IEnumerable<Customer> customers, IEnumerable<DynamicContentEntity> dynamicContentEntities, IEnumerable<Employee> employees, IEnumerable<Order_Detail> order_Details, IEnumerable<Order> orders, IEnumerable<Product> products, IEnumerable<Region> regions, IEnumerable<Shipper> shippers, IEnumerable<Supplier> suppliers, IEnumerable<Territory> territories)
+        public NorthwindChangeSet()
         {
-            // retrieve changes sets (modified entities)
-            var categoryChangeSet = categories.GetChangeSet();
-            var demographicGroupChangeSet = demographicGroups.GetChangeSet();
-            var customerChangeSet = customers.GetChangeSet();
-            var dynamicContentEntityChangeSet = dynamicContentEntities.GetChangeSet();
-            var employeeChangeSet = employees.GetChangeSet();
-            var order_DetailChangeSet = order_Details.GetChangeSet();
-            var orderChangeSet = orders.GetChangeSet();
-            var productChangeSet = products.GetChangeSet();
-            var regionChangeSet = regions.GetChangeSet();
-            var shipperChangeSet = shippers.GetChangeSet();
-            var supplierChangeSet = suppliers.GetChangeSet();
-            var territoryChangeSet = territories.GetChangeSet();
-
-            // reduce entities (copy changed values)
-            var categoriesMap = categoryChangeSet.ReduceToModifications();
-            var demographicGroupsMap = demographicGroupChangeSet.ReduceToModifications();
-            var customersMap = customerChangeSet.ReduceToModifications();
-            var dynamicContentEntitiesMap = dynamicContentEntityChangeSet.ReduceToModifications();
-            var employeesMap = employeeChangeSet.ReduceToModifications();
-            var order_DetailsMap = order_DetailChangeSet.ReduceToModifications();
-            var ordersMap = orderChangeSet.ReduceToModifications();
-            var productsMap = productChangeSet.ReduceToModifications();
-            var regionsMap = regionChangeSet.ReduceToModifications();
-            var shippersMap = shipperChangeSet.ReduceToModifications();
-            var suppliersMap = supplierChangeSet.ReduceToModifications();
-            var territoriesMap = territoryChangeSet.ReduceToModifications();
-
-            // fixup relations (replaces related entities with reduced entites)
-            this.FixupRelations(
-                this.Union(categoriesMap.CastToEntityTuple(), demographicGroupsMap.CastToEntityTuple(), customersMap.CastToEntityTuple(), dynamicContentEntitiesMap.CastToEntityTuple(), employeesMap.CastToEntityTuple(), order_DetailsMap.CastToEntityTuple(), ordersMap.CastToEntityTuple(), productsMap.CastToEntityTuple(), regionsMap.CastToEntityTuple(), shippersMap.CastToEntityTuple(), suppliersMap.CastToEntityTuple(), territoriesMap.CastToEntityTuple()),
-                this.Union(categoryChangeSet, demographicGroupChangeSet, customerChangeSet, dynamicContentEntityChangeSet, employeeChangeSet, order_DetailChangeSet, orderChangeSet, productChangeSet, regionChangeSet, shipperChangeSet, supplierChangeSet, territoryChangeSet)
-            );
-            if (categoriesMap.Count > 0) this.Categories = categoriesMap.Select(e => e.Item2).ToList();
-            if (demographicGroupsMap.Count > 0) this.DemographicGroups = demographicGroupsMap.Select(e => e.Item2).ToList();
-            if (customersMap.Count > 0) this.Customers = customersMap.Select(e => e.Item2).ToList();
-            if (dynamicContentEntitiesMap.Count > 0) this.DynamicContentEntities = dynamicContentEntitiesMap.Select(e => e.Item2).ToList();
-            if (employeesMap.Count > 0) this.Employees = employeesMap.Select(e => e.Item2).ToList();
-            if (order_DetailsMap.Count > 0) this.Order_Details = order_DetailsMap.Select(e => e.Item2).ToList();
-            if (ordersMap.Count > 0) this.Orders = ordersMap.Select(e => e.Item2).ToList();
-            if (productsMap.Count > 0) this.Products = productsMap.Select(e => e.Item2).ToList();
-            if (regionsMap.Count > 0) this.Regions = regionsMap.Select(e => e.Item2).ToList();
-            if (shippersMap.Count > 0) this.Shippers = shippersMap.Select(e => e.Item2).ToList();
-            if (suppliersMap.Count > 0) this.Suppliers = suppliersMap.Select(e => e.Item2).ToList();
-            if (territoriesMap.Count > 0) this.Territories = territoriesMap.Select(e => e.Item2).ToList();
         }
 
         protected NorthwindChangeSet(NorthwindChangeSet changeSet)
@@ -90,72 +37,60 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
             this.Territories = changeSet.Territories;
         }
 
-        #endregion Constructor
-
-        #region DataMember
+        [DataMember]
+        public List<Category> Categories { get; set; }
 
         [DataMember]
-        public List<Category> Categories { get; private set; }
+        public List<DemographicGroup> DemographicGroups { get; set; }
 
         [DataMember]
-        public List<DemographicGroup> DemographicGroups { get; private set; }
+        public List<Customer> Customers { get; set; }
 
         [DataMember]
-        public List<Customer> Customers { get; private set; }
+        public List<DynamicContentEntity> DynamicContentEntities { get; set; }
 
         [DataMember]
-        public List<DynamicContentEntity> DynamicContentEntities { get; private set; }
+        public List<Employee> Employees { get; set; }
 
         [DataMember]
-        public List<Employee> Employees { get; private set; }
+        public List<Order_Detail> Order_Details { get; set; }
 
         [DataMember]
-        public List<Order_Detail> Order_Details { get; private set; }
+        public List<Order> Orders { get; set; }
 
         [DataMember]
-        public List<Order> Orders { get; private set; }
+        public List<Product> Products { get; set; }
 
         [DataMember]
-        public List<Product> Products { get; private set; }
+        public List<Region> Regions { get; set; }
 
         [DataMember]
-        public List<Region> Regions { get; private set; }
+        public List<Shipper> Shippers { get; set; }
 
         [DataMember]
-        public List<Shipper> Shippers { get; private set; }
+        public List<Supplier> Suppliers { get; set; }
 
         [DataMember]
-        public List<Supplier> Suppliers { get; private set; }
-
-        [DataMember]
-        public List<Territory> Territories { get; private set; }
-
-        #endregion DataMember
-
-        #region IsEmpty
+        public List<Territory> Territories { get; set; }
 
         public bool IsEmpty
         {
             get
             {
-                return Categories == null &&
-                    DemographicGroups == null &&
-                    Customers == null &&
-                    DynamicContentEntities == null &&
-                    Employees == null &&
-                    Order_Details == null &&
-                    Orders == null &&
-                    Products == null &&
-                    Regions == null &&
-                    Shippers == null &&
-                    Suppliers == null &&
-                    Territories == null;
+                return (ReferenceEquals(null, Categories) || Categories.Count == 0)
+                    && (ReferenceEquals(null, DemographicGroups) || DemographicGroups.Count == 0)
+                    && (ReferenceEquals(null, Customers) || Customers.Count == 0)
+                    && (ReferenceEquals(null, DynamicContentEntities) || DynamicContentEntities.Count == 0)
+                    && (ReferenceEquals(null, Employees) || Employees.Count == 0)
+                    && (ReferenceEquals(null, Order_Details) || Order_Details.Count == 0)
+                    && (ReferenceEquals(null, Orders) || Orders.Count == 0)
+                    && (ReferenceEquals(null, Products) || Products.Count == 0)
+                    && (ReferenceEquals(null, Regions) || Regions.Count == 0)
+                    && (ReferenceEquals(null, Shippers) || Shippers.Count == 0)
+                    && (ReferenceEquals(null, Suppliers) || Suppliers.Count == 0)
+                    && (ReferenceEquals(null, Territories) || Territories.Count == 0);
             }
         }
-
-        #endregion IsEmpty
-
-        #region IEnumerable
 
         public IEnumerator<Entity> GetEnumerator()
         {
@@ -261,7 +196,5 @@ namespace IntegrationTest.Common.Domain.Model.Northwind
         {
             return GetEnumerator();
         }
-
-        #endregion IEnumerable
     }
 }

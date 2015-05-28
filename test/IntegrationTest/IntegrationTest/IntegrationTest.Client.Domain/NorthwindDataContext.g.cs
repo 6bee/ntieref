@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
@@ -28,6 +29,9 @@ namespace IntegrationTest.Client.Domain
         #region Fields
 
         private readonly Func<INorthwindDataService> _dataServiceFactory;
+
+        private readonly Func<INorthwindChangeSetFactory> _changeSetFactoryProvider;
+
         private readonly InternalEntitySet<Category> _categories;
         private readonly InternalEntitySet<DemographicGroup> _demographicGroups;
         private readonly InternalEntitySet<Customer> _customers;
@@ -40,6 +44,19 @@ namespace IntegrationTest.Client.Domain
         private readonly InternalEntitySet<Shipper> _shippers;
         private readonly InternalEntitySet<Supplier> _suppliers;
         private readonly InternalEntitySet<Territory> _territories;
+ 
+        private IEntitySet<Category> categoryEntitySet;
+        private IEntitySet<DemographicGroup> demographicGroupEntitySet;
+        private IEntitySet<Customer> customerEntitySet;
+        private IEntitySet<DynamicContentEntity> dynamicContentEntityEntitySet;
+        private IEntitySet<Employee> employeeEntitySet;
+        private IEntitySet<Order_Detail> order_DetailEntitySet;
+        private IEntitySet<Order> orderEntitySet;
+        private IEntitySet<Product> productEntitySet;
+        private IEntitySet<Region> regionEntitySet;
+        private IEntitySet<Shipper> shipperEntitySet;
+        private IEntitySet<Supplier> supplierEntitySet;
+        private IEntitySet<Territory> territoryEntitySet;
 
         #endregion Fields
 
@@ -47,9 +64,12 @@ namespace IntegrationTest.Client.Domain
 
         partial void Initialize();
 
-        public NorthwindDataContext(Func<INorthwindDataService> dataServiceFactory)
+        public NorthwindDataContext(Func<INorthwindDataService> dataServiceFactory, Func<INorthwindChangeSetFactory> changeSetFactoryProvider = null)
         {
             _dataServiceFactory = dataServiceFactory;
+
+            _changeSetFactoryProvider = changeSetFactoryProvider ?? (() => new NorthwindChangeSetFactory());
+
             _categories = CreateAndRegisterInternalEntitySet<Category>();
             _demographicGroups = CreateAndRegisterInternalEntitySet<DemographicGroup>();
             _customers = CreateAndRegisterInternalEntitySet<Customer>();
@@ -62,16 +82,17 @@ namespace IntegrationTest.Client.Domain
             _shippers = CreateAndRegisterInternalEntitySet<Shipper>();
             _suppliers = CreateAndRegisterInternalEntitySet<Supplier>();
             _territories = CreateAndRegisterInternalEntitySet<Territory>();
+
             Initialize();
         }
 
-        public NorthwindDataContext(IChannelFactory<INorthwindDataService> channelFactory)
-            : this(channelFactory.CreateChannel)
+        public NorthwindDataContext(IChannelFactory<INorthwindDataService> channelFactory, Func<INorthwindChangeSetFactory> changeSetFactoryProvider = null)
+            : this(channelFactory.CreateChannel, changeSetFactoryProvider)
         {
         }
 
-        public NorthwindDataContext(string endpointConfigurationName = "NorthwindDataService")
-            : this(CreateChannelFactory(endpointConfigurationName).CreateChannel)
+        public NorthwindDataContext(string endpointConfigurationName = "NorthwindDataService", Func<INorthwindChangeSetFactory> changeSetFactoryProvider = null)
+            : this(CreateChannelFactory(endpointConfigurationName).CreateChannel, changeSetFactoryProvider)
         {
         }
 
@@ -93,14 +114,14 @@ namespace IntegrationTest.Client.Domain
         {
             get
             {
-                if (categoryEntitySet == null)
+                if (ReferenceEquals(null, categoryEntitySet))
                 {
-                    categoryEntitySet = CreateEntitySet<Category>(_categories, AttachWithRelations, GetCategories);
+                    categoryEntitySet = CreateEntitySet<Category>(_categories, AttachWithRelations, OnDetach, GetCategories);
                 }
+
                 return categoryEntitySet;
             }
         }
-        private IEntitySet<Category> categoryEntitySet;
 
         public void Add(Category entity)
         {
@@ -156,7 +177,7 @@ namespace IntegrationTest.Client.Domain
         {
             #region iteration tracking
 
-            if (referenceTrackingList == null)
+            if (ReferenceEquals(null, referenceTrackingList))
             {
                 referenceTrackingList = new List<object>();
             }
@@ -188,7 +209,7 @@ namespace IntegrationTest.Client.Domain
                     throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
             }
 
-            if (((object)existingEntity) != null && object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && ReferenceEquals(existingEntity, entity))
             {
                 return existingEntity;
             }
@@ -196,55 +217,40 @@ namespace IntegrationTest.Client.Domain
             #endregion
 
             #region attach relations recursively
+            
 
-            // register relation's collection changed event if entity is new to context
-            if (existingEntity == null)
+            if (!ReferenceEquals(null, entity.Products))
             {
-                entity.Products.CollectionChanged += (s, e) =>
+                // register relation's collection changed event if entity is new to context
+                if (ReferenceEquals(null, existingEntity))
                 {
-                    if (entity.IsChangeTrackingPrevented) return;
+                    entity.Products.CollectionChanged += On_category_products_collectionChanged;
+                }
 
-                    if (e.NewItems != null)
-                    {
-                        foreach (Product item in e.NewItems)
-                        {
-                            Attach(item);
-                        }
-                    }
-                    //if (e.OldItems != null)
-                    //{
-                    //    foreach (Product item in e.OldItems)
-                    //    {
-                    //        if (item.ChangeTracker.State == ObjectState.Unchanged)
-                    //        {
-                    //            item.MarkAsModified();
-                    //        }
-                    //    }
-                    //}
-                };
-            }
-
-            // attach related entities to context
-            if (entity.Products.Count > 0)
-            {
-                foreach (var item in entity.Products.ToArray())
+                // attach related entities to context
+                if (entity.Products.Count > 0)
                 {
-                    var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
-                    // update relation if entity is new to context or relation is new to entity
-                    if (existingEntity == null || !existingEntity.Products.Contains(item))
+                    foreach (var item in entity.Products.ToArray())
                     {
-                        if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, item))
+                        var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
+
+                        // update relation if entity is new to context or relation is new to entity
+                        if (ReferenceEquals(null, existingEntity) || !existingEntity.Products.Contains(item))
                         {
-                            // check merge options
-                            if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Category")))
+                            if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, item))
                             {
-                                using (entity.ChangeTrackingPrevention())
+                                // check merge options
+                                if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Category")))
                                 {
-                                    entity.Products.Replace(item, existingRelatedEntity);
-                                }
-                                using (existingRelatedEntity.ChangeTrackingPrevention())
-                                {
-                                    existingRelatedEntity.Category = entity;
+                                    using (entity.ChangeTrackingPrevention())
+                                    {
+                                        entity.Products.Replace(item, existingRelatedEntity);
+                                    }
+
+                                    using (existingRelatedEntity.ChangeTrackingPrevention())
+                                    {
+                                        existingRelatedEntity.Category = entity;
+                                    }
                                 }
                             }
                         }
@@ -256,7 +262,7 @@ namespace IntegrationTest.Client.Domain
 
             #region refresh existing entity based on merge options
 
-            if (existingEntity != null && !object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && !ReferenceEquals(existingEntity, entity))
             {
                 if (Categories.MergeOption == MergeOption.OverwriteChanges)
                 {
@@ -280,6 +286,32 @@ namespace IntegrationTest.Client.Domain
             return existingEntity;
         }
 
+        private void OnDetach(Category entity)
+        {
+            if (!ReferenceEquals(null, entity.Products))
+            {
+                entity.Products.CollectionChanged -= On_category_products_collectionChanged;
+            }
+
+        }
+
+        private void On_category_products_collectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var entity = sender as Category;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (!ReferenceEquals(null, e.NewItems))
+            {
+                foreach (Product item in e.NewItems)
+                {
+                    Attach(item);
+                }
+            }
+        }
+
         #endregion Categories
 
         #region DemographicGroups
@@ -288,14 +320,14 @@ namespace IntegrationTest.Client.Domain
         {
             get
             {
-                if (demographicGroupEntitySet == null)
+                if (ReferenceEquals(null, demographicGroupEntitySet))
                 {
-                    demographicGroupEntitySet = CreateEntitySet<DemographicGroup>(_demographicGroups, AttachWithRelations, GetDemographicGroups);
+                    demographicGroupEntitySet = CreateEntitySet<DemographicGroup>(_demographicGroups, AttachWithRelations, OnDetach, GetDemographicGroups);
                 }
+
                 return demographicGroupEntitySet;
             }
         }
-        private IEntitySet<DemographicGroup> demographicGroupEntitySet;
 
         public void Add(DemographicGroup entity)
         {
@@ -351,7 +383,7 @@ namespace IntegrationTest.Client.Domain
         {
             #region iteration tracking
 
-            if (referenceTrackingList == null)
+            if (ReferenceEquals(null, referenceTrackingList))
             {
                 referenceTrackingList = new List<object>();
             }
@@ -383,7 +415,7 @@ namespace IntegrationTest.Client.Domain
                     throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
             }
 
-            if (((object)existingEntity) != null && object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && ReferenceEquals(existingEntity, entity))
             {
                 return existingEntity;
             }
@@ -391,64 +423,49 @@ namespace IntegrationTest.Client.Domain
             #endregion
 
             #region attach relations recursively
+            
 
-            // register relation's collection changed event if entity is new to context
-            if (existingEntity == null)
+            if (!ReferenceEquals(null, entity.Customers))
             {
-                entity.Customers.CollectionChanged += (s, e) =>
+                // register relation's collection changed event if entity is new to context
+                if (ReferenceEquals(null, existingEntity))
                 {
-                    if (entity.IsChangeTrackingPrevented) return;
+                    entity.Customers.CollectionChanged += On_demographicGroup_customers_collectionChanged;
+                }
 
-                    if (e.NewItems != null)
-                    {
-                        foreach (Customer item in e.NewItems)
-                        {
-                            Attach(item);
-                        }
-                    }
-                    //if (e.OldItems != null)
-                    //{
-                    //    foreach (Customer item in e.OldItems)
-                    //    {
-                    //        if (item.ChangeTracker.State == ObjectState.Unchanged)
-                    //        {
-                    //            item.MarkAsModified();
-                    //        }
-                    //    }
-                    //}
-                };
-            }
-
-            // attach related entities to context
-            if (entity.Customers.Count > 0)
-            {
-                foreach (var item in entity.Customers.ToArray())
+                // attach related entities to context
+                if (entity.Customers.Count > 0)
                 {
-                    var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
-                    // update relation if entity is new to context or relation is new to entity
-                    if (existingEntity == null || !existingEntity.Customers.Contains(item))
+                    foreach (var item in entity.Customers.ToArray())
                     {
-                        if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, item))
+                        var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
+
+                        // update relation if entity is new to context or relation is new to entity
+                        if (ReferenceEquals(null, existingEntity) || !existingEntity.Customers.Contains(item))
                         {
-                            // check merge options
-                            if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("CustomerDemographics")))
+                            if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, item))
                             {
-                                using (entity.ChangeTrackingPrevention())
+                                // check merge options
+                                if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("CustomerDemographics")))
                                 {
-                                    entity.Customers.Replace(item, existingRelatedEntity);
-                                }
-
-                                using (existingRelatedEntity.ChangeTrackingPrevention())
-                                {
-                                    var entityToReplace = existingRelatedEntity.CustomerDemographics.FirstOrDefault(e => e.Equals(entity));
-                                    if (entityToReplace != null)
+                                    using (entity.ChangeTrackingPrevention())
                                     {
-                                        using (entityToReplace.ChangeTrackingPrevention())
-                                        {
-                                            existingRelatedEntity.CustomerDemographics.Remove(entityToReplace);
-                                        }
+                                        entity.Customers.Replace(item, existingRelatedEntity);
                                     }
-                                    existingRelatedEntity.CustomerDemographics.Add(entity);
+
+                                    using (existingRelatedEntity.ChangeTrackingPrevention())
+                                    {
+                                        var entityToReplace = existingRelatedEntity.CustomerDemographics.FirstOrDefault(e => e.Equals(entity));
+                                        if (!ReferenceEquals(null, entityToReplace))
+                                        {
+                                            using (entityToReplace.ChangeTrackingPrevention())
+                                            {
+                                                existingRelatedEntity.CustomerDemographics.Remove(entityToReplace);
+                                            }
+                                        }
+
+                                        existingRelatedEntity.CustomerDemographics.Add(entity);
+                                    }
                                 }
                             }
                         }
@@ -460,7 +477,7 @@ namespace IntegrationTest.Client.Domain
 
             #region refresh existing entity based on merge options
 
-            if (existingEntity != null && !object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && !ReferenceEquals(existingEntity, entity))
             {
                 if (DemographicGroups.MergeOption == MergeOption.OverwriteChanges)
                 {
@@ -484,6 +501,32 @@ namespace IntegrationTest.Client.Domain
             return existingEntity;
         }
 
+        private void OnDetach(DemographicGroup entity)
+        {
+            if (!ReferenceEquals(null, entity.Customers))
+            {
+                entity.Customers.CollectionChanged -= On_demographicGroup_customers_collectionChanged;
+            }
+
+        }
+
+        private void On_demographicGroup_customers_collectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var entity = sender as DemographicGroup;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (!ReferenceEquals(null, e.NewItems))
+            {
+                foreach (Customer item in e.NewItems)
+                {
+                    Attach(item);
+                }
+            }
+        }
+
         #endregion DemographicGroups
 
         #region Customers
@@ -492,14 +535,14 @@ namespace IntegrationTest.Client.Domain
         {
             get
             {
-                if (customerEntitySet == null)
+                if (ReferenceEquals(null, customerEntitySet))
                 {
-                    customerEntitySet = CreateEntitySet<Customer>(_customers, AttachWithRelations, GetCustomers);
+                    customerEntitySet = CreateEntitySet<Customer>(_customers, AttachWithRelations, OnDetach, GetCustomers);
                 }
+
                 return customerEntitySet;
             }
         }
-        private IEntitySet<Customer> customerEntitySet;
 
         public void Add(Customer entity)
         {
@@ -555,7 +598,7 @@ namespace IntegrationTest.Client.Domain
         {
             #region iteration tracking
 
-            if (referenceTrackingList == null)
+            if (ReferenceEquals(null, referenceTrackingList))
             {
                 referenceTrackingList = new List<object>();
             }
@@ -587,7 +630,7 @@ namespace IntegrationTest.Client.Domain
                     throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
             }
 
-            if (((object)existingEntity) != null && object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && ReferenceEquals(existingEntity, entity))
             {
                 return existingEntity;
             }
@@ -595,55 +638,40 @@ namespace IntegrationTest.Client.Domain
             #endregion
 
             #region attach relations recursively
+            
 
-            // register relation's collection changed event if entity is new to context
-            if (existingEntity == null)
+            if (!ReferenceEquals(null, entity.Orders))
             {
-                entity.Orders.CollectionChanged += (s, e) =>
+                // register relation's collection changed event if entity is new to context
+                if (ReferenceEquals(null, existingEntity))
                 {
-                    if (entity.IsChangeTrackingPrevented) return;
+                    entity.Orders.CollectionChanged += On_customer_orders_collectionChanged;
+                }
 
-                    if (e.NewItems != null)
-                    {
-                        foreach (Order item in e.NewItems)
-                        {
-                            Attach(item);
-                        }
-                    }
-                    //if (e.OldItems != null)
-                    //{
-                    //    foreach (Order item in e.OldItems)
-                    //    {
-                    //        if (item.ChangeTracker.State == ObjectState.Unchanged)
-                    //        {
-                    //            item.MarkAsModified();
-                    //        }
-                    //    }
-                    //}
-                };
-            }
-
-            // attach related entities to context
-            if (entity.Orders.Count > 0)
-            {
-                foreach (var item in entity.Orders.ToArray())
+                // attach related entities to context
+                if (entity.Orders.Count > 0)
                 {
-                    var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
-                    // update relation if entity is new to context or relation is new to entity
-                    if (existingEntity == null || !existingEntity.Orders.Contains(item))
+                    foreach (var item in entity.Orders.ToArray())
                     {
-                        if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, item))
+                        var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
+
+                        // update relation if entity is new to context or relation is new to entity
+                        if (ReferenceEquals(null, existingEntity) || !existingEntity.Orders.Contains(item))
                         {
-                            // check merge options
-                            if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Customer")))
+                            if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, item))
                             {
-                                using (entity.ChangeTrackingPrevention())
+                                // check merge options
+                                if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Customer")))
                                 {
-                                    entity.Orders.Replace(item, existingRelatedEntity);
-                                }
-                                using (existingRelatedEntity.ChangeTrackingPrevention())
-                                {
-                                    existingRelatedEntity.Customer = entity;
+                                    using (entity.ChangeTrackingPrevention())
+                                    {
+                                        entity.Orders.Replace(item, existingRelatedEntity);
+                                    }
+
+                                    using (existingRelatedEntity.ChangeTrackingPrevention())
+                                    {
+                                        existingRelatedEntity.Customer = entity;
+                                    }
                                 }
                             }
                         }
@@ -651,63 +679,47 @@ namespace IntegrationTest.Client.Domain
                 }
             }
 
-            // register relation's collection changed event if entity is new to context
-            if (existingEntity == null)
+            if (!ReferenceEquals(null, entity.CustomerDemographics))
             {
-                entity.CustomerDemographics.CollectionChanged += (s, e) =>
+                // register relation's collection changed event if entity is new to context
+                if (ReferenceEquals(null, existingEntity))
                 {
-                    if (entity.IsChangeTrackingPrevented) return;
+                    entity.CustomerDemographics.CollectionChanged += On_customer_customerDemographics_collectionChanged;
+                }
 
-                    if (e.NewItems != null)
-                    {
-                        foreach (DemographicGroup item in e.NewItems)
-                        {
-                            Attach(item);
-                        }
-                    }
-                    //if (e.OldItems != null)
-                    //{
-                    //    foreach (DemographicGroup item in e.OldItems)
-                    //    {
-                    //        if (item.ChangeTracker.State == ObjectState.Unchanged)
-                    //        {
-                    //            item.MarkAsModified();
-                    //        }
-                    //    }
-                    //}
-                };
-            }
-
-            // attach related entities to context
-            if (entity.CustomerDemographics.Count > 0)
-            {
-                foreach (var item in entity.CustomerDemographics.ToArray())
+                // attach related entities to context
+                if (entity.CustomerDemographics.Count > 0)
                 {
-                    var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
-                    // update relation if entity is new to context or relation is new to entity
-                    if (existingEntity == null || !existingEntity.CustomerDemographics.Contains(item))
+                    foreach (var item in entity.CustomerDemographics.ToArray())
                     {
-                        if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, item))
+                        var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
+
+                        // update relation if entity is new to context or relation is new to entity
+                        if (ReferenceEquals(null, existingEntity) || !existingEntity.CustomerDemographics.Contains(item))
                         {
-                            // check merge options
-                            if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Customers")))
+                            if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, item))
                             {
-                                using (entity.ChangeTrackingPrevention())
+                                // check merge options
+                                if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Customers")))
                                 {
-                                    entity.CustomerDemographics.Replace(item, existingRelatedEntity);
-                                }
-
-                                using (existingRelatedEntity.ChangeTrackingPrevention())
-                                {
-                                    var entityToReplace = existingRelatedEntity.Customers.FirstOrDefault(e => e.Equals(entity));
-                                    if (entityToReplace != null)
+                                    using (entity.ChangeTrackingPrevention())
                                     {
-                                        using (entityToReplace.ChangeTrackingPrevention())
-                                        {
-                                            existingRelatedEntity.Customers.Remove(entityToReplace);
-                                        }
+                                        entity.CustomerDemographics.Replace(item, existingRelatedEntity);
                                     }
-                                    existingRelatedEntity.Customers.Add(entity);
+
+                                    using (existingRelatedEntity.ChangeTrackingPrevention())
+                                    {
+                                        var entityToReplace = existingRelatedEntity.Customers.FirstOrDefault(e => e.Equals(entity));
+                                        if (!ReferenceEquals(null, entityToReplace))
+                                        {
+                                            using (entityToReplace.ChangeTrackingPrevention())
+                                            {
+                                                existingRelatedEntity.Customers.Remove(entityToReplace);
+                                            }
+                                        }
+
+                                        existingRelatedEntity.Customers.Add(entity);
+                                    }
                                 }
                             }
                         }
@@ -719,7 +731,7 @@ namespace IntegrationTest.Client.Domain
 
             #region refresh existing entity based on merge options
 
-            if (existingEntity != null && !object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && !ReferenceEquals(existingEntity, entity))
             {
                 if (Customers.MergeOption == MergeOption.OverwriteChanges)
                 {
@@ -743,6 +755,54 @@ namespace IntegrationTest.Client.Domain
             return existingEntity;
         }
 
+        private void OnDetach(Customer entity)
+        {
+            if (!ReferenceEquals(null, entity.Orders))
+            {
+                entity.Orders.CollectionChanged -= On_customer_orders_collectionChanged;
+            }
+
+            if (!ReferenceEquals(null, entity.CustomerDemographics))
+            {
+                entity.CustomerDemographics.CollectionChanged -= On_customer_customerDemographics_collectionChanged;
+            }
+
+        }
+
+        private void On_customer_orders_collectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var entity = sender as Customer;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (!ReferenceEquals(null, e.NewItems))
+            {
+                foreach (Order item in e.NewItems)
+                {
+                    Attach(item);
+                }
+            }
+        }
+
+        private void On_customer_customerDemographics_collectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var entity = sender as Customer;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (!ReferenceEquals(null, e.NewItems))
+            {
+                foreach (DemographicGroup item in e.NewItems)
+                {
+                    Attach(item);
+                }
+            }
+        }
+
         #endregion Customers
 
         #region DynamicContentEntities
@@ -751,14 +811,14 @@ namespace IntegrationTest.Client.Domain
         {
             get
             {
-                if (dynamicContentEntityEntitySet == null)
+                if (ReferenceEquals(null, dynamicContentEntityEntitySet))
                 {
-                    dynamicContentEntityEntitySet = CreateEntitySet<DynamicContentEntity>(_dynamicContentEntities, AttachWithRelations, GetDynamicContentEntities);
+                    dynamicContentEntityEntitySet = CreateEntitySet<DynamicContentEntity>(_dynamicContentEntities, AttachWithRelations, OnDetach, GetDynamicContentEntities);
                 }
+
                 return dynamicContentEntityEntitySet;
             }
         }
-        private IEntitySet<DynamicContentEntity> dynamicContentEntityEntitySet;
 
         public void Add(DynamicContentEntity entity)
         {
@@ -814,7 +874,7 @@ namespace IntegrationTest.Client.Domain
         {
             #region iteration tracking
 
-            if (referenceTrackingList == null)
+            if (ReferenceEquals(null, referenceTrackingList))
             {
                 referenceTrackingList = new List<object>();
             }
@@ -846,7 +906,7 @@ namespace IntegrationTest.Client.Domain
                     throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
             }
 
-            if (((object)existingEntity) != null && object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && ReferenceEquals(existingEntity, entity))
             {
                 return existingEntity;
             }
@@ -854,12 +914,13 @@ namespace IntegrationTest.Client.Domain
             #endregion
 
             #region attach relations recursively
+            
 
             #endregion
 
             #region refresh existing entity based on merge options
 
-            if (existingEntity != null && !object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && !ReferenceEquals(existingEntity, entity))
             {
                 if (DynamicContentEntities.MergeOption == MergeOption.OverwriteChanges)
                 {
@@ -883,6 +944,10 @@ namespace IntegrationTest.Client.Domain
             return existingEntity;
         }
 
+        private void OnDetach(DynamicContentEntity entity)
+        {
+        }
+
         #endregion DynamicContentEntities
 
         #region Employees
@@ -891,14 +956,14 @@ namespace IntegrationTest.Client.Domain
         {
             get
             {
-                if (employeeEntitySet == null)
+                if (ReferenceEquals(null, employeeEntitySet))
                 {
-                    employeeEntitySet = CreateEntitySet<Employee>(_employees, AttachWithRelations, GetEmployees);
+                    employeeEntitySet = CreateEntitySet<Employee>(_employees, AttachWithRelations, OnDetach, GetEmployees);
                 }
+
                 return employeeEntitySet;
             }
         }
-        private IEntitySet<Employee> employeeEntitySet;
 
         public void Add(Employee entity)
         {
@@ -954,7 +1019,7 @@ namespace IntegrationTest.Client.Domain
         {
             #region iteration tracking
 
-            if (referenceTrackingList == null)
+            if (ReferenceEquals(null, referenceTrackingList))
             {
                 referenceTrackingList = new List<object>();
             }
@@ -986,7 +1051,7 @@ namespace IntegrationTest.Client.Domain
                     throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
             }
 
-            if (((object)existingEntity) != null && object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && ReferenceEquals(existingEntity, entity))
             {
                 return existingEntity;
             }
@@ -994,55 +1059,45 @@ namespace IntegrationTest.Client.Domain
             #endregion
 
             #region attach relations recursively
-
-            // register relation's collection changed event if entity is new to context
-            if (existingEntity == null)
+            
+            // register entity's property changed event if entity is new to context
+            if (ReferenceEquals(null, existingEntity))
             {
-                entity.Employees1.CollectionChanged += (s, e) =>
-                {
-                    if (entity.IsChangeTrackingPrevented) return;
-
-                    if (e.NewItems != null)
-                    {
-                        foreach (Employee item in e.NewItems)
-                        {
-                            Attach(item);
-                        }
-                    }
-                    //if (e.OldItems != null)
-                    //{
-                    //    foreach (Employee item in e.OldItems)
-                    //    {
-                    //        if (item.ChangeTracker.State == ObjectState.Unchanged)
-                    //        {
-                    //            item.MarkAsModified();
-                    //        }
-                    //    }
-                    //}
-                };
+                entity.PropertyChanged += On_employee_propertyChanged;
             }
 
-            // attach related entities to context
-            if (entity.Employees1.Count > 0)
+            if (!ReferenceEquals(null, entity.Employees1))
             {
-                foreach (var item in entity.Employees1.ToArray())
+                // register relation's collection changed event if entity is new to context
+                if (ReferenceEquals(null, existingEntity))
                 {
-                    var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
-                    // update relation if entity is new to context or relation is new to entity
-                    if (existingEntity == null || !existingEntity.Employees1.Contains(item))
+                    entity.Employees1.CollectionChanged += On_employee_employees1_collectionChanged;
+                }
+
+                // attach related entities to context
+                if (entity.Employees1.Count > 0)
+                {
+                    foreach (var item in entity.Employees1.ToArray())
                     {
-                        if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, item))
+                        var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
+
+                        // update relation if entity is new to context or relation is new to entity
+                        if (ReferenceEquals(null, existingEntity) || !existingEntity.Employees1.Contains(item))
                         {
-                            // check merge options
-                            if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Employee1")))
+                            if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, item))
                             {
-                                using (entity.ChangeTrackingPrevention())
+                                // check merge options
+                                if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Employee1")))
                                 {
-                                    entity.Employees1.Replace(item, existingRelatedEntity);
-                                }
-                                using (existingRelatedEntity.ChangeTrackingPrevention())
-                                {
-                                    existingRelatedEntity.Employee1 = entity;
+                                    using (entity.ChangeTrackingPrevention())
+                                    {
+                                        entity.Employees1.Replace(item, existingRelatedEntity);
+                                    }
+
+                                    using (existingRelatedEntity.ChangeTrackingPrevention())
+                                    {
+                                        existingRelatedEntity.Employee1 = entity;
+                                    }
                                 }
                             }
                         }
@@ -1050,32 +1105,15 @@ namespace IntegrationTest.Client.Domain
                 }
             }
 
-            // register entity's property changed event if entity is new to context
-            if (existingEntity == null)
-            {
-                entity.PropertyChanged += (s, e) =>
-                {
-                    if (entity.IsChangeTrackingPrevented) return;
-
-                    if (e.PropertyName == "Employee1")
-                    {
-                        var relation = entity[e.PropertyName] as Employee;
-                        if (relation != null)
-                        {
-                            Attach(relation);
-                        }
-                    }
-                };
-            }
-
             // attach related entity to context
-            if (entity.Employee1 != null)
+            if (!ReferenceEquals(null, entity.Employee1))
             {
                 var existingRelatedEntity = AttachWithRelations(entity.Employee1, insertMode, mergeOption, referenceTrackingList);
+
                 // update relation if entity is new to context or relation is new to entity
-                if (existingEntity == null || !entity.Employee1.Equals(existingEntity.Employee1))
+                if (ReferenceEquals(null, existingEntity) || !entity.Employee1.Equals(existingEntity.Employee1))
                 {
-                    if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, entity.Employee1))
+                    if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, entity.Employee1))
                     {
                         // check merge options
                         if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Employees1")))
@@ -1088,13 +1126,14 @@ namespace IntegrationTest.Client.Domain
                             using (existingRelatedEntity.ChangeTrackingPrevention())
                             {
                                 var entityToReplace = existingRelatedEntity.Employees1.FirstOrDefault(e => e.Equals(entity));
-                                if (entityToReplace != null)
+                                if (!ReferenceEquals(null, entityToReplace))
                                 {
                                     using (entityToReplace.ChangeTrackingPrevention())
                                     {
                                         existingRelatedEntity.Employees1.Remove(entityToReplace);
                                     }
                                 }
+
                                 existingRelatedEntity.Employees1.Add(entity);
                             }
                         }
@@ -1102,54 +1141,38 @@ namespace IntegrationTest.Client.Domain
                 }
             }
 
-            // register relation's collection changed event if entity is new to context
-            if (existingEntity == null)
+            if (!ReferenceEquals(null, entity.Orders))
             {
-                entity.Orders.CollectionChanged += (s, e) =>
+                // register relation's collection changed event if entity is new to context
+                if (ReferenceEquals(null, existingEntity))
                 {
-                    if (entity.IsChangeTrackingPrevented) return;
+                    entity.Orders.CollectionChanged += On_employee_orders_collectionChanged;
+                }
 
-                    if (e.NewItems != null)
-                    {
-                        foreach (Order item in e.NewItems)
-                        {
-                            Attach(item);
-                        }
-                    }
-                    //if (e.OldItems != null)
-                    //{
-                    //    foreach (Order item in e.OldItems)
-                    //    {
-                    //        if (item.ChangeTracker.State == ObjectState.Unchanged)
-                    //        {
-                    //            item.MarkAsModified();
-                    //        }
-                    //    }
-                    //}
-                };
-            }
-
-            // attach related entities to context
-            if (entity.Orders.Count > 0)
-            {
-                foreach (var item in entity.Orders.ToArray())
+                // attach related entities to context
+                if (entity.Orders.Count > 0)
                 {
-                    var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
-                    // update relation if entity is new to context or relation is new to entity
-                    if (existingEntity == null || !existingEntity.Orders.Contains(item))
+                    foreach (var item in entity.Orders.ToArray())
                     {
-                        if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, item))
+                        var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
+
+                        // update relation if entity is new to context or relation is new to entity
+                        if (ReferenceEquals(null, existingEntity) || !existingEntity.Orders.Contains(item))
                         {
-                            // check merge options
-                            if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Employee")))
+                            if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, item))
                             {
-                                using (entity.ChangeTrackingPrevention())
+                                // check merge options
+                                if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Employee")))
                                 {
-                                    entity.Orders.Replace(item, existingRelatedEntity);
-                                }
-                                using (existingRelatedEntity.ChangeTrackingPrevention())
-                                {
-                                    existingRelatedEntity.Employee = entity;
+                                    using (entity.ChangeTrackingPrevention())
+                                    {
+                                        entity.Orders.Replace(item, existingRelatedEntity);
+                                    }
+
+                                    using (existingRelatedEntity.ChangeTrackingPrevention())
+                                    {
+                                        existingRelatedEntity.Employee = entity;
+                                    }
                                 }
                             }
                         }
@@ -1157,39 +1180,21 @@ namespace IntegrationTest.Client.Domain
                 }
             }
 
-            // register relation's collection changed event if entity is new to context
-            if (existingEntity == null)
+            if (!ReferenceEquals(null, entity.Territories))
             {
-                entity.Territories.CollectionChanged += (s, e) =>
+                // register relation's collection changed event if entity is new to context
+                if (ReferenceEquals(null, existingEntity))
                 {
-                    if (entity.IsChangeTrackingPrevented) return;
+                    entity.Territories.CollectionChanged += On_employee_territories_collectionChanged;
+                }
 
-                    if (e.NewItems != null)
+                // attach related entities to context
+                if (entity.Territories.Count > 0)
+                {
+                    foreach (var item in entity.Territories.ToArray())
                     {
-                        foreach (Territory item in e.NewItems)
-                        {
-                            Attach(item);
-                        }
+                        var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
                     }
-                    //if (e.OldItems != null)
-                    //{
-                    //    foreach (Territory item in e.OldItems)
-                    //    {
-                    //        if (item.ChangeTracker.State == ObjectState.Unchanged)
-                    //        {
-                    //            item.MarkAsModified();
-                    //        }
-                    //    }
-                    //}
-                };
-            }
-
-            // attach related entities to context
-            if (entity.Territories.Count > 0)
-            {
-                foreach (var item in entity.Territories.ToArray())
-                {
-                    var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
                 }
             }
 
@@ -1197,7 +1202,7 @@ namespace IntegrationTest.Client.Domain
 
             #region refresh existing entity based on merge options
 
-            if (existingEntity != null && !object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && !ReferenceEquals(existingEntity, entity))
             {
                 if (Employees.MergeOption == MergeOption.OverwriteChanges)
                 {
@@ -1221,6 +1226,96 @@ namespace IntegrationTest.Client.Domain
             return existingEntity;
         }
 
+        private void OnDetach(Employee entity)
+        {
+            entity.PropertyChanged -= On_employee_propertyChanged;
+
+            if (!ReferenceEquals(null, entity.Employees1))
+            {
+                entity.Employees1.CollectionChanged -= On_employee_employees1_collectionChanged;
+            }
+
+            if (!ReferenceEquals(null, entity.Orders))
+            {
+                entity.Orders.CollectionChanged -= On_employee_orders_collectionChanged;
+            }
+
+            if (!ReferenceEquals(null, entity.Territories))
+            {
+                entity.Territories.CollectionChanged -= On_employee_territories_collectionChanged;
+            }
+
+        }
+
+        private void On_employee_propertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var entity = sender as Employee;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (e.PropertyName == "Employee1")
+            {
+                var relation = entity[e.PropertyName] as Employee;
+                if (!ReferenceEquals(null, relation))
+                {
+                    Attach(relation);
+                }
+            }
+        }
+
+        private void On_employee_employees1_collectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var entity = sender as Employee;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (!ReferenceEquals(null, e.NewItems))
+            {
+                foreach (Employee item in e.NewItems)
+                {
+                    Attach(item);
+                }
+            }
+        }
+
+        private void On_employee_orders_collectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var entity = sender as Employee;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (!ReferenceEquals(null, e.NewItems))
+            {
+                foreach (Order item in e.NewItems)
+                {
+                    Attach(item);
+                }
+            }
+        }
+
+        private void On_employee_territories_collectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var entity = sender as Employee;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (!ReferenceEquals(null, e.NewItems))
+            {
+                foreach (Territory item in e.NewItems)
+                {
+                    Attach(item);
+                }
+            }
+        }
+
         #endregion Employees
 
         #region Order_Details
@@ -1229,14 +1324,14 @@ namespace IntegrationTest.Client.Domain
         {
             get
             {
-                if (order_DetailEntitySet == null)
+                if (ReferenceEquals(null, order_DetailEntitySet))
                 {
-                    order_DetailEntitySet = CreateEntitySet<Order_Detail>(_order_Details, AttachWithRelations, GetOrder_Details);
+                    order_DetailEntitySet = CreateEntitySet<Order_Detail>(_order_Details, AttachWithRelations, OnDetach, GetOrder_Details);
                 }
+
                 return order_DetailEntitySet;
             }
         }
-        private IEntitySet<Order_Detail> order_DetailEntitySet;
 
         public void Add(Order_Detail entity)
         {
@@ -1292,7 +1387,7 @@ namespace IntegrationTest.Client.Domain
         {
             #region iteration tracking
 
-            if (referenceTrackingList == null)
+            if (ReferenceEquals(null, referenceTrackingList))
             {
                 referenceTrackingList = new List<object>();
             }
@@ -1324,7 +1419,7 @@ namespace IntegrationTest.Client.Domain
                     throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
             }
 
-            if (((object)existingEntity) != null && object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && ReferenceEquals(existingEntity, entity))
             {
                 return existingEntity;
             }
@@ -1332,33 +1427,22 @@ namespace IntegrationTest.Client.Domain
             #endregion
 
             #region attach relations recursively
-
+            
             // register entity's property changed event if entity is new to context
-            if (existingEntity == null)
+            if (ReferenceEquals(null, existingEntity))
             {
-                entity.PropertyChanged += (s, e) =>
-                {
-                    if (entity.IsChangeTrackingPrevented) return;
-
-                    if (e.PropertyName == "Order")
-                    {
-                        var relation = entity[e.PropertyName] as Order;
-                        if (relation != null)
-                        {
-                            Attach(relation);
-                        }
-                    }
-                };
+                entity.PropertyChanged += On_order_Detail_propertyChanged;
             }
 
             // attach related entity to context
-            if (entity.Order != null)
+            if (!ReferenceEquals(null, entity.Order))
             {
                 var existingRelatedEntity = AttachWithRelations(entity.Order, insertMode, mergeOption, referenceTrackingList);
+
                 // update relation if entity is new to context or relation is new to entity
-                if (existingEntity == null || !entity.Order.Equals(existingEntity.Order))
+                if (ReferenceEquals(null, existingEntity) || !entity.Order.Equals(existingEntity.Order))
                 {
-                    if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, entity.Order))
+                    if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, entity.Order))
                     {
                         // check merge options
                         if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Order_Details")))
@@ -1371,13 +1455,14 @@ namespace IntegrationTest.Client.Domain
                             using (existingRelatedEntity.ChangeTrackingPrevention())
                             {
                                 var entityToReplace = existingRelatedEntity.Order_Details.FirstOrDefault(e => e.Equals(entity));
-                                if (entityToReplace != null)
+                                if (!ReferenceEquals(null, entityToReplace))
                                 {
                                     using (entityToReplace.ChangeTrackingPrevention())
                                     {
                                         existingRelatedEntity.Order_Details.Remove(entityToReplace);
                                     }
                                 }
+
                                 existingRelatedEntity.Order_Details.Add(entity);
                             }
                         }
@@ -1385,32 +1470,15 @@ namespace IntegrationTest.Client.Domain
                 }
             }
 
-            // register entity's property changed event if entity is new to context
-            if (existingEntity == null)
-            {
-                entity.PropertyChanged += (s, e) =>
-                {
-                    if (entity.IsChangeTrackingPrevented) return;
-
-                    if (e.PropertyName == "Product")
-                    {
-                        var relation = entity[e.PropertyName] as Product;
-                        if (relation != null)
-                        {
-                            Attach(relation);
-                        }
-                    }
-                };
-            }
-
             // attach related entity to context
-            if (entity.Product != null)
+            if (!ReferenceEquals(null, entity.Product))
             {
                 var existingRelatedEntity = AttachWithRelations(entity.Product, insertMode, mergeOption, referenceTrackingList);
+
                 // update relation if entity is new to context or relation is new to entity
-                if (existingEntity == null || !entity.Product.Equals(existingEntity.Product))
+                if (ReferenceEquals(null, existingEntity) || !entity.Product.Equals(existingEntity.Product))
                 {
-                    if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, entity.Product))
+                    if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, entity.Product))
                     {
                         // check merge options
                         if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Order_Details")))
@@ -1423,13 +1491,14 @@ namespace IntegrationTest.Client.Domain
                             using (existingRelatedEntity.ChangeTrackingPrevention())
                             {
                                 var entityToReplace = existingRelatedEntity.Order_Details.FirstOrDefault(e => e.Equals(entity));
-                                if (entityToReplace != null)
+                                if (!ReferenceEquals(null, entityToReplace))
                                 {
                                     using (entityToReplace.ChangeTrackingPrevention())
                                     {
                                         existingRelatedEntity.Order_Details.Remove(entityToReplace);
                                     }
                                 }
+
                                 existingRelatedEntity.Order_Details.Add(entity);
                             }
                         }
@@ -1441,7 +1510,7 @@ namespace IntegrationTest.Client.Domain
 
             #region refresh existing entity based on merge options
 
-            if (existingEntity != null && !object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && !ReferenceEquals(existingEntity, entity))
             {
                 if (Order_Details.MergeOption == MergeOption.OverwriteChanges)
                 {
@@ -1465,6 +1534,39 @@ namespace IntegrationTest.Client.Domain
             return existingEntity;
         }
 
+        private void OnDetach(Order_Detail entity)
+        {
+            entity.PropertyChanged -= On_order_Detail_propertyChanged;
+
+        }
+
+        private void On_order_Detail_propertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var entity = sender as Order_Detail;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (e.PropertyName == "Order")
+            {
+                var relation = entity[e.PropertyName] as Order;
+                if (!ReferenceEquals(null, relation))
+                {
+                    Attach(relation);
+                }
+            }
+
+            if (e.PropertyName == "Product")
+            {
+                var relation = entity[e.PropertyName] as Product;
+                if (!ReferenceEquals(null, relation))
+                {
+                    Attach(relation);
+                }
+            }
+        }
+
         #endregion Order_Details
 
         #region Orders
@@ -1473,14 +1575,14 @@ namespace IntegrationTest.Client.Domain
         {
             get
             {
-                if (orderEntitySet == null)
+                if (ReferenceEquals(null, orderEntitySet))
                 {
-                    orderEntitySet = CreateEntitySet<Order>(_orders, AttachWithRelations, GetOrders);
+                    orderEntitySet = CreateEntitySet<Order>(_orders, AttachWithRelations, OnDetach, GetOrders);
                 }
+
                 return orderEntitySet;
             }
         }
-        private IEntitySet<Order> orderEntitySet;
 
         public void Add(Order entity)
         {
@@ -1536,7 +1638,7 @@ namespace IntegrationTest.Client.Domain
         {
             #region iteration tracking
 
-            if (referenceTrackingList == null)
+            if (ReferenceEquals(null, referenceTrackingList))
             {
                 referenceTrackingList = new List<object>();
             }
@@ -1568,7 +1670,7 @@ namespace IntegrationTest.Client.Domain
                     throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
             }
 
-            if (((object)existingEntity) != null && object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && ReferenceEquals(existingEntity, entity))
             {
                 return existingEntity;
             }
@@ -1576,33 +1678,22 @@ namespace IntegrationTest.Client.Domain
             #endregion
 
             #region attach relations recursively
-
+            
             // register entity's property changed event if entity is new to context
-            if (existingEntity == null)
+            if (ReferenceEquals(null, existingEntity))
             {
-                entity.PropertyChanged += (s, e) =>
-                {
-                    if (entity.IsChangeTrackingPrevented) return;
-
-                    if (e.PropertyName == "Customer")
-                    {
-                        var relation = entity[e.PropertyName] as Customer;
-                        if (relation != null)
-                        {
-                            Attach(relation);
-                        }
-                    }
-                };
+                entity.PropertyChanged += On_order_propertyChanged;
             }
 
             // attach related entity to context
-            if (entity.Customer != null)
+            if (!ReferenceEquals(null, entity.Customer))
             {
                 var existingRelatedEntity = AttachWithRelations(entity.Customer, insertMode, mergeOption, referenceTrackingList);
+
                 // update relation if entity is new to context or relation is new to entity
-                if (existingEntity == null || !entity.Customer.Equals(existingEntity.Customer))
+                if (ReferenceEquals(null, existingEntity) || !entity.Customer.Equals(existingEntity.Customer))
                 {
-                    if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, entity.Customer))
+                    if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, entity.Customer))
                     {
                         // check merge options
                         if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Orders")))
@@ -1615,13 +1706,14 @@ namespace IntegrationTest.Client.Domain
                             using (existingRelatedEntity.ChangeTrackingPrevention())
                             {
                                 var entityToReplace = existingRelatedEntity.Orders.FirstOrDefault(e => e.Equals(entity));
-                                if (entityToReplace != null)
+                                if (!ReferenceEquals(null, entityToReplace))
                                 {
                                     using (entityToReplace.ChangeTrackingPrevention())
                                     {
                                         existingRelatedEntity.Orders.Remove(entityToReplace);
                                     }
                                 }
+
                                 existingRelatedEntity.Orders.Add(entity);
                             }
                         }
@@ -1629,32 +1721,15 @@ namespace IntegrationTest.Client.Domain
                 }
             }
 
-            // register entity's property changed event if entity is new to context
-            if (existingEntity == null)
-            {
-                entity.PropertyChanged += (s, e) =>
-                {
-                    if (entity.IsChangeTrackingPrevented) return;
-
-                    if (e.PropertyName == "Employee")
-                    {
-                        var relation = entity[e.PropertyName] as Employee;
-                        if (relation != null)
-                        {
-                            Attach(relation);
-                        }
-                    }
-                };
-            }
-
             // attach related entity to context
-            if (entity.Employee != null)
+            if (!ReferenceEquals(null, entity.Employee))
             {
                 var existingRelatedEntity = AttachWithRelations(entity.Employee, insertMode, mergeOption, referenceTrackingList);
+
                 // update relation if entity is new to context or relation is new to entity
-                if (existingEntity == null || !entity.Employee.Equals(existingEntity.Employee))
+                if (ReferenceEquals(null, existingEntity) || !entity.Employee.Equals(existingEntity.Employee))
                 {
-                    if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, entity.Employee))
+                    if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, entity.Employee))
                     {
                         // check merge options
                         if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Orders")))
@@ -1667,13 +1742,14 @@ namespace IntegrationTest.Client.Domain
                             using (existingRelatedEntity.ChangeTrackingPrevention())
                             {
                                 var entityToReplace = existingRelatedEntity.Orders.FirstOrDefault(e => e.Equals(entity));
-                                if (entityToReplace != null)
+                                if (!ReferenceEquals(null, entityToReplace))
                                 {
                                     using (entityToReplace.ChangeTrackingPrevention())
                                     {
                                         existingRelatedEntity.Orders.Remove(entityToReplace);
                                     }
                                 }
+
                                 existingRelatedEntity.Orders.Add(entity);
                             }
                         }
@@ -1681,54 +1757,38 @@ namespace IntegrationTest.Client.Domain
                 }
             }
 
-            // register relation's collection changed event if entity is new to context
-            if (existingEntity == null)
+            if (!ReferenceEquals(null, entity.Order_Details))
             {
-                entity.Order_Details.CollectionChanged += (s, e) =>
+                // register relation's collection changed event if entity is new to context
+                if (ReferenceEquals(null, existingEntity))
                 {
-                    if (entity.IsChangeTrackingPrevented) return;
+                    entity.Order_Details.CollectionChanged += On_order_order_Details_collectionChanged;
+                }
 
-                    if (e.NewItems != null)
-                    {
-                        foreach (Order_Detail item in e.NewItems)
-                        {
-                            Attach(item);
-                        }
-                    }
-                    //if (e.OldItems != null)
-                    //{
-                    //    foreach (Order_Detail item in e.OldItems)
-                    //    {
-                    //        if (item.ChangeTracker.State == ObjectState.Unchanged)
-                    //        {
-                    //            item.MarkAsModified();
-                    //        }
-                    //    }
-                    //}
-                };
-            }
-
-            // attach related entities to context
-            if (entity.Order_Details.Count > 0)
-            {
-                foreach (var item in entity.Order_Details.ToArray())
+                // attach related entities to context
+                if (entity.Order_Details.Count > 0)
                 {
-                    var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
-                    // update relation if entity is new to context or relation is new to entity
-                    if (existingEntity == null || !existingEntity.Order_Details.Contains(item))
+                    foreach (var item in entity.Order_Details.ToArray())
                     {
-                        if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, item))
+                        var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
+
+                        // update relation if entity is new to context or relation is new to entity
+                        if (ReferenceEquals(null, existingEntity) || !existingEntity.Order_Details.Contains(item))
                         {
-                            // check merge options
-                            if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Order")))
+                            if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, item))
                             {
-                                using (entity.ChangeTrackingPrevention())
+                                // check merge options
+                                if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Order")))
                                 {
-                                    entity.Order_Details.Replace(item, existingRelatedEntity);
-                                }
-                                using (existingRelatedEntity.ChangeTrackingPrevention())
-                                {
-                                    existingRelatedEntity.Order = entity;
+                                    using (entity.ChangeTrackingPrevention())
+                                    {
+                                        entity.Order_Details.Replace(item, existingRelatedEntity);
+                                    }
+
+                                    using (existingRelatedEntity.ChangeTrackingPrevention())
+                                    {
+                                        existingRelatedEntity.Order = entity;
+                                    }
                                 }
                             }
                         }
@@ -1736,32 +1796,15 @@ namespace IntegrationTest.Client.Domain
                 }
             }
 
-            // register entity's property changed event if entity is new to context
-            if (existingEntity == null)
-            {
-                entity.PropertyChanged += (s, e) =>
-                {
-                    if (entity.IsChangeTrackingPrevented) return;
-
-                    if (e.PropertyName == "Shipper")
-                    {
-                        var relation = entity[e.PropertyName] as Shipper;
-                        if (relation != null)
-                        {
-                            Attach(relation);
-                        }
-                    }
-                };
-            }
-
             // attach related entity to context
-            if (entity.Shipper != null)
+            if (!ReferenceEquals(null, entity.Shipper))
             {
                 var existingRelatedEntity = AttachWithRelations(entity.Shipper, insertMode, mergeOption, referenceTrackingList);
+
                 // update relation if entity is new to context or relation is new to entity
-                if (existingEntity == null || !entity.Shipper.Equals(existingEntity.Shipper))
+                if (ReferenceEquals(null, existingEntity) || !entity.Shipper.Equals(existingEntity.Shipper))
                 {
-                    if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, entity.Shipper))
+                    if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, entity.Shipper))
                     {
                         // check merge options
                         if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Orders")))
@@ -1774,13 +1817,14 @@ namespace IntegrationTest.Client.Domain
                             using (existingRelatedEntity.ChangeTrackingPrevention())
                             {
                                 var entityToReplace = existingRelatedEntity.Orders.FirstOrDefault(e => e.Equals(entity));
-                                if (entityToReplace != null)
+                                if (!ReferenceEquals(null, entityToReplace))
                                 {
                                     using (entityToReplace.ChangeTrackingPrevention())
                                     {
                                         existingRelatedEntity.Orders.Remove(entityToReplace);
                                     }
                                 }
+
                                 existingRelatedEntity.Orders.Add(entity);
                             }
                         }
@@ -1792,7 +1836,7 @@ namespace IntegrationTest.Client.Domain
 
             #region refresh existing entity based on merge options
 
-            if (existingEntity != null && !object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && !ReferenceEquals(existingEntity, entity))
             {
                 if (Orders.MergeOption == MergeOption.OverwriteChanges)
                 {
@@ -1816,6 +1860,70 @@ namespace IntegrationTest.Client.Domain
             return existingEntity;
         }
 
+        private void OnDetach(Order entity)
+        {
+            entity.PropertyChanged -= On_order_propertyChanged;
+
+            if (!ReferenceEquals(null, entity.Order_Details))
+            {
+                entity.Order_Details.CollectionChanged -= On_order_order_Details_collectionChanged;
+            }
+
+        }
+
+        private void On_order_propertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var entity = sender as Order;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (e.PropertyName == "Customer")
+            {
+                var relation = entity[e.PropertyName] as Customer;
+                if (!ReferenceEquals(null, relation))
+                {
+                    Attach(relation);
+                }
+            }
+
+            if (e.PropertyName == "Employee")
+            {
+                var relation = entity[e.PropertyName] as Employee;
+                if (!ReferenceEquals(null, relation))
+                {
+                    Attach(relation);
+                }
+            }
+
+            if (e.PropertyName == "Shipper")
+            {
+                var relation = entity[e.PropertyName] as Shipper;
+                if (!ReferenceEquals(null, relation))
+                {
+                    Attach(relation);
+                }
+            }
+        }
+
+        private void On_order_order_Details_collectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var entity = sender as Order;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (!ReferenceEquals(null, e.NewItems))
+            {
+                foreach (Order_Detail item in e.NewItems)
+                {
+                    Attach(item);
+                }
+            }
+        }
+
         #endregion Orders
 
         #region Products
@@ -1824,14 +1932,14 @@ namespace IntegrationTest.Client.Domain
         {
             get
             {
-                if (productEntitySet == null)
+                if (ReferenceEquals(null, productEntitySet))
                 {
-                    productEntitySet = CreateEntitySet<Product>(_products, AttachWithRelations, GetProducts);
+                    productEntitySet = CreateEntitySet<Product>(_products, AttachWithRelations, OnDetach, GetProducts);
                 }
+
                 return productEntitySet;
             }
         }
-        private IEntitySet<Product> productEntitySet;
 
         public void Add(Product entity)
         {
@@ -1887,7 +1995,7 @@ namespace IntegrationTest.Client.Domain
         {
             #region iteration tracking
 
-            if (referenceTrackingList == null)
+            if (ReferenceEquals(null, referenceTrackingList))
             {
                 referenceTrackingList = new List<object>();
             }
@@ -1919,7 +2027,7 @@ namespace IntegrationTest.Client.Domain
                     throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
             }
 
-            if (((object)existingEntity) != null && object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && ReferenceEquals(existingEntity, entity))
             {
                 return existingEntity;
             }
@@ -1927,33 +2035,22 @@ namespace IntegrationTest.Client.Domain
             #endregion
 
             #region attach relations recursively
-
+            
             // register entity's property changed event if entity is new to context
-            if (existingEntity == null)
+            if (ReferenceEquals(null, existingEntity))
             {
-                entity.PropertyChanged += (s, e) =>
-                {
-                    if (entity.IsChangeTrackingPrevented) return;
-
-                    if (e.PropertyName == "Category")
-                    {
-                        var relation = entity[e.PropertyName] as Category;
-                        if (relation != null)
-                        {
-                            Attach(relation);
-                        }
-                    }
-                };
+                entity.PropertyChanged += On_product_propertyChanged;
             }
 
             // attach related entity to context
-            if (entity.Category != null)
+            if (!ReferenceEquals(null, entity.Category))
             {
                 var existingRelatedEntity = AttachWithRelations(entity.Category, insertMode, mergeOption, referenceTrackingList);
+
                 // update relation if entity is new to context or relation is new to entity
-                if (existingEntity == null || !entity.Category.Equals(existingEntity.Category))
+                if (ReferenceEquals(null, existingEntity) || !entity.Category.Equals(existingEntity.Category))
                 {
-                    if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, entity.Category))
+                    if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, entity.Category))
                     {
                         // check merge options
                         if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Products")))
@@ -1966,13 +2063,14 @@ namespace IntegrationTest.Client.Domain
                             using (existingRelatedEntity.ChangeTrackingPrevention())
                             {
                                 var entityToReplace = existingRelatedEntity.Products.FirstOrDefault(e => e.Equals(entity));
-                                if (entityToReplace != null)
+                                if (!ReferenceEquals(null, entityToReplace))
                                 {
                                     using (entityToReplace.ChangeTrackingPrevention())
                                     {
                                         existingRelatedEntity.Products.Remove(entityToReplace);
                                     }
                                 }
+
                                 existingRelatedEntity.Products.Add(entity);
                             }
                         }
@@ -1980,54 +2078,38 @@ namespace IntegrationTest.Client.Domain
                 }
             }
 
-            // register relation's collection changed event if entity is new to context
-            if (existingEntity == null)
+            if (!ReferenceEquals(null, entity.Order_Details))
             {
-                entity.Order_Details.CollectionChanged += (s, e) =>
+                // register relation's collection changed event if entity is new to context
+                if (ReferenceEquals(null, existingEntity))
                 {
-                    if (entity.IsChangeTrackingPrevented) return;
+                    entity.Order_Details.CollectionChanged += On_product_order_Details_collectionChanged;
+                }
 
-                    if (e.NewItems != null)
-                    {
-                        foreach (Order_Detail item in e.NewItems)
-                        {
-                            Attach(item);
-                        }
-                    }
-                    //if (e.OldItems != null)
-                    //{
-                    //    foreach (Order_Detail item in e.OldItems)
-                    //    {
-                    //        if (item.ChangeTracker.State == ObjectState.Unchanged)
-                    //        {
-                    //            item.MarkAsModified();
-                    //        }
-                    //    }
-                    //}
-                };
-            }
-
-            // attach related entities to context
-            if (entity.Order_Details.Count > 0)
-            {
-                foreach (var item in entity.Order_Details.ToArray())
+                // attach related entities to context
+                if (entity.Order_Details.Count > 0)
                 {
-                    var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
-                    // update relation if entity is new to context or relation is new to entity
-                    if (existingEntity == null || !existingEntity.Order_Details.Contains(item))
+                    foreach (var item in entity.Order_Details.ToArray())
                     {
-                        if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, item))
+                        var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
+
+                        // update relation if entity is new to context or relation is new to entity
+                        if (ReferenceEquals(null, existingEntity) || !existingEntity.Order_Details.Contains(item))
                         {
-                            // check merge options
-                            if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Product")))
+                            if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, item))
                             {
-                                using (entity.ChangeTrackingPrevention())
+                                // check merge options
+                                if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Product")))
                                 {
-                                    entity.Order_Details.Replace(item, existingRelatedEntity);
-                                }
-                                using (existingRelatedEntity.ChangeTrackingPrevention())
-                                {
-                                    existingRelatedEntity.Product = entity;
+                                    using (entity.ChangeTrackingPrevention())
+                                    {
+                                        entity.Order_Details.Replace(item, existingRelatedEntity);
+                                    }
+
+                                    using (existingRelatedEntity.ChangeTrackingPrevention())
+                                    {
+                                        existingRelatedEntity.Product = entity;
+                                    }
                                 }
                             }
                         }
@@ -2035,32 +2117,15 @@ namespace IntegrationTest.Client.Domain
                 }
             }
 
-            // register entity's property changed event if entity is new to context
-            if (existingEntity == null)
-            {
-                entity.PropertyChanged += (s, e) =>
-                {
-                    if (entity.IsChangeTrackingPrevented) return;
-
-                    if (e.PropertyName == "Supplier")
-                    {
-                        var relation = entity[e.PropertyName] as Supplier;
-                        if (relation != null)
-                        {
-                            Attach(relation);
-                        }
-                    }
-                };
-            }
-
             // attach related entity to context
-            if (entity.Supplier != null)
+            if (!ReferenceEquals(null, entity.Supplier))
             {
                 var existingRelatedEntity = AttachWithRelations(entity.Supplier, insertMode, mergeOption, referenceTrackingList);
+
                 // update relation if entity is new to context or relation is new to entity
-                if (existingEntity == null || !entity.Supplier.Equals(existingEntity.Supplier))
+                if (ReferenceEquals(null, existingEntity) || !entity.Supplier.Equals(existingEntity.Supplier))
                 {
-                    if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, entity.Supplier))
+                    if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, entity.Supplier))
                     {
                         // check merge options
                         if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Products")))
@@ -2073,13 +2138,14 @@ namespace IntegrationTest.Client.Domain
                             using (existingRelatedEntity.ChangeTrackingPrevention())
                             {
                                 var entityToReplace = existingRelatedEntity.Products.FirstOrDefault(e => e.Equals(entity));
-                                if (entityToReplace != null)
+                                if (!ReferenceEquals(null, entityToReplace))
                                 {
                                     using (entityToReplace.ChangeTrackingPrevention())
                                     {
                                         existingRelatedEntity.Products.Remove(entityToReplace);
                                     }
                                 }
+
                                 existingRelatedEntity.Products.Add(entity);
                             }
                         }
@@ -2091,7 +2157,7 @@ namespace IntegrationTest.Client.Domain
 
             #region refresh existing entity based on merge options
 
-            if (existingEntity != null && !object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && !ReferenceEquals(existingEntity, entity))
             {
                 if (Products.MergeOption == MergeOption.OverwriteChanges)
                 {
@@ -2115,6 +2181,61 @@ namespace IntegrationTest.Client.Domain
             return existingEntity;
         }
 
+        private void OnDetach(Product entity)
+        {
+            entity.PropertyChanged -= On_product_propertyChanged;
+
+            if (!ReferenceEquals(null, entity.Order_Details))
+            {
+                entity.Order_Details.CollectionChanged -= On_product_order_Details_collectionChanged;
+            }
+
+        }
+
+        private void On_product_propertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var entity = sender as Product;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (e.PropertyName == "Category")
+            {
+                var relation = entity[e.PropertyName] as Category;
+                if (!ReferenceEquals(null, relation))
+                {
+                    Attach(relation);
+                }
+            }
+
+            if (e.PropertyName == "Supplier")
+            {
+                var relation = entity[e.PropertyName] as Supplier;
+                if (!ReferenceEquals(null, relation))
+                {
+                    Attach(relation);
+                }
+            }
+        }
+
+        private void On_product_order_Details_collectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var entity = sender as Product;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (!ReferenceEquals(null, e.NewItems))
+            {
+                foreach (Order_Detail item in e.NewItems)
+                {
+                    Attach(item);
+                }
+            }
+        }
+
         #endregion Products
 
         #region Regions
@@ -2123,14 +2244,14 @@ namespace IntegrationTest.Client.Domain
         {
             get
             {
-                if (regionEntitySet == null)
+                if (ReferenceEquals(null, regionEntitySet))
                 {
-                    regionEntitySet = CreateEntitySet<Region>(_regions, AttachWithRelations, GetRegions);
+                    regionEntitySet = CreateEntitySet<Region>(_regions, AttachWithRelations, OnDetach, GetRegions);
                 }
+
                 return regionEntitySet;
             }
         }
-        private IEntitySet<Region> regionEntitySet;
 
         public void Add(Region entity)
         {
@@ -2186,7 +2307,7 @@ namespace IntegrationTest.Client.Domain
         {
             #region iteration tracking
 
-            if (referenceTrackingList == null)
+            if (ReferenceEquals(null, referenceTrackingList))
             {
                 referenceTrackingList = new List<object>();
             }
@@ -2218,7 +2339,7 @@ namespace IntegrationTest.Client.Domain
                     throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
             }
 
-            if (((object)existingEntity) != null && object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && ReferenceEquals(existingEntity, entity))
             {
                 return existingEntity;
             }
@@ -2226,55 +2347,40 @@ namespace IntegrationTest.Client.Domain
             #endregion
 
             #region attach relations recursively
+            
 
-            // register relation's collection changed event if entity is new to context
-            if (existingEntity == null)
+            if (!ReferenceEquals(null, entity.Territories))
             {
-                entity.Territories.CollectionChanged += (s, e) =>
+                // register relation's collection changed event if entity is new to context
+                if (ReferenceEquals(null, existingEntity))
                 {
-                    if (entity.IsChangeTrackingPrevented) return;
+                    entity.Territories.CollectionChanged += On_region_territories_collectionChanged;
+                }
 
-                    if (e.NewItems != null)
-                    {
-                        foreach (Territory item in e.NewItems)
-                        {
-                            Attach(item);
-                        }
-                    }
-                    //if (e.OldItems != null)
-                    //{
-                    //    foreach (Territory item in e.OldItems)
-                    //    {
-                    //        if (item.ChangeTracker.State == ObjectState.Unchanged)
-                    //        {
-                    //            item.MarkAsModified();
-                    //        }
-                    //    }
-                    //}
-                };
-            }
-
-            // attach related entities to context
-            if (entity.Territories.Count > 0)
-            {
-                foreach (var item in entity.Territories.ToArray())
+                // attach related entities to context
+                if (entity.Territories.Count > 0)
                 {
-                    var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
-                    // update relation if entity is new to context or relation is new to entity
-                    if (existingEntity == null || !existingEntity.Territories.Contains(item))
+                    foreach (var item in entity.Territories.ToArray())
                     {
-                        if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, item))
+                        var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
+
+                        // update relation if entity is new to context or relation is new to entity
+                        if (ReferenceEquals(null, existingEntity) || !existingEntity.Territories.Contains(item))
                         {
-                            // check merge options
-                            if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Region")))
+                            if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, item))
                             {
-                                using (entity.ChangeTrackingPrevention())
+                                // check merge options
+                                if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Region")))
                                 {
-                                    entity.Territories.Replace(item, existingRelatedEntity);
-                                }
-                                using (existingRelatedEntity.ChangeTrackingPrevention())
-                                {
-                                    existingRelatedEntity.Region = entity;
+                                    using (entity.ChangeTrackingPrevention())
+                                    {
+                                        entity.Territories.Replace(item, existingRelatedEntity);
+                                    }
+
+                                    using (existingRelatedEntity.ChangeTrackingPrevention())
+                                    {
+                                        existingRelatedEntity.Region = entity;
+                                    }
                                 }
                             }
                         }
@@ -2286,7 +2392,7 @@ namespace IntegrationTest.Client.Domain
 
             #region refresh existing entity based on merge options
 
-            if (existingEntity != null && !object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && !ReferenceEquals(existingEntity, entity))
             {
                 if (Regions.MergeOption == MergeOption.OverwriteChanges)
                 {
@@ -2310,6 +2416,32 @@ namespace IntegrationTest.Client.Domain
             return existingEntity;
         }
 
+        private void OnDetach(Region entity)
+        {
+            if (!ReferenceEquals(null, entity.Territories))
+            {
+                entity.Territories.CollectionChanged -= On_region_territories_collectionChanged;
+            }
+
+        }
+
+        private void On_region_territories_collectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var entity = sender as Region;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (!ReferenceEquals(null, e.NewItems))
+            {
+                foreach (Territory item in e.NewItems)
+                {
+                    Attach(item);
+                }
+            }
+        }
+
         #endregion Regions
 
         #region Shippers
@@ -2318,14 +2450,14 @@ namespace IntegrationTest.Client.Domain
         {
             get
             {
-                if (shipperEntitySet == null)
+                if (ReferenceEquals(null, shipperEntitySet))
                 {
-                    shipperEntitySet = CreateEntitySet<Shipper>(_shippers, AttachWithRelations, GetShippers);
+                    shipperEntitySet = CreateEntitySet<Shipper>(_shippers, AttachWithRelations, OnDetach, GetShippers);
                 }
+
                 return shipperEntitySet;
             }
         }
-        private IEntitySet<Shipper> shipperEntitySet;
 
         public void Add(Shipper entity)
         {
@@ -2381,7 +2513,7 @@ namespace IntegrationTest.Client.Domain
         {
             #region iteration tracking
 
-            if (referenceTrackingList == null)
+            if (ReferenceEquals(null, referenceTrackingList))
             {
                 referenceTrackingList = new List<object>();
             }
@@ -2413,7 +2545,7 @@ namespace IntegrationTest.Client.Domain
                     throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
             }
 
-            if (((object)existingEntity) != null && object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && ReferenceEquals(existingEntity, entity))
             {
                 return existingEntity;
             }
@@ -2421,55 +2553,40 @@ namespace IntegrationTest.Client.Domain
             #endregion
 
             #region attach relations recursively
+            
 
-            // register relation's collection changed event if entity is new to context
-            if (existingEntity == null)
+            if (!ReferenceEquals(null, entity.Orders))
             {
-                entity.Orders.CollectionChanged += (s, e) =>
+                // register relation's collection changed event if entity is new to context
+                if (ReferenceEquals(null, existingEntity))
                 {
-                    if (entity.IsChangeTrackingPrevented) return;
+                    entity.Orders.CollectionChanged += On_shipper_orders_collectionChanged;
+                }
 
-                    if (e.NewItems != null)
-                    {
-                        foreach (Order item in e.NewItems)
-                        {
-                            Attach(item);
-                        }
-                    }
-                    //if (e.OldItems != null)
-                    //{
-                    //    foreach (Order item in e.OldItems)
-                    //    {
-                    //        if (item.ChangeTracker.State == ObjectState.Unchanged)
-                    //        {
-                    //            item.MarkAsModified();
-                    //        }
-                    //    }
-                    //}
-                };
-            }
-
-            // attach related entities to context
-            if (entity.Orders.Count > 0)
-            {
-                foreach (var item in entity.Orders.ToArray())
+                // attach related entities to context
+                if (entity.Orders.Count > 0)
                 {
-                    var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
-                    // update relation if entity is new to context or relation is new to entity
-                    if (existingEntity == null || !existingEntity.Orders.Contains(item))
+                    foreach (var item in entity.Orders.ToArray())
                     {
-                        if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, item))
+                        var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
+
+                        // update relation if entity is new to context or relation is new to entity
+                        if (ReferenceEquals(null, existingEntity) || !existingEntity.Orders.Contains(item))
                         {
-                            // check merge options
-                            if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Shipper")))
+                            if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, item))
                             {
-                                using (entity.ChangeTrackingPrevention())
+                                // check merge options
+                                if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Shipper")))
                                 {
-                                    entity.Orders.Replace(item, existingRelatedEntity);
-                                }
-                                using (existingRelatedEntity.ChangeTrackingPrevention())
-                                {
-                                    existingRelatedEntity.Shipper = entity;
+                                    using (entity.ChangeTrackingPrevention())
+                                    {
+                                        entity.Orders.Replace(item, existingRelatedEntity);
+                                    }
+
+                                    using (existingRelatedEntity.ChangeTrackingPrevention())
+                                    {
+                                        existingRelatedEntity.Shipper = entity;
+                                    }
                                 }
                             }
                         }
@@ -2481,7 +2598,7 @@ namespace IntegrationTest.Client.Domain
 
             #region refresh existing entity based on merge options
 
-            if (existingEntity != null && !object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && !ReferenceEquals(existingEntity, entity))
             {
                 if (Shippers.MergeOption == MergeOption.OverwriteChanges)
                 {
@@ -2505,6 +2622,32 @@ namespace IntegrationTest.Client.Domain
             return existingEntity;
         }
 
+        private void OnDetach(Shipper entity)
+        {
+            if (!ReferenceEquals(null, entity.Orders))
+            {
+                entity.Orders.CollectionChanged -= On_shipper_orders_collectionChanged;
+            }
+
+        }
+
+        private void On_shipper_orders_collectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var entity = sender as Shipper;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (!ReferenceEquals(null, e.NewItems))
+            {
+                foreach (Order item in e.NewItems)
+                {
+                    Attach(item);
+                }
+            }
+        }
+
         #endregion Shippers
 
         #region Suppliers
@@ -2513,14 +2656,14 @@ namespace IntegrationTest.Client.Domain
         {
             get
             {
-                if (supplierEntitySet == null)
+                if (ReferenceEquals(null, supplierEntitySet))
                 {
-                    supplierEntitySet = CreateEntitySet<Supplier>(_suppliers, AttachWithRelations, GetSuppliers);
+                    supplierEntitySet = CreateEntitySet<Supplier>(_suppliers, AttachWithRelations, OnDetach, GetSuppliers);
                 }
+
                 return supplierEntitySet;
             }
         }
-        private IEntitySet<Supplier> supplierEntitySet;
 
         public void Add(Supplier entity)
         {
@@ -2576,7 +2719,7 @@ namespace IntegrationTest.Client.Domain
         {
             #region iteration tracking
 
-            if (referenceTrackingList == null)
+            if (ReferenceEquals(null, referenceTrackingList))
             {
                 referenceTrackingList = new List<object>();
             }
@@ -2608,7 +2751,7 @@ namespace IntegrationTest.Client.Domain
                     throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
             }
 
-            if (((object)existingEntity) != null && object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && ReferenceEquals(existingEntity, entity))
             {
                 return existingEntity;
             }
@@ -2616,55 +2759,40 @@ namespace IntegrationTest.Client.Domain
             #endregion
 
             #region attach relations recursively
+            
 
-            // register relation's collection changed event if entity is new to context
-            if (existingEntity == null)
+            if (!ReferenceEquals(null, entity.Products))
             {
-                entity.Products.CollectionChanged += (s, e) =>
+                // register relation's collection changed event if entity is new to context
+                if (ReferenceEquals(null, existingEntity))
                 {
-                    if (entity.IsChangeTrackingPrevented) return;
+                    entity.Products.CollectionChanged += On_supplier_products_collectionChanged;
+                }
 
-                    if (e.NewItems != null)
-                    {
-                        foreach (Product item in e.NewItems)
-                        {
-                            Attach(item);
-                        }
-                    }
-                    //if (e.OldItems != null)
-                    //{
-                    //    foreach (Product item in e.OldItems)
-                    //    {
-                    //        if (item.ChangeTracker.State == ObjectState.Unchanged)
-                    //        {
-                    //            item.MarkAsModified();
-                    //        }
-                    //    }
-                    //}
-                };
-            }
-
-            // attach related entities to context
-            if (entity.Products.Count > 0)
-            {
-                foreach (var item in entity.Products.ToArray())
+                // attach related entities to context
+                if (entity.Products.Count > 0)
                 {
-                    var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
-                    // update relation if entity is new to context or relation is new to entity
-                    if (existingEntity == null || !existingEntity.Products.Contains(item))
+                    foreach (var item in entity.Products.ToArray())
                     {
-                        if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, item))
+                        var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
+
+                        // update relation if entity is new to context or relation is new to entity
+                        if (ReferenceEquals(null, existingEntity) || !existingEntity.Products.Contains(item))
                         {
-                            // check merge options
-                            if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Supplier")))
+                            if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, item))
                             {
-                                using (entity.ChangeTrackingPrevention())
+                                // check merge options
+                                if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Supplier")))
                                 {
-                                    entity.Products.Replace(item, existingRelatedEntity);
-                                }
-                                using (existingRelatedEntity.ChangeTrackingPrevention())
-                                {
-                                    existingRelatedEntity.Supplier = entity;
+                                    using (entity.ChangeTrackingPrevention())
+                                    {
+                                        entity.Products.Replace(item, existingRelatedEntity);
+                                    }
+
+                                    using (existingRelatedEntity.ChangeTrackingPrevention())
+                                    {
+                                        existingRelatedEntity.Supplier = entity;
+                                    }
                                 }
                             }
                         }
@@ -2676,7 +2804,7 @@ namespace IntegrationTest.Client.Domain
 
             #region refresh existing entity based on merge options
 
-            if (existingEntity != null && !object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && !ReferenceEquals(existingEntity, entity))
             {
                 if (Suppliers.MergeOption == MergeOption.OverwriteChanges)
                 {
@@ -2700,6 +2828,32 @@ namespace IntegrationTest.Client.Domain
             return existingEntity;
         }
 
+        private void OnDetach(Supplier entity)
+        {
+            if (!ReferenceEquals(null, entity.Products))
+            {
+                entity.Products.CollectionChanged -= On_supplier_products_collectionChanged;
+            }
+
+        }
+
+        private void On_supplier_products_collectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var entity = sender as Supplier;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (!ReferenceEquals(null, e.NewItems))
+            {
+                foreach (Product item in e.NewItems)
+                {
+                    Attach(item);
+                }
+            }
+        }
+
         #endregion Suppliers
 
         #region Territories
@@ -2708,14 +2862,14 @@ namespace IntegrationTest.Client.Domain
         {
             get
             {
-                if (territoryEntitySet == null)
+                if (ReferenceEquals(null, territoryEntitySet))
                 {
-                    territoryEntitySet = CreateEntitySet<Territory>(_territories, AttachWithRelations, GetTerritories);
+                    territoryEntitySet = CreateEntitySet<Territory>(_territories, AttachWithRelations, OnDetach, GetTerritories);
                 }
+
                 return territoryEntitySet;
             }
         }
-        private IEntitySet<Territory> territoryEntitySet;
 
         public void Add(Territory entity)
         {
@@ -2771,7 +2925,7 @@ namespace IntegrationTest.Client.Domain
         {
             #region iteration tracking
 
-            if (referenceTrackingList == null)
+            if (ReferenceEquals(null, referenceTrackingList))
             {
                 referenceTrackingList = new List<object>();
             }
@@ -2803,7 +2957,7 @@ namespace IntegrationTest.Client.Domain
                     throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
             }
 
-            if (((object)existingEntity) != null && object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && ReferenceEquals(existingEntity, entity))
             {
                 return existingEntity;
             }
@@ -2811,33 +2965,22 @@ namespace IntegrationTest.Client.Domain
             #endregion
 
             #region attach relations recursively
-
+            
             // register entity's property changed event if entity is new to context
-            if (existingEntity == null)
+            if (ReferenceEquals(null, existingEntity))
             {
-                entity.PropertyChanged += (s, e) =>
-                {
-                    if (entity.IsChangeTrackingPrevented) return;
-
-                    if (e.PropertyName == "Region")
-                    {
-                        var relation = entity[e.PropertyName] as Region;
-                        if (relation != null)
-                        {
-                            Attach(relation);
-                        }
-                    }
-                };
+                entity.PropertyChanged += On_territory_propertyChanged;
             }
 
             // attach related entity to context
-            if (entity.Region != null)
+            if (!ReferenceEquals(null, entity.Region))
             {
                 var existingRelatedEntity = AttachWithRelations(entity.Region, insertMode, mergeOption, referenceTrackingList);
+
                 // update relation if entity is new to context or relation is new to entity
-                if (existingEntity == null || !entity.Region.Equals(existingEntity.Region))
+                if (ReferenceEquals(null, existingEntity) || !entity.Region.Equals(existingEntity.Region))
                 {
-                    if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, entity.Region))
+                    if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, entity.Region))
                     {
                         // check merge options
                         if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Territories")))
@@ -2850,13 +2993,14 @@ namespace IntegrationTest.Client.Domain
                             using (existingRelatedEntity.ChangeTrackingPrevention())
                             {
                                 var entityToReplace = existingRelatedEntity.Territories.FirstOrDefault(e => e.Equals(entity));
-                                if (entityToReplace != null)
+                                if (!ReferenceEquals(null, entityToReplace))
                                 {
                                     using (entityToReplace.ChangeTrackingPrevention())
                                     {
                                         existingRelatedEntity.Territories.Remove(entityToReplace);
                                     }
                                 }
+
                                 existingRelatedEntity.Territories.Add(entity);
                             }
                         }
@@ -2868,7 +3012,7 @@ namespace IntegrationTest.Client.Domain
 
             #region refresh existing entity based on merge options
 
-            if (existingEntity != null && !object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && !ReferenceEquals(existingEntity, entity))
             {
                 if (Territories.MergeOption == MergeOption.OverwriteChanges)
                 {
@@ -2890,6 +3034,30 @@ namespace IntegrationTest.Client.Domain
             #endregion
 
             return existingEntity;
+        }
+
+        private void OnDetach(Territory entity)
+        {
+            entity.PropertyChanged -= On_territory_propertyChanged;
+
+        }
+
+        private void On_territory_propertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var entity = sender as Territory;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (e.PropertyName == "Region")
+            {
+                var relation = entity[e.PropertyName] as Region;
+                if (!ReferenceEquals(null, relation))
+                {
+                    Attach(relation);
+                }
+            }
         }
 
         #endregion Territories
@@ -2942,63 +3110,75 @@ namespace IntegrationTest.Client.Domain
             {
                 categories = _categories.GetAllEntities();
             }
+
             IEnumerable<DemographicGroup> demographicGroups;
             lock (_demographicGroups.SyncRoot)
             {
                 demographicGroups = _demographicGroups.GetAllEntities();
             }
+
             IEnumerable<Customer> customers;
             lock (_customers.SyncRoot)
             {
                 customers = _customers.GetAllEntities();
             }
+
             IEnumerable<DynamicContentEntity> dynamicContentEntities;
             lock (_dynamicContentEntities.SyncRoot)
             {
                 dynamicContentEntities = _dynamicContentEntities.GetAllEntities();
             }
+
             IEnumerable<Employee> employees;
             lock (_employees.SyncRoot)
             {
                 employees = _employees.GetAllEntities();
             }
+
             IEnumerable<Order_Detail> order_Details;
             lock (_order_Details.SyncRoot)
             {
                 order_Details = _order_Details.GetAllEntities();
             }
+
             IEnumerable<Order> orders;
             lock (_orders.SyncRoot)
             {
                 orders = _orders.GetAllEntities();
             }
+
             IEnumerable<Product> products;
             lock (_products.SyncRoot)
             {
                 products = _products.GetAllEntities();
             }
+
             IEnumerable<Region> regions;
             lock (_regions.SyncRoot)
             {
                 regions = _regions.GetAllEntities();
             }
+
             IEnumerable<Shipper> shippers;
             lock (_shippers.SyncRoot)
             {
                 shippers = _shippers.GetAllEntities();
             }
+
             IEnumerable<Supplier> suppliers;
             lock (_suppliers.SyncRoot)
             {
                 suppliers = _suppliers.GetAllEntities();
             }
+
             IEnumerable<Territory> territories;
             lock (_territories.SyncRoot)
             {
                 territories = _territories.GetAllEntities();
             }
+
             // get reduced change set
-            var changeSet = new NorthwindChangeSet(
+            var changeSet = _changeSetFactoryProvider().CreateChangeSet(
                 categories, 
                 demographicGroups, 
                 customers, 
@@ -3021,50 +3201,62 @@ namespace IntegrationTest.Client.Domain
             {
                 Refresh(_categories, resultSet.Categories);
             }
+
             lock (_demographicGroups.SyncRoot)
             {
                 Refresh(_demographicGroups, resultSet.DemographicGroups);
             }
+
             lock (_customers.SyncRoot)
             {
                 Refresh(_customers, resultSet.Customers);
             }
+
             lock (_dynamicContentEntities.SyncRoot)
             {
                 Refresh(_dynamicContentEntities, resultSet.DynamicContentEntities);
             }
+
             lock (_employees.SyncRoot)
             {
                 Refresh(_employees, resultSet.Employees);
             }
+
             lock (_order_Details.SyncRoot)
             {
                 Refresh(_order_Details, resultSet.Order_Details);
             }
+
             lock (_orders.SyncRoot)
             {
                 Refresh(_orders, resultSet.Orders);
             }
+
             lock (_products.SyncRoot)
             {
                 Refresh(_products, resultSet.Products);
             }
+
             lock (_regions.SyncRoot)
             {
                 Refresh(_regions, resultSet.Regions);
             }
+
             lock (_shippers.SyncRoot)
             {
                 Refresh(_shippers, resultSet.Shippers);
             }
+
             lock (_suppliers.SyncRoot)
             {
                 Refresh(_suppliers, resultSet.Suppliers);
             }
+
             lock (_territories.SyncRoot)
             {
                 Refresh(_territories, resultSet.Territories);
             }
+
         }
 
         #endregion Submit Changes
