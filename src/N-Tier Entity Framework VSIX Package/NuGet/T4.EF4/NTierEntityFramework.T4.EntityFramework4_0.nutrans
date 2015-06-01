@@ -4,7 +4,7 @@
     <id xdt:Transform="Insert">NTierEntityFramework.T4.EntityFramework4_0</id>
     <description xdt:Transform="Insert">T4 code generation templates for N-Tier Entity Framework with EF4. Install this package for MyProject.Server.Domain.Edmx projekt if you target EF4.</description>
     <dependencies xdt:Transform="Insert">
-      <dependency id="NTierEntityFramework.T4" version="[1.7.0-beta003,1.8)" />
+      <dependency id="NTierEntityFramework.T4" version="[1.7.0,1.8)" />
     </dependencies>
   </metadata>
 </package>

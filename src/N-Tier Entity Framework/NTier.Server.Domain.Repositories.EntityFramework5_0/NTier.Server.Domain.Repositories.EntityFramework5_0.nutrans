@@ -4,7 +4,7 @@
     <id xdt:Transform="Insert">NTierEntityFramework.Server.EntityFramework5_0</id>
     <description xdt:Transform="Insert">EF5 provider for N-Tier Entity Framework.</description>
     <dependencies xdt:Transform="Insert">
-      <dependency id="NTierEntityFramework.Server" version="[1.7.0-beta003,1.8)" />
+      <dependency id="NTierEntityFramework.Server" version="[1.7.0,1.8)" />
       <dependency id="EntityFramework" version="[5.0,6.0)" />
     </dependencies>
   </metadata>
