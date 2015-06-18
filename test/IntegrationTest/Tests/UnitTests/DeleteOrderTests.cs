@@ -17,7 +17,7 @@ namespace UnitTests
         public void DeleteExecutionOrderForRelatedEntities()
         {
             var ctx = Default.DataContext();
-            
+
             var prodcount = ctx.Products.AsQueryable().Count();
 
             //create new category and new supplier for a new product and save together   
@@ -51,22 +51,27 @@ namespace UnitTests
             newProduct.ReorderLevel = 0;
             newProduct.UnitsInStock = 3;
             newProduct.UnitsOnOrder = 0;
+
+            // create graph
             newProduct.Category = newCategory;
             newProduct.Supplier = newSupplier;
 
-            ctx.Add(newCategory);
-            ctx.Add(newSupplier);
+            // add root
             ctx.Add(newProduct);
 
             //save all in one call   
             ctx.SaveChanges();
 
+            // create new context and load from db
+            ctx = Default.DataContext();
+            ctx.Products.AsQueryable().Where(p => p.ProductID == newProduct.ProductID).Include("Supplier").Include("Category").ToList(); ;
+
             // check existance in entity set   
-            var catElement = ctx.Categories.GetAllEntities().FirstOrDefault(p => object.ReferenceEquals(p, newCategory));
+            var catElement = ctx.Categories.FirstOrDefault(c => c.CategoryID.Equals(newCategory.CategoryID));
             Expect(catElement, Is.Not.Null);
-            var suppElement = ctx.Suppliers.GetAllEntities().FirstOrDefault(p => object.ReferenceEquals(p, newSupplier));
+            var suppElement = ctx.Suppliers.FirstOrDefault(s => s.SupplierID.Equals(newSupplier.SupplierID));
             Expect(suppElement, Is.Not.Null);
-            var prodElement = ctx.Products.GetAllEntities().FirstOrDefault(p => object.ReferenceEquals(p, newProduct));
+            var prodElement = ctx.Products.FirstOrDefault(p => p.ProductID.Equals(newProduct.ProductID));
             Expect(prodElement, Is.Not.Null);
 
             //delete created entities   
@@ -114,14 +119,27 @@ namespace UnitTests
 
                 throw;
             }
+            // create new context and load from db
+            ctx = Default.DataContext();
+            ctx.Products.AsQueryable().Where(p => p.ProductID == newProduct.ProductID).Include("Supplier").Include("Category").ToList(); ;
 
-            // check existance in entity set   
-            catElement = ctx.Categories.GetAllEntities().FirstOrDefault(p => object.ReferenceEquals(p, newCategory));
+            // check not existance in entity set   
+            catElement = ctx.Categories.FirstOrDefault(c => c.CategoryID.Equals(newCategory.CategoryID));
             Expect(catElement, Is.Null);
-            suppElement = ctx.Suppliers.GetAllEntities().FirstOrDefault(p => object.ReferenceEquals(p, newSupplier));
+            suppElement = ctx.Suppliers.FirstOrDefault(s => s.SupplierID.Equals(newSupplier.SupplierID));
             Expect(suppElement, Is.Null);
-            prodElement = ctx.Products.GetAllEntities().FirstOrDefault(p => object.ReferenceEquals(p, newProduct));
+            prodElement = ctx.Products.FirstOrDefault(p => p.ProductID.Equals(newProduct.ProductID));
             Expect(prodElement, Is.Null);
+
+            // direct load category and supplier not using include
+            ctx.Categories.AsQueryable().Where(c => c.CategoryID == newCategory.CategoryID).ToList();
+            ctx.Suppliers.AsQueryable().Where(s => s.SupplierID == newSupplier.SupplierID).ToList();
+
+            // check not existance in entity set  
+            catElement = ctx.Categories.FirstOrDefault(c => c.CategoryID.Equals(newCategory.CategoryID));
+            Expect(catElement, Is.Null);
+            suppElement = ctx.Suppliers.FirstOrDefault(s => s.SupplierID.Equals(newSupplier.SupplierID));
+            Expect(suppElement, Is.Null);
         }
     }
 }
