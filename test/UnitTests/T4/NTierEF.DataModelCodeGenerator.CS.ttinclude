@@ -1,0 +1,240 @@
+﻿<#@ include file="NTierEF.EnumTT.CS.ttinclude" #>
+<#@ include file="NTierEF.EntityTT.CS.ttinclude" #>
+<#@ include file="NTierEF.EntityMetadataTT.CS.ttinclude" #>
+<#@ include file="NTierEF.ComplexTypeTT.CS.ttinclude" #>
+<#@ include file="NTierEF.ComplexTypeMetadataTT.CS.ttinclude" #>
+<#@ include file="NTierEF.ChangeSetTT.CS.ttinclude" #>
+<#@ include file="NTierEF.ResultSetTT.CS.ttinclude" #>
+<#@ include file="NTierEF.OptimisticConcurrencyFaultTT.CS.ttinclude" #>
+<#@ include file="NTierEF.UpdateFaultTT.CS.ttinclude" #>
+<#+
+// <copyright file="NTierEF.DataModelCodeGenerator.CS.ttinclude" company="Trivadis">
+//     Copyright © Trivadis. All Rights Reserved.
+// </copyright>
+public partial class DataModelCodeGenerator : Generator
+{
+    private readonly EdmUtility EdmUtility;
+    private readonly string DataModelProject = string.Empty;
+
+    public DataModelCodeGenerator(string dataModelProject, EdmUtility edmUtility, string modelNamespace)
+    {
+        this.EdmUtility = edmUtility;
+        this.DataModelProject = dataModelProject;
+
+        BeforeInitializing();
+
+        this.EnumTemplate = new EnumTemplate(DataModelProject, EdmUtility, modelNamespace);
+        this.EntityTemplate = new EntityTemplate(DataModelProject, EdmUtility, modelNamespace);
+        this.EntityMetadataTemplate = new EntityMetadataTemplate(DataModelProject, EdmUtility, modelNamespace);
+        this.ComplexTypeTemplate = new ComplexTypeTemplate(DataModelProject, EdmUtility, modelNamespace);
+        this.ComplexTypeMetadataTemplate = new ComplexTypeMetadataTemplate(DataModelProject, EdmUtility, modelNamespace);
+        this.ChangeSetTemplate = new ChangeSetTemplate(DataModelProject, EdmUtility, modelNamespace);
+        this.ResultSetTemplate = new ResultSetTemplate(DataModelProject, EdmUtility, modelNamespace);
+        this.OptimisticConcurrencyFaultTemplate = new OptimisticConcurrencyFaultTemplate(DataModelProject, EdmUtility, modelNamespace);
+        this.UpdateFaultTemplate = new UpdateFaultTemplate(DataModelProject, EdmUtility, modelNamespace);
+
+        OnInitializing(modelNamespace);
+    }
+
+    partial void BeforeInitializing();
+
+    partial void OnInitializing(string modelNamespace);
+
+    partial void OnCodeGenerating();
+
+    partial void OnCodeGenerated();
+
+    /// <summary>
+    /// Gets or sets the template that generates the enum types of the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="EnumTemplate"/>.
+    /// </remarks>
+    public EnumTemplate EnumTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates the entity types of the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="EntityTemplate"/>.
+    /// </remarks>
+    public EntityTemplate EntityTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates the entity edmUtility types of the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="EntityMetadataTemplate"/>.
+    /// </remarks>
+    public EntityMetadataTemplate EntityMetadataTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates the complext types of the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="ComplexTypeTemplate"/>.
+    /// </remarks>
+    public ComplexTypeTemplate ComplexTypeTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates the complext type's metatdata of the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="ComplexTypeMetadataTemplate"/>.
+    /// </remarks>
+    public ComplexTypeMetadataTemplate ComplexTypeMetadataTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates the change set for the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="ChangeSetTemplate"/>.
+    /// </remarks>
+    public ChangeSetTemplate ChangeSetTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates the result set for the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="ResultSetTemplate"/>.
+    /// </remarks>
+    public ResultSetTemplate ResultSetTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates the optimistic concurrency fault type for the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="OptimisticConcurrencyFaultTemplate"/>.
+    /// </remarks>
+    public OptimisticConcurrencyFaultTemplate OptimisticConcurrencyFaultTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates the update fault type for the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="UpdateFaultTemplate"/>.
+    /// </remarks>
+    public UpdateFaultTemplate UpdateFaultTemplate;
+
+    /// <summary>
+    /// Generates data access classes.
+    /// </summary>
+    protected override void RunCore()
+    {
+        OnCodeGenerating();
+
+        CreateEnums();
+        CreateEntities();
+        CreateEntityMetadata();
+        CreateComplexTypes();
+        CreateComplexTypesMetadata();
+        CreateChangeSet();
+        CreateResultSet();
+        CreateOptimisticConcurrencyFault();
+        CreateUpdateFault();
+
+        OnCodeGenerated();
+    }
+
+    private void CreateEnums()
+    {
+        if (EnumTemplate != null)
+        {
+            foreach (EdmType item in EdmUtility.TypeMapper.GetEnumItemsToGenerate(EdmUtility.ItemCollection))
+            {
+                EnumTemplate.EnumName = item.Name;
+                EnumTemplate.Render();
+            }
+        }
+    }
+
+    private void CreateEntities()
+    {
+        if (EntityTemplate != null)
+        {
+            foreach (EntityType entity in EdmUtility.ItemCollection.GetItems<EntityType>())
+            {
+                EntityTemplate.EntityName = entity.Name;
+                EntityTemplate.Render();
+            }
+        }
+    }
+
+    private void CreateEntityMetadata()
+    {
+        if (EntityMetadataTemplate != null)
+        {
+            foreach (EntityType entity in EdmUtility.ItemCollection.GetItems<EntityType>())
+            {
+                EntityMetadataTemplate.EntityName = entity.Name;
+                EntityMetadataTemplate.Render();
+            }
+        }
+    }
+
+    private void CreateComplexTypes()
+    {
+        if (ComplexTypeTemplate != null)
+        {
+            foreach (ComplexType complex in EdmUtility.ItemCollection.GetItems<ComplexType>())
+            {
+                ComplexTypeTemplate.ClassName = complex.Name;
+                ComplexTypeTemplate.Render();
+            }
+        }
+    }
+
+    private void CreateComplexTypesMetadata()
+    {
+        if (ComplexTypeMetadataTemplate != null)
+        {
+            foreach (ComplexType complex in EdmUtility.ItemCollection.GetItems<ComplexType>())
+            {
+                ComplexTypeMetadataTemplate.ClassName = complex.Name;
+                ComplexTypeMetadataTemplate.Render();
+            }
+        }
+    }
+
+    private void CreateChangeSet()
+    {
+        if (ChangeSetTemplate != null)
+        {
+            ChangeSetTemplate.Render();
+        }
+    }
+
+    private void CreateResultSet()
+    {
+        if (ResultSetTemplate != null)
+        {
+            ResultSetTemplate.Render();
+        }
+    }
+
+    private void CreateOptimisticConcurrencyFault()
+    {
+        if (OptimisticConcurrencyFaultTemplate != null)
+        {
+            OptimisticConcurrencyFaultTemplate.Render();
+        }
+    }
+
+    private void CreateUpdateFault()
+    {
+        if (UpdateFaultTemplate != null)
+        {
+            UpdateFaultTemplate.Render();
+        }
+    }
+}
+#>

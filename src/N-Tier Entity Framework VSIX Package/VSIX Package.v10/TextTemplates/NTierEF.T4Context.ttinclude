@@ -1,0 +1,87 @@
+﻿<#@ assembly name="EnvDTE" #>
+<#@ assembly name="EnvDTE80" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="EnvDTE80" #>
+<#+
+// <copyright file="NTierEF.T4Context.ttinclude" company="Trivadis">
+//     Copyright © Trivadis. All Rights Reserved.
+// </copyright>
+public static class T4Context
+{
+    private static readonly Lazy<double> _dteVersion = new Lazy<double>(() =>
+    {
+        var dteVersion = T4Context.DTE.Version;
+
+        var regex = new Regex(@"(?<version>\d+(\.[\d]+)?)( \(.*\))?");
+        var match = regex.Match(dteVersion);
+        if (match.Success)
+        {
+            var versionString = match.Groups["version"].Value;
+            double version;
+            if (double.TryParse(versionString, out version))
+            {
+                return version;
+            }
+        }
+        throw new Exception("Unable to parse dte version.");
+    });
+
+    public static Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost Host
+    {
+        get
+        {
+            return TransformationContext.Host;
+        }
+    }
+
+    public static DTE2 DTE
+    {
+        get
+        {
+            return (DTE2)TransformationContext.DTE;
+        }
+    }
+
+    public static Project Project
+    {
+        get
+        {
+            ProjectItem projectItem = T4Context.DTE.Solution.FindProjectItem(T4Context.Host.TemplateFile);
+            Project project = projectItem.ContainingProject;
+            return project;
+        }
+    }
+    
+    public static double VisualStudioVersion
+    {
+        get { return _dteVersion.Value; }
+    }
+
+    public static void SetTemplateMetadata(string minimumEntityFrameworkVersion = "4.0")
+    {
+        // .NET 4 does not support template metadata
+    }
+
+    public static string GetFullPath(string path)
+    {
+        if (Path.IsPathRooted(path))
+        {
+            return path;
+        }
+        else
+        {
+            string templateFile = T4Context.Host.TemplateFile;
+            string workingDirectory = Path.GetDirectoryName(templateFile);
+            string fullPath = Path.Combine(workingDirectory, path);
+            return Path.GetFullPath(fullPath);
+        }
+    }
+}
+#>

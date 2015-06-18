@@ -1,0 +1,107 @@
+﻿<#@ assembly name="EnvDTE" #>
+<#@ assembly name="EnvDTE80" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="EnvDTE80" #>
+<#+
+// <copyright file="NTierEF.ProjectUtils.ttinclude" company="Trivadis">
+//     Copyright © Trivadis. All Rights Reserved.
+// </copyright>
+public class ProjectUtils
+{
+    private readonly Project Project;
+
+    public ProjectUtils(string projectName)
+    {
+        if (!System.IO.Path.IsPathRooted(projectName))
+        {
+            var dir = System.IO.Path.GetDirectoryName(T4Context.Project.FileName);
+            projectName = System.IO.Path.Combine(dir, projectName);
+            projectName = System.IO.Path.GetFullPath(projectName);
+        }
+
+        var dte = T4Context.DTE;
+        this.Project = GetProjects(dte).FirstOrDefault(p => string.Equals(p.FullName, projectName, StringComparison.InvariantCultureIgnoreCase));
+
+        Debug.WriteLine(string.Format("ProjectUtils::ctor - Project: '{0}'", this.Project == null ? string.Format("null ({0})", projectName) : this.Project.FullName));
+    }
+
+    public string GetProjectDirectory()
+    {
+        if (Project == null)
+        {
+            Debug.Fail("Project is null");
+            return null;
+        }
+
+        return System.IO.Path.GetDirectoryName(Project.FullName);
+    }
+
+    public string GetAssemblyPath()
+    {
+        if (Project == null)
+        {
+            Debug.Fail("Project is null");
+            return null;
+        }
+
+        // project path
+        var projectPath = GetProjectDirectory();
+
+        // output path
+        var outputPath = Project.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value.ToString();
+
+        // assembly
+        var outputFileName = Project.Properties.Item("OutputFileName").Value.ToString();
+
+        var fullPath = System.IO.Path.Combine(projectPath, outputPath, outputFileName);
+        return fullPath;
+    }
+
+    public static IList<Project> GetProjects(DTE2 dte)
+    {
+        List<Project> projects = new List<Project>();
+        foreach (Project project in dte.Solution.Projects)
+        {
+            //if (project.Kind.Equals(EnvDTE80ProjectKinds.vsProjectKindSolutionFolder, StringComparison.OrdinalIgnoreCase))
+            if (project.Object is SolutionFolder)
+            {
+                projects.AddRange(GetProjects(project.ProjectItems));
+            }
+            //else if (project.Kind.Equals(Constants.vspConstants.PrjKindMyProject, StringComparison.OrdinalIgnoreCase))
+            else
+            {
+                projects.Add(project);
+            }
+        }
+        return projects;
+    }
+
+    public static IList<Project> GetProjects(ProjectItems projectItems)
+    {
+        List<Project> projects = new List<Project>();
+        foreach (ProjectItem item in projectItems)
+        {
+            Project project = item.SubProject;
+            if (project == null)
+            {
+                continue;
+            }
+            //else if (project.Kind.Equals(EnvDTE80ProjectKinds.vsProjectKindSolutionFolder, StringComparison.OrdinalIgnoreCase))
+            else if (project.Object is SolutionFolder)
+            {
+                projects.AddRange(GetProjects(project.ProjectItems));
+            }
+            //else if (project.Kind.Equals(Constants.Constants.PrjKindMyProject, StringComparison.OrdinalIgnoreCase))
+            else
+            {
+                projects.Add(project);
+            }
+        }
+        return projects;
+    }
+}
+#>

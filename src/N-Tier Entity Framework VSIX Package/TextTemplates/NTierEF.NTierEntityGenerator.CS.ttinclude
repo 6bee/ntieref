@@ -1,0 +1,385 @@
+﻿<#@ include file="T4Toolbox.tt" #>
+<#@ include file="NTierEF.T4Context.ttinclude" #>
+<#@ include file="NTierEF.ProjectUtility.ttinclude" #>
+<#@ include file="NTierEF.EF.Utility.CS.ttinclude" #>
+<#@ include file="NTierEF.DataModelCodeGenerator.CS.ttinclude" #>
+<#@ include file="NTierEF.RepositoryInterfaceTT.CS.ttinclude" #>
+<#@ include file="NTierEF.RepositoryTT.CS.ttinclude" #>
+<#@ include file="NTierEF.DataServiceContractTT.CS.ttinclude" #>
+<#@ include file="NTierEF.DataServiceTT.CS.ttinclude" #>
+<#@ include file="NTierEF.DataServiceHostTT.CS.ttinclude" #>
+<#@ include file="NTierEF.ClientDataContextInterfaceTT.CS.ttinclude" #>
+<#@ include file="NTierEF.ClientDataContextTT.CS.ttinclude" #>
+<#@ include file="NTierEF.ChangeSetFactoryInterfaceTT.CS.ttinclude" #>
+<#@ include file="NTierEF.ChangeSetFactoryTT.CS.ttinclude" #>
+<#@ include file="NTierEF.RemoteChannelFactoryTT.CS.ttinclude" #>
+<#@ include file="NTierEF.InProcessChannelFactoryTT.CS.ttinclude" #>
+<#+
+// <copyright file="NTierEF.NTierEntityGenerator.CS.ttinclude" company="Trivadis">
+//     Copyright © Trivadis. All Rights Reserved.
+// </copyright>
+public partial class NTierEntityGenerator : Generator
+{
+    // project configuration: this section has to be configured according your project
+    private const string DefaultDataModelProject = @"..\..\Common\{0}.Common.Domain.Model\{0}.Common.Domain.Model.csproj";
+    private const string DefaultRepositoryProject = @"..\..\Server\{0}.Server.Domain.Repositories\{0}.Server.Domain.Repositories.csproj";
+    private const string DefaultDataServiceContractProject = @"..\..\Common\{0}.Common.Domain.Service\{0}.Common.Domain.Service.csproj";
+    private const string DefaultDataServiceProject = @"..\..\Server\{0}.Server.Domain.Service\{0}.Server.Domain.Service.csproj";
+    private const string DefaultDataServiceHostProject = @"..\..\Server\{0}.Server.Host\{0}.Server.Host.csproj";
+    private const string DefaultClientLibraryProject = @"..\..\Client\{0}.Client.Domain\{0}.Client.Domain.csproj";
+    private const string DefaultRemoteChannelFactoryProject = @"..\..\Client\{0}.Client.Domain.Service.RemoteChannelFactory\{0}.Client.Domain.Service.RemoteChannelFactory.csproj";
+    private const string DefaultInProcessChannelFactoryProject = @"..\..\Client\{0}.Client.Domain.Service.InProcessChannelFactory\{0}.Client.Domain.Service.InProcessChannelFactory.csproj";
+
+    private readonly EdmUtility EdmUtility;
+
+    public NTierEntityGenerator(object textTransformation, string modelFile = null)
+    {
+        if (string.IsNullOrEmpty(modelFile))
+        {
+            var path = System.IO.Path.GetDirectoryName(T4Context.Host.TemplateFile);
+            var file = string.Format("{0}.edmx", System.IO.Path.GetFileNameWithoutExtension(T4Context.Host.TemplateFile));
+            modelFile = System.IO.Path.Combine(path, file);
+        }
+
+        this.EdmUtility = new EdmUtility(textTransformation, modelFile);
+
+        BeforeInitializing(modelFile);
+
+        this.DataModelCodeGenerator = new DataModelCodeGenerator(DataModelProject, this.EdmUtility, DataModelNamespace);
+        this.RepositoryInterfaceTemplate = new RepositoryInterfaceTemplate(RepositoryProject, this.EdmUtility, RepositoryNamespace, DataModelNamespace);
+        this.RepositoryTemplate = new RepositoryTemplate(RepositoryProject, this.EdmUtility, RepositoryNamespace, DataModelNamespace);
+        this.DataServiceContractTemplate = new DataServiceContractTemplate(DataServiceContractProject, this.EdmUtility, DataServiceContractNamespace, DataModelNamespace);
+        this.DataServiceTemplate = new DataServiceTemplate(DataServiceProject, this.EdmUtility, DataServiceNamespace, DataModelNamespace, DataServiceContractNamespace, RepositoryNamespace);
+        this.DataServiceHostTemplate = new DataServiceHostTemplate(DataServiceHostProject, this.EdmUtility, DataServiceNamespace);
+        this.ClientDataContextInterfaceTemplate = new ClientDataContextInterfaceTemplate(ClientLibraryProject, this.EdmUtility, ClientLibraryNamespace, DataModelNamespace);
+        this.ClientDataContextTemplate = new ClientDataContextTemplate(ClientLibraryProject, this.EdmUtility, ClientLibraryNamespace, DataModelNamespace, DataServiceContractNamespace);
+        this.ChangeSetFactoryTemplate = new ChangeSetFactoryTemplate(ClientLibraryProject, this.EdmUtility, ClientLibraryNamespace, DataModelNamespace);
+        this.ChangeSetFactoryInterfaceTemplate = new ChangeSetFactoryInterfaceTemplate(ClientLibraryProject, this.EdmUtility, ClientLibraryNamespace, DataModelNamespace);
+        //this.RemoteChannelFactoryTemplate = new RemoteChannelFactoryTemplate(RemoteChannelFactoryProject, this.EdmUtility, RemoteChannelFactoryNamespace, DataServiceContractNamespace);
+        //this.InProcessChannelFactoryTemplate = new InProcessChannelFactoryTemplate(InProcessChannelFactoryProject, this.EdmUtility, InProcessChannelFactoryNamespace, DataServiceContractNamespace, DataServiceNamespace);
+
+        OnInitializing();
+    }
+
+    partial void BeforeInitializing(string modelFilePath);
+
+    partial void OnInitializing();
+
+    partial void OnCodeGenerating();
+
+    partial void OnCodeGenerated();
+
+    private static string EntityModelNamespace { get { return EdmUtility.GetDefaultNamespace(); } }
+    private static string DataModelNamespace { get { return EdmUtility.GetDefaultNamespace(DataModelProject); } }
+    private static string RepositoryNamespace { get { return EdmUtility.GetDefaultNamespace(RepositoryProject); } }
+    private static string DataServiceContractNamespace { get { return EdmUtility.GetDefaultNamespace(DataServiceContractProject); } }
+    private static string DataServiceNamespace { get { return EdmUtility.GetDefaultNamespace(DataServiceProject); } }
+    private static string DataServiceHostNamespace { get { return EdmUtility.GetDefaultNamespace(DataServiceHostProject); } }
+    private static string ClientLibraryNamespace { get { return EdmUtility.GetDefaultNamespace(ClientLibraryProject); } }
+    private static string RemoteChannelFactoryNamespace { get { return EdmUtility.GetDefaultNamespace(RemoteChannelFactoryProject); } }
+    private static string InProcessChannelFactoryNamespace { get { return EdmUtility.GetDefaultNamespace(InProcessChannelFactoryProject); } }
+
+    private static string DefaultProjectBaseName
+    {
+        get
+        {
+            var proj = T4Context.Project.FileName;
+            string projectFileName = System.IO.Path.GetFileNameWithoutExtension(T4Context.Project.FileName);
+            if (!projectFileName.Contains(".Server.Domain.Edmx"))
+            {
+                throw new Exception("Projects do not use default names. Projects need to be specified for NTierEntityGenerator. (" + projectFileName + ")");
+            }
+            return projectFileName.Substring(0, projectFileName.IndexOf(".Server.Domain.Edmx"));
+        }
+    }
+
+    public static string DataModelProject
+    {
+        set { _dataModelProject = value; }
+        get { return ProjectUtility.ResolveProjectPath(T4Context.GetFullPath(_dataModelProject ?? string.Format(DefaultDataModelProject, DefaultProjectBaseName))); }
+    }
+    private static string _dataModelProject = null;
+
+    public static string RepositoryProject
+    {
+        set { _repositoryProject = value; }
+        get { return ProjectUtility.ResolveProjectPath(T4Context.GetFullPath(_repositoryProject ?? string.Format(DefaultRepositoryProject, DefaultProjectBaseName))); }
+    }
+    private static string _repositoryProject = null;
+
+    public static string DataServiceContractProject
+    {
+        set { _dataServiceContractProject = value; }
+        get { return ProjectUtility.ResolveProjectPath(T4Context.GetFullPath(_dataServiceContractProject ?? string.Format(DefaultDataServiceContractProject, DefaultProjectBaseName))); }
+    }
+    private static string _dataServiceContractProject = null;
+
+    public static string DataServiceProject
+    {
+        set { _dataServiceProject = value; }
+        get { return ProjectUtility.ResolveProjectPath(T4Context.GetFullPath(_dataServiceProject ?? string.Format(DefaultDataServiceProject, DefaultProjectBaseName))); }
+    }
+    private static string _dataServiceProject = null;
+
+    public static string DataServiceHostProject
+    {
+        set { _dataServiceHostProject = value; }
+        get { return ProjectUtility.ResolveProjectPath(T4Context.GetFullPath(_dataServiceHostProject ?? string.Format(DefaultDataServiceHostProject, DefaultProjectBaseName))); }
+    }
+    private static string _dataServiceHostProject = null;
+
+    public static string ClientLibraryProject
+    {
+        set { _clientLibraryProject = value; }
+        get { return ProjectUtility.ResolveProjectPath(T4Context.GetFullPath(_clientLibraryProject ?? string.Format(DefaultClientLibraryProject, DefaultProjectBaseName))); }
+    }
+    private static string _clientLibraryProject = null;
+
+    public static string RemoteChannelFactoryProject
+    {
+        set { _remoteChannelFactoryProject = value; }
+        get { return ProjectUtility.ResolveProjectPath(T4Context.GetFullPath(_remoteChannelFactoryProject ?? string.Format(DefaultRemoteChannelFactoryProject, DefaultProjectBaseName))); }
+    }
+    private static string _remoteChannelFactoryProject = null;
+
+    public static string InProcessChannelFactoryProject
+    {
+        set { _inProcessChannelFactoryProject = value; }
+        get { return ProjectUtility.ResolveProjectPath(T4Context.GetFullPath(_inProcessChannelFactoryProject ?? string.Format(DefaultInProcessChannelFactoryProject, DefaultProjectBaseName))); }
+    }
+    private static string _inProcessChannelFactoryProject = null;
+
+    /// <summary>
+    /// Gets or sets the generator that generates the model classes of the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="DataModelCodeGenerator"/>.
+    /// </remarks>
+    public DataModelCodeGenerator DataModelCodeGenerator;
+
+    /// <summary>
+    /// Gets or sets the template that generates a repository interface the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="RepositoryInterfaceTemplate"/>.
+    /// </remarks>
+    public RepositoryInterfaceTemplate RepositoryInterfaceTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates a repository the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="RepositoryTemplate"/>.
+    /// </remarks>
+    public RepositoryTemplate RepositoryTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates a data service contract for the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="DataServiceContractTemplate"/>.
+    /// </remarks>
+    public DataServiceContractTemplate DataServiceContractTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates a data service for the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="DataServiceTemplate"/>.
+    /// </remarks>
+    public DataServiceTemplate DataServiceTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates a service host for the entity model's data service.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="DataServiceHostTemplate"/>.
+    /// </remarks>
+    public DataServiceHostTemplate DataServiceHostTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates a remote channel factory for the entity model's data service.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="RemoteChannelFactoryTemplate"/>.
+    /// </remarks>
+    public RemoteChannelFactoryTemplate RemoteChannelFactoryTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates an in-process channel factory for the entity model's data service.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="InProcessChannelFactoryTemplate"/>.
+    /// </remarks>
+    public InProcessChannelFactoryTemplate InProcessChannelFactoryTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates an client data context interface.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="ClientDataContextInterfaceTemplate"/>.
+    /// </remarks>
+    public ClientDataContextInterfaceTemplate ClientDataContextInterfaceTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates a client data context for the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="ClientDataContextTemplate"/>.
+    /// </remarks>
+    public ClientDataContextTemplate ClientDataContextTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates a change-set factory interface for the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="ChangeSetFactoryInterfaceTemplate"/>.
+    /// </remarks>
+    public ChangeSetFactoryInterfaceTemplate ChangeSetFactoryInterfaceTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates a change-set factory for the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="ChangeSetFactoryTemplate"/>.
+    /// </remarks>
+    public ChangeSetFactoryTemplate ChangeSetFactoryTemplate;
+
+    /// <summary>
+    /// Generates data access classes.
+    /// </summary>
+    protected override void RunCore()
+    {
+        if (EdmUtility.Container == null)
+        {
+            // No EntityContainer exists in the model, so no code may be generated
+            return;
+        }
+
+        OnCodeGenerating();
+
+        CreateDataModel();
+        CreateRepositoryInterface();
+        CreateRepository();
+        CreateDataServiceContract();
+        CreateDataService();
+        CreateDataServiceHost();
+        CreateClientDataContextInterface();
+        CreateClientDataContext();
+        CreateChangeSetFactoryInterface();
+        CreateChangeSetFactory();
+        CreateRemoteChannelFactory();
+        CreateInProcessChannelFactory();
+
+        OnCodeGenerated();
+    }
+
+    private void CreateDataModel()
+    {
+        if (DataModelCodeGenerator != null)
+        {
+            DataModelCodeGenerator.Run();
+        }
+    }
+
+    private void CreateRepositoryInterface()
+    {
+        if (RepositoryInterfaceTemplate != null)
+        {
+            RepositoryInterfaceTemplate.Render();
+        }
+    }
+
+    private void CreateRepository()
+    {
+        if (RepositoryTemplate != null)
+        {
+            RepositoryTemplate.Render();
+        }
+    }
+
+    private void CreateDataServiceContract()
+    {
+        if (DataServiceContractTemplate != null)
+        {
+            DataServiceContractTemplate.Render();
+        }
+    }
+
+    private void CreateDataService()
+    {
+        if (DataServiceTemplate != null)
+        {
+            DataServiceTemplate.Render();
+        }
+    }
+
+    private void CreateDataServiceHost()
+    {
+        if (DataServiceHostTemplate != null)
+        {
+            DataServiceHostTemplate.Render();
+        }
+    }
+
+    private void CreateClientDataContextInterface()
+    {
+        if (ClientDataContextInterfaceTemplate != null)
+        {
+            ClientDataContextInterfaceTemplate.Render();
+        }
+    }
+
+    private void CreateClientDataContext()
+    {
+        if (ClientDataContextTemplate != null)
+        {
+            ClientDataContextTemplate.Render();
+        }
+    }
+
+    private void CreateChangeSetFactoryInterface()
+    {
+        if (ChangeSetFactoryInterfaceTemplate != null)
+        {
+            ChangeSetFactoryInterfaceTemplate.Render();
+        }
+    }
+
+    private void CreateChangeSetFactory()
+    {
+        if (ChangeSetFactoryTemplate != null)
+        {
+            ChangeSetFactoryTemplate.Render();
+        }
+    }
+
+    private void CreateRemoteChannelFactory()
+    {
+        if (RemoteChannelFactoryTemplate != null)
+        {
+            RemoteChannelFactoryTemplate.Render();
+        }
+    }
+
+    private void CreateInProcessChannelFactory()
+    {
+        if (InProcessChannelFactoryTemplate != null)
+        {
+            InProcessChannelFactoryTemplate.Render();
+        }
+    }
+}
+#>

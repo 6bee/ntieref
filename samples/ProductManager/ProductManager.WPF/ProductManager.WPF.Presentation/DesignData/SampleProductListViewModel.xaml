@@ -1,0 +1,16 @@
+﻿<vm:ProductListViewModel 
+    xmlns:vm="clr-namespace:ProductManager.WPF.Applications.ViewModels;assembly=ProductManager.WPF.Applications"
+    xmlns:bo="clr-namespace:ProductManager.Common.Domain.Model.ProductManager;assembly=ProductManager.Common.Domain.Model">
+
+    <vm:ProductListViewModel.Products>
+        <bo:Product ProductID="1" Name="Product 1" Color="Silver" />
+        <bo:Product ProductID="2" Name="Product 2" Color="Gold" />
+        <bo:Product ProductID="3" Name="Product 3" Color="Red" />
+        <bo:Product ProductID="4" Name="Product 4" Color="Blue/Gray" />
+        <bo:Product ProductID="5" Name="Product 5" Color="Black/White" />
+        <bo:Product ProductID="6" Name="Product 6" Color="Yellow" />
+        <bo:Product ProductID="7" Name="Product 7" Color="Purple" />
+        <bo:Product ProductID="8" Name="Product 8" Color="Green" />
+    </vm:ProductListViewModel.Products>
+
+</vm:ProductListViewModel>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Patch" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    
+    <PropertyGroup>	
+        <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildThisFileDirectory)..\</SolutionDir>
+        <OutputPath Condition=" '$(OutputPath)' == '' ">$(SolutionDir)lib\ProjectTemplates\</OutputPath>
+        <ZipExePath>$(SolutionDir)\..\..\tools\7zip\7za.exe</ZipExePath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Folders Include="$([System.IO.Directory]::GetDirectories(&quot;$(MSBuildThisFileDirectory)Patch_Pre_VS12.0\&quot;))" />
+    </ItemGroup>
+    
+    <Target Name="Patch">       
+		<Exec Command="&quot;$(ZipExePath)&quot; u &quot;$(OutputPath)%(Folders.Filename).zip&quot; -ux2y2z2w2 &quot;%(Folders.Identity)\*&quot;" />
+		<!--<Exec Command="echo &quot;$(OutputPath)%(Folders.Filename).zip&quot; &quot;%(Folders.Identity)\*&quot;" />-->
+    </Target>
+    
+</Project>

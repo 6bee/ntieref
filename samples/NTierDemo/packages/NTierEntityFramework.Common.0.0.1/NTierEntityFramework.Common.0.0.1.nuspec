@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>NTierEntityFramework.Common</id>
+    <version>0.0.1</version>
+    <authors>Christof Senn</authors>
+    <owners>Christof Senn</owners>
+    <licenseUrl>http://ntieref.codeplex.com/SourceControl/latest#license.txt</licenseUrl>
+    <projectUrl>http://ntieref.codeplex.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Common base library N-Tier Entity Framework.</description>
+    <copyright>Copyright Christof Senn 2013-2014</copyright>
+    <tags>n-tier entity framework EF ntieref C# T4 code generator generation data access layer DAL DDD domain driven design software architecture</tags>
+    <dependencies>
+      <dependency id="Remote.Linq" version="1.0" />
+    </dependencies>
+  </metadata>
+</package>

@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Namespace="SimpleParentChildModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008">
+          <EntityType Name="Parent">
+              <Key>
+                  <PropertyRef Name="Id" />
+              </Key>
+              <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          </EntityType>
+          <EntityType Name="Child">
+              <Key>
+                  <PropertyRef Name="Id" />
+              </Key>
+              <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+              <Property Name="ParentId" Type="int" Nullable="false" />
+          </EntityType>
+          <Association Name="ParentChild">
+              <End Type="Self.Parent" Role="Parent" Multiplicity="1" />
+              <End Type="Self.Child" Role="Child" Multiplicity="*" />
+              <ReferentialConstraint>
+                  <Principal Role="Parent">
+                      <PropertyRef Name="Id" />
+                  </Principal>
+                  <Dependent Role="Child">
+                      <PropertyRef Name="ParentId" />
+                  </Dependent>
+              </ReferentialConstraint>
+          </Association>
+          <EntityContainer Name="SimpleParentChildModelTargetContainer" >
+              <EntitySet Name="Parent" EntityType="Self.Parent">
+                  <DefiningQuery>
+                      SELECT CAST(NULL AS INT) AS [Id]
+                  </DefiningQuery>
+              </EntitySet>
+              <EntitySet Name="Child" EntityType="Self.Child">
+                  <DefiningQuery>
+                      SELECT CAST(NULL AS INT) AS [Id],
+                      CAST(NULL AS INT) AS [ParentId]
+                  </DefiningQuery>
+              </EntitySet>
+              <AssociationSet Name="ParentChild" Association="Self.ParentChild">
+                  <End Role="Parent" EntitySet="Parent" />
+                  <End Role="Child" EntitySet="Child" />
+              </AssociationSet>
+          </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="SimpleParentChildModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="SimpleParentChildEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ParentSet" EntityType="SimpleParentChildModel.Parent" />
+          <EntitySet Name="ChildSet" EntityType="SimpleParentChildModel.Child" />
+          <AssociationSet Name="ParentChild" Association="SimpleParentChildModel.ParentChild">
+            <End Role="Parent" EntitySet="ParentSet" />
+            <End Role="Child" EntitySet="ChildSet" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Parent">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Children" Relationship="SimpleParentChildModel.ParentChild" FromRole="Parent" ToRole="Child" />
+        </EntityType>
+        <EntityType Name="Child">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Parent" Relationship="SimpleParentChildModel.ParentChild" FromRole="Child" ToRole="Parent" />
+          <Property Name="ParentId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="ParentChild">
+          <End Type="SimpleParentChildModel.Parent" Role="Parent" Multiplicity="1" />
+          <End Type="SimpleParentChildModel.Child" Role="Child" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Parent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Child">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="SimpleParentChildModel" />
+        <Alias Key="Target" Value="SimpleParentChildModel.Store" />
+        <EntityContainerMapping CdmEntityContainer="SimpleParentChildEntities" StorageEntityContainer="SimpleParentChildModelTargetContainer">
+          <EntitySetMapping Name="ParentSet">
+            <EntityTypeMapping TypeName="IsTypeOf(SimpleParentChildModel.Parent)">
+              <MappingFragment StoreEntitySet="Parent">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChildSet">
+            <EntityTypeMapping TypeName="IsTypeOf(SimpleParentChildModel.Child)">
+              <MappingFragment StoreEntitySet="Child">
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,153 @@
+﻿<#@ assembly name="EnvDTE" #>
+<#@ assembly name="EnvDTE80" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="EnvDTE80" #>
+<#+
+// <copyright file="NTierEF.ProjectUtility.ttinclude" company="Trivadis">
+//     Copyright © Trivadis. All Rights Reserved.
+// </copyright>
+public class ProjectUtility
+{
+    private readonly Project _project;
+
+    public ProjectUtility(string projectName)
+    {
+        if (!Path.IsPathRooted(projectName))
+        {
+            var dir = Path.GetDirectoryName(T4Context.Project.FileName);
+            projectName = Path.Combine(dir, projectName);
+            projectName = Path.GetFullPath(projectName);
+        }
+
+        var dte = T4Context.DTE;
+
+        _project = GetProjects(dte).FirstOrDefault(p => string.Equals(GetProjectFullNameOrNull(p), projectName, StringComparison.InvariantCultureIgnoreCase));
+
+        Debug.WriteLine(string.Format("ProjectUtility::ctor - Project: '{0}'", _project == null ? string.Format("null ({0})", projectName) : _project.FullName));
+    }
+
+    public string GetProjectDirectory()
+    {
+        if (_project == null)
+        {
+            Debug.Fail("Project is null");
+            return null;
+        }
+
+        var fullName = GetProjectFullNameOrNull(_project);
+        if (fullName == null)
+        {
+            Debug.Fail("Project has no fullname");
+            return null;
+        }
+
+        return Path.GetDirectoryName(fullName);
+    }
+
+    public string GetAssemblyPath()
+    {
+        if (_project == null)
+        {
+            Debug.Fail("Project is null");
+            return null;
+        }
+
+        // project path
+        var projectPath = GetProjectDirectory();
+
+        // output path
+        var outputPath = _project.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value.ToString();
+
+        // assembly
+        var outputFileName = _project.Properties.Item("OutputFileName").Value.ToString();
+
+        var fullPath = Path.Combine(projectPath, outputPath, outputFileName);
+        return fullPath;
+    }
+
+    public static IList<Project> GetProjects(DTE2 dte)
+    {
+        List<Project> projects = new List<Project>();
+        foreach (Project project in dte.Solution.Projects)
+        {
+            //if (project.Kind.Equals(EnvDTE80ProjectKinds.vsProjectKindSolutionFolder, StringComparison.OrdinalIgnoreCase))
+            if (project.Object is SolutionFolder)
+            {
+                projects.AddRange(GetProjects(project.ProjectItems));
+            }
+            //else if (project.Kind.Equals(Constants.vspConstants.PrjKindMyProject, StringComparison.OrdinalIgnoreCase))
+            else
+            {
+                projects.Add(project);
+            }
+        }
+        return projects;
+    }
+
+    public static IList<Project> GetProjects(ProjectItems projectItems)
+    {
+        List<Project> projects = new List<Project>();
+        foreach (ProjectItem item in projectItems)
+        {
+            Project project = item.SubProject;
+            if (project == null)
+            {
+                continue;
+            }
+            //else if (project.Kind.Equals(EnvDTE80ProjectKinds.vsProjectKindSolutionFolder, StringComparison.OrdinalIgnoreCase))
+            else if (project.Object is SolutionFolder)
+            {
+                projects.AddRange(GetProjects(project.ProjectItems));
+            }
+            //else if (project.Kind.Equals(Constants.Constants.PrjKindMyProject, StringComparison.OrdinalIgnoreCase))
+            else
+            {
+                projects.Add(project);
+            }
+        }
+        return projects;
+    }
+
+    public static string ResolveProjectPath(string projectName)
+    {
+        var dte = T4Context.DTE;
+        var projectNames = GetProjects(dte)
+            .Select(GetProjectFullNameOrNull)
+            .ToArray();;
+
+        var matches = projectNames
+            .Where(fullName => string.Equals(fullName, projectName, StringComparison.InvariantCultureIgnoreCase))
+            .ToArray();
+
+        if (!matches.Any()) 
+        {
+            var projectFileName = Path.GetFileName(projectName);
+            matches = projectNames
+                .Where(fullName => string.Equals(Path.GetFileName(fullName), projectFileName, StringComparison.InvariantCultureIgnoreCase))
+                .ToArray();
+        }
+
+        return matches.FirstOrDefault() ?? projectName;
+    }
+
+    public static string GetProjectFullNameOrNull(Project project)
+    {
+        string fullName;
+        try
+        {
+            fullName = project.FullName;
+        }
+        catch
+        {
+            fullName = null;
+        }
+
+        return fullName;
+    }
+}
+#>

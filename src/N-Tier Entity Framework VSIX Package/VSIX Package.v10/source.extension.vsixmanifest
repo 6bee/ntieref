@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vsix xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
+  <Identifier Id="NTierEntityFramework.Trivadis.511fbfbd-0acc-4ee5-ab92-62b02544c118">
+    <Name>N-Tier Entity Framework VS2010</Name>
+    <Author>Trivadis</Author>
+    <Version>1.8</Version>
+    <Description xml:space="preserve">The N-Tier Entity Framework extends Microsoft's Entity Framework (EF) to provide support for n-tier solutions. The framework aims to provide the richness of EF in a distributed architecture while keeping its simplicity.</Description>
+    <Locale>1033</Locale>
+    <MoreInfoUrl>http://ntieref.codeplex.com/</MoreInfoUrl>
+    <License>license.txt</License>
+    <GettingStartedGuide>http://ntieref.codeplex.com/</GettingStartedGuide>
+    <Icon>favicon.ico</Icon>
+    <PreviewImage>preview.png</PreviewImage>
+    <SupportedProducts>
+      <VisualStudio Version="10.0">
+        <Edition>Ultimate</Edition>
+        <Edition>Premium</Edition>
+        <Edition>Pro</Edition>
+      </VisualStudio>
+    </SupportedProducts>
+    <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
+  </Identifier>
+  <References>
+    <Reference Id="NuPackToolsVsix.Microsoft.67e54e40-0ae3-42c5-a949-fddf5739e7a5" MinVersion="1.7.30402.9028">
+      <Name>NuGet Package Manager</Name>
+      <MoreInfoUrl>http://docs.nuget.org/</MoreInfoUrl>
+    </Reference>
+  </References>
+  <Content>
+    <Assembly AssemblyName="ProjectTemplateWizard, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7d8b4e5866a6acd8">ProjectTemplateWizard.dll</Assembly>
+    <VsPackage>Additional.pkgdef</VsPackage>
+    <MefComponent>|EDMToolsExtensions|</MefComponent>
+    <ProjectTemplate>ProjectT</ProjectTemplate>
+    <ItemTemplate>ItemT</ItemTemplate>
+  </Content>
+</Vsix>

@@ -1,0 +1,33 @@
+﻿<UserControl xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"  x:Class="ProductManager.Silverlight.Views.ProductSearch"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:appControls="clr-namespace:ProductManager.Silverlight.Controls"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="600">
+
+    <StackPanel Margin="20">
+        
+        <TextBlock Style="{StaticResource HeaderTextStyle}" 
+                   Text="{Binding Path=ApplicationStrings.ProductsSearchPageTitle, Source={StaticResource ResourceWrapper}}"/>
+
+        <TextBlock Style="{StaticResource ContentTextStyle}"
+                   Text="{Binding Path=ApplicationStrings.ProductsSearchDescription, Source={StaticResource ResourceWrapper}}"/>
+
+        <appControls:SearchDialog x:Name="searchDialog" Height="414" />
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="-5 10">
+            <StackPanel.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Width" Value="60" />
+                    <Setter Property="Margin" Value="5 0" />
+                </Style>
+            </StackPanel.Resources>
+
+            <Button Content="Save" Click="SaveButton_Click" />
+            <Button Content="Revert" Click="RevertButton_Click" />
+        </StackPanel>
+        
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8E6451B9-FB03-4D60-A9DB-F25A870ACF72}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ProjectTemplateWizard</RootNamespace>
+    <AssemblyName>ProjectTemplateWizard</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>keyfile.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="envdte80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>C:\Program Files (x86)\Common Files\Microsoft Shared\MSEnv\PublicAssemblies\envdte80.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>Lib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TemplateWizardInterface, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="EnvDTEConstants.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NTierEntityFrameworkSilverlightLibWizard.cs" />
+    <Compile Include="NTierEntityFrameworkWizard.cs" />
+    <Compile Include="EnvDTE80ProjectKinds.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SilverlightLibWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SilverlightLibWizard.Designer.cs">
+      <DependentUpon>SilverlightLibWizard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SolutionExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="keyfile.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SilverlightLibWizard.resx">
+      <DependentUpon>SilverlightLibWizard.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="N-Tier Entity Framework.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+      <!--
+"$(SolutionDir)..\..\tools\NuGet\NuGet.exe" restore "$(SolutionDir)..\N-Tier Entity Framework\N-Tier Entity Framework.sln"
+%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\msbuild "$(SolutionDir)..\N-Tier Entity Framework\N-Tier Entity Framework.sln" /target:Rebuild /p:Configuration=$(Configuration)
+
+REM xcopy /y /d "$(SolutionDir)..\N-Tier Entity Framework\$(OutDir)*" "$(SolutionDir)lib\"
+
+REM del "$(SolutionDir)lib\Lib_SL.zip"
+REM del "$(SolutionDir)lib\Lib_NET.zip"
+
+REM "$(SolutionDir)..\..\tools\7zip\7za.exe" a "$(SolutionDir)lib\Lib_SL.zip" "$(SolutionDir)lib\Microsoft.CSharp.dll" "$(SolutionDir)lib\Microsoft.CSharp.xml" "$(SolutionDir)lib\Remote.Linq.SL.dll" "$(SolutionDir)lib\Remote.Linq.SL.pdb" "$(SolutionDir)lib\NTier.Silverlight.Domain.dll" "$(SolutionDir)lib\NTier.Silverlight.Domain.pdb"
+
+REM "$(SolutionDir)..\..\tools\7zip\7za.exe" a "$(SolutionDir)lib\Lib_NET.zip" "$(SolutionDir)lib\Remote.Linq.dll" "$(SolutionDir)lib\Remote.Linq.pdb" "$(SolutionDir)lib\NTier.Client.Domain.dll" "$(SolutionDir)lib\NTier.Client.Domain.pdb" "$(SolutionDir)lib\NTier.Common.Domain.dll" "$(SolutionDir)lib\NTier.Common.Domain.pdb" "$(SolutionDir)lib\NTier.Server.Domain.dll" "$(SolutionDir)lib\NTier.Server.Domain.pdb"
+-->
+    </PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="AfterBuild">
+  </Target>
+  <Target Name="BeforeBuild">
+  </Target>
+  -->
+  <Target Name="BeforeBuild">
+    <!-- 
+    <Exec Command="&quot;$(SolutionDir)..\..\tools\NuGet\NuGet.exe&quot; restore &quot;$(SolutionDir)..\N-Tier Entity Framework\N-Tier Entity Framework.sln&quot;" />
+    <MSBuild Projects="$(SolutionDir)..\N-Tier Entity Framework\N-Tier Entity Framework.sln" Targets="Rebuild" Properties="Configuration=$(Configuration)" />
+    -->
+    <MSBuild Projects="$(SolutionDir)\NuGet\NuGet.proj" Targets="RebuildPackages" Properties="Configuration=$(Configuration);Version=$(NugetPackageVersion);VisualStudioVersion=$(VisualStudioVersion)" />
+  </Target>
+</Project>

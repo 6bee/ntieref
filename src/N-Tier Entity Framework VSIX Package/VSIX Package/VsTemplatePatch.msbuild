@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SolutionDir Condition=" '$(SolutionDir)' == '' ">$(MSBuildProjectDirectory)\..\</SolutionDir>
+    <BuildPath Condition=" '$(BuildPath)' == '' ">$(MSBuildProjectDirectory)</BuildPath>
+    <ExtensionTasksPath Condition="Exists('$(SolutionDir)\..\..\tools\build\ExtensionPack\MSBuild.ExtensionPack.dll')">$(SolutionDir)\..\..\tools\build\ExtensionPack\</ExtensionTasksPath>
+  </PropertyGroup>
+
+  <Import Project="$(ExtensionTasksPath)\MSBuild.ExtensionPack.tasks" />
+
+  <ItemGroup>
+    <Namespaces Include="Mynamespace">
+      <Prefix>vs</Prefix>
+      <Uri>http://schemas.microsoft.com/developer/vstemplate/2005</Uri>
+    </Namespaces>
+    <VsTemplates Include="$(SolutionDir)\ProjectTemplates\**\*.vstemplate" />
+    <VsTemplates Include="$(SolutionDir)\ItemTemplates\**\*.vstemplate" />
+    
+    <Namespaces Include="Mynamespace">
+      <Prefix>vsx1</Prefix>
+      <Uri>http://schemas.microsoft.com/developer/vsx-schema/2010</Uri>
+    </Namespaces>
+    <Namespaces Include="Mynamespace">
+      <Prefix>vsx2</Prefix>
+      <Uri>http://schemas.microsoft.com/developer/vsx-schema/2011</Uri>
+    </Namespaces>
+    <VsixManifests Include="$(SolutionDir)\VSIX Package.v*\source.extension.vsixmanifest" />
+  </ItemGroup>
+  
+  <Target Name="PatchVsixId">
+    <Message Text="-----------------------------------------------------------------------" />
+    <Exec Command="echo." />
+    <Exec Command="echo Patch vsix id in VSTemplate/WizardData/packages/@repositoryId" />
+    <Exec Command="echo VSIX id: &quot;$(VsixGuid)&quot;" />
+    <Exec Command="echo VS template: &quot;%(VsTemplates.Identity)&quot;" />
+    <MSBuild.ExtensionPack.Xml.XmlFile 
+      Condition=" '$(VsixGuid)' != '' And '@(VsTemplates)' != '' And Exists('%(VsTemplates.Identity)') "
+      TaskAction="UpdateElement" 
+      File="%(VsTemplates.Identity)" 
+      XPath="/vs:VSTemplate/vs:WizardData/vs:packages[starts-with(@repositoryId, 'NTierEntityFramework.Trivadis')]/@repositoryId"
+      InnerText="NTierEntityFramework.Trivadis.$(VsixGuid)" 
+      Namespaces="@(Namespaces)"/>
+  </Target>
+  
+  <Target Name="PatchVsixVersion">
+    <Message Text="-----------------------------------------------------------------------" />
+    <Exec Command="echo." />
+    <Exec Command="echo Patch vsix version in PackageManifest/Metadata/Identity/@Version" />
+    <Exec Command="echo VSIX version: &quot;$(VsixVersion)&quot;" />
+    <Exec Command="echo VSIX manifest: &quot;%(VsixManifests.Identity)&quot;" />
+    <MSBuild.ExtensionPack.Xml.XmlFile 
+      Condition=" '$(VsixVersion)' != '' And '@(VsixManifests)' != '' And Exists('%(VsixManifests.Identity)') "
+      TaskAction="UpdateElement" 
+      File="%(VsixManifests.Identity)" 
+      XPath="/vsx1:Vsix/vsx1:Identifier/vsx1:Version"
+      InnerText="$(VsixVersion)" 
+      Namespaces="@(Namespaces)"/>
+    <MSBuild.ExtensionPack.Xml.XmlFile 
+      Condition=" '$(VsixVersion)' != '' And '@(VsixManifests)' != '' And Exists('%(VsixManifests.Identity)') "
+      TaskAction="UpdateElement" 
+      File="%(VsixManifests.Identity)" 
+      XPath="/vsx2:PackageManifest/vsx2:Metadata/vsx2:Identity/@Version"
+      InnerText="$(VsixVersion)" 
+      Namespaces="@(Namespaces)"/>
+  </Target>
+  
+  <Target Name="NugetPackageVersion">
+    <Message Text="-----------------------------------------------------------------------" />
+    <Exec Command="echo." />
+    <Exec Command="echo Patch nuget package version in VSTemplate/WizardData/packages/package/@version" />
+    <Exec Command="echo NuGet package version: &quot;$(NugetPackageVersion)&quot;" />
+    <Exec Command="echo VS template: &quot;%(VsTemplates.Identity)&quot;" />
+    <MSBuild.ExtensionPack.Xml.XmlFile 
+      Condition=" '$(VsixVersion)' != '' And '@(VsTemplates)' != '' And Exists('%(VsTemplates.Identity)') "
+      TaskAction="UpdateElement" 
+      File="%(VsTemplates.Identity)" 
+      XPath="/vs:VSTemplate/vs:WizardData/vs:packages[@repository='extension']/vs:package[starts-with(@id, 'NTierEntityFramework.')]/@version"
+      InnerText="$(NugetPackageVersion)" 
+      Namespaces="@(Namespaces)"/>
+  </Target>
+  
+  <Target Name="PatchEFPackageVersions">
+    <Message Text="-----------------------------------------------------------------------" />
+    <Exec Command="echo." />
+    <Exec Command="echo Patch entity framework provider version in VSTemplate/WizardData/packages/package/@id" />
+    <Exec Command="echo EF provider version: &quot;$(EFProviderVersion)&quot;" />
+    <Exec Command="echo EF version: &quot;$(EFVersion)&quot;" />
+    <Exec Command="echo VS template: &quot;%(VsTemplates.Identity)&quot;" />
+
+    <!-- Patch EF repository version -->
+    <MSBuild.ExtensionPack.Xml.XmlFile 
+      Condition=" '$(EFProviderVersion)' != '' And '@(VsTemplates)' != '' And Exists('%(VsTemplates.Identity)') "
+      TaskAction="UpdateElement" 
+      File="%(VsTemplates.Identity)" 
+      XPath="/vs:VSTemplate/vs:WizardData/vs:packages/vs:package[starts-with(@id, 'NTierEntityFramework.Server.EntityFramework')]/@id"
+      InnerText="NTierEntityFramework.Server.EntityFramework$(EFProviderVersion)" 
+      Namespaces="@(Namespaces)"/>
+
+    <!-- Patch EF T4 template version -->
+    <MSBuild.ExtensionPack.Xml.XmlFile 
+      Condition=" '$(EFProviderVersion)' != '' And '@(VsTemplates)' != '' And Exists('%(VsTemplates.Identity)') "
+      TaskAction="UpdateElement" 
+      File="%(VsTemplates.Identity)" 
+      XPath="/vs:VSTemplate/vs:WizardData/vs:packages/vs:package[starts-with(@id, 'NTierEntityFramework.T4.EntityFramework')]/@id"
+      InnerText="NTierEntityFramework.T4.EntityFramework$(EFProviderVersion)" 
+      Namespaces="@(Namespaces)"/>
+
+    <!-- Patch EF version -->
+    <MSBuild.ExtensionPack.Xml.XmlFile 
+      Condition=" '$(EFVersion)' != '' And '@(VsTemplates)' != '' And Exists('%(VsTemplates.Identity)') "
+      TaskAction="UpdateElement" 
+      File="%(VsTemplates.Identity)" 
+      XPath="/vs:VSTemplate/vs:WizardData/vs:packages/vs:package[@id='EntityFramework']/@version"
+      InnerText="$(EFVersion)" 
+      Namespaces="@(Namespaces)"/>
+  </Target>
+</Project>

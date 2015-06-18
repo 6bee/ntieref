@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ConcurrencyTestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ARecord">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Value" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Key" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ChangedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BRecord">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Value" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Key" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="ChangedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ConcurrencyDemo.dbo.CRecord_View' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="CRecord_View">
+          <Key>
+            <PropertyRef Name="Id" />
+            
+            
+            
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Value" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Key" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="ChangedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Function Name="CRecord_Delete" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="CRecord_Insert" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Value" Type="varchar" Mode="In" />
+          <Parameter Name="ChangedDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="CRecord_Update" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="bigint" Mode="In" />
+          <Parameter Name="Value" Type="varchar" Mode="In" />
+          <Parameter Name="ChangedDate" Type="datetime" Mode="In" />
+          <Parameter Name="Key" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <EntityContainer Name="ConcurrencyTestModelStoreContainer">
+          <EntitySet Name="ARecord" EntityType="Self.ARecord" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BRecord" EntityType="Self.BRecord" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CRecord_View" EntityType="Self.CRecord_View" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [CRecord_View].[Id] AS [Id], 
+    [CRecord_View].[Value] AS [Value], 
+    [CRecord_View].[Key] AS [Key], 
+    [CRecord_View].[ChangedDate] AS [ChangedDate]
+    FROM [dbo].[CRecord_View] AS [CRecord_View]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ConcurrencyTestModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="ConcurrencyTestEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ARecords" EntityType="ConcurrencyTestModel.ARecord" />
+          <EntitySet Name="BRecords" EntityType="ConcurrencyTestModel.BRecord" />
+          <EntitySet Name="CRecords" EntityType="ConcurrencyTestModel.CRecord" />
+        </EntityContainer>
+        <EntityType Name="ARecord">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" a:SetterAccess="Private" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+          <Property Name="Value" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Key" Type="Guid" Nullable="false" ConcurrencyMode="Fixed" annotation:StoreGeneratedPattern="None" a:SetterAccess="Public" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+          <Property Name="ChangedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="BRecord">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" a:SetterAccess="Private" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+          <Property Name="Value" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Key" Type="Guid" Nullable="false" ConcurrencyMode="Fixed" annotation:StoreGeneratedPattern="Computed" a:SetterAccess="Private" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+          <Property Name="ChangedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="CRecord">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Value" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Key" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="Computed" a:SetterAccess="Private" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" ConcurrencyMode="Fixed" />
+          <Property Name="ChangedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ConcurrencyTestModelStoreContainer" CdmEntityContainer="ConcurrencyTestEntities">
+          <EntitySetMapping Name="ARecords">
+            <EntityTypeMapping TypeName="ConcurrencyTestModel.ARecord">
+              <MappingFragment StoreEntitySet="ARecord">
+                <ScalarProperty Name="ChangedDate" ColumnName="ChangedDate" />
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BRecords">
+            <EntityTypeMapping TypeName="ConcurrencyTestModel.BRecord">
+              <MappingFragment StoreEntitySet="BRecord">
+                <ScalarProperty Name="ChangedDate" ColumnName="ChangedDate" />
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CRecords">
+            <EntityTypeMapping TypeName="ConcurrencyTestModel.CRecord">
+              <MappingFragment StoreEntitySet="CRecord_View">
+                <ScalarProperty Name="ChangedDate" ColumnName="ChangedDate" />
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="ConcurrencyTestModel.CRecord">
+              <ModificationFunctionMapping>
+                <UpdateFunction FunctionName="ConcurrencyTestModel.Store.CRecord_Update">
+                  <ScalarProperty Name="Key" ParameterName="Key" Version="Current" />
+                  <ScalarProperty Name="ChangedDate" ParameterName="ChangedDate" Version="Current" />
+                  <ScalarProperty Name="Value" ParameterName="Value" Version="Current" />
+                  <ScalarProperty Name="Id" ParameterName="Id" Version="Current" />
+                  <ResultBinding Name="Key" ColumnName="Key" />
+                </UpdateFunction>
+                <DeleteFunction FunctionName="ConcurrencyTestModel.Store.CRecord_Delete">
+                  <ScalarProperty Name="Id" ParameterName="Id" />
+                </DeleteFunction>
+                <InsertFunction FunctionName="ConcurrencyTestModel.Store.CRecord_Insert">
+                  <ScalarProperty Name="ChangedDate" ParameterName="ChangedDate" />
+                  <ScalarProperty Name="Value" ParameterName="Value" />
+                  <ResultBinding Name="Id" ColumnName="Id" />
+                  <ResultBinding Name="Key" ColumnName="Key" />
+                </InsertFunction>
+              </ModificationFunctionMapping>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

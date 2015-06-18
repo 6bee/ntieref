@@ -1,0 +1,242 @@
+﻿<#+
+// <copyright file="NTierEF.DataServiceTT.CS.ttinclude" company="Trivadis">
+//     Copyright © Trivadis. All Rights Reserved.
+// </copyright>
+public class DataServiceTemplate : Template
+{
+    public EdmUtility EdmUtility { get; set; }
+    public string Namespace { get; set; }
+    public string ModelNamespace { get; set; }
+    public string ModelBaseNamespace { get; set; }
+    public string ServiceContractNamespace { get; set; }
+    public string RepositoryNamespace { get; set; }
+    public string RepositoryBaseNamespace { get; set; }
+    public string ServiceBaseNamespace { get; set; }
+    private string file = null;
+    public string File
+    {
+        get { return file != null ? file : string.Format(@"{0}DataService.g.cs", EdmUtility.ModelName); }
+        set { file = value; }
+    }
+
+    public DataServiceTemplate(string project = null, EdmUtility edmUtility = null, string defaultNameSpace = null, string modelNamespace = null, string serviceContractNamespace = null, string repositoryNamespace = null)
+    {
+        if (!string.IsNullOrWhiteSpace(project))
+        {
+            base.Output.Project = project;
+        }
+        this.EdmUtility = edmUtility;
+        this.Namespace = defaultNameSpace;
+        this.ModelNamespace = modelNamespace;
+        this.ServiceContractNamespace = serviceContractNamespace;
+        this.RepositoryNamespace = repositoryNamespace;
+        this.ModelBaseNamespace = "NTier.Common.Domain.Model";
+        this.RepositoryBaseNamespace = "NTier.Server.Domain.Repositories";
+        this.ServiceBaseNamespace = "NTier.Server.Domain.Service";
+    }
+
+    /// <summary>
+    /// Directs output of the template to a separate file by default. User can override
+    /// default behavior by assigning <see cref="Rendering"/> event handler.
+    /// </summary>
+    protected override void OnRendering(System.EventArgs e)
+    {
+        if (EdmUtility == null)
+        {
+            throw new Exception("Missing property EdmUtility");
+        }
+        if (string.IsNullOrWhiteSpace(Namespace))
+        {
+            throw new Exception("Missing property Namespace");
+        }
+        if (string.IsNullOrWhiteSpace(ModelNamespace))
+        {
+            throw new Exception("Missing property ModelNamespace");
+        }
+        if (string.IsNullOrWhiteSpace(ModelBaseNamespace))
+        {
+            throw new Exception("Missing property ModelBaseNamespace");
+        }
+        if (string.IsNullOrWhiteSpace(ServiceContractNamespace))
+        {
+            throw new Exception("Missing property ServiceContractNamespace");
+        }
+        if (string.IsNullOrWhiteSpace(RepositoryNamespace))
+        {
+            throw new Exception("Missing property RepositoryNamespace");
+        }
+        if (string.IsNullOrWhiteSpace(RepositoryBaseNamespace))
+        {
+            throw new Exception("Missing property RepositoryBaseNamespace");
+        }
+        if (string.IsNullOrWhiteSpace(ServiceBaseNamespace))
+        {
+            throw new Exception("Missing property ServiceBaseNamespace");
+        }
+
+        this.Output.File = this.File;
+        base.OnRendering(e);
+    }
+
+    public override string TransformText()
+    {
+        WriteHeader(
+            ServiceBaseNamespace,
+            ModelBaseNamespace,
+            ModelNamespace + "." + EdmUtility.ModelName,
+            ServiceContractNamespace + ".Contracts",
+            RepositoryNamespace,
+            RepositoryBaseNamespace
+        );
+#>
+
+namespace <#=EdmUtility.Code.EscapeNamespace(Namespace)#>
+{
+    public partial class <#=EdmUtility.ModelName#>DataService : DataService<I<#=EdmUtility.ModelName#>Repository>, I<#=EdmUtility.ModelName#>DataService
+    {
+        #region fields
+ 
+        private static Func<ClientInfo, I<#=EdmUtility.ModelName#>Repository> _defaultRepositoryFactory = clientInfo => new <#=EdmUtility.ModelName#>Repository();
+        private readonly Func<ClientInfo, I<#=EdmUtility.ModelName#>Repository> _repositoryFactory;
+ 
+        #endregion fields
+ 
+        #region constructor
+ 
+        public <#=EdmUtility.ModelName#>DataService()
+            : this(_defaultRepositoryFactory)
+        {
+        }
+ 
+        public <#=EdmUtility.ModelName#>DataService(Func<ClientInfo, I<#=EdmUtility.ModelName#>Repository> repositoryFactory)
+        {
+            if (ReferenceEquals(null, repositoryFactory)) throw new ArgumentNullException("repositoryFactory");
+            _repositoryFactory = repositoryFactory;
+        }
+ 
+        #endregion constructor
+
+        #region query service methods
+
+        partial void PreProcessing(ClientInfo clientInfo, ref Query query, I<#=EdmUtility.ModelName#>Repository repository);
+<#+
+        foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
+        {
+            // skip entities which are marked as non-root
+            var isAggregateRoot = !entitySet.ElementType.MetadataProperties.Any(p => p.Name.EndsWith("AggregateRoot") && !bool.Parse(p.Value as string));
+            if (!isAggregateRoot) continue;
+#>
+        partial void PostProcessing(ClientInfo clientInfo, Query query, ref QueryResult<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> result, I<#=EdmUtility.ModelName#>Repository repository);
+<#+
+        }
+
+        foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
+        {
+            // skip entities which are marked as non-root
+            var isAggregateRoot = !entitySet.ElementType.MetadataProperties.Any(p => p.Name.EndsWith("AggregateRoot") && !bool.Parse(p.Value as string));
+            if (!isAggregateRoot) continue;
+#>
+
+        [OperationBehavior(Impersonation = ImpersonationOption.Allowed)]
+        public QueryResult<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> Get<#=EdmUtility.Code.Escape(entitySet)#>(ClientInfo clientInfo, Query query)
+        {
+            using (var dataRepository = _repositoryFactory(clientInfo))
+            {
+                PreProcessing(clientInfo, ref query, dataRepository);
+                var result = Get(dataRepository.<#=EdmUtility.Code.Escape(entitySet)#>.AsNoTrackingQueryable(), query, clientInfo);
+                PostProcessing(clientInfo, query, ref result, dataRepository);
+                return result;
+            }
+        }
+<#+
+        }
+#>
+
+        #endregion query service methods
+
+        #region update service method
+
+        partial void PreProcessing(ClientInfo clientInfo, ref <#=EdmUtility.ModelName#>ChangeSet changeSet, I<#=EdmUtility.ModelName#>Repository repository);
+        partial void BeforeSaving(ClientInfo clientInfo, ref <#=EdmUtility.ModelName#>ChangeSet changeSet, I<#=EdmUtility.ModelName#>Repository repository);
+        partial void PostProcessing(ClientInfo clientInfo, ref <#=EdmUtility.ModelName#>ResultSet result, I<#=EdmUtility.ModelName#>Repository repository);
+
+        [OperationBehavior(TransactionScopeRequired = true, Impersonation = ImpersonationOption.Allowed)]
+        public <#=EdmUtility.ModelName#>ResultSet SubmitChanges(ClientInfo clientInfo, <#=EdmUtility.ModelName#>ChangeSet changeSet)
+        {
+            var resultSet = new <#=EdmUtility.ModelName#>ResultSet(changeSet);
+            using (var transactionScope = CreateSavingTransactionScope())
+            {
+                using (var dataRepository = _repositoryFactory(clientInfo))
+                {
+                    // optional custom processing
+                    PreProcessing(clientInfo, ref changeSet, dataRepository);
+
+                    // apply chnages to repository
+<#+
+            foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
+            {
+#>
+                    ApplyChanges(dataRepository, dataRepository.<#=EdmUtility.Code.Escape(entitySet)#>, changeSet, changeSet.<#=EdmUtility.Code.Escape(entitySet)#>, clientInfo);
+<#+
+            }
+#>
+
+                    // optional custom processing
+                    BeforeSaving(clientInfo, ref changeSet, dataRepository);
+
+                    // save changes
+                    SaveChanges(dataRepository, changeSet, resultSet);
+
+                    // optional custom processing
+                    PostProcessing(clientInfo, ref resultSet, dataRepository);
+                }
+                transactionScope.Complete();
+            }
+            return resultSet;
+        }
+
+        protected override FaultException CreateUpdateFaultException(string message, IEnumerable<Entity> entities)
+        {
+            return new FaultException<<#=EdmUtility.ModelName#>UpdateFault>(new <#=EdmUtility.ModelName#>UpdateFault(message, entities), "Update error");
+        }
+
+        protected override FaultException CreateOptimisticConcurrencyFaultException(string message, IEnumerable<Entity> entities)
+        {
+            return new FaultException<<#=EdmUtility.ModelName#>OptimisticConcurrencyFault>(new <#=EdmUtility.ModelName#>OptimisticConcurrencyFault(message, entities), "Optimistic concurrency error");
+        }
+
+        #endregion update service method
+    }
+}
+
+<#+
+        return this.GenerationEnvironment.ToString();
+    }
+
+
+    private void WriteHeader(params string[] extraUsings)
+    {
+#>
+//------------------------------------------------------------------------------
+// <auto-generated>
+//   This file was generated by T4 code generator <#= System.IO.Path.GetFileName(T4Context.Host.TemplateFile) #>.
+//   Any changes made to this file manually may cause incorrect behavior
+//   and will be lost next time the file is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Security.Permissions;
+using System.ServiceModel;
+using System.ServiceModel.Activation;
+using System.Transactions;
+<#=String.Join(String.Empty, extraUsings.OrderBy(u => u).Select(u => "using " + u + ";" + Environment.NewLine).ToArray())#>
+<#+
+    }
+}
+#>

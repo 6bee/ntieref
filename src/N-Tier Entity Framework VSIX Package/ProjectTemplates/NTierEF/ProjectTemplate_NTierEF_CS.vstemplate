@@ -1,0 +1,68 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="ProjectGroup">
+    
+    <TemplateData>
+        <Name>N-Tier Entity Framework Application</Name>
+        <Description>N-Tier Entity Framework Application</Description>
+        <ProjectType>CSharp</ProjectType>
+        <ProjectSubType></ProjectSubType>
+        <Icon>Icon.ico</Icon>
+        <PreviewImage>preview.png</PreviewImage>
+        <DefaultName>Company.Project</DefaultName>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <SortOrder>1000</SortOrder>
+        <CreateNewFolder>true</CreateNewFolder>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <!--<MaxFrameworkVersion>4.0</MaxFrameworkVersion>-->
+        <LocationField>Enabled</LocationField>
+        <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+        <TemplateID>NTierEF_ProjectTemplate_NTierEF_CS</TemplateID>
+    </TemplateData>
+    
+    <TemplateContent>
+        <ProjectCollection>
+            <SolutionFolder Name="Client">
+                <ProjectTemplateLink ProjectName="$safesolutionname$.Client.Domain.Test">
+                    Client.Test\NTier.Client.Domain.Test.vstemplate
+                </ProjectTemplateLink>
+                <ProjectTemplateLink ProjectName="$safesolutionname$.Client.Domain">
+                    Client\NTier.Client.Domain.vstemplate
+                </ProjectTemplateLink>
+                <!--<ProjectTemplateLink ProjectName="$safesolutionname$.Client.Domain.Service.InProcessChannelFactory">
+                    InProcessChannelFactory\NTier.Client.Domain.Service.InProcessChannelFactory.vstemplate
+                </ProjectTemplateLink>-->
+                <!--<ProjectTemplateLink ProjectName="$safesolutionname$.Client.Domain.Service.RemoteChannelFactory">
+                    RemoteChannelFactory\NTier.Client.Domain.Service.RemoteChannelFactory.vstemplate
+                </ProjectTemplateLink>-->
+            </SolutionFolder>
+            <SolutionFolder Name="Common">
+                <ProjectTemplateLink ProjectName="$safesolutionname$.Common.Domain.Model">
+                    Common.Model\NTier.Common.Domain.Model.vstemplate
+                </ProjectTemplateLink>
+                <ProjectTemplateLink ProjectName="$safesolutionname$.Common.Domain.Service">
+                    Common.Service\NTier.Common.Domain.Service.vstemplate
+                </ProjectTemplateLink>
+            </SolutionFolder>
+            <SolutionFolder Name="Server">
+                <ProjectTemplateLink ProjectName="$safesolutionname$.Server.Domain.Edmx">
+                    Server.Edmx\NTier.Server.Domain.Edmx.vstemplate
+                </ProjectTemplateLink>
+                <ProjectTemplateLink ProjectName="$safesolutionname$.Server.Host">
+                    Server.Host\NTier.Server.Host.vstemplate
+                </ProjectTemplateLink>
+                <ProjectTemplateLink ProjectName="$safesolutionname$.Server.Domain.Repositories">
+                    Server.Repositories\NTier.Server.Domain.Repositories.vstemplate
+                </ProjectTemplateLink>
+                <ProjectTemplateLink ProjectName="$safesolutionname$.Server.Domain.Service">
+                    Server.Service\NTier.Server.Domain.Service.vstemplate
+                </ProjectTemplateLink>
+            </SolutionFolder>
+        </ProjectCollection>
+    </TemplateContent>
+    
+    <WizardExtension>
+        <Assembly>ProjectTemplateWizard, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7d8b4e5866a6acd8</Assembly>
+        <FullClassName>ProjectTemplateWizard.NTierEntityFrameworkWizard</FullClassName>
+    </WizardExtension>
+</VSTemplate>

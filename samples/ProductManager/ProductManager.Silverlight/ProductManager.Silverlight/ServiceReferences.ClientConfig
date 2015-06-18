@@ -1,0 +1,24 @@
+﻿<configuration>
+    <system.serviceModel>
+        <bindings>
+            <basicHttpBinding>
+                <binding name="BasicHttpBinding" maxBufferSize="2147483647" maxReceivedMessageSize="2147483647">
+                    <security mode="None" />
+                </binding>
+            </basicHttpBinding>
+        </bindings>
+        <client>
+            <!-- 
+                 addresses of data service
+                 1) silverlight host
+                    ../ProductManagerDataService.svc/basic 
+                 2) dedicated server
+                    http://localhost:5000/ProductManagerDataService.svc/basic 
+            -->
+            <endpoint address="http://localhost:5000/ProductManagerDataService.svc/basic"
+                binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding"
+                contract="ProductManager.Common.Domain.Service.Contracts.IProductManagerDataService"
+                name="ProductManagerDataService" />
+        </client>
+    </system.serviceModel>
+</configuration>

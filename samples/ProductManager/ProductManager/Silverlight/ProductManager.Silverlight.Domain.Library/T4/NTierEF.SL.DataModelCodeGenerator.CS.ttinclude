@@ -1,0 +1,143 @@
+﻿<#@ include file="NTierEF.SL.ReflectionUtils.CS.ttinclude" #>
+<#@ include file="NTierEF.SL.EnumTT.CS.ttinclude" #>
+<#@ include file="NTierEF.SL.EntityTT.CS.ttinclude" #>
+<#@ include file="NTierEF.SL.ComplexTypeTT.CS.ttinclude" #>
+<#@ include file="NTierEF.SL.ChangeSetTT.CS.ttinclude" #>
+<#@ include file="NTierEF.SL.ResultSetTT.CS.ttinclude" #>
+<#+
+// <copyright file="NTierEF.SL.DataModelCodeGenerator.CS.ttinclude" company="Trivadis">
+//     Copyright © Trivadis. All Rights Reserved.
+// </copyright>
+public class DataModelCodeGenerator : Generator
+{
+    private readonly GenerationUtils GenerationUtils;
+    private readonly ReflectionUtils ReflectionUtils;
+
+    public DataModelCodeGenerator(GenerationUtils generationUtils, string dataModelProject, string modelNamespace)
+    {
+        this.GenerationUtils = generationUtils;
+
+        var dataModelProjectUtils = new ProjectUtils(dataModelProject);
+        this.ReflectionUtils = new ReflectionUtils(dataModelProjectUtils.GetAssemblyPath());
+
+        this.EnumTemplate = new EnumTemplate(this.GenerationUtils, modelNamespace);
+        this.EntityTemplate = new EntityTemplate(this.GenerationUtils, this.ReflectionUtils, modelNamespace);
+        this.ComplexTypeTemplate = new ComplexTypeTemplate(this.GenerationUtils, modelNamespace);
+        this.ChangeSetTemplate = new ChangeSetTemplate(this.GenerationUtils, modelNamespace);
+        this.ResultSetTemplate = new ResultSetTemplate(this.GenerationUtils, modelNamespace);
+    }
+
+    /// <summary>
+    /// Gets or sets the template that generates the enum types of the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="EnumTemplate"/>.
+    /// </remarks>
+    public EnumTemplate EnumTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates the entity types of the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="EntityTemplate"/>.
+    /// </remarks>
+    public EntityTemplate EntityTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates the complext types of the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="ComplexTypeTemplate"/>.
+    /// </remarks>
+    public ComplexTypeTemplate ComplexTypeTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates the change set for the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="ChangeSetTemplate"/>.
+    /// </remarks>
+    public ChangeSetTemplate ChangeSetTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates the result set for the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="ResultSetTemplate"/>.
+    /// </remarks>
+    public ResultSetTemplate ResultSetTemplate;
+
+    /// <summary>
+    /// Generates data access classes.
+    /// </summary>
+    protected override void RunCore()
+    {
+        CreateEnums();
+        CreateEntities();
+        CreateComplexTypes();
+        CreateChangeSet();
+        CreateResultSet();
+    }
+
+    private void CreateEnums()
+    {
+        if (EnumTemplate != null)
+        {
+            foreach (EdmType item in GenerationUtils.TypeMapper.GetEnumItemsToGenerate(GenerationUtils.ItemCollection))
+            {
+                EnumTemplate.EnumName = item.Name;
+                EnumTemplate.Render();
+            }
+        }
+    }
+
+    private void CreateEntities()
+    {
+        if (EntityTemplate != null)
+        {
+            foreach (EntityType entity in GenerationUtils.ItemCollection.GetItems<EntityType>())
+            {
+                EntityTemplate.EntityName = entity.Name;
+                //EntityTemplate.File = string.Format(@"Common{2}Model{2}{0}{2}{1}.g.cs", GenerationUtils.ModelName, entity.Name, System.IO.Path.DirectorySeparatorChar);
+                EntityTemplate.Render();
+            }
+        }
+    }
+
+    private void CreateComplexTypes()
+    {
+        if (ComplexTypeTemplate != null)
+        {
+            foreach (ComplexType complex in GenerationUtils.ItemCollection.GetItems<ComplexType>())
+            {
+                ComplexTypeTemplate.ClassName = complex.Name;
+                //ComplexTypeTemplate.File = string.Format(@"Common{2}Model{2}{0}{2}{1}.g.cs", GenerationUtils.ModelName, complex.Name, System.IO.Path.DirectorySeparatorChar);
+                ComplexTypeTemplate.Render();
+            }
+        }
+    }
+
+    private void CreateChangeSet()
+    {
+        if (ChangeSetTemplate != null)
+        {
+            //ChangeSetTemplate.File = string.Format(@"Common{1}Model{1}{0}{1}{0}ChangeSet.g.cs", GenerationUtils.ModelName, System.IO.Path.DirectorySeparatorChar);
+            ChangeSetTemplate.Render();
+        }
+    }
+
+    private void CreateResultSet()
+    {
+        if (ResultSetTemplate != null)
+        {
+            //ResultSetTemplate.File = string.Format(@"Common{1}Model{1}{0}{1}{0}ResultSet.g.cs", GenerationUtils.ModelName, System.IO.Path.DirectorySeparatorChar);
+            ResultSetTemplate.Render();
+        }
+    }
+}
+#>

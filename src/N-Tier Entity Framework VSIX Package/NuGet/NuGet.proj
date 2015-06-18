@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="RebuildPackages" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+    <XmlTransformationAssemblyName Condition="'$(VisualStudioVersion)' == '10.0'">Microsoft.Web.Publishing.Tasks</XmlTransformationAssemblyName>
+    <XmlTransformationAssemblyName Condition="'$(VisualStudioVersion)' != '10.0'">Microsoft.Web.XmlTransform</XmlTransformationAssemblyName>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildThisFileDirectory)\..\</SolutionDir>
+    <OutputPath Condition=" '$(OutputPath)' == '' ">$(SolutionDir)\bin\$(Configuration)\</OutputPath>
+    <PackagesPath Condition=" '$(PackagesPath)' == '' ">$(SolutionDir)\lib\Packages\</PackagesPath>
+    <NuGetExePath>$(SolutionDir)\..\..\tools\NuGet\NuGet.exe</NuGetExePath>
+    <FrameworkDir>$(SolutionDir)\..\N-Tier Entity Framework\</FrameworkDir>
+    <FrameworkBinDir>$(FrameworkDir)\bin\$(Configuration)\</FrameworkBinDir>
+    <VersionOption Condition=" '$(Version)' != '' ">-Version $(Version)</VersionOption>
+    <Symbols>-Symbols</Symbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+    <NuSpecs Include="$(MSBuildThisFileDirectory)\*\**\*.nuspec" />
+    -->
+    <NuPackSourceDir Include="$(MSBuildThisFileDirectory)\*\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--<ClientDomain         Include="$(FrameworkBinDir)**\NTier.Client.Domain.*" />-->
+    <!--<CommonDomain         Include="$(FrameworkBinDir)**\NTier.Common.Domain.*" />-->
+    <!--<ServerDomain         Include="$(FrameworkBinDir)**\NTier.Server.Domain.*" Exclude="$(FrameworkBinDir)**\NTier.Server.Domain.Repositories.*" />-->
+    <ServerDomainEF5      Include="$(FrameworkBinDir)EF5\**\NTier.Server.Domain.Repositories.EntityFramework.*" />
+    <!--<ServerDomainEF6      Include="$(FrameworkBinDir)EF6\**\NTier.Server.Domain.Repositories.EntityFramework.*" />-->
+    <Silverlight4Domain   Include="$(FrameworkBinDir)**\SL4\NTier.Silverlight.Domain.*" />
+    <Silverlight5Domain   Include="$(FrameworkBinDir)**\SL5\NTier.Silverlight.Domain.*" />
+    <T4Include            Include="$(SolutionDir)\TextTemplates\NTierEF.*.ttinclude" Exclude="$(SolutionDir)\TextTemplates\NTierEF.SL.*.ttinclude;$(SolutionDir)\TextTemplates\NTierEF.DomainService*.ttinclude" />
+    <T4IncludeWithTarget  Include="$(SolutionDir)\TextTemplates\*\NTierEF.*.ttinclude" Exclude="$(SolutionDir)\TextTemplates\*\NTierEF.SL.*.ttinclude;$(SolutionDir)\TextTemplates\*\NTierEF.DomainService*.ttinclude" />
+    <SilverlightT4Dll     Include="$(FrameworkBinDir)**\NTier.Common.Domain.dll" />
+    <SilverlightT4Include Include="$(SolutionDir)\TextTemplates\NTierEF.SL.*.ttinclude" />
+    <SilverlightT4Include Include="$(SolutionDir)\TextTemplates\NTierEF.EF.Utility.CS.ttinclude" />
+    <T4EF4Include         Include="$(SolutionDir)\TextTemplates.EF4\*.ttinclude" />
+    <T4EF5Include         Include="$(SolutionDir)\TextTemplates.EF5\*.ttinclude" />
+    <T4EF6Include         Include="$(SolutionDir)\TextTemplates.EF6\*.ttinclude" />
+    <WcfRiaT4Include      Include="$(SolutionDir)\TextTemplates\NTierEF.DomainService*.ttinclude" />
+    <WcfRiaT4Include      Include="$(SolutionDir)\TextTemplates\NTierEF.EF.Utility.CS.ttinclude" />
+    <T4Tools              Include="$(MSBuildThisFileDirectory)\tools\*" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <ClientDomainPojectName>NTier.Client.Domain</ClientDomainPojectName>
+    <CommonDomainPojectName>NTier.Common.Domain</CommonDomainPojectName>
+    <ServerDomainPojectName>NTier.Server.Domain</ServerDomainPojectName>
+    <ServerDomainEF5RepoPojectName>NTier.Server.Domain.Repositories.EntityFramework5_0</ServerDomainEF5RepoPojectName>
+    <ServerDomainEF6RepoPojectName>NTier.Server.Domain.Repositories.EntityFramework6_0</ServerDomainEF6RepoPojectName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkProjects   Include="$(FrameworkDir)\$(ClientDomainPojectName)\*.csproj" />
+    <FrameworkProjects   Include="$(FrameworkDir)\$(CommonDomainPojectName)\*.csproj" />
+    <FrameworkProjects   Include="$(FrameworkDir)\$(ServerDomainPojectName)\*.csproj" />
+    <FrameworkProjects   Include="$(FrameworkDir)\$(ServerDomainEF5RepoPojectName)\*.csproj" />
+    <FrameworkProjects   Include="$(FrameworkDir)\$(ServerDomainEF6RepoPojectName)\*.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\Client\lib\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\Common\lib\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\Server\lib\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\Server.EF4\lib\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\Server.EF5\lib\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\Server.EF6\lib\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\Silverlight\lib\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\Silverlight\content\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\Silverlight\tools\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\T4\content\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\T4\tools\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\T4.EF4\content\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\T4.EF4\tools\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\T4.EF5\content\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\T4.EF5\tools\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\T4.EF6\content\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\T4.EF6\tools\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\WcfRia\content\" />
+    <ResourceDirectories Include="$(MSBuildThisFileDirectory)\WcfRia\tools\" />
+  </ItemGroup>
+
+  <Target Name="Clean">	
+    <!-- remove resource directories -->
+    <RemoveDir Condition=" Exists('%(ResourceDirectories.Identity)') "  Directories="%(ResourceDirectories.Identity)" />
+    
+    <!-- delete nupkg files -->
+    <ItemGroup>
+      <NuGetPackages Include="$(PackagesPath)\*.nupkg" />
+      <NuGetPackages Include="$(OutputPath)\*.nupkg" />
+    </ItemGroup>
+    <Delete Files="@(NuGetPackages)" />
+    
+    <!-- delete nuspec files being generated based on nutrans file -->
+    <CreateItem Include="$(MSBuildThisFileDirectory)\*\**\*.nuspec" AdditionalMetadata="MyMetadata=Hello">
+      <Output TaskParameter="Include" ItemName="NuSpecs"/>
+    </CreateItem>
+    <Delete Condition=" Exists('%(RootDir)%(NuSpecs.Directory)%(NuSpecs.Filename).nutrans') " Files="%(NuSpecs.Identity)" /> 
+  </Target>
+
+  <Target Name="RebuildPackages" DependsOnTargets="Clean;Build">
+  </Target>
+
+  <Target Name="Build" DependsOnTargets="Prepare">
+    <MakeDir Directories="$(PackagesPath)" Condition=" !Exists('$(PackagesPath)') " />
+    
+    <CreateItem Include="$(MSBuildThisFileDirectory)\*\**\*.nuspec" AdditionalMetadata="MyMetadata=Hello">
+      <Output TaskParameter="Include" ItemName="NuSpecs"/>
+    </CreateItem>
+    <Exec Command="&quot;$(NuGetExePath)&quot; pack &quot;%(NuSpecs.Identity)&quot; $(VersionOption) -OutputDirectory &quot;$(PackagesPath).&quot; -Exclude &quot;*.nutrans&quot; -NonInteractive -NoPackageAnalysis" />
+    <Exec Command="&quot;$(NuGetExePath)&quot; pack &quot;%(FrameworkProjects.Identity)&quot; $(VersionOption) -Build $(Symbols) -Properties Configuration=Release -OutputDirectory &quot;$(PackagesPath).&quot; -NonInteractive -NoPackageAnalysis" />
+    
+    <CallTarget Targets="CopyFrameworkPackages"/>
+    <!--<CallTarget Targets="CopyPackagesToOutputPath"/>-->
+  </Target>
+
+  <Target Name="CopyFrameworkPackages">
+    <ItemGroup>
+      <FrameworkNuGetPackages Include="$(FrameworkDir)lib\**\*.nupkg" />
+      <FrameworkNuGetPackages Include="$(FrameworkDir)packages\**\*.nupkg" />
+    </ItemGroup>
+    <Copy DestinationFolder="$(PackagesPath)" SourceFiles="@(FrameworkNuGetPackages)" />
+  </Target>
+
+  <Target Name="CopyPackagesToOutputPath">
+    <ItemGroup>
+      <VsixNuGetPackages Include="$(PackagesPath)\*.nupkg" />
+    </ItemGroup>
+    <MakeDir Directories="$(OutputPath)" Condition=" !Exists('$(OutputPath)') " />
+    <Copy DestinationFolder="$(OutputPath)" SourceFiles="@(VsixNuGetPackages)" />
+  </Target>
+
+  <Target Name="Prepare" DependsOnTargets="PrepareNuSpecs;PrepareResources">
+  </Target>
+
+  <Target Name="PrepareResources">
+    <!--<Copy DestinationFolder="$(MSBuildThisFileDirectory)\Client\lib\net4-client" SourceFiles="@(ClientDomain)" />-->
+    <!--<Copy DestinationFolder="$(MSBuildThisFileDirectory)\Common\lib\net4-client" SourceFiles="@(CommonDomain)" />-->
+    <!--<Copy DestinationFolder="$(MSBuildThisFileDirectory)\Server\lib\net4-client" SourceFiles="@(ServerDomain)" />-->
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Server.EF4\lib\net4-client" SourceFiles="@(ServerDomainEF5)" />
+    <!--<Copy DestinationFolder="$(MSBuildThisFileDirectory)\Server.EF5\lib\net4-client" SourceFiles="@(ServerDomainEF5)" />-->
+    <!--<Copy DestinationFolder="$(MSBuildThisFileDirectory)\Server.EF6\lib\net4-client" SourceFiles="@(ServerDomainEF6)" />-->
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\lib\sl4" SourceFiles="@(Silverlight4Domain)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\lib\sl5" SourceFiles="@(Silverlight5Domain)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\content\T4" SourceFiles="@(SilverlightT4Dll)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\content\T4" SourceFiles="@(SilverlightT4Include)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\Silverlight\tools" SourceFiles="@(T4Tools)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4\content\T4" SourceFiles="@(T4Include)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4\content\$([System.IO.Directory]::GetParent(%(T4IncludeWithTarget.Identity)).Name)\T4" SourceFiles="@(T4Include);%(T4IncludeWithTarget.Identity)" Condition=" %(T4IncludeWithTarget.Identity) != '' " />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4\tools" SourceFiles="@(T4Tools)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4.EF4\content\T4" SourceFiles="@(T4EF4Include)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4.EF4\tools" SourceFiles="@(T4Tools)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4.EF5\content\T4" SourceFiles="@(T4EF5Include)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4.EF5\tools" SourceFiles="@(T4Tools)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4.EF6\content\T4" SourceFiles="@(T4EF6Include)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\T4.EF6\tools" SourceFiles="@(T4Tools)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\WcfRia\content\T4" SourceFiles="@(WcfRiaT4Include)" />
+    <Copy DestinationFolder="$(MSBuildThisFileDirectory)\WcfRia\tools" SourceFiles="@(T4Tools)" />
+  </Target>
+
+  <Target Name="PrepareNuSpecs">
+    <ItemGroup>
+      <Transforms Include="$(MSBuildThisFileDirectory)\**\*.nutrans" />
+      <Transforms Include="$(FrameworkDir)\**\*.nutrans" />
+    </ItemGroup>
+
+    <!-- Transform Nuspecs -->
+    <TransformXmlHierarchy
+      Source="%(Transforms.Identity)"
+      Destination="%(Transforms.RootDir)%(Transforms.Directory)%(Transforms.Filename).nuspec"
+      TaskDirectory="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Web\"
+      XmlTransformationAssemblyName="$(XmlTransformationAssemblyName)" />
+  </Target>
+
+  <!-- This task takes in a XDT transform file and transforms it, following any inheritance chain.
+       There should be at least one base transform for this to work; otherwise just use Microsoft's
+       regular TransformXml task. 
+       SOURCE: http://kamranicus.com/Blog/Posts/32/using-nuspec-inheritance-to-reduce-nuget-maintenan
+  -->
+  <!-- EXAMPLE USAGE:
+    <TransformXmlHierarchy 
+      Source="source.xml" 
+      Destination="transformed.xml"
+      TaskDirectory="path/to/directory/of/Microsoft.Web.Publishing.Tasks" />
+  -->
+  <UsingTask
+    TaskName="TransformXmlHierarchy"
+    TaskFactory="CodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" >
+  <ParameterGroup>
+    <Source Required="true" />
+    <Destination Required="true" />
+    <TaskDirectory Required="true" />
+    <XmlTransformationAssemblyName Required="true" />
+  </ParameterGroup>
+  <Task>    
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Using Namespace="System"/>
+    <Using Namespace="System.Linq"/>
+    <Using Namespace="System.IO" />
+    <Using Namespace="System.Xml"/>
+    <Using Namespace="System.Reflection" />
+    <Code Type="Fragment" Language="cs">
+      <![CDATA[
+      // TODO: Figure out a way to make the inline task reference this. For the life of me,
+      //     it wasn't working, so had to load via Reflection.
+      var taskPath = Path.Combine(TaskDirectory, XmlTransformationAssemblyName + ".dll");
+      if (!File.Exists(taskPath))
+        throw new Exception("Could not load publishing tasks assembly: " +  taskPath);
+      
+      Assembly taskAssembly = Assembly.UnsafeLoadFrom(taskPath);
+      
+      Func<XmlDocument, string, XmlDocument> transformer = (source, transform) => 
+      {
+         var typeName = XmlTransformationAssemblyName + ".XmlTransformation";
+         dynamic transformation = taskAssembly.CreateInstance(
+           typeName, true, BindingFlags.CreateInstance, 
+           null, new object[] { transform }, null, null);
+         
+         if (transformation == null)
+           throw new Exception("Could not create instance of XmlTransformation: " + typeName);
+         
+         transformation.Apply(source);
+         
+         return source;
+      };
+      
+      Func<XmlDocument, string> getParent = (source) => 
+      {
+         if (source == null) return null;
+         
+         // Use default namespace of document
+         var nsmgr = new XmlNamespaceManager(source.NameTable);
+         nsmgr.AddNamespace("x", source.DocumentElement.NamespaceURI);
+         
+         // TODO: Probably can safely select first node, to support any kind of XML document
+         var attr = source.SelectSingleNode("x:package", nsmgr).Attributes["inherits"];
+         
+         return attr == null ? null : attr.Value;
+      };
+      
+      var rootDoc = new XmlDocument();
+      var sources = new List<string>();
+      var basePath = Path.GetDirectoryName(Source);
+      var parent = Path.GetFileName(Source);
+      
+      if (basePath == null) {
+        throw new Exception("Could not find base directory of path " + Source);
+      }
+      
+      do {
+        sources.Add(parent);
+        
+        rootDoc.Load(Path.Combine(basePath, parent));
+        
+        parent = getParent(rootDoc);
+        
+        // TODO: Need to rebase basePath here?
+        
+        if (parent != null) {
+          rootDoc.Load(Path.Combine(basePath, parent));
+        }
+      } while (parent != null);
+      
+      // Reverse chain
+      sources.Reverse();
+      
+      var transformedDoc = sources.Skip(1).Aggregate(rootDoc, 
+        (document, transform) => String.IsNullOrEmpty(transform) 
+          ? document 
+          : transformer(document, Path.Combine(basePath, transform)),
+        (document) => document);
+      
+      Log.LogMessage(MessageImportance.Normal, "Transformed " + Destination);
+      
+      transformedDoc.Save(Destination);
+      ]]>
+    </Code>
+  </Task>
+  </UsingTask>
+
+</Project>

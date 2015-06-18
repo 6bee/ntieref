@@ -1,0 +1,20 @@
+﻿<#@ assembly name="$(ProjectDir)\T4\NTier.Common.Domain.dll" #>
+<#@ template language="C#" hostspecific="true" debug="true" #>
+<#@ output extension="txt" #>
+<#@ include file="$(ProjectDir)\T4\NTierEF.SL.NTierEntityGenerator.CS.ttinclude" #>
+<#
+    // <copyright file="EntityModel.tt" company="Trivadis">
+    //  Copyright © Trivadis. All Rights Reserved.
+    // </copyright>
+    
+    // Specify project files in case projects do not use default project names.
+    //NTierEntityGenerator.ClientLibraryProject = @"..\..\Client\ProductManager.Client.Domain\ProductManager.Client.Domain.csproj";
+    //NTierEntityGenerator.DataModelProject = @"..\..\Common\ProductManager.Common.Domain.Model\ProductManager.Common.Domain.Model.csproj";
+    //NTierEntityGenerator.DataServiceContractProject = @"..\..\Common\ProductManager.Common.Domain.Service\ProductManager.Common.Domain.Service.csproj";
+    //NTierEntityGenerator.EdmxProject = @"..\..\Server\ProductManager.Server.Domain.Edmx\ProductManager.Server.Domain.Edmx.csproj";
+    
+    //var generator = new NTierEntityGenerator(this, @"..\..\Server\ProductManager.Server.Domain.Edmx\EntityModel.edmx");
+    var generator = new NTierEntityGenerator(this);
+    generator.Run();
+#>
+See EntityModel.tt.log for list of generated files.

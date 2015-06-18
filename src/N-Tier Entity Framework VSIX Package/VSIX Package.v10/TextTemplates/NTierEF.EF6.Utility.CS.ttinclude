@@ -1,0 +1,4 @@
+﻿<#@ include file="NTierEF.EdmUtility.CS.ttinclude" #>
+<#
+    T4Context.SetTemplateMetadata(minimumEntityFrameworkVersion: "6.0");
+#>

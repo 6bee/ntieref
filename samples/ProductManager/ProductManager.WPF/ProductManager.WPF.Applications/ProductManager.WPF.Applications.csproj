@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9DAF5524-073E-44BE-86D4-36213F41BEA7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ProductManager.WPF.Applications</RootNamespace>
+    <AssemblyName>ProductManager.WPF.Applications</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="ProductManager.Client.Domain">
+      <HintPath>..\..\ProductManager\Client\ProductManager.Client.Domain\bin\Debug\ProductManager.Client.Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="ProductManager.Client.Domain.Service.RemoteChannelFactory">
+      <HintPath>..\..\ProductManager\Client\ProductManager.Client.Domain.Service.RemoteChannelFactory\bin\Debug\ProductManager.Client.Domain.Service.RemoteChannelFactory.dll</HintPath>
+    </Reference>
+    <Reference Include="ProductManager.Common.Domain.Model">
+      <HintPath>..\..\ProductManager\Client\ProductManager.Client.Domain\bin\Debug\ProductManager.Common.Domain.Model.dll</HintPath>
+    </Reference>
+    <Reference Include="ProductManager.Common.Domain.Service">
+      <HintPath>..\..\ProductManager\Client\ProductManager.Client.Domain\bin\Debug\ProductManager.Common.Domain.Service.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="NTier.Client.Domain">
+      <HintPath>..\..\ProductManager\Client\ProductManager.Client.Domain\bin\Debug\NTier.Client.Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="NTier.Common.Domain">
+      <HintPath>..\..\ProductManager\Client\ProductManager.Client.Domain\bin\Debug\NTier.Common.Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="WpfApplicationFramework, Version=1.0.0.400, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\Lib\WpfApplicationFramework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\EntityController.cs" />
+    <Compile Include="Controllers\IEntityController.cs" />
+    <Compile Include="Controllers\IPresentationController.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Model\ProductManager\ProductColorFilter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Services\EntityService.cs" />
+    <Compile Include="Services\IEntityService.cs" />
+    <Compile Include="Services\IQuestionService.cs" />
+    <Compile Include="ViewModels\ProductListViewModel.cs" />
+    <Compile Include="ViewModels\ProductViewModel.cs" />
+    <Compile Include="ViewModels\ShellViewModel.cs" />
+    <Compile Include="Views\IProductListView.cs" />
+    <Compile Include="Views\IProductView.cs" />
+    <Compile Include="Views\IShellView.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

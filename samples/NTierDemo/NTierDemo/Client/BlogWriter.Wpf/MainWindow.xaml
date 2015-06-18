@@ -1,0 +1,44 @@
+﻿<Window x:Class="BlogWriter.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:v="clr-namespace:BlogWriter.Wpf.Views"
+        xmlns:dp="clr-namespace:BlogWriter.Wpf.DependencyProperties"
+        Title="N-Tier Demo  -  Blog Witer" 
+        Height="350" Width="525">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <!-- login -->
+        <ContentControl Style="{StaticResource SlidingPage}" VerticalAlignment="Center" Width="300" 
+                        dp:ContentControl.IsActive="{Binding LoginViewModel.IsActive, FallbackValue=False}">
+            <v:LoginView DataContext="{Binding LoginViewModel}" />
+        </ContentControl>
+
+        <!-- registration -->
+        <ContentControl Style="{StaticResource SlidingPage}" VerticalAlignment="Center" Width="300"
+                        dp:ContentControl.IsActive="{Binding RegistrationViewModel.IsActive, FallbackValue=False}">
+            <v:RegistrationView DataContext="{Binding RegistrationViewModel}" />
+        </ContentControl>
+
+        <!-- blogs and posts -->
+        <ContentControl Style="{StaticResource SlidingPage}"
+                        dp:ContentControl.IsActive="{Binding UserBlogsViewModel.IsActive, FallbackValue=False}">
+            <v:UserBlogsView DataContext="{Binding UserBlogsViewModel}" />
+        </ContentControl>
+
+        <!-- status bar -->
+        <StatusBar Grid.Row="1">
+            <StatusBarItem Content="Powered by N-Tier Entity Framework"/>
+            <Separator Visibility="{Binding IsUserAuthenticated, Converter={StaticResource BooleanToCollapsed}}" />
+            <StatusBarItem Visibility="{Binding IsUserAuthenticated, Converter={StaticResource BooleanToCollapsed}}">
+                <TextBlock>
+                    <Run Text="{Binding CurrentUser.FirstName}"/>
+                    <Run Text="{Binding CurrentUser.LastName}"/>
+                </TextBlock>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

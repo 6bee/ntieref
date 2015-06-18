@@ -1,0 +1,380 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EAD50F34-E02A-4F91-B4AB-990D4D7207B8}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NTier.Domain</RootNamespace>
+    <AssemblyName>NTier.Silverlight.Domain</AssemblyName>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+  </PropertyGroup>
+  <!-- This property group is only here to support building this project using the 
+       MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 
+       to set the TargetFrameworkVersion to v3.5 -->
+  <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\SL5\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\SL5\</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="Remote.Linq">
+      <HintPath>..\packages\Remote.Linq.4.1.0\lib\sl5\Remote.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations, Version=5.0.5.0, Culture=neutral, PublicKeyToken=ddd0da4d3e678217, processorArchitecture=MSIL" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Browser" />
+    <Reference Include="System.Windows.Data, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.XPath, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\AcceptOption.cs">
+      <Link>Client\AcceptOption.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\AsyncQueryCallback.cs">
+      <Link>Client\AsyncQueryCallback.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\DataContext.Silverlight.cs">
+      <Link>Client\DataContext.Silverlight.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\DataContext`.Silverlight.cs">
+      <Link>Client\DataContext`.Silverlight.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\DataServiceQueryable`.Silverlight.cs">
+      <Link>Client\DataServiceQueryable`.Silverlight.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\DataServiceQueryableImp.Silverlight.cs">
+      <Link>Client\DataServiceQueryableImp.Silverlight.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\Deployment.cs">
+      <Link>Client\Deployment.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\EntitySet.Silverlight.cs">
+      <Link>Client\EntitySet.Silverlight.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\IDataServiceQueryable.Silverlight.cs">
+      <Link>Client\IDataServiceQueryable.Silverlight.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\OrderedDataServiceQueryable.Silverlight.cs">
+      <Link>Client\OrderedDataServiceQueryable.Silverlight.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\System.Collections.Generic\SortedDictionary.cs">
+      <Link>System.Collections.Generic\SortedDictionary.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\UpdateException.cs">
+      <Link>Client\UpdateException.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\OptimisticConcurrencyFault.cs">
+      <Link>Common\OptimisticConcurrencyFault.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\UpdateFault.cs">
+      <Link>Common\UpdateFault.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\ChangeSetFactory.cs">
+      <Link>Client\ChangeSetFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\DataContext.cs">
+      <Link>Client\DataContext.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\DataContext`.cs">
+      <Link>Client\DataContext`.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\DataLoader.cs">
+      <Link>Client\DataLoader.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\DataServiceQueryable.cs">
+      <Link>Client\DataServiceQueryable.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\DataServiceQueryable`.cs">
+      <Link>Client\DataServiceQueryable`.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\DataServiceQueryable`.QueryResult.cs">
+      <Link>Client\DataServiceQueryable`.QueryResult.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\DataServiceQueryableImp.cs">
+      <Link>Client\DataServiceQueryableImp.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\EditableEntityCollectionView.cs">
+      <Link>Client\EditableEntityCollectionView.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\EntityCollectionView.cs">
+      <Link>Client\EntityCollectionView.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\EntitySet.cs">
+      <Link>Client\EntitySet.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\EntitySetExtensions.cs">
+      <Link>Client\EntitySetExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\ExceptionEventArgs.cs">
+      <Link>Client\ExceptionEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\FilterExpressionCollection.cs">
+      <Link>Client\FilterExpressionCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\IDataContext.cs">
+      <Link>Client\IDataContext.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Client\IDataContext.Silverlight.cs">
+      <Link>Client\IDataContext.Silverlight.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\IDataLoader.cs">
+      <Link>Client\IDataLoader.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\IDataServiceQueryable.cs">
+      <Link>Client\IDataServiceQueryable.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\IDataServiceQueryableExtensions.cs">
+      <Link>Client\IDataServiceQueryableExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\IEntityCollectionView.cs">
+      <Link>Client\IEntityCollectionView.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\IEntitySet.cs">
+      <Link>Client\IEntitySet.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\IFilteredCollectionView.cs">
+      <Link>Client\IFilteredCollectionView.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\IInternalEntitySet.cs">
+      <Link>Client\IInternalEntitySet.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\InternalEntitySet.cs">
+      <Link>Client\InternalEntitySet.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\IOrderedDataServiceQueryable.cs">
+      <Link>Client\IOrderedDataServiceQueryable.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\IOrderedDataServiceQueryableExtensions.cs">
+      <Link>Client\IOrderedDataServiceQueryableExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\IQueryResult.cs">
+      <Link>Client\IQueryResult.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\IRemoteCollectionView.cs">
+      <Link>Client\IRemoteCollectionView.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\MergeOption.cs">
+      <Link>Client\MergeOption.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\ObservableEntityCollection.cs">
+      <Link>Client\ObservableEntityCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\OptimisticConcurrencyException.cs">
+      <Link>Client\OptimisticConcurrencyException.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\OrderedDataServiceQueryable.cs">
+      <Link>Client\OrderedDataServiceQueryable.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\PrimeNumbers.cs">
+      <Link>Client\PrimeNumbers.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\RefreshEventArgs.cs">
+      <Link>Client\RefreshEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\RemoteDataLoader.cs">
+      <Link>Client\RemoteDataLoader.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\ServerValidationException.cs">
+      <Link>Client\ServerValidationException.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\SortDescriptionExtensions.cs">
+      <Link>Client\SortDescriptionExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Client.Domain\StateEntry.cs">
+      <Link>Client\StateEntry.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ClientInfo.cs">
+      <Link>Common\Model\ClientInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ComplexPropertyAttribute.cs">
+      <Link>Common\Model\ComplexPropertyAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ConcurrencyPropertyAttribute.cs">
+      <Link>Common\Model\ConcurrencyPropertyAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\DynamicPropertyHelper.cs">
+      <Link>Common\Model\DynamicPropertyHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\EntitiesAddedToCollectionProperties.cs">
+      <Link>Common\Model\EntitiesAddedToCollectionProperties.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\EntitiesRemovedFromCollectionProperties.cs">
+      <Link>Common\Model\EntitiesRemovedFromCollectionProperties.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\Entity.cs">
+      <Link>Common\Model\Entity.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\EntityList.cs">
+      <Link>Common\Model\EntityList.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\Error.cs">
+      <Link>Common\Model\Error.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ErrorType.cs">
+      <Link>Common\Model\ErrorType.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ExtendedPropertiesDictionary.cs">
+      <Link>Common\Model\ExtendedPropertiesDictionary.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ForeignKeyPropertyAttribute.cs">
+      <Link>Common\Model\ForeignKeyPropertyAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\IChangeSet.cs">
+      <Link>Common\Model\IChangeSet.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\IEditable.cs">
+      <Link>Common\Model\IEditable.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\IEnumerableExtensions.cs">
+      <Link>Common\Model\IEnumerableExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\IncludeOnDeleteAttribute.cs">
+      <Link>Common\Model\IncludeOnDeleteAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\IncludeOnUpdateAttribute.cs">
+      <Link>Common\Model\IncludeOnUpdateAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\IObjectWithChangeTracker.cs">
+      <Link>Common\Model\IObjectWithChangeTracker.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\IResultSet.cs">
+      <Link>Common\Model\IResultSet.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ITrackableCollection.cs">
+      <Link>Common\Model\ITrackableCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ITrackableCollection`.cs">
+      <Link>Common\Model\ITrackableCollection`.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\NavigationPropertyAttribute.cs">
+      <Link>Common\Model\NavigationPropertyAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ObjectChangeTracker.cs">
+      <Link>Common\Model\ObjectChangeTracker.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ObjectState.cs">
+      <Link>Common\Model\ObjectState.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ObjectStateChangingEventArgs.cs">
+      <Link>Common\Model\ObjectStateChangingEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ObjectWithChangeTrackerExtensions.cs">
+      <Link>Common\Model\ObjectWithChangeTrackerExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\OriginalValuesDictionary.cs">
+      <Link>Common\Model\OriginalValuesDictionary.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\PrimitivePropertyAttribute.cs">
+      <Link>Common\Model\PrimitivePropertyAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\PropertyChangedWithValuesEventArgs.cs">
+      <Link>Common\Model\PropertyChangedWithValuesEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\PropertyChangingWithValuesEventArgs.cs">
+      <Link>Common\Model\PropertyChangingWithValuesEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\PropertyInfos.cs">
+      <Link>Common\Model\PropertyInfos.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\Query.cs">
+      <Link>Common\Model\Query.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\QueryResult.cs">
+      <Link>Common\Model\QueryResult.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ServerGenerationAttribute.cs">
+      <Link>Common\Model\ServerGenerationAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ServerGenerationTypes.cs">
+      <Link>Common\Model\ServerGenerationTypes.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\SimplePropertyAttribute.cs">
+      <Link>Common\Model\SimplePropertyAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\TrackableCollection`.cs">
+      <Link>Common\Model\TrackableCollection`.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Common.Domain\Model\ValueObject.cs">
+      <Link>Common\Model\ValueObject.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Common\Model\NonSerializedAttribute.cs">
+      <Link>Common\Model\NonSerializedAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\NTier.Silverlight.Domain.SL4\Common\Model\SerializableAttribute.cs">
+      <Link>Common\Model\SerializableAttribute.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

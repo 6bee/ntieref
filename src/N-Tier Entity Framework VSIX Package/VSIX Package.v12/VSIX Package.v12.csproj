@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <EFVersion Condition=" '$(EFVersion)' == '' ">6.0.2</EFVersion>
+    <EFProviderVersion Condition=" '$(EFProviderVersion)' == '' ">6_0</EFProviderVersion>
+    <NugetPackageVersion Condition=" '$(NugetPackageVersion)' == '' ">0.0.1</NugetPackageVersion>
+    <VsixFileVersion Condition=" '$(VsixVersion)' != '' ">_V$(VsixVersion)</VsixFileVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{A27B949F-B7F3-4FB9-9C04-9305A498F20D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NTierEntityFramework</RootNamespace>
+    <AssemblyName>N-Tier Entity Framework %28VS2013%29$(VsixFileVersion)</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <GeneratePkgDefFile>false</GeneratePkgDefFile>
+    <IncludeAssemblyInVSIXContainer>false</IncludeAssemblyInVSIXContainer>
+    <IncludeDebugSymbolsInVSIXContainer>false</IncludeDebugSymbolsInVSIXContainer>
+    <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
+    <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
+    <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DeployExtension>False</DeployExtension>
+    <CreateVsixContainer>True</CreateVsixContainer>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\VSIX Package\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\VSIX Package\favicon.ico">
+      <Link>favicon.ico</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\VSIX Package\license.txt">
+      <Link>license.txt</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\VSIX Package\preview.png">
+      <Link>preview.png</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\VSIX Package\Additional.pkgdef">
+      <Link>Additional.pkgdef</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\VSIX Package\TextTemplates\NTierEF.EdmUtility.CS.ttinclude">
+      <Link>TextTemplates\NTierEF.EdmUtility.CS.ttinclude</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\VSIX Package\TextTemplates\NTierEF.ProjectUtility.ttinclude">
+      <Link>TextTemplates\NTierEF.ProjectUtility.ttinclude</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\VSIX Package.v10\TextTemplates\NTierEF.EF4.Utility.CS.ttinclude">
+      <Link>TextTemplates\NTierEF.EF4.Utility.CS.ttinclude</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\VSIX Package.v10\TextTemplates\NTierEF.EF5.Utility.CS.ttinclude">
+      <Link>TextTemplates\NTierEF.EF5.Utility.CS.ttinclude</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="TextTemplates\NTierEF.EF6.Utility.CS.ttinclude">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\VSIX Package.v11\TextTemplates\NTierEF.T4Context.ttinclude">
+      <Link>TextTemplates\NTierEF.T4Context.ttinclude</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\ItemTemplates\DomainServiceGenerator.zip">
+      <Link>ItemTemplates\Silverlight\DomainServiceGenerator.zip</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\ItemTemplates\NTierEntityGenerator.zip">
+      <Link>ItemTemplates\Data\NTierEntityGenerator.zip</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\ItemTemplates\SilverlightGenerator.zip">
+      <Link>ItemTemplates\Silverlight\SilverlightGenerator.zip</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Client.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.Client.$(NugetPackageVersion).nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Common.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.Common.$(NugetPackageVersion).nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Server.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.Server.$(NugetPackageVersion).nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Server.EntityFramework4_0.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.Server.EntityFramework4_0.$(NugetPackageVersion).nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Server.EntityFramework5_0.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.Server.EntityFramework5_0.$(NugetPackageVersion).nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Server.EntityFramework6_0.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.Server.EntityFramework6_0.$(NugetPackageVersion).nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\NTierEntityFramework.Silverlight.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.Silverlight.$(NugetPackageVersion).nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\NTierEntityFramework.T4.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.T4.$(NugetPackageVersion).nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\NTierEntityFramework.T4.EntityFramework4_0.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.T4.EntityFramework4_0.$(NugetPackageVersion).nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\NTierEntityFramework.T4.EntityFramework5_0.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.T4.EntityFramework5_0.$(NugetPackageVersion).nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\NTierEntityFramework.T4.EntityFramework6_0.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.T4.EntityFramework6_0.$(NugetPackageVersion).nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\NTierEntityFramework.WcfRia.$(NugetPackageVersion).nupkg">
+      <Link>packages\NTierEntityFramework.WcfRia.$(NugetPackageVersion).nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\ProjectTemplates\NTierEF.zip">
+      <Link>ProjectTemplates\Windows\NTierEF.zip</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\ProjectTemplates\NTierEF_SL.zip">
+      <Link>ProjectTemplates\Silverlight\NTierEF_SL.zip</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\Remote.Linq.4.1.0.nupkg">
+      <Link>packages\Remote.Linq.4.1.0.nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\EntityFramework.4.3.1.nupkg">
+      <Link>packages\EntityFramework.4.3.1.nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\EntityFramework.5.0.0.nupkg">
+      <Link>packages\EntityFramework.5.0.0.nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\EntityFramework.6.0.2.nupkg">
+      <Link>packages\EntityFramework.6.0.2.nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <None Include="source.extension.vsixmanifest" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\EntityDataModelToolsExtensions\EntityDataModelToolsExtensions.csproj">
+      <Project>{F825E60E-4CC2-4666-AA9F-BA6DAB6013D7}</Project>
+      <Name>EntityDataModelToolsExtensions</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\ProjectTemplateWizard\ProjectTemplateWizard.csproj">
+      <Project>{8E6451B9-FB03-4D60-A9DB-F25A870ACF72}</Project>
+      <Name>ProjectTemplateWizard</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /y /d "$(TargetDir)*.vsix" "$(SolutionDir)$(OutDir)"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Target Name="BeforeBuild">
+    <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchVsixId" Properties="VsixGuid=6faf798b-bc7c-430f-95ed-3cb26f66f56b" />
+    <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchEFPackageVersions" Properties="EFProviderVersion=$(EFProviderVersion);EFVersion=$(EFVersion)" />
+    <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="NugetPackageVersion" Properties="NugetPackageVersion=$(NugetPackageVersion)" Condition="'$(NugetPackageVersion)' != ''" />
+    <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchVsixVersion" Properties="VsixVersion=$(VsixVersion)" Condition="'$(VsixVersion)' != ''" />
+    <MSBuild Projects="$(ProjectDir)..\ProjectTemplates\ProjectTemplates.proj" Targets="Clean;Build" />
+    <MSBuild Projects="$(ProjectDir)..\ItemTemplates\ItemTemplates.proj" Targets="Clean;Build" />
+    <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchEFPackageVersions" Properties="EFProviderVersion=X_Y;EFVersion=x.y.z" />
+    <MSBuild Projects="$(ProjectDir)..\VSIX Package\VsTemplatePatch.msbuild" Targets="PatchVsixId" Properties="VsixGuid=x" />
+  </Target>
+</Project>

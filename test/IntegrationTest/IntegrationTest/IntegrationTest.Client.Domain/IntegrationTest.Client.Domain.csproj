@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FDBED8A7-C640-4BCA-9C2F-23E8DA1BF6B0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>IntegrationTest.Client.Domain</RootNamespace>
+    <AssemblyName>IntegrationTest.Client.Domain</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NTier.Client.Domain">
+      <HintPath>..\..\packages\NTierEntityFramework.Client.1.8.0-alpha001\lib\net40-Client\NTier.Client.Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="NTier.Common.Domain">
+      <HintPath>..\..\packages\NTierEntityFramework.Common.1.8.0-alpha001\lib\net40-Client\NTier.Common.Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="Remote.Linq">
+      <HintPath>..\..\packages\Remote.Linq.4.1.2\lib\net45\Remote.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="INorthwindChangeSetFactory.g.cs" />
+    <Compile Include="INorthwindDataContext.g.cs" />
+    <Compile Include="NorthwindChangeSetFactory.g.cs" />
+    <Compile Include="NorthwindDataContext.g.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IntegrationTest.Common.Domain.Model\IntegrationTest.Common.Domain.Model.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\IntegrationTest.Common.Domain.Model\IntegrationTest.Common.Domain.Model.csproj') ">
+      <Name>IntegrationTest.Common.Domain.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IntegrationTest.Common.Domain.Model\IntegrationTest.Common.Domain.Model.csproj">
+      <Project>{5f9b2239-e85d-48d0-b4b4-625e0a326edd}</Project>
+      <Name>IntegrationTest.Common.Domain.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IntegrationTest.Common.Domain.Service\IntegrationTest.Common.Domain.Service.csproj" Condition=" Exists('$(MSBuildThisFileDirectory)\..\IntegrationTest.Common.Domain.Service\IntegrationTest.Common.Domain.Service.csproj') ">
+      <Name>IntegrationTest.Common.Domain.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IntegrationTest.Common.Domain.Service\IntegrationTest.Common.Domain.Service.csproj">
+      <Project>{b1580516-8b39-4ed6-b977-c4462ed0f569}</Project>
+      <Name>IntegrationTest.Common.Domain.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

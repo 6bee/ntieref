@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5F9B2239-E85D-48D0-B4B4-625E0A326EDD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>IntegrationTest.Common.Domain.Model</RootNamespace>
+    <AssemblyName>IntegrationTest.Common.Domain.Model</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;CLIENT_PROFILE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;CLIENT_PROFILE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NTier.Common.Domain">
+      <HintPath>..\..\packages\NTierEntityFramework.Common.1.8.0-alpha001\lib\net40-Client\NTier.Common.Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="Remote.Linq">
+      <HintPath>..\..\packages\Remote.Linq.4.1.2\lib\net45\Remote.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel.DomainServices.Server, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft SDKs\RIA Services\v1.0\Libraries\Server\System.ServiceModel.DomainServices.Server.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Northwind\Category.g.cs" />
+    <Compile Include="Northwind\Category.metadata.cs" />
+    <Compile Include="Northwind\Contact.g.cs" />
+    <Compile Include="Northwind\Contact.metadata.cs" />
+    <Compile Include="Northwind\Customer.g.cs" />
+    <Compile Include="Northwind\Customer.metadata.cs" />
+    <Compile Include="Northwind\DemographicGroup.g.cs" />
+    <Compile Include="Northwind\DemographicGroup.metadata.cs" />
+    <Compile Include="Northwind\DynamicContentEntity.g.cs" />
+    <Compile Include="Northwind\DynamicContentEntity.metadata.cs" />
+    <Compile Include="Northwind\DynamicContentEntity.cs" />
+    <Compile Include="Northwind\Employee.g.cs" />
+    <Compile Include="Northwind\Employee.metadata.cs" />
+    <Compile Include="Northwind\NorthwindChangeSet.g.cs" />
+    <Compile Include="Northwind\NorthwindOptimisticConcurrencyFault.g.cs" />
+    <Compile Include="Northwind\NorthwindResultSet.g.cs" />
+    <Compile Include="Northwind\NorthwindUpdateFault.g.cs" />
+    <Compile Include="Northwind\Order.g.cs" />
+    <Compile Include="Northwind\Order.metadata.cs" />
+    <Compile Include="Northwind\Order_Detail.g.cs" />
+    <Compile Include="Northwind\Order_Detail.metadata.cs" />
+    <Compile Include="Northwind\Product.g.cs" />
+    <Compile Include="Northwind\Product.metadata.cs" />
+    <Compile Include="Northwind\Region.g.cs" />
+    <Compile Include="Northwind\Region.metadata.cs" />
+    <Compile Include="Northwind\Shipper.g.cs" />
+    <Compile Include="Northwind\Shipper.metadata.cs" />
+    <Compile Include="Northwind\Supplier.g.cs" />
+    <Compile Include="Northwind\Supplier.metadata.cs" />
+    <Compile Include="Northwind\Territory.g.cs" />
+    <Compile Include="Northwind\Territory.metadata.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,13 @@
+﻿
+
+<!-- EF6 specific code generation utilities are not supported by this verison-->
+<!--#@ include file="EF6.Utility.CS.ttinclude" #-->
+<!--#@ include file="NTierEF.EdmUtility.CS.ttinclude" #-->
+<!--#
+    T4Context.SetTemplateMetadata(minimumEntityFrameworkVersion: "6.0");
+#-->
+
+
+
+
+Generates code in different projects. See SimpleParentChildModel.tt.log for list of generated files.

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="33124f6293ac410fa82aa41de558d518" Name="Diagram1">
+        <EntityTypeShape EntityType="TableInheritanceDemoDBModel.Customer" Width="2.125" PointX="5.25" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TableInheritanceDemoDBModel.Employee" Width="1.5" PointX="2.875" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TableInheritanceDemoDBModel.Person" Width="1.5" PointX="4.125" PointY="0.5" IsExpanded="true" />
+        <InheritanceConnector EntityType="TableInheritanceDemoDBModel.Customer" />
+        <InheritanceConnector EntityType="TableInheritanceDemoDBModel.Employee" />
+        <AssociationConnector Association="TableInheritanceDemoDBModel.FK__Employees__Manag__21B6055D" />
+        <EntityTypeShape EntityType="TableInheritanceDemoDBModel.Address" Width="1.5" PointX="8" PointY="0.5" />
+        <EntityTypeShape EntityType="TableInheritanceDemoDBModel.Demographic" Width="1.5" PointX="8.5" PointY="3.125" />
+        <EntityTypeShape EntityType="TableInheritanceDemoDBModel.EmployeeRole" Width="1.5" PointX="0.5" PointY="3.25" />
+        <AssociationConnector Association="TableInheritanceDemoDBModel.FK__Customers__Defau__164452B1" />
+        <AssociationConnector Association="TableInheritanceDemoDBModel.FK__People__HomeAddr__1273C1CD" />
+        <AssociationConnector Association="TableInheritanceDemoDBModel.FK__Demographics__Id__1FCDBCEB" />
+        <AssociationConnector Association="TableInheritanceDemoDBModel.FK__Employees__RoleI__1BFD2C07" />
+        <AssociationConnector Association="TableInheritanceDemoDBModel.CustomerDemographics" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
