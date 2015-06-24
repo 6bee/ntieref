@@ -186,10 +186,10 @@ namespace NTier.Common.Domain.Model
             }
 #endif
         }
-
+      
         public bool Contains(T item)
         {
-            return _data.Contains(item);
+            return _data.Contains(item,  new TrackableCollectionEqualityComparer());
         }
 
         void ICollection<T>.CopyTo(T[] array, int arrayIndex)
@@ -326,6 +326,24 @@ namespace NTier.Common.Domain.Model
                 throw new ArgumentException(string.Format("Argument expected to be of type {0} and got type {1}.", typeof(T).FullName, obj.GetType().FullName));
             }
             return (T)obj;
+        }
+
+        class TrackableCollectionEqualityComparer : IEqualityComparer<T>
+        {
+
+            #region IEqualityComparer<T> Members
+
+            public bool Equals(T x, T y)
+            {
+                return ReferenceEquals(x, y);
+            }
+
+            public int GetHashCode(T obj)
+            {
+                return obj.GetHashCode();
+            }
+
+            #endregion
         }
     }
 }
