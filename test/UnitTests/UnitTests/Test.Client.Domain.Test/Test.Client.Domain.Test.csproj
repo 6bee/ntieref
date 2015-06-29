@@ -36,10 +36,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NTier.Client.Domain">
-      <HintPath>..\..\packages\NTierEntityFramework.Client.1.8.0-alpha001\lib\net40-Client\NTier.Client.Domain.dll</HintPath>
+      <HintPath>..\..\packages\NTierEntityFramework.Client.1.8.0-alpha002\lib\net40-Client\NTier.Client.Domain.dll</HintPath>
     </Reference>
     <Reference Include="NTier.Common.Domain">
-      <HintPath>..\..\packages\NTierEntityFramework.Common.1.8.0-alpha001\lib\net40-Client\NTier.Common.Domain.dll</HintPath>
+      <HintPath>..\..\packages\NTierEntityFramework.Common.1.8.0-alpha002\lib\net40-Client\NTier.Common.Domain.dll</HintPath>
     </Reference>
     <Reference Include="Remote.Linq">
       <HintPath>..\..\packages\Remote.Linq.4.1.0\lib\net45\Remote.Linq.dll</HintPath>

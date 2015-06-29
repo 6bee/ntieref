@@ -31,31 +31,33 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Moq">
-      <HintPath>..\packages\Moq.4.2.1502.0911\lib\net40\Moq.dll</HintPath>
+      <HintPath>..\..\packages\Moq.4.2.1502.0911\lib\net40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="NTier.Client.Domain">
-      <HintPath>..\packages\NTierEntityFramework.Client.1.8.0-alpha001\lib\net40-Client\NTier.Client.Domain.dll</HintPath>
+      <HintPath>..\..\packages\NTierEntityFramework.Client.1.8.0-alpha002\lib\net40-Client\NTier.Client.Domain.dll</HintPath>
     </Reference>
-    <Reference Include="NTier.Common.Domain">
-      <HintPath>..\packages\NTierEntityFramework.Common.1.8.0-alpha001\lib\net40-Client\NTier.Common.Domain.dll</HintPath>
+    <Reference Include="NTier.Common.Domain, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NTierEntityFramework.Common.1.8.0-alpha002\lib\net40-Client\NTier.Common.Domain.dll</HintPath>
     </Reference>
     <Reference Include="Remote.Linq">
-      <HintPath>..\packages\Remote.Linq.4.1.0\lib\net45\Remote.Linq.dll</HintPath>
+      <HintPath>..\..\packages\Remote.Linq.4.1.0\lib\net45\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="xunit">
-      <HintPath>..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
+      <HintPath>..\..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
     </Reference>
     <Reference Include="xunit.should">
-      <HintPath>..\packages\xunit.should.1.1\lib\net35\xunit.should.dll</HintPath>
+      <HintPath>..\..\packages\xunit.should.1.1\lib\net35\xunit.should.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientDataContext\SimpleParentChildDataContext\When_loading_entities.cs" />
     <Compile Include="ClientDataContext\SimpleParentChildDataContext\When_detaching_entities.cs" />
+    <Compile Include="ClientDataContext\SimpleParentChildDataContext\When_loading_entities_with_include.cs" />
     <Compile Include="DomainModel\SimpleParentChild\When_clearing_navigation_properties.cs" />
     <Compile Include="DomainModel\SimpleParentChild\When_assigning_navigation_properties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

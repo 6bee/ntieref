@@ -39,14 +39,15 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="NTier.Common.Domain">
-      <HintPath>..\..\packages\NTierEntityFramework.Common.1.8.0-alpha001\lib\net40-Client\NTier.Common.Domain.dll</HintPath>
+    <Reference Include="NTier.Common.Domain, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NTierEntityFramework.Common.1.8.0-alpha002\lib\net40-Client\NTier.Common.Domain.dll</HintPath>
     </Reference>
     <Reference Include="NTier.Server.Domain">
-      <HintPath>..\..\packages\NTierEntityFramework.Server.1.8.0-alpha001\lib\net40-Client\NTier.Server.Domain.dll</HintPath>
+      <HintPath>..\..\packages\NTierEntityFramework.Server.1.8.0-alpha002\lib\net40-Client\NTier.Server.Domain.dll</HintPath>
     </Reference>
     <Reference Include="NTier.Server.Domain.Repositories.EntityFramework">
-      <HintPath>..\..\packages\NTierEntityFramework.Server.EntityFramework6_0.1.8.0-alpha001\lib\net40-Client\NTier.Server.Domain.Repositories.EntityFramework.dll</HintPath>
+      <HintPath>..\..\packages\NTierEntityFramework.Server.EntityFramework6_0.1.8.0-alpha002\lib\net40-Client\NTier.Server.Domain.Repositories.EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Remote.Linq">
       <HintPath>..\..\packages\Remote.Linq.4.1.0\lib\net45\Remote.Linq.dll</HintPath>
