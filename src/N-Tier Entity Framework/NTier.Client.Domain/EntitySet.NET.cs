@@ -12,46 +12,45 @@ namespace NTier.Client.Domain
         {
             var result = _queryDelegate(clientInfo, query);
 
-            //lock (_internalEntitySet.SyncRoot) // this would potentially lead to deadlocks
+            using (_internalEntitySet.PreventChangetracking())
             {
-                using (_internalEntitySet.PreventChangetracking())
+                if (result.TotalCount.HasValue)
                 {
-                    if (result.TotalCount.HasValue)
+                    _internalEntitySet.DatasourceTotalCount = result.TotalCount.Value;
+                }
+
+                if (!ReferenceEquals(null, result.Data))
+                {
+                    if (DetachEntitiesUponNewQueryResult)
                     {
-                        _internalEntitySet.DatasourceTotalCount = result.TotalCount.Value;
+                        if (MergeOption == MergeOption.PreserveChanges)
+                        {
+                            var unmodifiedEntities = this.Where(e => !e.HasChanges).ToArray();
+                            foreach (var entity in unmodifiedEntities)
+                            {
+                                Detach(entity);
+                            }
+                        }
+                        else
+                        {
+                            DetachAll();
+                        }
                     }
 
-                    if (result.Data != null)
+                    foreach (var entity in result.Data)
                     {
-                        if (DetachEntitiesUponNewQueryResult)
+                        TEntity existingEntity = null;
+                        if (MergeOption != MergeOption.NoTracking)
                         {
-                            if (MergeOption == MergeOption.PreserveChanges)
-                            {
-                                var unmodifiedEntities = this.Where(e => !e.HasChanges).ToArray();
-                                foreach (var entity in unmodifiedEntities)
-                                {
-                                    Detach(entity);
-                                }
-                            }
-                            else
-                            {
-                                DetachAll();
-                            }
+                            existingEntity = _attachDelegate(entity, DataContext.InsertMode.Attach, mergeOption: MergeOption);
                         }
 
-                        foreach (var entity in result.Data)
+                        if (!ReferenceEquals(null, existingEntity) && existingEntity.ChangeTracker.State == ObjectState.Deleted)
                         {
-                            TEntity existingEntity = null;
-                            if (MergeOption != MergeOption.NoTracking)
-                            {
-                                existingEntity = _attachDelegate(entity, DataContext.InsertMode.Attach, mergeOption: MergeOption);
-                            }
-                            if (existingEntity != null && existingEntity.ChangeTracker.State == ObjectState.Deleted)
-                            {
-                                continue;
-                            }
-                            yield return existingEntity != null ? existingEntity : entity;
+                            continue;
                         }
+
+                        yield return ReferenceEquals(null, existingEntity) ? entity : existingEntity;
                     }
                 }
             }

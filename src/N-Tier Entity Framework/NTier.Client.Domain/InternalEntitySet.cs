@@ -90,7 +90,7 @@ namespace NTier.Client.Domain
             lock (SyncRoot)
             {
                 existingEntity = GetExistingByReference(entity);
-                if (existingEntity == null)
+                if (ReferenceEquals(null, existingEntity))
                 {
                     entity.MarkAsAdded();
                     // apply settings
@@ -98,6 +98,7 @@ namespace NTier.Client.Domain
                     {
                         entity.IsValidationEnabled = IsValidationEnabled;
                     }
+
                     RegisterForHasChangesEvent(entity);
                     _entitySet.Add(entity);
                     if (!SuppressChangeTracking)
@@ -115,6 +116,7 @@ namespace NTier.Client.Domain
                     }
                 }
             }
+
             OnPropertyChanged("HasChanges");
             return existingEntity;
         }
@@ -125,7 +127,7 @@ namespace NTier.Client.Domain
             lock (SyncRoot)
             {
                 existingEntity = GetExisting(entity);
-                if (existingEntity == null)
+                if (ReferenceEquals(null, existingEntity))
                 {
                     entity.StartTracking();
                     // apply settings
@@ -133,6 +135,7 @@ namespace NTier.Client.Domain
                     {
                         entity.IsValidationEnabled = IsValidationEnabled;
                     }
+                    
                     RegisterForHasChangesEvent(entity);
                     _entitySet.Add(entity);
                     if (!SuppressChangeTracking)
@@ -163,7 +166,7 @@ namespace NTier.Client.Domain
                 if (entity.ChangeTracker.State == ObjectState.Added)
                 {
                     existingEntity = GetExistingByReference(entity);
-                    if (existingEntity != null)
+                    if (!ReferenceEquals(null, existingEntity))
                     {
                         Detach(existingEntity);
                     }
@@ -173,7 +176,7 @@ namespace NTier.Client.Domain
                     _suppressDeletedEvent = true;
 
                     existingEntity = GetExisting(entity);
-                    if (existingEntity != null)
+                    if (!ReferenceEquals(null, existingEntity))
                     {
                         existingEntity.MarkAsDeleted();
                         existingEntity.IsValidationEnabled = IsValidationEnabled;
@@ -202,6 +205,7 @@ namespace NTier.Client.Domain
                     _suppressDeletedEvent = false;
                 }
             }
+
             OnPropertyChanged("HasChanges");
             return existingEntity;
         }
@@ -226,6 +230,7 @@ namespace NTier.Client.Domain
                                     _removed.Add(entity);
                                 }
                             }
+
                             UnRegisterFromHasChangesEvent(entity);
                         }
                     }
@@ -236,10 +241,12 @@ namespace NTier.Client.Domain
                     }
                 }
             }
+
             if (!_suppressCollectionChangedEvent && hasAny && CollectionChanged != null)
             {
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
+
             OnPropertyChanged("HasChanges");
         }
 
@@ -258,13 +265,16 @@ namespace NTier.Client.Domain
                             _removed.Add(entity);
                         }
                     }
+                    
                     UnRegisterFromHasChangesEvent(entity);
+                    
                     if (!_suppressCollectionChangedEvent && CollectionChanged != null)
                     {
                         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, entity, index));
                     }
                 }
             }
+
             OnPropertyChanged("HasChanges");
         }
 
@@ -273,6 +283,7 @@ namespace NTier.Client.Domain
             lock (SyncRoot)
             {
                 UnRegisterFromHasChangesEvent(_entitySet);
+
                 foreach (var entity in _entitySet)
                 {
                     if (!SuppressChangeTracking)
@@ -283,12 +294,15 @@ namespace NTier.Client.Domain
                         }
                     }
                 }
+
                 _entitySet.Clear();
             }
+            
             if (!_suppressCollectionChangedEvent && CollectionChanged != null)
             {
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
+            
             OnPropertyChanged("HasChanges");
         }
 
@@ -348,10 +362,12 @@ namespace NTier.Client.Domain
                 lock (SyncRoot)
                 {
                     _suppressHasChangesEvent = true;
+                    
                     foreach (var e in _entitySet)
                     {
                         e.Errors.Clear();
                     }
+                    
                     _suppressHasChangesEvent = false;
                 }
                 OnPropertyChanged("HasChanges");
@@ -387,6 +403,7 @@ namespace NTier.Client.Domain
             lock (SyncRoot)
             {
                 _suppressHasChangesEvent = true;
+                
                 foreach (var entity in _entitySet.Where(e => !onlyForValidEntities || e.IsValid).ToArray())
                 {
                     if (entity.ChangeTracker.State == ObjectState.Deleted)
@@ -399,6 +416,7 @@ namespace NTier.Client.Domain
                         entity.AcceptChanges();
                     }
                 }
+                
                 if (onlyForValidEntities)
                 {
                     foreach (var entity in _added.Where(e => e.IsValid).ToArray())
@@ -410,9 +428,12 @@ namespace NTier.Client.Domain
                 {
                     _added.Clear();
                 }
+                
                 _removed.Clear();
+                
                 _suppressHasChangesEvent = false;
             }
+
             OnPropertyChanged("HasChanges");
         }
 
@@ -430,10 +451,12 @@ namespace NTier.Client.Domain
                     {
                         Detach(entity);
                     }
+                    
                     foreach (var entity in _removed)
                     {
                         Add(entity);
                     }
+                    
                     foreach (var entity in _entitySet.ToArray())
                     {
                         entity.RevertChanges();
@@ -449,6 +472,7 @@ namespace NTier.Client.Domain
                     _suppressHasChangesEvent = false;
                 }
             }
+
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             OnPropertyChanged("HasChanges");            
         }
@@ -469,6 +493,7 @@ namespace NTier.Client.Domain
                         e.IsValidationEnabled = value;
                     }
                 }
+
                 OnPropertyChanged("IsValidationEnabled");
             }
         }
@@ -538,7 +563,7 @@ namespace NTier.Client.Domain
                         if (!_suppressDeletedEvent)
                         {
                             var entity = sender as TEntity;
-                            if (entity != null && entity.ChangeTracker.State == ObjectState.Deleted)
+                            if (!ReferenceEquals(null, entity) && entity.ChangeTracker.State == ObjectState.Deleted)
                             {
                                 Delete(entity);
                             }
