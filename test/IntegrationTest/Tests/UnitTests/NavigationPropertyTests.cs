@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using IntegrationTest.Client.Domain;
-using NTier.Client.Domain;
-using IntegrationTest.Common.Domain.Model.Northwind;
+﻿using NTier.Client.Domain;
 using NTier.Common.Domain.Model;
+using NUnit.Framework;
+using System;
+using System.Linq;
 
 namespace UnitTests
 {

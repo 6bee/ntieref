@@ -19,7 +19,6 @@ namespace NTier.Common.Domain.Model
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-
         private int IndexOf(T item)
         {
             return _data.IndexOf(item);
@@ -115,26 +114,6 @@ namespace NTier.Common.Domain.Model
 
             var index = IndexOf(oldItem);
             this[index] = newItem;
-
-            //if (Contains(newItem))
-            //{
-            //    throw new Exception("New item is already contained.");
-            //}
-
-            //var index = IndexOf(oldItem);
-            //_data.Add(newItem);
-            //var successfullyRemoved = _data.Remove(oldItem);
-            //if (!successfullyRemoved)
-            //{
-            //    _data.Remove(newItem);
-            //    throw new Exception("Old item is not contained.");
-            //}
-
-            //var collectionChanged = CollectionChanged;
-            //if (collectionChanged != null)
-            //{
-            //    collectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, newItem, oldItem, index));
-            //}
         }
 
         public void Add(T item)
@@ -189,7 +168,7 @@ namespace NTier.Common.Domain.Model
       
         public bool Contains(T item)
         {
-            return _data.Contains(item,  new TrackableCollectionEqualityComparer());
+            return _data.Contains(item, TrackableCollectionEqualityComparer.Instance);
         }
 
         void ICollection<T>.CopyTo(T[] array, int arrayIndex)
@@ -321,17 +300,22 @@ namespace NTier.Common.Domain.Model
             {
                 throw new ArgumentNullException("obj");
             }
+
             if (!(obj is T))
             {
                 throw new ArgumentException(string.Format("Argument expected to be of type {0} and got type {1}.", typeof(T).FullName, obj.GetType().FullName));
             }
+
             return (T)obj;
         }
 
-        class TrackableCollectionEqualityComparer : IEqualityComparer<T>
+        private sealed class TrackableCollectionEqualityComparer : IEqualityComparer<T>
         {
+            public static readonly IEqualityComparer<T> Instance = new TrackableCollectionEqualityComparer();
 
-            #region IEqualityComparer<T> Members
+            private TrackableCollectionEqualityComparer()
+            {
+            }
 
             public bool Equals(T x, T y)
             {
@@ -342,8 +326,6 @@ namespace NTier.Common.Domain.Model
             {
                 return obj.GetHashCode();
             }
-
-            #endregion
         }
     }
 }

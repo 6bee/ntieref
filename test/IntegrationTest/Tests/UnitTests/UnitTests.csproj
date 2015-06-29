@@ -98,12 +98,11 @@
     <Compile Include="ClientTransactionTests.cs" />
     <Compile Include="EditableEntityTests.cs" />
     <Compile Include="Default.cs" />
+    <Compile Include="NavigationPropertyTests.cs"/>
     <Compile Include="RevertReferenceCollectionTest.cs" />
     <Compile Include="RevertDirectedReferenceCollectionTest.cs" />
     <Compile Include="RevertDirectedReferenceTest.cs" />
-    <Compile Include="DirectedReferenceCollectionTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="DirectedReferenceCollectionTests.cs"/>
     <Compile Include="ReferenceCollectionTests.cs" />
     <Compile Include="DirectedReferencePropertyTests.cs" />
     <Compile Include="DynamicPropertyValidationTests.cs" />
