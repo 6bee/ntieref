@@ -21,8 +21,42 @@
 
             parent = new Parent();
             child = new Child { Parent = parent };
-            
+
+            parent.AcceptChanges();
+            child.AcceptChanges();
+
             context.Attach(parent);
+        }
+
+        [Fact]
+        public void Context_should_be_unchanged_before_detaching()
+        {
+            context.HasChanges.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Context_should_be_unchanged_after_detaching_parent()
+        {
+            context.Detach(parent);
+
+            context.HasChanges.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Context_should_be_unchanged_after_detaching_child()
+        {
+            context.Detach(child);
+
+            context.HasChanges.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Context_should_be_unchanged_after_detaching_all()
+        {
+            context.ParentSet.DetachAll();
+            context.ChildSet.DetachAll();
+
+            context.HasChanges.ShouldBeFalse();
         }
 
         [Fact]
