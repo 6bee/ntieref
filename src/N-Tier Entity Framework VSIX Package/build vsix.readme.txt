@@ -1,0 +1,2 @@
+To create a VSIX you may run the corresponding 'build vsix ????.cmd' batch files.
+Make sure to set the parameter 'VisualStudioVersion' in the cmd-file to the visual studio version of your build machine.
