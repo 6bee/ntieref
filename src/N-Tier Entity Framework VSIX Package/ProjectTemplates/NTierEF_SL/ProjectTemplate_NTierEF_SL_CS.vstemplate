@@ -31,7 +31,8 @@
   </WizardExtension>
   <WizardData>
     <packages repository="extension" repositoryId="NTierEntityFramework.Trivadis.x">
-      <package id="NTierEntityFramework.Silverlight" version="1.8.0-alpha001" />
+      <package id="NTierEntityFramework.Silverlight" version="1.8.0" />
+      <!--<package id="aqua-core" version="1.0.0" />-->
       <!--<package id="Remote.Linq" version="4.1.0" />-->
     </packages>
   </WizardData>

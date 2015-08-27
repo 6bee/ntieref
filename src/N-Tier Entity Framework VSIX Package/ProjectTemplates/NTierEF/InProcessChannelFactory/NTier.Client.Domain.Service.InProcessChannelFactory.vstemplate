@@ -27,9 +27,9 @@
   </WizardExtension>
   <WizardData>
     <packages repository="extension" repositoryId="NTierEntityFramework.Trivadis.x">
-      <package id="NTierEntityFramework.Client" version="1.8.0-alpha001" />
-      <package id="NTierEntityFramework.Common" version="1.8.0-alpha001" />
-      <package id="NTierEntityFramework.Server" version="1.8.0-alpha001" />
+      <package id="NTierEntityFramework.Client" version="1.8.0" />
+      <package id="NTierEntityFramework.Common" version="1.8.0" />
+      <package id="NTierEntityFramework.Server" version="1.8.0" />
     </packages>
   </WizardData>
 </VSTemplate>

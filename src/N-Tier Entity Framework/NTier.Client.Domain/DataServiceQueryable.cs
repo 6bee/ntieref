@@ -166,8 +166,8 @@ namespace NTier.Client.Domain
 
         protected bool IsSortingReset { set; get; }
 
-        internal abstract Remote.Linq.TypeSystem.TypeInfo OfTypeValue { get; set; }
-        internal Remote.Linq.TypeSystem.TypeInfo ParentOfTypeValue
+        internal abstract Aqua.TypeSystem.TypeInfo OfTypeValue { get; set; }
+        internal Aqua.TypeSystem.TypeInfo ParentOfTypeValue
         {
             get
             {

@@ -164,8 +164,12 @@
       <Link>ProjectTemplates\Silverlight\NTierEF_SL.zip</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\Packages\Remote.Linq.4.1.0.nupkg">
-      <Link>packages\Remote.Linq.4.1.0.nupkg</Link>
+    <Content Include="..\lib\Packages\aqua-core.1.0.0.nupkg">
+      <Link>packages\aqua-core.1.0.0.nupkg</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\lib\Packages\Remote.Linq.5.0.0.nupkg">
+      <Link>packages\Remote.Linq.5.0.0.nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="..\lib\Packages\EntityFramework.4.3.1.nupkg">

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Trivadis. All rights reserved. See license.txt in the project root for license information.
 
 using NTier.Common.Domain.Model;
-using Remote.Linq.TypeSystem;
+using Aqua.TypeSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;

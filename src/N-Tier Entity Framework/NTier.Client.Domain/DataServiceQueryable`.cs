@@ -151,7 +151,7 @@ namespace NTier.Client.Domain
         public IDataServiceQueryable<T, TBase> OfType<T>() where T : TEntity
         {
             var queriable = new DataServiceQueryableImp<T, TBase>(this.EntitySet, this);
-            queriable.OfTypeValue = new Remote.Linq.TypeSystem.TypeInfo(typeof(T));
+            queriable.OfTypeValue = new Aqua.TypeSystem.TypeInfo(typeof(T));
             return queriable;
         }
 
