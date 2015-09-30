@@ -438,12 +438,12 @@ namespace NTier.Client.Domain
 
                 try
                 {
-                    foreach (var entity in _added)
+                    foreach (var entity in _added.ToArray())
                     {
                         Detach(entity);
                     }
 
-                    foreach (var entity in _removed)
+                    foreach (var entity in _removed.ToArray())
                     {
                         Add(entity);
                     }
