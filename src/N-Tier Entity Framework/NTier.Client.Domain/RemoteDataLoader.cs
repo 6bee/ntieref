@@ -2,6 +2,7 @@
 
 using NTier.Common.Domain.Model;
 using Remote.Linq;
+using Remote.Linq.ExpressionVisitors;
 using System;
 using System.Linq;
 using System.Windows.Threading;
@@ -29,38 +30,6 @@ namespace NTier.Client.Domain
             get { return _requestDelay; }
             set { _requestDelay = value; }
         }
-
-        //// TOOD: get rid of global filgter columns
-        //// note: this raises issues due to unknown types/formats/etc.
-        ////       instead provide api to allow flexible specification of filtering (i.e. allow for and/or combination)
-        //public string[] GlobalFilterColumns
-        //{
-        //    get
-        //    {
-        //        if (_globalFilterColumns == null && !_globalFilterColumnsDefined)
-        //        {
-        //            _globalFilterColumnsDefined = true;
-
-        //            _globalFilterColumns = typeof(T).GetProperties()
-        //                .Where(p => p.GetCustomAttributes(typeof(SimplePropertyAttribute), true).Length > 0)
-        //                .Where(p =>
-        //                {
-        //                    var displayAttributes = p.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.DisplayAttribute), true);
-        //                    return displayAttributes.Length == 0 || (((System.ComponentModel.DataAnnotations.DisplayAttribute)displayAttributes[0]).GetAutoGenerateField() ?? true);
-        //                })
-        //                .Select(p => p.Name)
-        //                .ToArray();
-        //        }
-        //        return _globalFilterColumns;
-        //    }
-        //    set
-        //    {
-        //        _globalFilterColumnsDefined = true;
-        //        _globalFilterColumns = value;
-        //    }
-        //}
-        //private string[] _globalFilterColumns = null;
-        //private bool _globalFilterColumnsDefined = false;
 
         public override void Load(IEntityCollectionView<T> view)
         {
@@ -111,27 +80,9 @@ namespace NTier.Client.Domain
 
             #region filters
 
-            //// column filters
-            //foreach (var filterDescription in view.FilterDescriptions.Where(f => !string.IsNullOrEmpty(f.PropertyName)))
-            //{
-            //    var filterExpression = filterDescription.ToExpression<T>();
-            //    query = query.Where(filterExpression);
-            //}
-
-            //// global filters
-            //var globalFilterColumns = GlobalFilterColumns;
-            //if (globalFilterColumns != null && globalFilterColumns.Length > 0)
-            //{
-            //    foreach (var filterDescription in view.FilterDescriptions.Where(f => string.IsNullOrEmpty(f.PropertyName)))
-            //    {
-            //        var filterExpression = filterDescription.ToGlobalExpression<T>(globalFilterColumns);
-            //        query = query.Where(filterExpression);
-            //    }
-            //}
-
             foreach (var filterExpression in view.FilterExpressions)
             {
-                var remoteExpression = filterExpression.ToRemoteLinqExpression();
+                var remoteExpression = DataServiceQueryable.ToRemoteExpression(filterExpression);
                 query = query.Where(remoteExpression);
             }
 
