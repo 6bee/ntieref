@@ -101,11 +101,15 @@
       <LastGenOutput>NTierDemoModel_NTierEntityGenerator.txt</LastGenOutput>
       <DependentUpon>NTierDemoModel.edmx</DependentUpon>
       <LastOutputs>
+..\..\Client\NTierDemo.Client.Domain\INTierDemoChangeSetFactory.g.cs
 ..\..\Client\NTierDemo.Client.Domain\INTierDemoDataContext.g.cs
+..\..\Client\NTierDemo.Client.Domain\NTierDemoChangeSetFactory.g.cs
 ..\..\Client\NTierDemo.Client.Domain\NTierDemoDataContext.g.cs
 ..\..\Common\NTierDemo.Common.Domain.Model\NTierDemo\Blog.g.cs
 ..\..\Common\NTierDemo.Common.Domain.Model\NTierDemo\NTierDemoChangeSet.g.cs
+..\..\Common\NTierDemo.Common.Domain.Model\NTierDemo\NTierDemoOptimisticConcurrencyFault.g.cs
 ..\..\Common\NTierDemo.Common.Domain.Model\NTierDemo\NTierDemoResultSet.g.cs
+..\..\Common\NTierDemo.Common.Domain.Model\NTierDemo\NTierDemoUpdateFault.g.cs
 ..\..\Common\NTierDemo.Common.Domain.Model\NTierDemo\Post.g.cs
 ..\..\Common\NTierDemo.Common.Domain.Model\NTierDemo\User.g.cs
 ..\..\Common\NTierDemo.Common.Domain.Service\Contracts\INTierDemoDataService.g.cs
@@ -123,11 +127,11 @@
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />

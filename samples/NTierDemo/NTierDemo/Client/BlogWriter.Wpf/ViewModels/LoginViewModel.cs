@@ -43,7 +43,7 @@ namespace BlogWriter.Wpf.ViewModels
                 where author.Username == Username && author.Password == password
                 select author;
 
-            var user = (await query.ExecuteAsync()).FirstOrDefault();
+            var user = (await query.ExecuteAsync()).ResultSet.FirstOrDefault();
 
             // check if user found
             ErrorMessage = user == null ? "Username or password invalid." : null;

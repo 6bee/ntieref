@@ -1,41 +1,39 @@
-﻿using System.Windows;
-using System.Windows.Markup;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using C1.Silverlight;
+﻿using C1.Silverlight;
 using C1.Silverlight.DataGrid;
-using ProductManager.Client.Domain;
-using ProductManager.Silverlight.Controls;
 using NTier.Client.Domain;
 using ProductManager.Common.Domain.Model.ProductManager;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Markup;
 
 namespace ProductManager.Silverlight.Controls
 {
-    public class FilterDescriptor
-    {
-        public string PropertyName { get; set; }
-        public object Value { get; set; }
-    }
+    //public class FilterDescriptor
+    //{
+    //    public string PropertyName { get; set; }
+    //    public object Value { get; set; }
+    //}
 
     public class DataGridFilterRow : DataGridRow
     {
-        private readonly Dictionary<DataGridColumn, SearchBox> _cells = new Dictionary<DataGridColumn,SearchBox>();
-        //public ReadOnlyCollection<Tuple<C1SearchBox, DataGridColumn>> Cells
+        //private readonly Dictionary<DataGridColumn, SearchBox> _cells = new Dictionary<DataGridColumn,SearchBox>();
+        ////public ReadOnlyCollection<Tuple<C1SearchBox, DataGridColumn>> Cells
+        ////{
+        ////    get
+        ////    {
+        ////        return _cells.AsReadOnly();
+        ////    }
+        ////}
+        //public ReadOnlyCollection<FilterDescriptor> Filters
         //{
         //    get
         //    {
-        //        return _cells.AsReadOnly();
+        //        return _cells.Where(e => !string.IsNullOrEmpty(e.Value.Text)).Select(e => new FilterDescriptor { PropertyName = e.Key.FilterMemberPath, Value = e.Value.Text }).ToList().AsReadOnly();
         //    }
         //}
-        public ReadOnlyCollection<FilterDescriptor> Filters
-        {
-            get
-            {
-                return _cells.Where(e => !string.IsNullOrEmpty(e.Value.Text)).Select(e => new FilterDescriptor { PropertyName = e.Key.FilterMemberPath, Value = e.Value.Text }).ToList().AsReadOnly();
-            }
-        }
 
         protected override void OnLoaded()
         {
@@ -82,7 +80,7 @@ namespace ProductManager.Silverlight.Controls
         {
             var filterTextBox = (SearchBox)cellContent;
             
-            _cells.Add(column,filterTextBox);
+            //_cells.Add(column,filterTextBox);
             
             filterTextBox.Margin = CellPadding;
             filterTextBox.Tag = column;
@@ -96,6 +94,7 @@ namespace ProductManager.Silverlight.Controls
                 filterTextBox.Text = "";
                 filterTextBox.IsEnabled = true;
             }
+
             UpdateText(column, filterTextBox);
             // handle TextChanged to apply the filter
             filterTextBox.TextChanged += new System.EventHandler<System.Windows.Controls.TextChangedEventArgs>(filterTextBox_TextChanged);
@@ -118,7 +117,7 @@ namespace ProductManager.Silverlight.Controls
         {
             var filterTextBox = (SearchBox)cellContent;
 
-            _cells.Remove(column);
+            //_cells.Remove(column);
             
             filterTextBox.TextChanged -= new System.EventHandler<System.Windows.Controls.TextChangedEventArgs>(filterTextBox_TextChanged);
             //column.FilterStateChanged -= new System.EventHandler<PropertyChangedEventArgs<DataGridFilterState>>(column_FilterStateChanged);
@@ -190,19 +189,34 @@ namespace ProductManager.Silverlight.Controls
 
                 if (column.DataGrid.DataSourceView is IFilteredCollectionView)
                 {
-                    // todo: create type specific filters
                     var filters = (column.DataGrid.DataSourceView as IFilteredCollectionView).FilterExpressions;
-                    // TODO: Fix filter logic
-                    //var filter = filters.FirstOrDefault(f => f.PropertyName == column.FilterMemberPath);
-                    //if (filter != null)
-                    //{
-                    //    filters.Remove(filter);
-                    //}
-                    //if (!string.IsNullOrEmpty(filterTextBox.Text))
-                    //{
-                    //    filters.Add(new NTier.Client.Domain.FilterDescription { PropertyName = column.FilterMemberPath, Value = filterTextBox.Text });
-                    //}
+
+                    var expression = column.Tag as System.Linq.Expressions.Expression<Func<Product, bool>>;
+                    if (expression != null)
+                    {
+                        filters.Remove(expression);
+                    }
+
+                    var memberName = column.FilterMemberPath;
+                    var filterValue = filterTextBox.Text;
+
+                    if (column is DataGridDateTimeColumn)
+                    {
+                        expression = _ => (
+                            (((DateTime)_[memberName]).Day < 10 ? "0" : "") + ((DateTime)_[memberName]).Day +
+                            (((DateTime)_[memberName]).Month < 10 ? ".0" : ".") + ((DateTime)_[memberName]).Month +
+                            "." + ((DateTime)_[memberName]).Year
+                            ).Contains(filterValue);
+                    }
+                    else
+                    {
+                        expression = _ => _[memberName].ToString().Contains(filterValue);
+                    }
+
+                    column.Tag = expression;
+                    filters.Add(expression);
                 }
+
                 OnFilterChanged(column, filterTextBox.Text);
             }
         }

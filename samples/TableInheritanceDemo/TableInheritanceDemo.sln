@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{FC57C517-7AAA-4013-99D6-46EB783691C1}"
 EndProject
@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TableInheritance.Server.Dom
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "T4", "T4", "{0ECF4FBA-9ED7-4DAE-908B-908554EA4F12}"
 	ProjectSection(SolutionItems) = preProject
+		T4\NTierEF.ChangeSetFactoryInterfaceTT.CS.ttinclude = T4\NTierEF.ChangeSetFactoryInterfaceTT.CS.ttinclude
+		T4\NTierEF.ChangeSetFactoryTT.CS.ttinclude = T4\NTierEF.ChangeSetFactoryTT.CS.ttinclude
 		T4\NTierEF.ChangeSetTT.CS.ttinclude = T4\NTierEF.ChangeSetTT.CS.ttinclude
 		T4\NTierEF.ClientDataContextInterfaceTT.CS.ttinclude = T4\NTierEF.ClientDataContextInterfaceTT.CS.ttinclude
 		T4\NTierEF.ClientDataContextTT.CS.ttinclude = T4\NTierEF.ClientDataContextTT.CS.ttinclude

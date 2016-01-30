@@ -6,6 +6,7 @@ obj
 tmp
 App_Data
 TestResults
+packages
 .vs
 *.user
 *.patch

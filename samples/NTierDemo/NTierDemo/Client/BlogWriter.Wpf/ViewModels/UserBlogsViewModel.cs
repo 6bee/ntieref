@@ -4,7 +4,6 @@ using NTierDemo.Common.Domain.Model.NTierDemo;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace BlogWriter.Wpf.ViewModels
@@ -46,7 +45,7 @@ namespace BlogWriter.Wpf.ViewModels
                 var result = query.ExecuteAsync();
 
                 // creating a collection view based on the user's blogs
-                UserBlogs = await result;
+                UserBlogs = (await result).EntitySet;
                 OnPropertyChanged(() => UserBlogs);
             }
         }

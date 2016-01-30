@@ -33,8 +33,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NTier.Common.Domain">
-      <HintPath>..\..\..\packages\NTierEntityFramework.Common.0.0.1\lib\net4-client\NTier.Common.Domain.dll</HintPath>
+    <Reference Include="Aqua">
+      <HintPath>..\..\..\packages\aqua-core.3.0.0\lib\net45\Aqua.dll</HintPath>
+    </Reference>
+    <Reference Include="NTier.Common.Domain, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\NTierEntityFramework.Common.1.9.0\lib\net40-Client\NTier.Common.Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="Remote.Linq">
+      <HintPath>..\..\..\packages\Remote.Linq.5.3.1\lib\net45\Remote.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -52,6 +59,8 @@
   <ItemGroup>
     <Compile Include="IUpdatableEntity.cs" />
     <Compile Include="NTierDemo\Blog.part.cs" />
+    <Compile Include="NTierDemo\NTierDemoOptimisticConcurrencyFault.g.cs" />
+    <Compile Include="NTierDemo\NTierDemoUpdateFault.g.cs" />
     <Compile Include="NTierDemo\Post.part.cs" />
     <Compile Include="NTierDemo\User.part.cs" />
     <Compile Include="NTierDemo\Blog.g.cs" />

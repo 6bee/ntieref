@@ -71,6 +71,7 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
+        [ForeignKeyProperty]
         [SimpleProperty]
         public Nullable<global::System.Int64> ManagerId
         {
@@ -104,6 +105,7 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
+        [ForeignKeyProperty]
         [SimpleProperty]
         public Nullable<global::System.Int64> RoleId
         {

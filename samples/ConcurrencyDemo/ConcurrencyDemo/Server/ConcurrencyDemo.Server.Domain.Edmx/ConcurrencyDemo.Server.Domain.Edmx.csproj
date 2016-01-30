@@ -103,12 +103,16 @@
       <LastGenOutput>DemoModel.txt</LastGenOutput>
       <DependentUpon>DemoModel.edmx</DependentUpon>
       <LastOutputs>
+..\..\Client\ConcurrencyDemo.Client.Domain\ConcurrencyTestChangeSetFactory.g.cs
 ..\..\Client\ConcurrencyDemo.Client.Domain\ConcurrencyTestDataContext.g.cs
+..\..\Client\ConcurrencyDemo.Client.Domain\IConcurrencyTestChangeSetFactory.g.cs
 ..\..\Client\ConcurrencyDemo.Client.Domain\IConcurrencyTestDataContext.g.cs
 ..\..\Common\ConcurrencyDemo.Common.Domain.Model\ConcurrencyTest\ARecord.g.cs
 ..\..\Common\ConcurrencyDemo.Common.Domain.Model\ConcurrencyTest\BRecord.g.cs
 ..\..\Common\ConcurrencyDemo.Common.Domain.Model\ConcurrencyTest\ConcurrencyTestChangeSet.g.cs
+..\..\Common\ConcurrencyDemo.Common.Domain.Model\ConcurrencyTest\ConcurrencyTestOptimisticConcurrencyFault.g.cs
 ..\..\Common\ConcurrencyDemo.Common.Domain.Model\ConcurrencyTest\ConcurrencyTestResultSet.g.cs
+..\..\Common\ConcurrencyDemo.Common.Domain.Model\ConcurrencyTest\ConcurrencyTestUpdateFault.g.cs
 ..\..\Common\ConcurrencyDemo.Common.Domain.Model\ConcurrencyTest\CRecord.g.cs
 ..\..\Common\ConcurrencyDemo.Common.Domain.Service\Contracts\IConcurrencyTestDataService.g.cs
 ..\ConcurrencyDemo.Server.Domain.Repositories\ConcurrencyTestRepository.g.cs
@@ -123,11 +127,13 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />

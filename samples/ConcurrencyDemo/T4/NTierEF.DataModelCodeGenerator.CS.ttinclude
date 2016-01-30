@@ -5,11 +5,13 @@
 <#@ include file="NTierEF.ComplexTypeMetadataTT.CS.ttinclude" #>
 <#@ include file="NTierEF.ChangeSetTT.CS.ttinclude" #>
 <#@ include file="NTierEF.ResultSetTT.CS.ttinclude" #>
+<#@ include file="NTierEF.OptimisticConcurrencyFaultTT.CS.ttinclude" #>
+<#@ include file="NTierEF.UpdateFaultTT.CS.ttinclude" #>
 <#+
-// <copyright file="NTierEF.DataModelCodeGen.CS.ttinclude" company="Trivadis">
+// <copyright file="NTierEF.DataModelCodeGenerator.CS.ttinclude" company="Trivadis">
 //     Copyright © Trivadis. All Rights Reserved.
 // </copyright>
-public class DataModelCodeGenerator : Generator
+public partial class DataModelCodeGenerator : Generator
 {
     private readonly EdmUtility EdmUtility;
     private readonly string DataModelProject = string.Empty;
@@ -19,6 +21,8 @@ public class DataModelCodeGenerator : Generator
         this.EdmUtility = edmUtility;
         this.DataModelProject = dataModelProject;
 
+        BeforeInitializing();
+
         this.EnumTemplate = new EnumTemplate(DataModelProject, EdmUtility, modelNamespace);
         this.EntityTemplate = new EntityTemplate(DataModelProject, EdmUtility, modelNamespace);
         this.EntityMetadataTemplate = new EntityMetadataTemplate(DataModelProject, EdmUtility, modelNamespace);
@@ -26,7 +30,19 @@ public class DataModelCodeGenerator : Generator
         this.ComplexTypeMetadataTemplate = new ComplexTypeMetadataTemplate(DataModelProject, EdmUtility, modelNamespace);
         this.ChangeSetTemplate = new ChangeSetTemplate(DataModelProject, EdmUtility, modelNamespace);
         this.ResultSetTemplate = new ResultSetTemplate(DataModelProject, EdmUtility, modelNamespace);
+        this.OptimisticConcurrencyFaultTemplate = new OptimisticConcurrencyFaultTemplate(DataModelProject, EdmUtility, modelNamespace);
+        this.UpdateFaultTemplate = new UpdateFaultTemplate(DataModelProject, EdmUtility, modelNamespace);
+
+        OnInitializing(modelNamespace);
     }
+
+    partial void BeforeInitializing();
+
+    partial void OnInitializing(string modelNamespace);
+
+    partial void OnCodeGenerating();
+
+    partial void OnCodeGenerated();
 
     /// <summary>
     /// Gets or sets the template that generates the enum types of the entity model.
@@ -92,10 +108,30 @@ public class DataModelCodeGenerator : Generator
     public ResultSetTemplate ResultSetTemplate;
 
     /// <summary>
+    /// Gets or sets the template that generates the optimistic concurrency fault type for the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="OptimisticConcurrencyFaultTemplate"/>.
+    /// </remarks>
+    public OptimisticConcurrencyFaultTemplate OptimisticConcurrencyFaultTemplate;
+
+    /// <summary>
+    /// Gets or sets the template that generates the update fault type for the entity model.
+    /// </summary>
+    /// <remarks>
+    /// You can customize generation by replacing the default template
+    /// with your custom version derived from <see cref="UpdateFaultTemplate"/>.
+    /// </remarks>
+    public UpdateFaultTemplate UpdateFaultTemplate;
+
+    /// <summary>
     /// Generates data access classes.
     /// </summary>
     protected override void RunCore()
     {
+        OnCodeGenerating();
+
         CreateEnums();
         CreateEntities();
         CreateEntityMetadata();
@@ -103,6 +139,10 @@ public class DataModelCodeGenerator : Generator
         CreateComplexTypesMetadata();
         CreateChangeSet();
         CreateResultSet();
+        CreateOptimisticConcurrencyFault();
+        CreateUpdateFault();
+
+        OnCodeGenerated();
     }
 
     private void CreateEnums()
@@ -178,6 +218,22 @@ public class DataModelCodeGenerator : Generator
         if (ResultSetTemplate != null)
         {
             ResultSetTemplate.Render();
+        }
+    }
+
+    private void CreateOptimisticConcurrencyFault()
+    {
+        if (OptimisticConcurrencyFaultTemplate != null)
+        {
+            OptimisticConcurrencyFaultTemplate.Render();
+        }
+    }
+
+    private void CreateUpdateFault()
+    {
+        if (UpdateFaultTemplate != null)
+        {
+            UpdateFaultTemplate.Render();
         }
     }
 }

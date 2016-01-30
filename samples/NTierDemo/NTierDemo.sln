@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{15444A08-394B-4B6C-B54B-AA81C51C008B}"
 EndProject
@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTierDemo.Server.Domain.Edm
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "T4", "T4", "{FE8574F8-E505-415A-87D7-991CFFE31E16}"
 	ProjectSection(SolutionItems) = preProject
+		T4\NTierEF.ChangeSetFactoryInterfaceTT.CS.ttinclude = T4\NTierEF.ChangeSetFactoryInterfaceTT.CS.ttinclude
+		T4\NTierEF.ChangeSetFactoryTT.CS.ttinclude = T4\NTierEF.ChangeSetFactoryTT.CS.ttinclude
 		T4\NTierEF.ChangeSetTT.CS.ttinclude = T4\NTierEF.ChangeSetTT.CS.ttinclude
 		T4\NTierEF.ClientDataContextInterfaceTT.CS.ttinclude = T4\NTierEF.ClientDataContextInterfaceTT.CS.ttinclude
 		T4\NTierEF.ClientDataContextTT.CS.ttinclude = T4\NTierEF.ClientDataContextTT.CS.ttinclude
@@ -38,10 +40,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "T4", "T4", "{FE8574F8-E505-
 		T4\NTierEF.EnumTT.CS.ttinclude = T4\NTierEF.EnumTT.CS.ttinclude
 		T4\NTierEF.InProcessChannelFactoryTT.CS.ttinclude = T4\NTierEF.InProcessChannelFactoryTT.CS.ttinclude
 		T4\NTierEF.NTierEntityGenerator.CS.ttinclude = T4\NTierEF.NTierEntityGenerator.CS.ttinclude
+		T4\NTierEF.OptimisticConcurrencyFaultTT.CS.ttinclude = T4\NTierEF.OptimisticConcurrencyFaultTT.CS.ttinclude
 		T4\NTierEF.RemoteChannelFactoryTT.CS.ttinclude = T4\NTierEF.RemoteChannelFactoryTT.CS.ttinclude
 		T4\NTierEF.RepositoryInterfaceTT.CS.ttinclude = T4\NTierEF.RepositoryInterfaceTT.CS.ttinclude
 		T4\NTierEF.RepositoryTT.CS.ttinclude = T4\NTierEF.RepositoryTT.CS.ttinclude
 		T4\NTierEF.ResultSetTT.CS.ttinclude = T4\NTierEF.ResultSetTT.CS.ttinclude
+		T4\NTierEF.UpdateFaultTT.CS.ttinclude = T4\NTierEF.UpdateFaultTT.CS.ttinclude
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTierDemo.Server.Host", "NTierDemo\Server\NTierDemo.Server.Host\NTierDemo.Server.Host.csproj", "{ADAA8165-8E45-470B-B7FF-242923CDA3D2}"
@@ -66,6 +70,16 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Release|x86.ActiveCfg = Release|Any CPU
 		{D740BDB0-F705-4F45-AC1D-168627042F3B}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{D740BDB0-F705-4F45-AC1D-168627042F3B}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{D740BDB0-F705-4F45-AC1D-168627042F3B}.Debug|Mixed Platforms.Build.0 = Debug|x86
@@ -146,24 +160,14 @@ Global
 		{50C69B62-B425-4204-9891-0E77B470F8EE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{50C69B62-B425-4204-9891-0E77B470F8EE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{50C69B62-B425-4204-9891-0E77B470F8EE}.Release|x86.ActiveCfg = Release|Any CPU
-		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E} = {15444A08-394B-4B6C-B54B-AA81C51C008B}
 		{D740BDB0-F705-4F45-AC1D-168627042F3B} = {15444A08-394B-4B6C-B54B-AA81C51C008B}
 		{5D6116A2-D954-4F86-B14B-BB9C65670AF0} = {15444A08-394B-4B6C-B54B-AA81C51C008B}
-		{8406AFE5-FC8C-419E-B25A-BFCC43BE9A0E} = {15444A08-394B-4B6C-B54B-AA81C51C008B}
 		{2EF15A05-B392-41D9-A089-CCBC81FFCF03} = {7CE56EDD-AE0E-4A34-AB1A-DB2AE97FD9AF}
 		{27B4FF09-CB78-4B4D-A500-4A5CD5015FB1} = {7CE56EDD-AE0E-4A34-AB1A-DB2AE97FD9AF}
 		{004C00A8-14EC-444D-AF20-99D7182083F5} = {60559A4A-9F6C-4D39-A373-E0A6575B1C8C}

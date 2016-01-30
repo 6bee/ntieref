@@ -1,10 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using C1.Silverlight.DataGrid;
+using NTier.Client.Domain;
+using ProductManager.Common.Domain.Model.ProductManager;
+using System;
+using System.Linq.Expressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using ProductManager.Client.Domain;
-using NTier.Client.Domain;
 
 namespace ProductManager.Silverlight.Controls
 {
@@ -13,6 +14,7 @@ namespace ProductManager.Silverlight.Controls
         private readonly object FilterBoxLock = new object();
         private readonly DispatcherTimer StatusTimer;
         private int statusDotsCount = 0;
+        private Expression<Func<Product, bool>> filterExpression;
 
         public SearchDialog()
         {
@@ -27,16 +29,41 @@ namespace ProductManager.Silverlight.Controls
                     if (collectionView != null)
                     {
                         var filters = collectionView.FilterExpressions;
-                        // TODO: Fix filter logic
-                        //var filter = filters.FirstOrDefault(f => f.PropertyName == null);
-                        //if (filter != null)
-                        //{
-                        //    filters.Remove(filter);
-                        //}
-                        //if (!string.IsNullOrEmpty(filterBox.Text))
-                        //{
-                        //    filters.Add(new FilterDescription { PropertyName = null, Value = filterBox.Text, FilterOperation = FilterOperation.Contains });
-                        //}
+
+                        if (filterExpression != null)
+                        {
+                            filters.Remove(filterExpression);
+                        }
+
+                        if (string.IsNullOrEmpty(filterBox.Text))
+                        {
+                            filterExpression = null;
+                        }
+                        else
+                        {
+                            var filterValue = filterBox.Text;
+                            filterExpression = _ => _.ProductID.ToString().Contains(filterValue)
+                                || _.Name.Contains(filterValue)
+                                || _.ProductNumber.Contains(filterValue)
+                                || _.Color.Contains(filterValue)
+                                || _.StandardCost.ToString().Contains(filterValue)
+                                || _.ListPrice.ToString().Contains(filterValue)
+                                || _.Size.ToString().Contains(filterValue)
+                                || _.Weight.ToString().Contains(filterValue)
+                                || ((_.SellStartDate.Day < 10 ? "0" : "") + _.SellStartDate.Day +
+                                    (_.SellStartDate.Month < 10 ? ".0" : ".") + _.SellStartDate.Month +
+                                    "." + _.SellStartDate.Year).Contains(filterValue)
+                                || (_.SellEndDate.HasValue &&
+                                    ((_.SellEndDate.Value.Day < 10 ? "0" : "") + _.SellEndDate.Value.Day +
+                                    (_.SellEndDate.Value.Month < 10 ? ".0" : ".") + _.SellEndDate.Value.Month +
+                                    "." + _.SellEndDate.Value.Year).Contains(filterValue))
+                                //|| (_.DiscontinuedDate.HasValue &&
+                                //    ((_.DiscontinuedDate.Value.Day < 10 ? "0" : "") + _.DiscontinuedDate.Value.Day +
+                                //    (_.DiscontinuedDate.Value.Month < 10 ? ".0" : ".") + _.DiscontinuedDate.Value.Month +
+                                //    "." + _.DiscontinuedDate.Value.Year).Contains(filterValue))
+                                ;
+                            filters.Add(filterExpression);
+                        }
                     }
                 }
             };
@@ -82,6 +109,14 @@ namespace ProductManager.Silverlight.Controls
                         statusLabel.Content = string.Format("Total Count: {0}", collectionView.TotalItemCount);
                     }
                 };
+            }
+        }
+
+        private void C1DataGrid_AutoGeneratingColumn(object sender, C1.Silverlight.DataGrid.DataGridAutoGeneratingColumnEventArgs e)
+        {
+            if (e.Column is DataGridDateTimeColumn)
+            {
+                e.Column.Format = "dd.MM.yyyy";
             }
         }
     }

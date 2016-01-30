@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{7428C552-ADC1-49BE-A373-F5BAE6BF4D49}"
 EndProject
@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrencyDemo.Server.Doma
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "T4", "T4", "{D7AE80A7-479B-46DE-85C8-DE99941CF9A4}"
 	ProjectSection(SolutionItems) = preProject
+		T4\NTierEF.ChangeSetFactoryInterfaceTT.CS.ttinclude = T4\NTierEF.ChangeSetFactoryInterfaceTT.CS.ttinclude
+		T4\NTierEF.ChangeSetFactoryTT.CS.ttinclude = T4\NTierEF.ChangeSetFactoryTT.CS.ttinclude
 		T4\NTierEF.ChangeSetTT.CS.ttinclude = T4\NTierEF.ChangeSetTT.CS.ttinclude
 		T4\NTierEF.ClientDataContextInterfaceTT.CS.ttinclude = T4\NTierEF.ClientDataContextInterfaceTT.CS.ttinclude
 		T4\NTierEF.ClientDataContextTT.CS.ttinclude = T4\NTierEF.ClientDataContextTT.CS.ttinclude
@@ -36,10 +38,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "T4", "T4", "{D7AE80A7-479B-
 		T4\NTierEF.EnumTT.CS.ttinclude = T4\NTierEF.EnumTT.CS.ttinclude
 		T4\NTierEF.InProcessChannelFactoryTT.CS.ttinclude = T4\NTierEF.InProcessChannelFactoryTT.CS.ttinclude
 		T4\NTierEF.NTierEntityGenerator.CS.ttinclude = T4\NTierEF.NTierEntityGenerator.CS.ttinclude
+		T4\NTierEF.OptimisticConcurrencyFaultTT.CS.ttinclude = T4\NTierEF.OptimisticConcurrencyFaultTT.CS.ttinclude
 		T4\NTierEF.RemoteChannelFactoryTT.CS.ttinclude = T4\NTierEF.RemoteChannelFactoryTT.CS.ttinclude
 		T4\NTierEF.RepositoryInterfaceTT.CS.ttinclude = T4\NTierEF.RepositoryInterfaceTT.CS.ttinclude
 		T4\NTierEF.RepositoryTT.CS.ttinclude = T4\NTierEF.RepositoryTT.CS.ttinclude
 		T4\NTierEF.ResultSetTT.CS.ttinclude = T4\NTierEF.ResultSetTT.CS.ttinclude
+		T4\NTierEF.UpdateFaultTT.CS.ttinclude = T4\NTierEF.UpdateFaultTT.CS.ttinclude
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrencyDemo.Server.Host", "ConcurrencyDemo\Server\ConcurrencyDemo.Server.Host\ConcurrencyDemo.Server.Host.csproj", "{7077DFCF-F843-4ED6-B7ED-E33A24E4B6B2}"

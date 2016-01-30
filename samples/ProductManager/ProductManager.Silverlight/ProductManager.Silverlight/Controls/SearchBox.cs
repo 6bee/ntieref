@@ -1,8 +1,8 @@
-﻿using System;
+﻿using C1.Silverlight;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using C1.Silverlight;
 
 namespace ProductManager.Silverlight.Controls
 {

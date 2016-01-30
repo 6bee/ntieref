@@ -8,10 +8,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
-using System.Data;
 using System.Linq;
 using System.ServiceModel;
 using System.Transactions;
@@ -28,10 +28,18 @@ namespace TableInheritance.Client.Domain
         #region Fields
 
         private readonly Func<ITableInheritanceDemoDBDataService> _dataServiceFactory;
+
+        private readonly Func<ITableInheritanceDemoDBChangeSetFactory> _changeSetFactoryProvider;
+
         private readonly InternalEntitySet<Person> _people;
         private readonly InternalEntitySet<Address> _addresses;
         private readonly InternalEntitySet<Demographic> _demographics;
         private readonly InternalEntitySet<EmployeeRole> _employeeRoles;
+ 
+        private IEntitySet<Person> personEntitySet;
+        private IEntitySet<Address> addressEntitySet;
+        private IEntitySet<Demographic> demographicEntitySet;
+        private IEntitySet<EmployeeRole> employeeRoleEntitySet;
 
         #endregion Fields
 
@@ -39,23 +47,27 @@ namespace TableInheritance.Client.Domain
 
         partial void Initialize();
 
-        public TableInheritanceDemoDBDataContext(Func<ITableInheritanceDemoDBDataService> dataServiceFactory)
+        public TableInheritanceDemoDBDataContext(Func<ITableInheritanceDemoDBDataService> dataServiceFactory, Func<ITableInheritanceDemoDBChangeSetFactory> changeSetFactoryProvider = null)
         {
             _dataServiceFactory = dataServiceFactory;
+
+            _changeSetFactoryProvider = changeSetFactoryProvider ?? (() => new TableInheritanceDemoDBChangeSetFactory());
+
             _people = CreateAndRegisterInternalEntitySet<Person>();
             _addresses = CreateAndRegisterInternalEntitySet<Address>();
             _demographics = CreateAndRegisterInternalEntitySet<Demographic>();
             _employeeRoles = CreateAndRegisterInternalEntitySet<EmployeeRole>();
+
             Initialize();
         }
 
-        public TableInheritanceDemoDBDataContext(IChannelFactory<ITableInheritanceDemoDBDataService> channelFactory)
-            : this(channelFactory.CreateChannel)
+        public TableInheritanceDemoDBDataContext(IChannelFactory<ITableInheritanceDemoDBDataService> channelFactory, Func<ITableInheritanceDemoDBChangeSetFactory> changeSetFactoryProvider = null)
+            : this(channelFactory.CreateChannel, changeSetFactoryProvider)
         {
         }
 
-        public TableInheritanceDemoDBDataContext(string endpointConfigurationName = "TableInheritanceDemoDBDataService")
-            : this(CreateChannelFactory(endpointConfigurationName).CreateChannel)
+        public TableInheritanceDemoDBDataContext(string endpointConfigurationName = "TableInheritanceDemoDBDataService", Func<ITableInheritanceDemoDBChangeSetFactory> changeSetFactoryProvider = null)
+            : this(CreateChannelFactory(endpointConfigurationName).CreateChannel, changeSetFactoryProvider)
         {
         }
 
@@ -77,14 +89,14 @@ namespace TableInheritance.Client.Domain
         {
             get
             {
-                if (personEntitySet == null)
+                if (ReferenceEquals(null, personEntitySet))
                 {
-                    personEntitySet = CreateEntitySet<Person>(_people, AttachWithRelations, GetPeople);
+                    personEntitySet = CreateEntitySet<Person>(_people, AttachWithRelations, OnDetach, GetPeople);
                 }
+
                 return personEntitySet;
             }
         }
-        private IEntitySet<Person> personEntitySet;
 
         public void Add(Person entity)
         {
@@ -140,7 +152,7 @@ namespace TableInheritance.Client.Domain
         {
             #region iteration tracking
 
-            if (referenceTrackingList == null)
+            if (ReferenceEquals(null, referenceTrackingList))
             {
                 referenceTrackingList = new List<object>();
             }
@@ -172,7 +184,7 @@ namespace TableInheritance.Client.Domain
                     throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
             }
 
-            if (((object)existingEntity) != null && object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && ReferenceEquals(existingEntity, entity))
             {
                 return existingEntity;
             }
@@ -180,33 +192,22 @@ namespace TableInheritance.Client.Domain
             #endregion
 
             #region attach relations recursively
-
+            
             // register entity's property changed event if entity is new to context
-            if (existingEntity == null)
+            if (ReferenceEquals(null, existingEntity))
             {
-                entity.PropertyChanged += (s, e) =>
-                {
-                    if (entity.IsChangeTrackingPrevented) return;
-
-                    if (e.PropertyName == "Address1")
-                    {
-                        var relation = entity[e.PropertyName] as Address;
-                        if (relation != null)
-                        {
-                            Attach(relation);
-                        }
-                    }
-                };
+                entity.PropertyChanged += On_person_propertyChanged;
             }
 
             // attach related entity to context
-            if (entity.Address1 != null)
+            if (!ReferenceEquals(null, entity.Address1))
             {
                 var existingRelatedEntity = AttachWithRelations(entity.Address1, insertMode, mergeOption, referenceTrackingList);
+
                 // update relation if entity is new to context or relation is new to entity
-                if (existingEntity == null || !entity.Address1.Equals(existingEntity.Address1))
+                if (ReferenceEquals(null, existingEntity) || !entity.Address1.Equals(existingEntity.Address1))
                 {
-                    if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, entity.Address1))
+                    if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, entity.Address1))
                     {
                         // check merge options
                         if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("People")))
@@ -219,13 +220,14 @@ namespace TableInheritance.Client.Domain
                             using (existingRelatedEntity.ChangeTrackingPrevention())
                             {
                                 var entityToReplace = existingRelatedEntity.People.FirstOrDefault(e => e.Equals(entity));
-                                if (entityToReplace != null)
+                                if (!ReferenceEquals(null, entityToReplace))
                                 {
                                     using (entityToReplace.ChangeTrackingPrevention())
                                     {
                                         existingRelatedEntity.People.Remove(entityToReplace);
                                     }
                                 }
+
                                 existingRelatedEntity.People.Add(entity);
                             }
                         }
@@ -237,7 +239,7 @@ namespace TableInheritance.Client.Domain
 
             #region refresh existing entity based on merge options
 
-            if (existingEntity != null && !object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && !ReferenceEquals(existingEntity, entity))
             {
                 if (People.MergeOption == MergeOption.OverwriteChanges)
                 {
@@ -261,6 +263,30 @@ namespace TableInheritance.Client.Domain
             return existingEntity;
         }
 
+        private void OnDetach(Person entity)
+        {
+            entity.PropertyChanged -= On_person_propertyChanged;
+
+        }
+
+        private void On_person_propertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var entity = sender as Person;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (e.PropertyName == "Address1")
+            {
+                var relation = entity[e.PropertyName] as Address;
+                if (!ReferenceEquals(null, relation))
+                {
+                    Attach(relation);
+                }
+            }
+        }
+
         #endregion People
 
         #region Addresses
@@ -269,14 +295,14 @@ namespace TableInheritance.Client.Domain
         {
             get
             {
-                if (addressEntitySet == null)
+                if (ReferenceEquals(null, addressEntitySet))
                 {
-                    addressEntitySet = CreateEntitySet<Address>(_addresses, AttachWithRelations, GetAddresses);
+                    addressEntitySet = CreateEntitySet<Address>(_addresses, AttachWithRelations, OnDetach, GetAddresses);
                 }
+
                 return addressEntitySet;
             }
         }
-        private IEntitySet<Address> addressEntitySet;
 
         public void Add(Address entity)
         {
@@ -332,7 +358,7 @@ namespace TableInheritance.Client.Domain
         {
             #region iteration tracking
 
-            if (referenceTrackingList == null)
+            if (ReferenceEquals(null, referenceTrackingList))
             {
                 referenceTrackingList = new List<object>();
             }
@@ -364,7 +390,7 @@ namespace TableInheritance.Client.Domain
                     throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
             }
 
-            if (((object)existingEntity) != null && object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && ReferenceEquals(existingEntity, entity))
             {
                 return existingEntity;
             }
@@ -372,55 +398,40 @@ namespace TableInheritance.Client.Domain
             #endregion
 
             #region attach relations recursively
+            
 
-            // register relation's collection changed event if entity is new to context
-            if (existingEntity == null)
+            if (!ReferenceEquals(null, entity.Customers))
             {
-                entity.Customers.CollectionChanged += (s, e) =>
+                // register relation's collection changed event if entity is new to context
+                if (ReferenceEquals(null, existingEntity))
                 {
-                    if (entity.IsChangeTrackingPrevented) return;
+                    entity.Customers.CollectionChanged += On_address_customers_collectionChanged;
+                }
 
-                    if (e.NewItems != null)
-                    {
-                        foreach (Customer item in e.NewItems)
-                        {
-                            Attach(item);
-                        }
-                    }
-                    //if (e.OldItems != null)
-                    //{
-                    //    foreach (Customer item in e.OldItems)
-                    //    {
-                    //        if (item.ChangeTracker.State == ObjectState.Unchanged)
-                    //        {
-                    //            item.MarkAsModified();
-                    //        }
-                    //    }
-                    //}
-                };
-            }
-
-            // attach related entities to context
-            if (entity.Customers.Count > 0)
-            {
-                foreach (var item in entity.Customers.ToArray())
+                // attach related entities to context
+                if (entity.Customers.Count > 0)
                 {
-                    var existingRelatedEntity = (Customer)AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
-                    // update relation if entity is new to context or relation is new to entity
-                    if (existingEntity == null || !existingEntity.Customers.Contains(item))
+                    foreach (var item in entity.Customers.ToArray())
                     {
-                        if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, item))
+                        var existingRelatedEntity = (Customer)AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
+
+                        // update relation if entity is new to context or relation is new to entity
+                        if (ReferenceEquals(null, existingEntity) || !existingEntity.Customers.Contains(item))
                         {
-                            // check merge options
-                            if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Address")))
+                            if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, item))
                             {
-                                using (entity.ChangeTrackingPrevention())
+                                // check merge options
+                                if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Address")))
                                 {
-                                    entity.Customers.Replace(item, existingRelatedEntity);
-                                }
-                                using (existingRelatedEntity.ChangeTrackingPrevention())
-                                {
-                                    existingRelatedEntity.Address = entity;
+                                    using (entity.ChangeTrackingPrevention())
+                                    {
+                                        entity.Customers.Replace(item, existingRelatedEntity);
+                                    }
+
+                                    using (existingRelatedEntity.ChangeTrackingPrevention())
+                                    {
+                                        existingRelatedEntity.Address = entity;
+                                    }
                                 }
                             }
                         }
@@ -428,54 +439,38 @@ namespace TableInheritance.Client.Domain
                 }
             }
 
-            // register relation's collection changed event if entity is new to context
-            if (existingEntity == null)
+            if (!ReferenceEquals(null, entity.People))
             {
-                entity.People.CollectionChanged += (s, e) =>
+                // register relation's collection changed event if entity is new to context
+                if (ReferenceEquals(null, existingEntity))
                 {
-                    if (entity.IsChangeTrackingPrevented) return;
+                    entity.People.CollectionChanged += On_address_people_collectionChanged;
+                }
 
-                    if (e.NewItems != null)
-                    {
-                        foreach (Person item in e.NewItems)
-                        {
-                            Attach(item);
-                        }
-                    }
-                    //if (e.OldItems != null)
-                    //{
-                    //    foreach (Person item in e.OldItems)
-                    //    {
-                    //        if (item.ChangeTracker.State == ObjectState.Unchanged)
-                    //        {
-                    //            item.MarkAsModified();
-                    //        }
-                    //    }
-                    //}
-                };
-            }
-
-            // attach related entities to context
-            if (entity.People.Count > 0)
-            {
-                foreach (var item in entity.People.ToArray())
+                // attach related entities to context
+                if (entity.People.Count > 0)
                 {
-                    var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
-                    // update relation if entity is new to context or relation is new to entity
-                    if (existingEntity == null || !existingEntity.People.Contains(item))
+                    foreach (var item in entity.People.ToArray())
                     {
-                        if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, item))
+                        var existingRelatedEntity = AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
+
+                        // update relation if entity is new to context or relation is new to entity
+                        if (ReferenceEquals(null, existingEntity) || !existingEntity.People.Contains(item))
                         {
-                            // check merge options
-                            if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Address1")))
+                            if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, item))
                             {
-                                using (entity.ChangeTrackingPrevention())
+                                // check merge options
+                                if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Address1")))
                                 {
-                                    entity.People.Replace(item, existingRelatedEntity);
-                                }
-                                using (existingRelatedEntity.ChangeTrackingPrevention())
-                                {
-                                    existingRelatedEntity.Address1 = entity;
+                                    using (entity.ChangeTrackingPrevention())
+                                    {
+                                        entity.People.Replace(item, existingRelatedEntity);
+                                    }
+
+                                    using (existingRelatedEntity.ChangeTrackingPrevention())
+                                    {
+                                        existingRelatedEntity.Address1 = entity;
+                                    }
                                 }
                             }
                         }
@@ -487,7 +482,7 @@ namespace TableInheritance.Client.Domain
 
             #region refresh existing entity based on merge options
 
-            if (existingEntity != null && !object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && !ReferenceEquals(existingEntity, entity))
             {
                 if (Addresses.MergeOption == MergeOption.OverwriteChanges)
                 {
@@ -511,6 +506,54 @@ namespace TableInheritance.Client.Domain
             return existingEntity;
         }
 
+        private void OnDetach(Address entity)
+        {
+            if (!ReferenceEquals(null, entity.Customers))
+            {
+                entity.Customers.CollectionChanged -= On_address_customers_collectionChanged;
+            }
+
+            if (!ReferenceEquals(null, entity.People))
+            {
+                entity.People.CollectionChanged -= On_address_people_collectionChanged;
+            }
+
+        }
+
+        private void On_address_customers_collectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var entity = sender as Address;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (!ReferenceEquals(null, e.NewItems))
+            {
+                foreach (Customer item in e.NewItems)
+                {
+                    Attach(item);
+                }
+            }
+        }
+
+        private void On_address_people_collectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var entity = sender as Address;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (!ReferenceEquals(null, e.NewItems))
+            {
+                foreach (Person item in e.NewItems)
+                {
+                    Attach(item);
+                }
+            }
+        }
+
         #endregion Addresses
 
         #region Demographics
@@ -519,14 +562,14 @@ namespace TableInheritance.Client.Domain
         {
             get
             {
-                if (demographicEntitySet == null)
+                if (ReferenceEquals(null, demographicEntitySet))
                 {
-                    demographicEntitySet = CreateEntitySet<Demographic>(_demographics, AttachWithRelations, GetDemographics);
+                    demographicEntitySet = CreateEntitySet<Demographic>(_demographics, AttachWithRelations, OnDetach, GetDemographics);
                 }
+
                 return demographicEntitySet;
             }
         }
-        private IEntitySet<Demographic> demographicEntitySet;
 
         public void Add(Demographic entity)
         {
@@ -582,7 +625,7 @@ namespace TableInheritance.Client.Domain
         {
             #region iteration tracking
 
-            if (referenceTrackingList == null)
+            if (ReferenceEquals(null, referenceTrackingList))
             {
                 referenceTrackingList = new List<object>();
             }
@@ -614,7 +657,7 @@ namespace TableInheritance.Client.Domain
                     throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
             }
 
-            if (((object)existingEntity) != null && object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && ReferenceEquals(existingEntity, entity))
             {
                 return existingEntity;
             }
@@ -622,33 +665,22 @@ namespace TableInheritance.Client.Domain
             #endregion
 
             #region attach relations recursively
-
+            
             // register entity's property changed event if entity is new to context
-            if (existingEntity == null)
+            if (ReferenceEquals(null, existingEntity))
             {
-                entity.PropertyChanged += (s, e) =>
-                {
-                    if (entity.IsChangeTrackingPrevented) return;
-
-                    if (e.PropertyName == "Customer")
-                    {
-                        var relation = entity[e.PropertyName] as Customer;
-                        if (relation != null)
-                        {
-                            Attach(relation);
-                        }
-                    }
-                };
+                entity.PropertyChanged += On_demographic_propertyChanged;
             }
 
             // attach related entity to context
-            if (entity.Customer != null)
+            if (!ReferenceEquals(null, entity.Customer))
             {
                 var existingRelatedEntity = (Customer)AttachWithRelations(entity.Customer, insertMode, mergeOption, referenceTrackingList);
+
                 // update relation if entity is new to context or relation is new to entity
-                if (existingEntity == null || !entity.Customer.Equals(existingEntity.Customer))
+                if (ReferenceEquals(null, existingEntity) || !entity.Customer.Equals(existingEntity.Customer))
                 {
-                    if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, entity.Customer))
+                    if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, entity.Customer))
                     {
                         // check merge options
                         if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Demographic")))
@@ -666,63 +698,47 @@ namespace TableInheritance.Client.Domain
                 }
             }
 
-            // register relation's collection changed event if entity is new to context
-            if (existingEntity == null)
+            if (!ReferenceEquals(null, entity.Customers))
             {
-                entity.Customers.CollectionChanged += (s, e) =>
+                // register relation's collection changed event if entity is new to context
+                if (ReferenceEquals(null, existingEntity))
                 {
-                    if (entity.IsChangeTrackingPrevented) return;
+                    entity.Customers.CollectionChanged += On_demographic_customers_collectionChanged;
+                }
 
-                    if (e.NewItems != null)
-                    {
-                        foreach (Customer item in e.NewItems)
-                        {
-                            Attach(item);
-                        }
-                    }
-                    //if (e.OldItems != null)
-                    //{
-                    //    foreach (Customer item in e.OldItems)
-                    //    {
-                    //        if (item.ChangeTracker.State == ObjectState.Unchanged)
-                    //        {
-                    //            item.MarkAsModified();
-                    //        }
-                    //    }
-                    //}
-                };
-            }
-
-            // attach related entities to context
-            if (entity.Customers.Count > 0)
-            {
-                foreach (var item in entity.Customers.ToArray())
+                // attach related entities to context
+                if (entity.Customers.Count > 0)
                 {
-                    var existingRelatedEntity = (Customer)AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
-                    // update relation if entity is new to context or relation is new to entity
-                    if (existingEntity == null || !existingEntity.Customers.Contains(item))
+                    foreach (var item in entity.Customers.ToArray())
                     {
-                        if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, item))
+                        var existingRelatedEntity = (Customer)AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
+
+                        // update relation if entity is new to context or relation is new to entity
+                        if (ReferenceEquals(null, existingEntity) || !existingEntity.Customers.Contains(item))
                         {
-                            // check merge options
-                            if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Demographics")))
+                            if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, item))
                             {
-                                using (entity.ChangeTrackingPrevention())
+                                // check merge options
+                                if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("Demographics")))
                                 {
-                                    entity.Customers.Replace(item, existingRelatedEntity);
-                                }
-
-                                using (existingRelatedEntity.ChangeTrackingPrevention())
-                                {
-                                    var entityToReplace = existingRelatedEntity.Demographics.FirstOrDefault(e => e.Equals(entity));
-                                    if (entityToReplace != null)
+                                    using (entity.ChangeTrackingPrevention())
                                     {
-                                        using (entityToReplace.ChangeTrackingPrevention())
-                                        {
-                                            existingRelatedEntity.Demographics.Remove(entityToReplace);
-                                        }
+                                        entity.Customers.Replace(item, existingRelatedEntity);
                                     }
-                                    existingRelatedEntity.Demographics.Add(entity);
+
+                                    using (existingRelatedEntity.ChangeTrackingPrevention())
+                                    {
+                                        var entityToReplace = existingRelatedEntity.Demographics.FirstOrDefault(e => e.Equals(entity));
+                                        if (!ReferenceEquals(null, entityToReplace))
+                                        {
+                                            using (entityToReplace.ChangeTrackingPrevention())
+                                            {
+                                                existingRelatedEntity.Demographics.Remove(entityToReplace);
+                                            }
+                                        }
+
+                                        existingRelatedEntity.Demographics.Add(entity);
+                                    }
                                 }
                             }
                         }
@@ -734,7 +750,7 @@ namespace TableInheritance.Client.Domain
 
             #region refresh existing entity based on merge options
 
-            if (existingEntity != null && !object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && !ReferenceEquals(existingEntity, entity))
             {
                 if (Demographics.MergeOption == MergeOption.OverwriteChanges)
                 {
@@ -758,6 +774,52 @@ namespace TableInheritance.Client.Domain
             return existingEntity;
         }
 
+        private void OnDetach(Demographic entity)
+        {
+            entity.PropertyChanged -= On_demographic_propertyChanged;
+
+            if (!ReferenceEquals(null, entity.Customers))
+            {
+                entity.Customers.CollectionChanged -= On_demographic_customers_collectionChanged;
+            }
+
+        }
+
+        private void On_demographic_propertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var entity = sender as Demographic;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (e.PropertyName == "Customer")
+            {
+                var relation = entity[e.PropertyName] as Customer;
+                if (!ReferenceEquals(null, relation))
+                {
+                    Attach(relation);
+                }
+            }
+        }
+
+        private void On_demographic_customers_collectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var entity = sender as Demographic;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (!ReferenceEquals(null, e.NewItems))
+            {
+                foreach (Customer item in e.NewItems)
+                {
+                    Attach(item);
+                }
+            }
+        }
+
         #endregion Demographics
 
         #region EmployeeRoles
@@ -766,14 +828,14 @@ namespace TableInheritance.Client.Domain
         {
             get
             {
-                if (employeeRoleEntitySet == null)
+                if (ReferenceEquals(null, employeeRoleEntitySet))
                 {
-                    employeeRoleEntitySet = CreateEntitySet<EmployeeRole>(_employeeRoles, AttachWithRelations, GetEmployeeRoles);
+                    employeeRoleEntitySet = CreateEntitySet<EmployeeRole>(_employeeRoles, AttachWithRelations, OnDetach, GetEmployeeRoles);
                 }
+
                 return employeeRoleEntitySet;
             }
         }
-        private IEntitySet<EmployeeRole> employeeRoleEntitySet;
 
         public void Add(EmployeeRole entity)
         {
@@ -829,7 +891,7 @@ namespace TableInheritance.Client.Domain
         {
             #region iteration tracking
 
-            if (referenceTrackingList == null)
+            if (ReferenceEquals(null, referenceTrackingList))
             {
                 referenceTrackingList = new List<object>();
             }
@@ -861,7 +923,7 @@ namespace TableInheritance.Client.Domain
                     throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
             }
 
-            if (((object)existingEntity) != null && object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && ReferenceEquals(existingEntity, entity))
             {
                 return existingEntity;
             }
@@ -869,55 +931,40 @@ namespace TableInheritance.Client.Domain
             #endregion
 
             #region attach relations recursively
+            
 
-            // register relation's collection changed event if entity is new to context
-            if (existingEntity == null)
+            if (!ReferenceEquals(null, entity.Employees))
             {
-                entity.Employees.CollectionChanged += (s, e) =>
+                // register relation's collection changed event if entity is new to context
+                if (ReferenceEquals(null, existingEntity))
                 {
-                    if (entity.IsChangeTrackingPrevented) return;
+                    entity.Employees.CollectionChanged += On_employeeRole_employees_collectionChanged;
+                }
 
-                    if (e.NewItems != null)
-                    {
-                        foreach (Employee item in e.NewItems)
-                        {
-                            Attach(item);
-                        }
-                    }
-                    //if (e.OldItems != null)
-                    //{
-                    //    foreach (Employee item in e.OldItems)
-                    //    {
-                    //        if (item.ChangeTracker.State == ObjectState.Unchanged)
-                    //        {
-                    //            item.MarkAsModified();
-                    //        }
-                    //    }
-                    //}
-                };
-            }
-
-            // attach related entities to context
-            if (entity.Employees.Count > 0)
-            {
-                foreach (var item in entity.Employees.ToArray())
+                // attach related entities to context
+                if (entity.Employees.Count > 0)
                 {
-                    var existingRelatedEntity = (Employee)AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
-                    // update relation if entity is new to context or relation is new to entity
-                    if (existingEntity == null || !existingEntity.Employees.Contains(item))
+                    foreach (var item in entity.Employees.ToArray())
                     {
-                        if (existingRelatedEntity != null && !object.ReferenceEquals(existingRelatedEntity, item))
+                        var existingRelatedEntity = (Employee)AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
+
+                        // update relation if entity is new to context or relation is new to entity
+                        if (ReferenceEquals(null, existingEntity) || !existingEntity.Employees.Contains(item))
                         {
-                            // check merge options
-                            if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("EmployeeRole")))
+                            if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, item))
                             {
-                                using (entity.ChangeTrackingPrevention())
+                                // check merge options
+                                if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("EmployeeRole")))
                                 {
-                                    entity.Employees.Replace(item, existingRelatedEntity);
-                                }
-                                using (existingRelatedEntity.ChangeTrackingPrevention())
-                                {
-                                    existingRelatedEntity.EmployeeRole = entity;
+                                    using (entity.ChangeTrackingPrevention())
+                                    {
+                                        entity.Employees.Replace(item, existingRelatedEntity);
+                                    }
+
+                                    using (existingRelatedEntity.ChangeTrackingPrevention())
+                                    {
+                                        existingRelatedEntity.EmployeeRole = entity;
+                                    }
                                 }
                             }
                         }
@@ -929,7 +976,7 @@ namespace TableInheritance.Client.Domain
 
             #region refresh existing entity based on merge options
 
-            if (existingEntity != null && !object.ReferenceEquals(existingEntity, entity))
+            if (!ReferenceEquals(null, existingEntity) && !ReferenceEquals(existingEntity, entity))
             {
                 if (EmployeeRoles.MergeOption == MergeOption.OverwriteChanges)
                 {
@@ -951,6 +998,32 @@ namespace TableInheritance.Client.Domain
             #endregion
 
             return existingEntity;
+        }
+
+        private void OnDetach(EmployeeRole entity)
+        {
+            if (!ReferenceEquals(null, entity.Employees))
+            {
+                entity.Employees.CollectionChanged -= On_employeeRole_employees_collectionChanged;
+            }
+
+        }
+
+        private void On_employeeRole_employees_collectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var entity = sender as EmployeeRole;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (!ReferenceEquals(null, e.NewItems))
+            {
+                foreach (Employee item in e.NewItems)
+                {
+                    Attach(item);
+                }
+            }
         }
 
         #endregion EmployeeRoles
@@ -1003,23 +1076,27 @@ namespace TableInheritance.Client.Domain
             {
                 people = _people.GetAllEntities();
             }
+
             IEnumerable<Address> addresses;
             lock (_addresses.SyncRoot)
             {
                 addresses = _addresses.GetAllEntities();
             }
+
             IEnumerable<Demographic> demographics;
             lock (_demographics.SyncRoot)
             {
                 demographics = _demographics.GetAllEntities();
             }
+
             IEnumerable<EmployeeRole> employeeRoles;
             lock (_employeeRoles.SyncRoot)
             {
                 employeeRoles = _employeeRoles.GetAllEntities();
             }
+
             // get reduced change set
-            var changeSet = new TableInheritanceDemoDBChangeSet(
+            var changeSet = _changeSetFactoryProvider().CreateChangeSet(
                 people, 
                 addresses, 
                 demographics, 
@@ -1034,18 +1111,22 @@ namespace TableInheritance.Client.Domain
             {
                 Refresh(_people, resultSet.People);
             }
+
             lock (_addresses.SyncRoot)
             {
                 Refresh(_addresses, resultSet.Addresses);
             }
+
             lock (_demographics.SyncRoot)
             {
                 Refresh(_demographics, resultSet.Demographics);
             }
+
             lock (_employeeRoles.SyncRoot)
             {
                 Refresh(_employeeRoles, resultSet.EmployeeRoles);
             }
+
         }
 
         #endregion Submit Changes

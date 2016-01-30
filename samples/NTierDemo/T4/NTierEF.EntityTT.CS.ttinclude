@@ -70,7 +70,7 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
 <#+
         WriteEntityTypeSerializationInfo(entity);
 #>
-    <#=Accessibility.ForType(entity)#> <#=EdmUtility.Code.SpaceAfter(EdmUtility.Code.AbstractOption(entity))#>partial class <#=EdmUtility.Code.Escape(entity)#><#=EdmUtility.Code.StringBefore(" : ", EdmUtility.Code.Escape(entity.BaseType))#><#=entity.BaseType == null ? " : Entity<" + EdmUtility.Code.Escape(entity) + ">, " : ", "#>INotifyPropertyChanged, INotifyPropertyChanging, IDataErrorInfo
+    <#=Accessibility.ForType(entity)#> <#=EdmUtility.Code.SpaceAfter(EdmUtility.Code.AbstractOption(entity))#>partial class <#=EdmUtility.Code.Escape(entity)#><#=EdmUtility.Code.StringBefore(" : ", EdmUtility.Code.Escape(entity.BaseType))#><#=entity.BaseType == null ? " : Entity, " : ", "#>INotifyPropertyChanged, INotifyPropertyChanging, IDataErrorInfo
     {
         #region Constructor and Initialization
 
@@ -100,15 +100,25 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
-<#+if(edmProperty.MetadataProperties.Any(p => p.Name.EndsWith("StoreGeneratedPattern"))){
-    string pattern = MapStoreGeneratedPattern(edmProperty.MetadataProperties.First(p => p.Name.EndsWith("StoreGeneratedPattern")).Value as string);
-    if (!string.IsNullOrEmpty(pattern)){
-#>
+<#+
+        if(edmProperty.MetadataProperties.Any(p => p.Name.EndsWith("StoreGeneratedPattern")))
+        {
+            string pattern = MapStoreGeneratedPattern(edmProperty.MetadataProperties.First(p => p.Name.EndsWith("StoreGeneratedPattern")).Value as string);
+            if (!string.IsNullOrEmpty(pattern))
+            {#>
         [ServerGeneration(<#=pattern#>)]
-<#+}}#>
-<#+if(edmProperty.TypeUsage.Facets.Any(f => f.Name == "ConcurrencyMode" && f.Value.ToString() == "Fixed")){#>
+<#+         }
+        }#>
+<#+
+        bool hasDependentProperties = entity.NavigationProperties.Any(np => np.GetDependentProperties().Contains(edmProperty));
+        if (hasDependentProperties)
+        {
+#>
+        [ForeignKeyProperty]
+<#+     }#>
+<#+     if(edmProperty.TypeUsage.Facets.Any(f => f.Name == "ConcurrencyMode" && f.Value.ToString() == "Fixed")){#>
         [ConcurrencyProperty]
-<#+}#>
+<#+     }#>
         [SimpleProperty]
         <#=Accessibility.ForProperty(edmProperty)#> <#=EdmUtility.Code.Escape(edmProperty.TypeUsage)#> <#=EdmUtility.Code.Escape(edmProperty)#>
         {
@@ -137,25 +147,19 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
         {
             var errorMessage = string.Format("The property '{0}' is part of the object's key and cannot be changed. Changes to key properties can only be made when the object is not being tracked or is in the Added state.", edmProperty.Name);
 #>
-                    //if (!IsDeserializing && ChangeTracker.IsChangeTrackingEnabled)
                     if (!IsDeserializing && ChangeTracker.State != ObjectState.Added)
                     {
                         throw new InvalidOperationException("<#=errorMessage#>");
                     }
 <#+
         }
-        else if (originalValueMembers.IsOriginalValueMember(edmProperty))
-        {
-#>
-                    //RecordOriginalValue("<#=edmProperty.Name#>", <#=EdmUtility.Code.FieldName(edmProperty)#>);
-<#+
-        }
+        //else if (originalValueMembers.IsOriginalValueMember(edmProperty))
+        //{
+        //}
 #>
                     <#=EdmUtility.Code.Escape(edmProperty)#>Changing(value);
                     OnPropertyChanging("<#=edmProperty.Name#>", value);
 <#+
-
-        bool hasDependentProperties = entity.NavigationProperties.Where(np=>np.GetDependentProperties().Contains(edmProperty)).Any();
         if (hasDependentProperties)
         {
 #>
@@ -320,7 +324,7 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
             }
             set
             {
-                if (!object.ReferenceEquals(<#=EdmUtility.Code.FieldName(navProperty)#>, value))
+                if (!ReferenceEquals(<#=EdmUtility.Code.FieldName(navProperty)#>, value))
                 {
                     if (!IsDeserializing && ChangeTracker.IsChangeTrackingEnabled)
                     {
@@ -380,7 +384,7 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
             <#=EdmUtility.Code.SpaceAfter(Accessibility.ForGetter(navProperty))#>get { return <#=EdmUtility.Code.FieldName(navProperty)#>; }
             <#=EdmUtility.Code.SpaceAfter(Accessibility.ForSetter(navProperty))#>set
             {
-                if (!object.ReferenceEquals(<#=EdmUtility.Code.FieldName(navProperty)#>, value))
+                if (!ReferenceEquals(<#=EdmUtility.Code.FieldName(navProperty)#>, value))
                 {
                     <#=EdmUtility.Code.Escape(navProperty)#>Changing(value);
                     OnPropertyChanging("<#=navProperty.Name#>", value);
@@ -649,7 +653,7 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
             else
             {
 #>
-            if (previousValue != null && object.ReferenceEquals(previousValue.<#=EdmUtility.Code.Escape(inverse)#>, this))
+            if (previousValue != null && ReferenceEquals(previousValue.<#=EdmUtility.Code.Escape(inverse)#>, this))
             {
                 previousValue.<#=EdmUtility.Code.Escape(inverse)#> = null;
             }
@@ -773,7 +777,7 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
             if (ChangeTracker.IsChangeTrackingEnabled)
             {
                 if (ChangeTracker.OriginalValues.ContainsKey("<#=navProperty.Name#>")
-                    && object.ReferenceEquals(ChangeTracker.OriginalValues["<#=navProperty.Name#>"], <#=EdmUtility.Code.Escape(navProperty)#>))
+                    && ReferenceEquals(ChangeTracker.OriginalValues["<#=navProperty.Name#>"], <#=EdmUtility.Code.Escape(navProperty)#>))
                 {
                     //ChangeTracker.OriginalValues.Remove("<#=navProperty.Name#>");
                 }
@@ -990,7 +994,7 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
                     if (inverse.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many)
                     {
 #>
-                    if (object.ReferenceEquals(item.<#=EdmUtility.Code.Escape(inverse)#>, this))
+                    if (ReferenceEquals(item.<#=EdmUtility.Code.Escape(inverse)#>, this))
                     {
                         item.<#=EdmUtility.Code.Escape(inverse)#> = null;
                     }
@@ -1137,9 +1141,15 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
 #>
 
         #endregion Association Fixup
+<#+
+    if (entity.BaseType == null)
+    {
+#>
 
-        protected override bool IsKeyEqual(<#=EdmUtility.Code.Escape(entity)#> entity)
+        protected override bool IsKeyEqual(Entity other)
         {
+            var entity = other as <#=EdmUtility.Code.Escape(entity)#>;
+            if (ReferenceEquals(null, entity)) return false;
 <#+
         string val;
         var pkList = entity.Properties.Where(p => p.TypeUsage.EdmType is SimpleType && p.DeclaringType == entity && EdmUtility.EF.IsKey(p)).ToList();
@@ -1174,7 +1184,7 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
             if (type.IsClass || type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
 #>
-            return ReferenceEquals(this.<#=pkList[0].Name#>, null) ? 0 : this.<#=pkList[0].Name#>.GetHashCode();
+            return ReferenceEquals(null, this.<#=pkList[0].Name#>) ? 13 : this.<#=pkList[0].Name#>.GetHashCode();
 <#+
             }
             else
@@ -1194,7 +1204,7 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
             if (type.IsClass || type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
 #>
-                var hashCode = ReferenceEquals(this.<#=pkList[0].Name#>, null) ? 0 : this.<#=pkList[0].Name#>.GetHashCode();
+                var hashCode = ReferenceEquals(null, this.<#=pkList[0].Name#>) ? 13 : this.<#=pkList[0].Name#>.GetHashCode();
 <#+
             }
             else
@@ -1205,14 +1215,11 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
             }
             for(int i = 1; i < pkList.Count; i++)
             {
-                //hashCode ^= ReferenceEquals(this.Name, null) ? 0 : this.Name.GetHashCode() * 397;
-                //hashCode ^= this.ProductNumber.GetHashCode() * 397;
-                //val += string.Format("this.{0}.GetHashCode(){1}", pkList[i].Name, (i == pkList.Count - 1 ? "" : " + \r\n               "));
                 type = Type.GetType(EdmUtility.Code.Escape(pkList[i].TypeUsage).Replace("global::", ""));
                 if (type.IsClass || type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
 #>
-                hashCode ^= ReferenceEquals(this.<#=pkList[i].Name#>, null) ? 0 : this.<#=pkList[i].Name#>.GetHashCode() * 397;
+                hashCode ^= ReferenceEquals(null, this.<#=pkList[i].Name#>) ? 13 : this.<#=pkList[i].Name#>.GetHashCode() * 397;
 <#+
                 }
                 else
@@ -1225,10 +1232,14 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
 #>
                 return hashCode;
             }
+        
 <#+
         }
 #>
         }
+<#+
+        }
+#>
     }
 }
 <#+
@@ -1239,11 +1250,11 @@ namespace <#=Namespace + "." + EdmUtility.ModelName#>
     {
 #>
 //------------------------------------------------------------------------------
-// <autogenerated>
+// <auto-generated>
 //   This file was generated by T4 code generator <#= System.IO.Path.GetFileName(T4Context.Host.TemplateFile) #>.
 //   Any changes made to this file manually may cause incorrect behavior
 //   and will be lost next time the file is regenerated.
-// </autogenerated>
+// </auto-generated>
 //------------------------------------------------------------------------------
 
 using System;

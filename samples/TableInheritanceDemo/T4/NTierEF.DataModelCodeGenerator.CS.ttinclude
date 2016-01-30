@@ -8,10 +8,10 @@
 <#@ include file="NTierEF.OptimisticConcurrencyFaultTT.CS.ttinclude" #>
 <#@ include file="NTierEF.UpdateFaultTT.CS.ttinclude" #>
 <#+
-// <copyright file="NTierEF.DataModelCodeGen.CS.ttinclude" company="Trivadis">
+// <copyright file="NTierEF.DataModelCodeGenerator.CS.ttinclude" company="Trivadis">
 //     Copyright © Trivadis. All Rights Reserved.
 // </copyright>
-public class DataModelCodeGenerator : Generator
+public partial class DataModelCodeGenerator : Generator
 {
     private readonly EdmUtility EdmUtility;
     private readonly string DataModelProject = string.Empty;
@@ -20,6 +20,8 @@ public class DataModelCodeGenerator : Generator
     {
         this.EdmUtility = edmUtility;
         this.DataModelProject = dataModelProject;
+
+        BeforeInitializing();
 
         this.EnumTemplate = new EnumTemplate(DataModelProject, EdmUtility, modelNamespace);
         this.EntityTemplate = new EntityTemplate(DataModelProject, EdmUtility, modelNamespace);
@@ -30,7 +32,17 @@ public class DataModelCodeGenerator : Generator
         this.ResultSetTemplate = new ResultSetTemplate(DataModelProject, EdmUtility, modelNamespace);
         this.OptimisticConcurrencyFaultTemplate = new OptimisticConcurrencyFaultTemplate(DataModelProject, EdmUtility, modelNamespace);
         this.UpdateFaultTemplate = new UpdateFaultTemplate(DataModelProject, EdmUtility, modelNamespace);
+
+        OnInitializing(modelNamespace);
     }
+
+    partial void BeforeInitializing();
+
+    partial void OnInitializing(string modelNamespace);
+
+    partial void OnCodeGenerating();
+
+    partial void OnCodeGenerated();
 
     /// <summary>
     /// Gets or sets the template that generates the enum types of the entity model.
@@ -118,6 +130,8 @@ public class DataModelCodeGenerator : Generator
     /// </summary>
     protected override void RunCore()
     {
+        OnCodeGenerating();
+
         CreateEnums();
         CreateEntities();
         CreateEntityMetadata();
@@ -127,6 +141,8 @@ public class DataModelCodeGenerator : Generator
         CreateResultSet();
         CreateOptimisticConcurrencyFault();
         CreateUpdateFault();
+
+        OnCodeGenerated();
     }
 
     private void CreateEnums()

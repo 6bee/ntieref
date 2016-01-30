@@ -42,7 +42,7 @@ namespace BlogWriter.Wpf.ViewModels
                 from author in dataContext.Users.AsQueryable()
                 where author.Username == User.Username
                 select author;
-            if ((await query.ExecuteAsync()).Any()) throw new Exception(string.Format("User with user name '{0}' already exists!", User.Username));
+            if ((await query.ExecuteAsync()).ResultSet.Any()) throw new Exception(string.Format("User with user name '{0}' already exists!", User.Username));
 
             // save as new user
             dataContext.Add(User);

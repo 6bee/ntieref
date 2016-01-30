@@ -8,13 +8,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Globalization;
-using System.Reflection;
 using System.Runtime.Serialization;
 using NTier.Common.Domain.Model;
 
@@ -23,31 +17,8 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
     [DataContract(IsReference = true)]
     public partial class TableInheritanceDemoDBChangeSet : IChangeSet
     {
-        #region Constructor
-
-        public TableInheritanceDemoDBChangeSet(IEnumerable<Person> people, IEnumerable<Address> addresses, IEnumerable<Demographic> demographics, IEnumerable<EmployeeRole> employeeRoles)
+        public TableInheritanceDemoDBChangeSet()
         {
-            // retrieve changes sets (modified entities)
-            var personChangeSet = people.GetChangeSet();
-            var addressChangeSet = addresses.GetChangeSet();
-            var demographicChangeSet = demographics.GetChangeSet();
-            var employeeRoleChangeSet = employeeRoles.GetChangeSet();
-
-            // reduce entities (copy changed values)
-            var peopleMap = personChangeSet.ReduceToModifications();
-            var addressesMap = addressChangeSet.ReduceToModifications();
-            var demographicsMap = demographicChangeSet.ReduceToModifications();
-            var employeeRolesMap = employeeRoleChangeSet.ReduceToModifications();
-
-            // fixup relations (replaces related entities with reduced entites)
-            this.FixupRelations(
-                this.Union(peopleMap.CastToEntityTuple(), addressesMap.CastToEntityTuple(), demographicsMap.CastToEntityTuple(), employeeRolesMap.CastToEntityTuple()),
-                this.Union(personChangeSet, addressChangeSet, demographicChangeSet, employeeRoleChangeSet)
-            );
-            if (peopleMap.Count > 0) this.People = peopleMap.Select(e => e.Item2).ToList();
-            if (addressesMap.Count > 0) this.Addresses = addressesMap.Select(e => e.Item2).ToList();
-            if (demographicsMap.Count > 0) this.Demographics = demographicsMap.Select(e => e.Item2).ToList();
-            if (employeeRolesMap.Count > 0) this.EmployeeRoles = employeeRolesMap.Select(e => e.Item2).ToList();
         }
 
         protected TableInheritanceDemoDBChangeSet(TableInheritanceDemoDBChangeSet changeSet)
@@ -58,40 +29,28 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
             this.EmployeeRoles = changeSet.EmployeeRoles;
         }
 
-        #endregion Constructor
-
-        #region DataMember
+        [DataMember]
+        public List<Person> People { get; set; }
 
         [DataMember]
-        public List<Person> People { get; private set; }
+        public List<Address> Addresses { get; set; }
 
         [DataMember]
-        public List<Address> Addresses { get; private set; }
+        public List<Demographic> Demographics { get; set; }
 
         [DataMember]
-        public List<Demographic> Demographics { get; private set; }
-
-        [DataMember]
-        public List<EmployeeRole> EmployeeRoles { get; private set; }
-
-        #endregion DataMember
-
-        #region IsEmpty
+        public List<EmployeeRole> EmployeeRoles { get; set; }
 
         public bool IsEmpty
         {
             get
             {
-                return People == null &&
-                    Addresses == null &&
-                    Demographics == null &&
-                    EmployeeRoles == null;
+                return (ReferenceEquals(null, People) || People.Count == 0)
+                    && (ReferenceEquals(null, Addresses) || Addresses.Count == 0)
+                    && (ReferenceEquals(null, Demographics) || Demographics.Count == 0)
+                    && (ReferenceEquals(null, EmployeeRoles) || EmployeeRoles.Count == 0);
             }
         }
-
-        #endregion IsEmpty
-
-        #region IEnumerable
 
         public IEnumerator<Entity> GetEnumerator()
         {
@@ -133,7 +92,5 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
         {
             return GetEnumerator();
         }
-
-        #endregion IEnumerable
     }
 }

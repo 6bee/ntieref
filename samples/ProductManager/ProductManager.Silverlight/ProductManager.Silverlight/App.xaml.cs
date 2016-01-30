@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -31,7 +33,6 @@ namespace ProductManager.Silverlight
 
         private void Application_Exit(object sender, EventArgs e)
         {
-
         }
 
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)

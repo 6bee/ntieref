@@ -45,6 +45,7 @@ namespace TableInheritance.Common.Domain.Model.TableInheritanceDemoDB
 #if !CLIENT_PROFILE
         [RoundtripOriginal]
 #endif
+        [ForeignKeyProperty]
         [SimpleProperty]
         public global::System.Int64 Id
         {
