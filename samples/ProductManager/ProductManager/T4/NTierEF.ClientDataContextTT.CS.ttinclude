@@ -1,0 +1,764 @@
+﻿<#+
+// <copyright file="NTierEF.ClientDataContextTT.CS.ttinclude" company="Trivadis">
+//     Copyright © Trivadis. All Rights Reserved.
+// </copyright>
+public class ClientDataContextTemplate : Template
+{
+    public EdmUtility EdmUtility { get; set; }
+    public string Namespace { get; set; }
+    public string ClientBaseNamespace { get; set; }
+    public string ModelBaseNamespace { get; set; }
+    public string ModelNamespace { get; set; }
+    public string ServiceContractNamespace { get; set; }
+    public string ChannelFactoryNamespace { get; set; }
+    public bool SuppressMEF { get; set; }
+    private string file = null;
+    public string File
+    {
+        get { return file != null ? file : string.Format(@"{0}DataContext.g.cs", EdmUtility.ModelName); }
+        set { file = value; }
+    }
+
+    public ClientDataContextTemplate(string project = null, EdmUtility edmUtility = null, string defaultNamespace = null, string modelNamespace = null, string serviceContractNamespace = null, bool suppressMEF = true)
+    {
+        if (!string.IsNullOrWhiteSpace(project))
+        {
+            base.Output.Project = project;
+        }
+        this.EdmUtility = edmUtility;
+        this.Namespace = defaultNamespace;
+        this.ClientBaseNamespace = "NTier.Client.Domain";
+        this.ModelBaseNamespace = "NTier.Common.Domain.Model";
+        this.ModelNamespace = modelNamespace;
+        this.ServiceContractNamespace = serviceContractNamespace;
+        this.ChannelFactoryNamespace = "NTier.Client.Domain.Service.ChannelFactory";
+        this.SuppressMEF = suppressMEF;
+    }
+
+    /// <summary>
+    /// Directs output of the template to a separate file by default. User can override
+    /// default behavior by assigning <see cref="Rendering"/> event handler.
+    /// </summary>
+    protected override void OnRendering(System.EventArgs e)
+    {
+        if (EdmUtility == null)
+        {
+            throw new Exception("Missing property EdmUtility");
+        }
+        if (string.IsNullOrWhiteSpace(Namespace))
+        {
+            throw new Exception("Missing property Namespace");
+        }
+        if (string.IsNullOrWhiteSpace(ClientBaseNamespace))
+        {
+            throw new Exception("Missing property ClientBaseNamespace");
+        }
+        if (string.IsNullOrWhiteSpace(ModelBaseNamespace))
+        {
+            throw new Exception("Missing property ModelBaseNamespace");
+        }
+        if (string.IsNullOrWhiteSpace(ModelNamespace))
+        {
+            throw new Exception("Missing property ModelNamespace");
+        }
+        if (string.IsNullOrWhiteSpace(ServiceContractNamespace))
+        {
+            throw new Exception("Missing property ServiceContractNamespace");
+        }
+        if (string.IsNullOrWhiteSpace(ChannelFactoryNamespace))
+        {
+            throw new Exception("Missing property ChannelFactoryNamespace");
+        }
+
+        this.Output.File = this.File;
+        base.OnRendering(e);
+    }
+
+    public override string TransformText()
+    {
+        WriteHeader(
+            ClientBaseNamespace,
+            ModelBaseNamespace,
+            ModelNamespace + "." + EdmUtility.ModelName,
+            ServiceContractNamespace + ".Contracts",
+            ChannelFactoryNamespace
+        );
+#>
+namespace <#=Namespace#>
+{
+    public sealed partial class <#=EdmUtility.ModelName#>DataContext : DataContext<<#=EdmUtility.ModelName#>ResultSet>, I<#=EdmUtility.ModelName#>DataContext
+    {
+        #region Fields
+
+        private readonly Func<I<#=EdmUtility.ModelName#>DataService> _dataServiceFactory;
+
+        private readonly Func<I<#=EdmUtility.ModelName#>ChangeSetFactory> _changeSetFactoryProvider;
+
+<#+
+        foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
+        {
+#>
+        private readonly InternalEntitySet<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> _<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>;
+<#+
+        }
+#>
+ 
+<#+
+        foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
+        {
+#>
+        private IEntitySet<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>EntitySet;
+<#+
+        }
+#>
+
+        #endregion Fields
+
+        #region Contructor
+
+        partial void Initialize();
+
+        public <#=EdmUtility.ModelName#>DataContext(Func<I<#=EdmUtility.ModelName#>DataService> dataServiceFactory, Func<I<#=EdmUtility.ModelName#>ChangeSetFactory> changeSetFactoryProvider = null)
+        {
+            _dataServiceFactory = dataServiceFactory;
+
+            _changeSetFactoryProvider = changeSetFactoryProvider ?? (() => new <#=EdmUtility.ModelName#>ChangeSetFactory());
+
+<#+
+        foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
+        {
+#>
+            _<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#> = CreateAndRegisterInternalEntitySet<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>>();
+<#+
+        }
+#>
+
+            Initialize();
+        }
+
+        public <#=EdmUtility.ModelName#>DataContext(IChannelFactory<I<#=EdmUtility.ModelName#>DataService> channelFactory, Func<I<#=EdmUtility.ModelName#>ChangeSetFactory> changeSetFactoryProvider = null)
+            : this(channelFactory.CreateChannel, changeSetFactoryProvider)
+        {
+        }
+
+        public <#=EdmUtility.ModelName#>DataContext(string endpointConfigurationName = "<#=EdmUtility.ModelName#>DataService", Func<I<#=EdmUtility.ModelName#>ChangeSetFactory> changeSetFactoryProvider = null)
+            : this(CreateChannelFactory(endpointConfigurationName).CreateChannel, changeSetFactoryProvider)
+        {
+        }
+
+<#+
+        if (SuppressMEF)
+        {
+#>
+        private static ChannelFactory<I<#=EdmUtility.ModelName#>DataService> CreateChannelFactory(string endpointConfigurationName)
+        {
+            var channelFactory = string.IsNullOrEmpty(endpointConfigurationName)
+                ? new ChannelFactory<I<#=EdmUtility.ModelName#>DataService>()
+                : new ChannelFactory<I<#=EdmUtility.ModelName#>DataService>(endpointConfigurationName);
+            return channelFactory;
+        }
+<#+
+        }
+        else
+        {
+#>
+        private static IChannelFactory<I<#=EdmUtility.ModelName#>DataService> CreateChannelFactory(string endpointConfigurationName)
+        {
+            #region MEF composition
+
+            var catalog = new System.ComponentModel.Composition.Hosting.AggregateCatalog();
+
+            // AppDomain.CurrentDomain.BaseDirectory
+            var directoryCatalog = new System.ComponentModel.Composition.Hosting.DirectoryCatalog(".");
+            catalog.Catalogs.Add(directoryCatalog);
+
+            // ASP.NET / Visual Studio dev webserver uses bin subdirectory to store assemblies
+            var direcotry = System.IO.Path.Combine(directoryCatalog.FullPath, "bin");
+            if (System.IO.Directory.Exists(direcotry))
+            {
+                directoryCatalog = new System.ComponentModel.Composition.Hosting.DirectoryCatalog(direcotry);
+                catalog.Catalogs.Add(directoryCatalog);
+            }
+
+            var container = new System.ComponentModel.Composition.Hosting.CompositionContainer(catalog);
+            container.ComposeExportedValue(endpointConfigurationName);
+            var channelFactory = container.GetExportedValue<IChannelFactory<I<#=EdmUtility.ModelName#>DataService>>();
+            return channelFactory;
+
+            #endregion MEF composition
+        }
+<#+
+        }
+#>
+
+        #endregion Contructor
+
+        #region Entities
+
+<#+
+        foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
+        {
+            // entities which are marked as non-root don't get exposed publicly
+            var isAggregateRoot = !entitySet.ElementType.MetadataProperties.Any(p => p.Name.EndsWith("AggregateRoot") && !bool.Parse(p.Value as string));
+#>
+        #region <#=EdmUtility.Code.Escape(entitySet)#>
+
+        <#= isAggregateRoot ? "public" : "private" #> IEntitySet<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> <#=EdmUtility.Code.Escape(entitySet)#>
+        {
+            get
+            {
+                if (ReferenceEquals(null, <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>EntitySet))
+                {
+                    <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>EntitySet = CreateEntitySet<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>>(_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>, AttachWithRelations, OnDetach, <#= isAggregateRoot ? "Get" + EdmUtility.Code.Escape(entitySet) : "null" #>);
+                }
+
+                return <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>EntitySet;
+            }
+        }
+
+<#+
+            // expose public methods to get and set merge option of private entity set (for non-root entities)
+            if (!isAggregateRoot)
+            {
+#>
+        public void SetMergeOptionFor<#=EdmUtility.Code.Escape(entitySet)#>(MergeOption mergeOption)
+        {
+            <#=EdmUtility.Code.Escape(entitySet)#>.MergeOption = mergeOption;
+        }
+
+        public MergeOption GetMergeOptionOf<#=EdmUtility.Code.Escape(entitySet)#>()
+        {
+            return <#=EdmUtility.Code.Escape(entitySet)#>.MergeOption;
+        }
+
+<#+
+            }
+#>
+        <#= isAggregateRoot ? "public" : "private" #> void Add(<#=EdmUtility.Code.Escape(entitySet.ElementType)#> entity)
+        {
+            <#=EdmUtility.Code.Escape(entitySet)#>.Add(entity);
+        }
+
+        <#= isAggregateRoot ? "public" : "private" #> void Delete(<#=EdmUtility.Code.Escape(entitySet.ElementType)#> entity)
+        {
+            <#=EdmUtility.Code.Escape(entitySet)#>.Delete(entity);
+        }
+
+        <#= isAggregateRoot ? "public" : "private" #> void Attach(<#=EdmUtility.Code.Escape(entitySet.ElementType)#> entity)
+        {
+            <#=EdmUtility.Code.Escape(entitySet)#>.Attach(entity);
+        }
+
+        <#= isAggregateRoot ? "public" : "private" #> void AttachAsModified(<#=EdmUtility.Code.Escape(entitySet.ElementType)#> entity, <#=EdmUtility.Code.Escape(entitySet.ElementType)#> original)
+        {
+            <#=EdmUtility.Code.Escape(entitySet)#>.AttachAsModified(entity, original);
+        }
+
+        <#= isAggregateRoot ? "public" : "private" #> void Detach(<#=EdmUtility.Code.Escape(entitySet.ElementType)#> entity)
+        {
+            <#=EdmUtility.Code.Escape(entitySet)#>.Detach(entity);
+        }
+
+<#+
+            if (isAggregateRoot)
+            {
+#>
+        private QueryResult<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> Get<#=EdmUtility.Code.Escape(entitySet)#>(ClientInfo clientInfo, Query query)
+        {
+            var service = _dataServiceFactory();
+            try
+            {
+                var result = service.Get<#=EdmUtility.Code.Escape(entitySet)#>(clientInfo, query);
+                return result;
+            }
+            finally
+            {
+                var client = service as ICommunicationObject;
+                if (client != null)
+                {
+                    if (client.State == CommunicationState.Faulted)
+                    {
+                        client.Abort();
+                    }
+                    else
+                    {
+                        client.Close();
+                    }
+                }
+            }
+        }
+
+<#+
+            }
+#>
+        private <#=EdmUtility.Code.Escape(entitySet.ElementType)#> AttachWithRelations(<#=EdmUtility.Code.Escape(entitySet.ElementType)#> entity, InsertMode insertMode = InsertMode.Attach, MergeOption mergeOption = MergeOption.AppendOnly, List<object> referenceTrackingList = null)
+        {
+            #region iteration tracking
+
+            if (ReferenceEquals(null, referenceTrackingList))
+            {
+                referenceTrackingList = new List<object>();
+            }
+
+            if (referenceTrackingList.Contains(entity))
+            {
+                return _<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>.GetExisting(entity);
+            }
+            else
+            {
+                referenceTrackingList.Add(entity);
+            }
+
+            #endregion
+
+            #region add/attach entity
+
+            <#=EdmUtility.Code.Escape(entitySet.ElementType)#> existingEntity = null;
+
+            switch (insertMode)
+            {
+                case InsertMode.Add:
+                    existingEntity = _<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>.Add(entity);
+                    break;
+                case InsertMode.Attach:
+                    existingEntity = _<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>.Attach(entity);
+                    break;
+                default:
+                    throw new Exception(string.Format("Implementation Exception: missing action for {0}", insertMode));
+            }
+
+            if (!ReferenceEquals(null, existingEntity) && ReferenceEquals(existingEntity, entity))
+            {
+                return existingEntity;
+            }
+
+            #endregion
+
+            #region attach relations recursively
+            
+<#+
+        if (entitySet.ElementType.NavigationProperties.Any(np => np.DeclaringType == entitySet.ElementType && np.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many))
+        {
+#>
+            // register entity's property changed event if entity is new to context
+            if (ReferenceEquals(null, existingEntity))
+            {
+                entity.PropertyChanged += On_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>_propertyChanged;
+            }
+<#+
+        }
+
+        foreach (NavigationProperty navProperty in entitySet.ElementType.NavigationProperties.Where(np => np.DeclaringType == entitySet.ElementType))
+        {
+            NavigationProperty inverse = EdmUtility.EF.Inverse(navProperty);
+            if (inverse != null && !IsReadWriteAccessibleProperty(inverse))
+            {
+                inverse = null;
+            }
+            if (navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many)
+            {
+#>
+
+            if (!ReferenceEquals(null, entity.<#=EdmUtility.Code.Escape(navProperty)#>))
+            {
+                // register relation's collection changed event if entity is new to context
+                if (ReferenceEquals(null, existingEntity))
+                {
+                    entity.<#=EdmUtility.Code.Escape(navProperty)#>.CollectionChanged += On_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>_<#=FirstCaseLow(EdmUtility.Code.Escape(navProperty))#>_collectionChanged;
+                }
+
+                // attach related entities to context
+                if (entity.<#=EdmUtility.Code.Escape(navProperty)#>.Count > 0)
+                {
+                    foreach (var item in entity.<#=EdmUtility.Code.Escape(navProperty)#>.ToArray())
+                    {
+                        var existingRelatedEntity = <#=CastIfRequired(navProperty)#>AttachWithRelations(item, insertMode, mergeOption, referenceTrackingList);
+<#+
+                if (inverse != null)
+                {
+#>
+
+                        // update relation if entity is new to context or relation is new to entity
+                        if (ReferenceEquals(null, existingEntity) || !existingEntity.<#=EdmUtility.Code.Escape(navProperty)#>.Contains(item))
+                        {
+                            if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, item))
+                            {
+                                // check merge options
+                                if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("<#=EdmUtility.Code.Escape(inverse)#>")))
+                                {
+                                    using (entity.ChangeTrackingPrevention())
+                                    {
+                                        entity.<#=EdmUtility.Code.Escape(navProperty)#>.Replace(item, existingRelatedEntity);
+                                    }
+<#+
+                    if (inverse.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many)
+                    {
+#>
+
+                                    using (existingRelatedEntity.ChangeTrackingPrevention())
+                                    {
+                                        var entityToReplace = existingRelatedEntity.<#=EdmUtility.Code.Escape(inverse)#>.FirstOrDefault(e => e.Equals(entity));
+                                        if (!ReferenceEquals(null, entityToReplace))
+                                        {
+                                            using (entityToReplace.ChangeTrackingPrevention())
+                                            {
+                                                existingRelatedEntity.<#=EdmUtility.Code.Escape(inverse)#>.Remove(entityToReplace);
+                                            }
+                                        }
+
+                                        existingRelatedEntity.<#=EdmUtility.Code.Escape(inverse)#>.Add(entity);
+                                    }
+<#+
+                    }
+                    else
+                    {
+#>
+
+                                    using (existingRelatedEntity.ChangeTrackingPrevention())
+                                    {
+                                        existingRelatedEntity.<#=EdmUtility.Code.Escape(inverse)#> = entity;
+                                    }
+<#+
+                    }
+#>
+                                }
+                            }
+                        }
+<#+
+                }
+#>
+                    }
+                }
+            }
+<#+
+            }
+            else
+            {
+#>
+
+            // attach related entity to context
+            if (!ReferenceEquals(null, entity.<#=EdmUtility.Code.Escape(navProperty)#>))
+            {
+                var existingRelatedEntity = <#=CastIfRequired(navProperty)#>AttachWithRelations(entity.<#=EdmUtility.Code.Escape(navProperty)#>, insertMode, mergeOption, referenceTrackingList);
+<#+
+                if (inverse != null)
+                {
+#>
+
+                // update relation if entity is new to context or relation is new to entity
+                if (ReferenceEquals(null, existingEntity) || !entity.<#=EdmUtility.Code.Escape(navProperty)#>.Equals(existingEntity.<#=EdmUtility.Code.Escape(navProperty)#>))
+                {
+                    if (!ReferenceEquals(null, existingRelatedEntity) && !ReferenceEquals(existingRelatedEntity, entity.<#=EdmUtility.Code.Escape(navProperty)#>))
+                    {
+                        // check merge options
+                        if (!(mergeOption == MergeOption.PreserveChanges && existingRelatedEntity.ChangeTracker.OriginalValues.ContainsKey("<#=EdmUtility.Code.Escape(inverse)#>")))
+                        {
+                            using (entity.ChangeTrackingPrevention())
+                            {
+                                entity.<#=EdmUtility.Code.Escape(navProperty)#> = existingRelatedEntity;
+                            }
+<#+
+                    if (inverse.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many)
+                    {
+#>
+
+                            using (existingRelatedEntity.ChangeTrackingPrevention())
+                            {
+                                var entityToReplace = existingRelatedEntity.<#=EdmUtility.Code.Escape(inverse)#>.FirstOrDefault(e => e.Equals(entity));
+                                if (!ReferenceEquals(null, entityToReplace))
+                                {
+                                    using (entityToReplace.ChangeTrackingPrevention())
+                                    {
+                                        existingRelatedEntity.<#=EdmUtility.Code.Escape(inverse)#>.Remove(entityToReplace);
+                                    }
+                                }
+
+                                existingRelatedEntity.<#=EdmUtility.Code.Escape(inverse)#>.Add(entity);
+                            }
+<#+
+                    }
+                    else
+                    {
+#>
+                            using (existingRelatedEntity.ChangeTrackingPrevention())
+                            {
+                                existingRelatedEntity.<#=EdmUtility.Code.Escape(inverse)#> = entity;
+                            }
+<#+
+                    }
+#>
+                        }
+                    }
+                }
+<#+
+                }
+#>
+            }
+<#+
+            }
+        }
+#>
+
+            #endregion
+
+            #region refresh existing entity based on merge options
+
+            if (!ReferenceEquals(null, existingEntity) && !ReferenceEquals(existingEntity, entity))
+            {
+                if (<#=EdmUtility.Code.Escape(entitySet)#>.MergeOption == MergeOption.OverwriteChanges)
+                {
+                    Invoke(delegate
+                    {
+                        existingEntity.Refresh(entity, trackChanges: false);
+                        existingEntity.AcceptChanges();
+                    });
+                }
+                else if (<#=EdmUtility.Code.Escape(entitySet)#>.MergeOption == MergeOption.PreserveChanges)
+                {
+                    Invoke(delegate
+                    {
+                        existingEntity.Refresh(entity, trackChanges: false, preserveExistingChanges: true);
+                    });
+                }
+            }
+
+            #endregion
+
+            return existingEntity;
+        }
+
+        private void OnDetach(<#=EdmUtility.Code.Escape(entitySet.ElementType)#> entity)
+        {
+<#+
+        if (entitySet.ElementType.NavigationProperties.Any(np => np.DeclaringType == entitySet.ElementType && np.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many))
+        {
+#>
+            entity.PropertyChanged -= On_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>_propertyChanged;
+
+<#+
+        }
+
+        foreach (NavigationProperty navProperty in entitySet.ElementType.NavigationProperties.Where(np => np.DeclaringType == entitySet.ElementType && np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many))
+        {
+#>
+            if (!ReferenceEquals(null, entity.<#=EdmUtility.Code.Escape(navProperty)#>))
+            {
+                entity.<#=EdmUtility.Code.Escape(navProperty)#>.CollectionChanged -= On_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>_<#=FirstCaseLow(EdmUtility.Code.Escape(navProperty))#>_collectionChanged;
+            }
+
+<#+
+        }
+#>
+        }
+<#+
+        if (entitySet.ElementType.NavigationProperties.Any(np => np.DeclaringType == entitySet.ElementType && np.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many))
+        {
+#>
+
+        private void On_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>_propertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var entity = sender as <#=EdmUtility.Code.Escape(entitySet.ElementType)#>;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+<#+
+        foreach (NavigationProperty navProperty in entitySet.ElementType.NavigationProperties.Where(np => np.DeclaringType == entitySet.ElementType && np.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many))
+        {
+#>
+
+            if (e.PropertyName == "<#=EdmUtility.Code.Escape(navProperty)#>")
+            {
+                var relation = entity[e.PropertyName] as <#=EdmUtility.Code.Escape(navProperty.ToEndMember.GetEntityType())#>;
+                if (!ReferenceEquals(null, relation))
+                {
+                    Attach(relation);
+                }
+            }
+<#+
+        }
+#>
+        }
+<#+
+        }
+
+        foreach (NavigationProperty navProperty in entitySet.ElementType.NavigationProperties.Where(np => np.DeclaringType == entitySet.ElementType && np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many))
+        {
+#>
+
+        private void On_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet.ElementType))#>_<#=FirstCaseLow(EdmUtility.Code.Escape(navProperty))#>_collectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var entity = sender as <#=EdmUtility.Code.Escape(entitySet.ElementType)#>;
+            if (!ReferenceEquals(null, entity) && entity.IsChangeTrackingPrevented)
+            {
+                return;
+            }
+
+            if (!ReferenceEquals(null, e.NewItems))
+            {
+                foreach (<#=EdmUtility.Code.Escape(navProperty.ToEndMember.GetEntityType())#> item in e.NewItems)
+                {
+                    Attach(item);
+                }
+            }
+        }
+<#+
+        }
+#>
+
+        #endregion <#=EdmUtility.Code.Escape(entitySet)#>
+
+<#+
+        }
+#>
+        #endregion Entities
+
+        #region Submit Changes
+
+        protected override <#=EdmUtility.ModelName#>ResultSet SubmitChanges(ClientInfo clientInfo)
+        {
+            // get reduced change set
+            var changeSet = GetChangeSet();
+
+            if (!changeSet.IsEmpty)
+            {
+                var service = _dataServiceFactory();
+                try
+                {
+                    // submit data
+                    var resultSet = service.SubmitChanges(clientInfo, changeSet);
+                    return resultSet;
+                }
+                finally
+                {
+                    var client = service as ICommunicationObject;
+                    if (client != null)
+                    {
+                        if (client.State == CommunicationState.Faulted)
+                        {
+                            client.Abort();
+                        }
+                        else
+                        {
+                            client.Close();
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // return empty result set
+                return new <#=EdmUtility.ModelName#>ResultSet(changeSet);
+            }
+        }
+
+        private <#=EdmUtility.ModelName#>ChangeSet GetChangeSet()
+        {
+<#+
+        foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
+        {
+#>
+            IEnumerable<<#=EdmUtility.Code.Escape(entitySet.ElementType)#>> <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>;
+            lock (_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>.SyncRoot)
+            {
+                <#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#> = _<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>.GetAllEntities();
+            }
+
+<#+
+        }
+#>
+            // get reduced change set
+            var changeSet = _changeSetFactoryProvider().CreateChangeSet(
+                <#=string.Join(", " + Environment.NewLine + "                ", EdmUtility.Container.BaseEntitySets.OfType<EntitySet>().Select(e => FirstCaseLow(EdmUtility.Code.Escape(e))).ToArray())#>);
+
+            return changeSet;
+        }
+
+        protected override void Refresh(<#=EdmUtility.ModelName#>ResultSet resultSet)
+        {
+<#+
+        foreach (EntitySet entitySet in EdmUtility.Container.BaseEntitySets.OfType<EntitySet>())
+        {
+#>
+            lock (_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>.SyncRoot)
+            {
+                Refresh(_<#=FirstCaseLow(EdmUtility.Code.Escape(entitySet))#>, resultSet.<#=EdmUtility.Code.Escape(entitySet)#>);
+            }
+
+<#+
+        }
+#>
+        }
+
+        #endregion Submit Changes
+    }
+}
+<#+
+        return this.GenerationEnvironment.ToString();
+    }
+
+
+    private void WriteHeader(params string[] extraUsings)
+    {
+#>
+//------------------------------------------------------------------------------
+// <auto-generated>
+//   This file was generated by T4 code generator <#= System.IO.Path.GetFileName(T4Context.Host.TemplateFile) #>.
+//   Any changes made to this file manually may cause incorrect behavior
+//   and will be lost next time the file is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
+using System.Linq;
+using System.ServiceModel;
+using System.Transactions;
+<#=String.Join(String.Empty, extraUsings.OrderBy(u => u).Select(u => "using " + u + ";" + Environment.NewLine).ToArray())#>
+<#+
+    }
+
+    private bool IsReadWriteAccessibleProperty(EdmMember member)
+    {
+        string setter = Accessibility.ForWriteOnlyProperty(member);
+        string getter = Accessibility.ForReadOnlyProperty(member);
+
+        return getter != "private" && getter != "protected" && setter != "private" && setter != "protected";
+    }
+
+    private string FirstCaseLow(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return value;
+        }
+
+        return value.Substring(0, 1).ToLower() + value.Substring(1, value.Length - 1);
+    }
+
+    private string CastIfRequired(EdmType edmType, string value = null)
+    {
+        if (ReferenceEquals(null, edmType.BaseType))
+        {
+            return value ?? string.Empty;
+        }
+        
+        if (string.IsNullOrEmpty(value))
+        {
+            return string.Format("({0})", edmType.Name);
+        }
+        
+        return string.Format("(({0}){1})", edmType.Name, value);
+    }
+
+    private string CastIfRequired(NavigationProperty navProperty, string value = null)
+    {
+        var edmType = navProperty.ToEndMember.GetEntityType();
+        return CastIfRequired(edmType, value);
+    }
+}
+#>

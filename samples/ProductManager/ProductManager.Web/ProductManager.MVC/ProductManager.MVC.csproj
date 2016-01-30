@@ -21,6 +21,13 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
+    <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,24 +47,31 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="NTier.Client.Domain">
-      <HintPath>..\..\ProductManager\Client\ProductManager.Client.Domain\bin\Debug\NTier.Client.Domain.dll</HintPath>
+    <Reference Include="Aqua, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\aqua-core.3.0.0-alpha003\lib\net35-client\Aqua.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="NTier.Common.Domain">
-      <HintPath>..\..\ProductManager\Client\ProductManager.Client.Domain\bin\Debug\NTier.Common.Domain.dll</HintPath>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NTier.Client.Domain, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NTierEntityFramework.Client.1.8.1\lib\net40-Client\NTier.Client.Domain.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NTier.Common.Domain, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NTierEntityFramework.Common.1.8.1\lib\net40-Client\NTier.Common.Domain.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="ProductManager.Client.Domain">
-      <HintPath>..\..\ProductManager\Client\ProductManager.Client.Domain\bin\Debug\ProductManager.Client.Domain.dll</HintPath>
-    </Reference>
-    <Reference Include="ProductManager.Client.Domain.Service.RemoteChannelFactory">
-      <HintPath>..\..\ProductManager\Client\ProductManager.Client.Domain.Service.RemoteChannelFactory\bin\Debug\ProductManager.Client.Domain.Service.RemoteChannelFactory.dll</HintPath>
+      <HintPath>..\..\ProductManager\ProductManager\ProductManager.Client.Domain\bin\Debug\ProductManager.Client.Domain.dll</HintPath>
     </Reference>
     <Reference Include="ProductManager.Common.Domain.Model">
-      <HintPath>..\..\ProductManager\Client\ProductManager.Client.Domain\bin\Debug\ProductManager.Common.Domain.Model.dll</HintPath>
+      <HintPath>..\..\ProductManager\ProductManager\ProductManager.Client.Domain\bin\Debug\ProductManager.Common.Domain.Model.dll</HintPath>
     </Reference>
     <Reference Include="ProductManager.Common.Domain.Service">
-      <HintPath>..\..\ProductManager\Client\ProductManager.Client.Domain\bin\Debug\ProductManager.Common.Domain.Service.dll</HintPath>
+      <HintPath>..\..\ProductManager\ProductManager\ProductManager.Client.Domain\bin\Debug\ProductManager.Common.Domain.Service.dll</HintPath>
+    </Reference>
+    <Reference Include="Remote.Linq, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Remote.Linq.5.3.0-beta003\lib\net35-client\Remote.Linq.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -133,6 +147,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

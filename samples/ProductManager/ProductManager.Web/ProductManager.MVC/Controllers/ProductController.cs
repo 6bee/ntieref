@@ -68,12 +68,12 @@ namespace ProductManager.MVC.Controllers
 
             #region View Parameters
             ViewData["CurrentPage"] = page ?? 1;
-            ViewData["PageCount"] = (int)((result.TotalCount / PageSize) + (result.TotalCount % PageSize > 0 ? 1 : 0));
+            ViewData["PageCount"] = (int)((result.EntitySet.TotalCount / PageSize) + (result.EntitySet.TotalCount % PageSize > 0 ? 1 : 0));
             ViewData["SortColumn"] = sort ?? "ProductID";
             ViewData["SortDirection"] = desc ? "desc" : "asc";
             #endregion View Parameters
 
-            return View(result);
+            return View(result.ResultSet);
         }
         #endregion Index
 

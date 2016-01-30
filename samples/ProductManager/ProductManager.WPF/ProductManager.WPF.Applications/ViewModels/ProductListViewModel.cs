@@ -13,7 +13,7 @@ namespace ProductManager.WPF.Applications.ViewModels
 {
     public class ProductListViewModel : ViewModel<IProductListView>
     {
-        private ObservableCollection<Product> products;
+        private IEnumerable<Product> products;
         private readonly ObservableCollection<Product> selectedProducts;
         private Product selectedProduct;
         private ICommand firstPageCommand;
@@ -119,7 +119,7 @@ namespace ProductManager.WPF.Applications.ViewModels
             }
         }
 
-        public ObservableCollection<Product> Products
+        public IEnumerable<Product> Products
         {
             get { return products; }
             internal set
@@ -129,6 +129,20 @@ namespace ProductManager.WPF.Applications.ViewModels
 
                 SelectedProduct = products.FirstOrDefault();
             }
+        }
+
+        public void AddProduct(Product product)
+        {
+            var list = Products.ToList();
+            list.Add(product);
+            Products = list;
+        }
+
+        public void RemoveProduct(Product product)
+        {
+            var list = Products.ToList();
+            list.Remove(product);
+            Products = list;
         }
         
         public ObservableCollection<Product> SelectedProducts

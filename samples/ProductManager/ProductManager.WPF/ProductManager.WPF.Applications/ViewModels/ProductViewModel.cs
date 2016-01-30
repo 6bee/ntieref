@@ -95,8 +95,8 @@ namespace ProductManager.WPF.Applications.ViewModels
             }
         }
 
-        private ObservableCollection<ProductCategory> _categories;
-        public ObservableCollection<ProductCategory> Categories
+        private IEnumerable<ProductCategory> _categories;
+        public IEnumerable<ProductCategory> Categories
         {
             get { return _categories; }
             set

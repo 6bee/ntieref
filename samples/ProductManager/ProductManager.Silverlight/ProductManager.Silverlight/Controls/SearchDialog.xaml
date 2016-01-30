@@ -8,8 +8,11 @@
              xmlns:appControls="clr-namespace:ProductManager.Silverlight.Controls"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="500" 
-             Loaded="UserControl_Loaded">
-    
+             Loaded="UserControl_Loaded"
+             Height="342">
+    <!--
+     Height="414"
+    -->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -17,11 +20,11 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
-        <appControls:SearchBox x:Name="filterBox" Grid.Row="0" Margin="0 10" c1:C1NagScreen.Nag="True" />
+        <appControls:SearchBox Visibility="Collapsed" x:Name="filterBox" Grid.Row="0" Margin="0 10" c1:C1NagScreen.Nag="True" />
         
         <c1:C1DataGrid ItemsSource="{Binding}" Grid.Row="1" c1:C1NagScreen.Nag="True" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
             <c1:C1DataGrid.TopRows>
-                <appControls:DataGridFilterRow Height="30" />
+                <appControls:DataGridFilterRow Visibility="Collapsed" Height="30" />
             </c1:C1DataGrid.TopRows>
         </c1:C1DataGrid>
         

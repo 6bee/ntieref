@@ -82,14 +82,15 @@ namespace ProductManager.WPF.Applications.Controllers
                 shellViewModel.ReleaseWaitCursor();
                 saved = true;
             }
-            catch (ValidationException e)
+            catch (NTier.Client.Domain.ServerValidationException ex)
             {
-                messageService.ShowError(string.Format(CultureInfo.CurrentCulture, Resources.SaveErrorInvalidEntities, e.Message));
+                messageService.ShowError(string.Format(CultureInfo.CurrentCulture, Resources.SaveErrorInvalidEntities, ex.Message));
             }
-            catch (UpdateException e)
+            catch (NTier.Client.Domain.UpdateException ex)
             {
-                messageService.ShowError(string.Format(CultureInfo.CurrentCulture, Resources.SaveErrorInvalidFields, e.InnerException.Message));
+                messageService.ShowError(string.Format(CultureInfo.CurrentCulture, Resources.SaveErrorInvalidFields, ex.InnerException.Message));
             }
+
             return saved;
         }
 

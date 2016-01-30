@@ -15,7 +15,7 @@
         <TextBlock Style="{StaticResource ContentTextStyle}"
                    Text="{Binding Path=ApplicationStrings.ProductsSearchDescription, Source={StaticResource ResourceWrapper}}"/>
 
-        <appControls:SearchDialog x:Name="searchDialog" Height="414" />
+        <appControls:SearchDialog x:Name="searchDialog" />
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="-5 10">
             <StackPanel.Resources>

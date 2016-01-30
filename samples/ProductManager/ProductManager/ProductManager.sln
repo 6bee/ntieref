@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{5C9792DB-1F7C-4472-AE0F-47C4D4D1A144}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{6AB81CD4-0765-4756-A682-F22A65FD899B}"
@@ -9,27 +11,65 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{EB2CB8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Silverlight", "Silverlight", "{B27BCB3C-3B55-45F1-8E42-D014C0CC3EC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Client.Domain.Test", "Client\ProductManager.Client.Domain.Test\ProductManager.Client.Domain.Test.csproj", "{BD953997-52F9-4C57-A2CE-7B5BD54CFE21}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Client.Domain.Test", "ProductManager\ProductManager.Client.Domain.Test\ProductManager.Client.Domain.Test.csproj", "{BD953997-52F9-4C57-A2CE-7B5BD54CFE21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Client.Domain", "Client\ProductManager.Client.Domain\ProductManager.Client.Domain.csproj", "{EB2D8387-9107-4766-96AD-402633800CE6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Client.Domain", "ProductManager\ProductManager.Client.Domain\ProductManager.Client.Domain.csproj", "{EB2D8387-9107-4766-96AD-402633800CE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Client.Domain.Service.InProcessChannelFactory", "Client\ProductManager.Client.Domain.Service.InProcessChannelFactory\ProductManager.Client.Domain.Service.InProcessChannelFactory.csproj", "{2DFD1BEF-5FDF-4499-BFB6-D7DAF33FEE2B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Common.Domain.Model", "ProductManager\ProductManager.Common.Domain.Model\ProductManager.Common.Domain.Model.csproj", "{E805C879-C712-4F43-8E9E-8C4439C9CCAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Client.Domain.Service.RemoteChannelFactory", "Client\ProductManager.Client.Domain.Service.RemoteChannelFactory\ProductManager.Client.Domain.Service.RemoteChannelFactory.csproj", "{8E44CD18-FA3F-495F-BB74-3CFC680A008C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Common.Domain.Service", "ProductManager\ProductManager.Common.Domain.Service\ProductManager.Common.Domain.Service.csproj", "{32AE4264-D0A8-4901-B392-C344D24CE00C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Common.Domain.Model", "Common\ProductManager.Common.Domain.Model\ProductManager.Common.Domain.Model.csproj", "{E805C879-C712-4F43-8E9E-8C4439C9CCAF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Server.Domain.Edmx", "ProductManager\ProductManager.Server.Domain.Edmx\ProductManager.Server.Domain.Edmx.csproj", "{6BED8512-128B-479B-BA8A-1804DC47F5C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Common.Domain.Service", "Common\ProductManager.Common.Domain.Service\ProductManager.Common.Domain.Service.csproj", "{32AE4264-D0A8-4901-B392-C344D24CE00C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Server.Host", "ProductManager\ProductManager.Server.Host\ProductManager.Server.Host.csproj", "{A91ACD7C-F8EC-463D-A164-0E87B9DBF2E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Server.Domain.Edmx", "Server\ProductManager.Server.Domain.Edmx\ProductManager.Server.Domain.Edmx.csproj", "{6BED8512-128B-479B-BA8A-1804DC47F5C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Server.Domain.Repositories", "ProductManager\ProductManager.Server.Domain.Repositories\ProductManager.Server.Domain.Repositories.csproj", "{0181168D-34C9-4437-AC06-B1A4605F031E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Server.Host", "Server\ProductManager.Server.Host\ProductManager.Server.Host.csproj", "{A91ACD7C-F8EC-463D-A164-0E87B9DBF2E8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Server.Domain.Service", "ProductManager\ProductManager.Server.Domain.Service\ProductManager.Server.Domain.Service.csproj", "{489D4E5E-EE2C-411F-AACA-CDBCFA8F2217}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Server.Domain.Repositories", "Server\ProductManager.Server.Domain.Repositories\ProductManager.Server.Domain.Repositories.csproj", "{0181168D-34C9-4437-AC06-B1A4605F031E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Silverlight.Domain.Library", "ProductManager\ProductManager.Silverlight.Domain.Library\ProductManager.Silverlight.Domain.Library.csproj", "{80D1161A-3EAA-4555-87D1-DA9A7F5476CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Server.Domain.Service", "Server\ProductManager.Server.Domain.Service\ProductManager.Server.Domain.Service.csproj", "{489D4E5E-EE2C-411F-AACA-CDBCFA8F2217}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Silverlight.Domain.Library", "Silverlight\ProductManager.Silverlight.Domain.Library\ProductManager.Silverlight.Domain.Library.csproj", "{80D1161A-3EAA-4555-87D1-DA9A7F5476CA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "T4", "T4", "{81C80A1F-ADF3-4109-8D03-A66A7BAD19BA}"
+	ProjectSection(SolutionItems) = preProject
+		T4\NTierEF.ChangeSetFactoryInterfaceTT.CS.ttinclude = T4\NTierEF.ChangeSetFactoryInterfaceTT.CS.ttinclude
+		T4\NTierEF.ChangeSetFactoryTT.CS.ttinclude = T4\NTierEF.ChangeSetFactoryTT.CS.ttinclude
+		T4\NTierEF.ChangeSetTT.CS.ttinclude = T4\NTierEF.ChangeSetTT.CS.ttinclude
+		T4\NTierEF.ClientDataContextInterfaceTT.CS.ttinclude = T4\NTierEF.ClientDataContextInterfaceTT.CS.ttinclude
+		T4\NTierEF.ClientDataContextTT.CS.ttinclude = T4\NTierEF.ClientDataContextTT.CS.ttinclude
+		T4\NTierEF.ComplexTypeMetadataTT.CS.ttinclude = T4\NTierEF.ComplexTypeMetadataTT.CS.ttinclude
+		T4\NTierEF.ComplexTypeTT.CS.ttinclude = T4\NTierEF.ComplexTypeTT.CS.ttinclude
+		T4\NTierEF.DataModelCodeGenerator.CS.ttinclude = T4\NTierEF.DataModelCodeGenerator.CS.ttinclude
+		T4\NTierEF.DataServiceContractTT.CS.ttinclude = T4\NTierEF.DataServiceContractTT.CS.ttinclude
+		T4\NTierEF.DataServiceHostTT.CS.ttinclude = T4\NTierEF.DataServiceHostTT.CS.ttinclude
+		T4\NTierEF.DataServiceTT.CS.ttinclude = T4\NTierEF.DataServiceTT.CS.ttinclude
+		T4\NTierEF.EF.Utility.CS.ttinclude = T4\NTierEF.EF.Utility.CS.ttinclude
+		T4\NTierEF.EntityMetadataTT.CS.ttinclude = T4\NTierEF.EntityMetadataTT.CS.ttinclude
+		T4\NTierEF.EntityTT.CS.ttinclude = T4\NTierEF.EntityTT.CS.ttinclude
+		T4\NTierEF.EnumTT.CS.ttinclude = T4\NTierEF.EnumTT.CS.ttinclude
+		T4\NTierEF.InProcessChannelFactoryTT.CS.ttinclude = T4\NTierEF.InProcessChannelFactoryTT.CS.ttinclude
+		T4\NTierEF.NTierEntityGenerator.CS.ttinclude = T4\NTierEF.NTierEntityGenerator.CS.ttinclude
+		T4\NTierEF.OptimisticConcurrencyFaultTT.CS.ttinclude = T4\NTierEF.OptimisticConcurrencyFaultTT.CS.ttinclude
+		T4\NTierEF.RemoteChannelFactoryTT.CS.ttinclude = T4\NTierEF.RemoteChannelFactoryTT.CS.ttinclude
+		T4\NTierEF.RepositoryInterfaceTT.CS.ttinclude = T4\NTierEF.RepositoryInterfaceTT.CS.ttinclude
+		T4\NTierEF.RepositoryTT.CS.ttinclude = T4\NTierEF.RepositoryTT.CS.ttinclude
+		T4\NTierEF.ResultSetTT.CS.ttinclude = T4\NTierEF.ResultSetTT.CS.ttinclude
+		T4\NTierEF.SL.ChangeSetFactoryInterfaceTT.CS.ttinclude = T4\NTierEF.SL.ChangeSetFactoryInterfaceTT.CS.ttinclude
+		T4\NTierEF.SL.ChangeSetFactoryTT.CS.ttinclude = T4\NTierEF.SL.ChangeSetFactoryTT.CS.ttinclude
+		T4\NTierEF.SL.ChangeSetTT.CS.ttinclude = T4\NTierEF.SL.ChangeSetTT.CS.ttinclude
+		T4\NTierEF.SL.ClientDataContextInterfaceTT.CS.ttinclude = T4\NTierEF.SL.ClientDataContextInterfaceTT.CS.ttinclude
+		T4\NTierEF.SL.ClientDataContextTT.CS.ttinclude = T4\NTierEF.SL.ClientDataContextTT.CS.ttinclude
+		T4\NTierEF.SL.ComplexTypeTT.CS.ttinclude = T4\NTierEF.SL.ComplexTypeTT.CS.ttinclude
+		T4\NTierEF.SL.DataModelCodeGenerator.CS.ttinclude = T4\NTierEF.SL.DataModelCodeGenerator.CS.ttinclude
+		T4\NTierEF.SL.DataServiceContractTT.CS.ttinclude = T4\NTierEF.SL.DataServiceContractTT.CS.ttinclude
+		T4\NTierEF.SL.EntityTT.CS.ttinclude = T4\NTierEF.SL.EntityTT.CS.ttinclude
+		T4\NTierEF.SL.EnumTT.CS.ttinclude = T4\NTierEF.SL.EnumTT.CS.ttinclude
+		T4\NTierEF.SL.NTierEntityGenerator.CS.ttinclude = T4\NTierEF.SL.NTierEntityGenerator.CS.ttinclude
+		T4\NTierEF.SL.OptimisticConcurrencyFaultTT.CS.ttinclude = T4\NTierEF.SL.OptimisticConcurrencyFaultTT.CS.ttinclude
+		T4\NTierEF.SL.ReflectionUtils.CS.ttinclude = T4\NTierEF.SL.ReflectionUtils.CS.ttinclude
+		T4\NTierEF.SL.ResultSetTT.CS.ttinclude = T4\NTierEF.SL.ResultSetTT.CS.ttinclude
+		T4\NTierEF.SL.UpdateFaultTT.CS.ttinclude = T4\NTierEF.SL.UpdateFaultTT.CS.ttinclude
+		T4\NTierEF.UpdateFaultTT.CS.ttinclude = T4\NTierEF.UpdateFaultTT.CS.ttinclude
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,26 +101,6 @@ Global
 		{EB2D8387-9107-4766-96AD-402633800CE6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{EB2D8387-9107-4766-96AD-402633800CE6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{EB2D8387-9107-4766-96AD-402633800CE6}.Release|x86.ActiveCfg = Release|Any CPU
-		{2DFD1BEF-5FDF-4499-BFB6-D7DAF33FEE2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2DFD1BEF-5FDF-4499-BFB6-D7DAF33FEE2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2DFD1BEF-5FDF-4499-BFB6-D7DAF33FEE2B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{2DFD1BEF-5FDF-4499-BFB6-D7DAF33FEE2B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{2DFD1BEF-5FDF-4499-BFB6-D7DAF33FEE2B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{2DFD1BEF-5FDF-4499-BFB6-D7DAF33FEE2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2DFD1BEF-5FDF-4499-BFB6-D7DAF33FEE2B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2DFD1BEF-5FDF-4499-BFB6-D7DAF33FEE2B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{2DFD1BEF-5FDF-4499-BFB6-D7DAF33FEE2B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{2DFD1BEF-5FDF-4499-BFB6-D7DAF33FEE2B}.Release|x86.ActiveCfg = Release|Any CPU
-		{8E44CD18-FA3F-495F-BB74-3CFC680A008C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8E44CD18-FA3F-495F-BB74-3CFC680A008C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8E44CD18-FA3F-495F-BB74-3CFC680A008C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{8E44CD18-FA3F-495F-BB74-3CFC680A008C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{8E44CD18-FA3F-495F-BB74-3CFC680A008C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{8E44CD18-FA3F-495F-BB74-3CFC680A008C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8E44CD18-FA3F-495F-BB74-3CFC680A008C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8E44CD18-FA3F-495F-BB74-3CFC680A008C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{8E44CD18-FA3F-495F-BB74-3CFC680A008C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{8E44CD18-FA3F-495F-BB74-3CFC680A008C}.Release|x86.ActiveCfg = Release|Any CPU
 		{E805C879-C712-4F43-8E9E-8C4439C9CCAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E805C879-C712-4F43-8E9E-8C4439C9CCAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E805C879-C712-4F43-8E9E-8C4439C9CCAF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -158,8 +178,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{BD953997-52F9-4C57-A2CE-7B5BD54CFE21} = {5C9792DB-1F7C-4472-AE0F-47C4D4D1A144}
 		{EB2D8387-9107-4766-96AD-402633800CE6} = {5C9792DB-1F7C-4472-AE0F-47C4D4D1A144}
-		{2DFD1BEF-5FDF-4499-BFB6-D7DAF33FEE2B} = {5C9792DB-1F7C-4472-AE0F-47C4D4D1A144}
-		{8E44CD18-FA3F-495F-BB74-3CFC680A008C} = {5C9792DB-1F7C-4472-AE0F-47C4D4D1A144}
 		{E805C879-C712-4F43-8E9E-8C4439C9CCAF} = {6AB81CD4-0765-4756-A682-F22A65FD899B}
 		{32AE4264-D0A8-4901-B392-C344D24CE00C} = {6AB81CD4-0765-4756-A682-F22A65FD899B}
 		{6BED8512-128B-479B-BA8A-1804DC47F5C9} = {EB2CB878-9433-444A-8FE9-3101BB42C4AB}

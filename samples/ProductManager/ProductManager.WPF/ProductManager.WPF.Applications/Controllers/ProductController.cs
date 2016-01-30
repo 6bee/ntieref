@@ -93,7 +93,7 @@ namespace ProductManager.WPF.Applications.Controllers
                                              .AsQueryable()
                                              .Include("ProductCategory")
                                              .Where(p => p.ProductID == productListViewModel.SelectedProduct.ProductID)
-                                             .ExecuteAsync(callback: delegate(ICallbackResult<Product> result) { /* note: pass callback or use task to handle potential exceptions */ });
+                                             .ExecuteAsync(callback: delegate(IQueryResult<Product, Product> result) { /* note: pass callback or use task to handle potential exceptions */ });
                             }
                             // set selected product for detail view
                             productViewModel.Product = productListViewModel.SelectedProduct;
@@ -189,11 +189,11 @@ namespace ProductManager.WPF.Applications.Controllers
             products.ExecuteAsync(SetProducts);
         }
 
-        private void SetProductCategories(ICallbackResult<ProductCategory> result)
+        private void SetProductCategories(IQueryResult<ProductCategory, ProductCategory> result)
         {
             if (!Dispatcher.CheckAccess())
             {
-                Dispatcher.BeginInvoke((Action<ICallbackResult<ProductCategory>>)SetProductCategories, result);
+                Dispatcher.BeginInvoke((Action<IQueryResult<ProductCategory, ProductCategory>>)SetProductCategories, result);
                 return;
             }
 
@@ -202,14 +202,15 @@ namespace ProductManager.WPF.Applications.Controllers
                 throw new Exception("Failed loading product categories", result.Exception);
             }
 
-            productViewModel.Categories = result.EntitySet.ToObservableCollection();
+            // TODO: Result set can not be converted into observable collection. 
+            productViewModel.Categories = result.ResultSet;
         }
 
-        private void SetProducts(ICallbackResult<Product> result)
+        private void SetProducts(IQueryResult<Product, Product> result)
         {
             if (!Dispatcher.CheckAccess())
             {
-                Dispatcher.BeginInvoke((Action<ICallbackResult<Product>>)SetProducts, result);
+                Dispatcher.BeginInvoke((Action<IQueryResult<Product, Product>>)SetProducts, result);
                 return;
             }
 
@@ -218,7 +219,7 @@ namespace ProductManager.WPF.Applications.Controllers
                 throw new Exception("Failed loading products", result.Exception);
             }
 
-            productListViewModel.Products = result.EntitySet.ToObservableCollection();
+            productListViewModel.Products = result.ResultSet;
 
             if (result.EntitySet.TotalCount.HasValue)
             {
@@ -287,7 +288,10 @@ namespace ProductManager.WPF.Applications.Controllers
                 SellStartDate = DateTime.Now.Date
                 //rowguid = Guid.NewGuid()
             };
-            productListViewModel.Products.Add(product);
+
+            entityService.Products.Add(product);
+
+            productListViewModel.AddProduct(product);
 
             productListViewModel.SelectedProduct = product;
             productViewModel.Focus();
@@ -298,7 +302,8 @@ namespace ProductManager.WPF.Applications.Controllers
         {
             foreach (Product product in productListViewModel.SelectedProducts.ToArray())
             {
-                productListViewModel.Products.Remove(product);
+                entityService.Products.Delete(product);
+                productListViewModel.RemoveProduct(product);
             }
         }
 

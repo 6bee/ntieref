@@ -55,35 +55,35 @@
 
         <!-- row 1 -->
         <Label Content="{x:Static p:Resources.Name}" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" />
-        <TextBox Name="NameField" Text="{Binding Product.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=true}" 
+        <TextBox Name="NameField" Text="{Binding Product.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, ValidatesOnDataErrors=True}" 
                  MaxLength="100" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
         <ContentControl Grid.Column="2" Grid.Row="1" Style="{DynamicResource ChangeMarker}" 
                         util:ChangeMarker.Entity="{Binding Product}" util:ChangeMarker.PropertyName="Name" />
 
         <Label Content="{x:Static p:Resources.Size}" Grid.Column="3" Grid.Row="1" VerticalAlignment="Center" />
         <TextBox x:Name="SizeTextBox" Grid.Column="4" Grid.Row="1" Text="{Binding Product.Size, UpdateSourceTrigger=PropertyChanged, 
-                 ValidatesOnExceptions=true, TargetNullValue={x:Static sys:String.Empty}}"
+                 ValidatesOnExceptions=True, ValidatesOnDataErrors=True, TargetNullValue={x:Static sys:String.Empty}}"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center" />
         <ContentControl Grid.Column="5" Grid.Row="1" Style="{DynamicResource ChangeMarker}" 
                         util:ChangeMarker.Entity="{Binding Product}" util:ChangeMarker.PropertyName="Size" />
        
         <!-- row 2 -->
         <Label Content="{x:Static p:Resources.ProductNumber}" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" />
-        <TextBox Text="{Binding Product.ProductNumber, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=true}" 
+        <TextBox Text="{Binding Product.ProductNumber, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, ValidatesOnDataErrors=True}" 
                  MaxLength="100" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
         <ContentControl Grid.Column="2" Grid.Row="2" Style="{DynamicResource ChangeMarker}" 
                         util:ChangeMarker.Entity="{Binding Product}" util:ChangeMarker.PropertyName="ProductNumber" />
 
         <Label Content="{x:Static p:Resources.Weight}" Grid.Column="3" Grid.Row="2" VerticalAlignment="Center" />
         <TextBox x:Name="WeightTextBox" Grid.Column="4" Grid.Row="2" Text="{Binding Product.Weight, UpdateSourceTrigger=PropertyChanged, 
-                 ValidatesOnExceptions=true, TargetNullValue={x:Static sys:String.Empty}}"
+                 ValidatesOnExceptions=True, ValidatesOnDataErrors=True, TargetNullValue={x:Static sys:String.Empty}}"
                  HorizontalAlignment="Stretch" VerticalAlignment="Center" />
         <ContentControl Grid.Column="5" Grid.Row="2" Style="{DynamicResource ChangeMarker}" 
                         util:ChangeMarker.Entity="{Binding Product}" util:ChangeMarker.PropertyName="Weight" />
 
         <!-- row 3 -->
         <Label Content="{x:Static p:Resources.ListPrice}" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" />
-        <TextBox Text="{Binding Product.ListPrice, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=true, 
+        <TextBox Text="{Binding Product.ListPrice, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, ValidatesOnDataErrors=True, 
                  Converter={StaticResource PositiveDecimalConverter}}" IsEnabled="{Binding IsCurrencyEnabled}"
                  MaxLength="100" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
         <ContentControl Grid.Column="2" Grid.Row="3" Style="{DynamicResource ChangeMarker}" 
@@ -92,7 +92,7 @@
         <Label Content="{x:Static p:Resources.SellStartDate}" Grid.Column="3" Grid.Row="3" VerticalAlignment="Center" />
         <!--<DatePicker Grid.Column="4" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                     SelectedDate="{Binding SellStartDate}" />-->
-        <TextBox Text="{Binding Product.SellStartDate, StringFormat=d, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=true, 
+        <TextBox Text="{Binding Product.SellStartDate, StringFormat=d, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, ValidatesOnDataErrors=True, 
                  TargetNullValue={x:Static sys:String.Empty}}"
                  MaxLength="100" Grid.Column="4" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
         <ContentControl Grid.Column="5" Grid.Row="3" Style="{DynamicResource ChangeMarker}" 
@@ -100,7 +100,7 @@
 
         <!-- row 4 -->
         <Label Content="{x:Static p:Resources.Color}" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" />
-        <TextBox Text="{Binding Product.Color, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=true, 
+        <TextBox Text="{Binding Product.Color, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, ValidatesOnDataErrors=True, 
                  TargetNullValue={x:Static sys:String.Empty}}"
                  MaxLength="100" Grid.Column="1" Grid.Row="4" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
         <!--<ComboBox ItemsSource="{Binding Source={StaticResource ProductColorFilterValues}}"
@@ -119,7 +119,7 @@
         <Label Content="{x:Static p:Resources.SellEndDate}" Grid.Column="3" Grid.Row="4" VerticalAlignment="Center" />
         <!--<DatePicker Grid.Column="4" Grid.Row="4" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                     SelectedDate="{Binding SellEndDate}" />-->
-        <TextBox Text="{Binding Product.SellEndDate, StringFormat=d, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=true, 
+        <TextBox Text="{Binding Product.SellEndDate, StringFormat=d, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, ValidatesOnDataErrors=True, 
                  TargetNullValue={x:Static sys:String.Empty}}"
                  MaxLength="100" Grid.Column="4" Grid.Row="4" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
         <ContentControl Grid.Column="5" Grid.Row="4" Style="{DynamicResource ChangeMarker}" 
@@ -127,7 +127,7 @@
 
         <!-- row 5 -->
         <Label Content="{x:Static p:Resources.StandardCost}" Grid.Column="0" Grid.Row="5" VerticalAlignment="Center" />
-        <TextBox Text="{Binding Product.StandardCost, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=true, 
+        <TextBox Text="{Binding Product.StandardCost, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, ValidatesOnDataErrors=True, 
                  Converter={StaticResource PositiveDecimalConverter}}"
                  IsEnabled="{Binding IsBaseFareAmountEnabled}"
                  MaxLength="100" Grid.Column="1" Grid.Row="5" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
@@ -137,7 +137,7 @@
         <Label Content="{x:Static p:Resources.DiscontinuedDate}" Grid.Column="3" Grid.Row="5" VerticalAlignment="Center" />
         <!--<DatePicker Name="dp" Grid.Column="4" Grid.Row="5" HorizontalAlignment="Stretch" VerticalAlignment="Center" 
                     SelectedDate="{Binding DiscontinuedDate}" />-->
-        <TextBox Text="{Binding Product.DiscontinuedDate, StringFormat=d, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=true, 
+        <TextBox Text="{Binding Product.DiscontinuedDate, StringFormat=d, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, 
                  ValidatesOnDataErrors=true, NotifyOnValidationError=true, TargetNullValue={x:Static sys:String.Empty}}"
                  MaxLength="100" Grid.Column="4" Grid.Row="5" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
         <ContentControl Grid.Column="5" Grid.Row="5" Style="{DynamicResource ChangeMarker}" 
@@ -152,7 +152,7 @@
 
         <!-- row 7 -->
         <Label Content="{x:Static p:Resources.Notes}" Grid.Column="0" Grid.Row="7" VerticalAlignment="Top" ToolTip="{x:Static p:Resources.NotesInfo}" />
-        <TextBox Text="{Binding Product.Notes, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=true, 
+        <TextBox Text="{Binding Product.Notes, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, 
                  ValidatesOnDataErrors=true, NotifyOnValidationError=true, TargetNullValue={x:Static sys:String.Empty}}"
                  Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="4"
                  Height="60" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"

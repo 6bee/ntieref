@@ -9,7 +9,7 @@ namespace ProductManager.Silverlight
 {
     internal static class QueryHelper
     {
-        public static IOrderedDataServiceQueryable<T> Sort<T, T2>(this IDataServiceQueryable<T> query, Expression<Func<T, T2>> member, C1.Silverlight.DataGrid.DataGridSortDirection direction, ref bool isFirst) where T : Entity, new()
+        public static IOrderedDataServiceQueryable<T,T> Sort<T, T2>(this IDataServiceQueryable<T,T> query, Expression<Func<T, T2>> member, C1.Silverlight.DataGrid.DataGridSortDirection direction, ref bool isFirst) where T : Entity, new()
         {
             if (direction == C1.Silverlight.DataGrid.DataGridSortDirection.None)
             {
@@ -33,11 +33,11 @@ namespace ProductManager.Silverlight
             {
                 if (direction == C1.Silverlight.DataGrid.DataGridSortDirection.Ascending)
                 {
-                    return ((IOrderedDataServiceQueryable<T>)query).ThenBy(member);
+                    return ((IOrderedDataServiceQueryable<T,T>)query).ThenBy(member);
                 }
                 else
                 {
-                    return ((IOrderedDataServiceQueryable<T>)query).ThenByDescending(member);
+                    return ((IOrderedDataServiceQueryable<T,T>)query).ThenByDescending(member);
                 }
             }
         }

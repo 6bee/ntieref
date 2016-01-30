@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Silverlight", "ProductManager.Silverlight\ProductManager.Silverlight.csproj", "{8302668B-E93A-4E35-B239-8C41FCDF9281}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Silverlight.Web", "ProductManager.Silverlight.Web\ProductManager.Silverlight.Web.csproj", "{094377DD-EDC3-4169-8AC1-26282081FC26}"

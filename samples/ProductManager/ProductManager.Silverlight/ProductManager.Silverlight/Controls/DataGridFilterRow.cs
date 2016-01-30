@@ -9,6 +9,7 @@ using C1.Silverlight.DataGrid;
 using ProductManager.Client.Domain;
 using ProductManager.Silverlight.Controls;
 using NTier.Client.Domain;
+using ProductManager.Common.Domain.Model.ProductManager;
 
 namespace ProductManager.Silverlight.Controls
 {
@@ -186,19 +187,21 @@ namespace ProductManager.Silverlight.Controls
                     // apply filter
                     column.DataGrid.FilterBy(column, state, true);
                 }
+
                 if (column.DataGrid.DataSourceView is IFilteredCollectionView)
                 {
                     // todo: create type specific filters
-                    var filters = (column.DataGrid.DataSourceView as IFilteredCollectionView).FilterDescriptions;
-                    var filter = filters.FirstOrDefault(f => f.PropertyName == column.FilterMemberPath);
-                    if (filter != null)
-                    {
-                        filters.Remove(filter);
-                    }
-                    if (!string.IsNullOrEmpty(filterTextBox.Text))
-                    {
-                        filters.Add(new NTier.Client.Domain.FilterDescription { PropertyName = column.FilterMemberPath, Value = filterTextBox.Text });
-                    }
+                    var filters = (column.DataGrid.DataSourceView as IFilteredCollectionView).FilterExpressions;
+                    // TODO: Fix filter logic
+                    //var filter = filters.FirstOrDefault(f => f.PropertyName == column.FilterMemberPath);
+                    //if (filter != null)
+                    //{
+                    //    filters.Remove(filter);
+                    //}
+                    //if (!string.IsNullOrEmpty(filterTextBox.Text))
+                    //{
+                    //    filters.Add(new NTier.Client.Domain.FilterDescription { PropertyName = column.FilterMemberPath, Value = filterTextBox.Text });
+                    //}
                 }
                 OnFilterChanged(column, filterTextBox.Text);
             }

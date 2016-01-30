@@ -26,16 +26,17 @@ namespace ProductManager.Silverlight.Controls
                     var collectionView = DataContext as IFilteredCollectionView;
                     if (collectionView != null)
                     {
-                        var filters = collectionView.FilterDescriptions;
-                        var filter = filters.FirstOrDefault(f => f.PropertyName == null);
-                        if (filter != null)
-                        {
-                            filters.Remove(filter);
-                        }
-                        if (!string.IsNullOrEmpty(filterBox.Text))
-                        {
-                            filters.Add(new FilterDescription { PropertyName = null, Value = filterBox.Text, FilterOperation = FilterOperation.Contains });
-                        }
+                        var filters = collectionView.FilterExpressions;
+                        // TODO: Fix filter logic
+                        //var filter = filters.FirstOrDefault(f => f.PropertyName == null);
+                        //if (filter != null)
+                        //{
+                        //    filters.Remove(filter);
+                        //}
+                        //if (!string.IsNullOrEmpty(filterBox.Text))
+                        //{
+                        //    filters.Add(new FilterDescription { PropertyName = null, Value = filterBox.Text, FilterOperation = FilterOperation.Contains });
+                        //}
                     }
                 }
             };
