@@ -13,6 +13,7 @@
     <FrameworkDir>$(SolutionDir)\..\N-Tier Entity Framework\</FrameworkDir>
     <FrameworkBinDir>$(FrameworkDir)\bin\$(Configuration)\</FrameworkBinDir>
     <VersionOption Condition=" '$(Version)' != '' ">-Version $(Version)</VersionOption>
+    <!-- -->
     <Symbols>-Symbols</Symbols>
   </PropertyGroup>
 
