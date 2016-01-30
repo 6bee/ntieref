@@ -4,7 +4,7 @@
     <id xdt:Transform="Insert">NTierEntityFramework.Common</id>
     <description xdt:Transform="Insert">Common base library N-Tier Entity Framework.</description>
     <dependencies xdt:Transform="Insert">
-      <dependency id="Remote.Linq" version="[5.0.0,)" />
+      <dependency id="Remote.Linq" version="[5.3.0,)" />
     </dependencies>
   </metadata>
 </package>
