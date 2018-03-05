@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
-using System.ComponentModel;
 using Microsoft.Data.Entity.Design.Extensibility;
 
 namespace NTier.Domain.EntityDataModelToolsExtensions

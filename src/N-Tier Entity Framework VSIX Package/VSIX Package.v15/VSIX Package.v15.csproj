@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
@@ -28,8 +28,8 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NTierEntityFramework</RootNamespace>
-    <AssemblyName>N-Tier Entity Framework %28VS2015%29$(VsixFileVersion)</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <AssemblyName>N-Tier Entity Framework %28VS2017%29</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <GeneratePkgDefFile>false</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>false</IncludeAssemblyInVSIXContainer>
     <IncludeDebugSymbolsInVSIXContainer>false</IncludeDebugSymbolsInVSIXContainer>
@@ -101,16 +101,8 @@
       <Link>TextTemplates\NTierEF.T4Context.ttinclude</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\ItemTemplates\DomainServiceGenerator.zip">
-      <Link>ItemTemplates\Silverlight\DomainServiceGenerator.zip</Link>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="..\lib\ItemTemplates\NTierEntityGenerator.zip">
       <Link>ItemTemplates\Data\NTierEntityGenerator.zip</Link>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\lib\ItemTemplates\SilverlightGenerator.zip">
-      <Link>ItemTemplates\Silverlight\SilverlightGenerator.zip</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="..\lib\Packages\NTierEntityFramework.Client.$(NugetPackageVersion).nupkg">
@@ -137,10 +129,6 @@
       <Link>packages\NTierEntityFramework.Server.EntityFramework6_0.$(NugetPackageVersion).nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\lib\Packages\NTierEntityFramework.Silverlight.$(NugetPackageVersion).nupkg">
-      <Link>packages\NTierEntityFramework.Silverlight.$(NugetPackageVersion).nupkg</Link>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="..\lib\Packages\NTierEntityFramework.T4.$(NugetPackageVersion).nupkg">
       <Link>packages\NTierEntityFramework.T4.$(NugetPackageVersion).nupkg</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -163,10 +151,6 @@
     </Content>
     <Content Include="..\lib\ProjectTemplates\NTierEF.zip">
       <Link>ProjectTemplates\Windows\NTierEF.zip</Link>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\lib\ProjectTemplates\NTierEF_SL.zip">
-      <Link>ProjectTemplates\Silverlight\NTierEF_SL.zip</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="..\lib\Packages\aqua-core.3.0.0.nupkg">

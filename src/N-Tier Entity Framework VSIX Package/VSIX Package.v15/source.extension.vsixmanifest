@@ -4,9 +4,9 @@
     <Identity Id="NTierEntityFramework.Trivadis.VS2017" Version="1.9.1" Language="en-US" Publisher="Trivadis" />
     <DisplayName>N-Tier Entity Framework VS2017</DisplayName>
     <Description xml:space="preserve">The N-Tier Entity Framework extends Microsoft's Entity Framework (EF) to provide support for n-tier solutions. The framework aims to provide the richness of EF in a distributed architecture while keeping its simplicity.</Description>
-    <MoreInfo>http://ntieref.codeplex.com/</MoreInfo>
+    <MoreInfo>https://github.com/6bee/ntieref</MoreInfo>
     <License>license.txt</License>
-    <GettingStartedGuide>http://ntieref.codeplex.com/</GettingStartedGuide>
+    <GettingStartedGuide>https://github.com/6bee/ntieref</GettingStartedGuide>
     <Icon>favicon.ico</Icon>
     <PreviewImage>preview.png</PreviewImage>
     <Tags>Entity Framework, Code Generator, code generation, T4, C#, data access, C# Code Generator, DAL, data access layer, DDD, Domain Driven Design, N-Tier Entity Framework, N-Tier EF, ntieref </Tags>
@@ -17,7 +17,7 @@
     <InstallationTarget Version="[15.0,16.0)" Id="Microsoft.VisualStudio.Ultimate" />
   </Installation>
   <Dependencies>
-    <Dependency d:Source="Installed" Id="T4Toolbox.14" DisplayName="T4 Toolbox for Visual Studio 2015" Version="14.0" d:InstallSource="Download" Location="https://marketplace.visualstudio.com/items?itemName=OlegVSych.T4ToolboxforVisualStudio2017" CanAutoDownload="true" IsRequired="true" />
+    <Dependency d:Source="Installed" Version="[15.0.0.2,16.0)" d:InstallSource="Download" Location="https://marketplace.visualstudio.com/items?itemName=OlegVSych.T4ToolboxforVisualStudio2017" CanAutoDownload="true" IsRequired="true" Id="T4Toolbox.15" DisplayName="T4 Toolbox for Visual Studio 2017" />
   </Dependencies>
   <References>
     <Reference Id="T4Toolbox.15" MinVersion="15.0">
@@ -35,4 +35,7 @@
     <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\Code Generation\NTierEntityGenerator.zip" />
     <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\Silverlight\SilverlightGenerator.zip" />
   </Assets>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.LanguageServices" Version="[15.0,16.0)" DisplayName="C# and Visual Basic" />
+  </Prerequisites>
 </PackageManifest>
