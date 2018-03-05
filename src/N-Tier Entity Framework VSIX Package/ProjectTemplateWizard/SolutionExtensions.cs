@@ -11,31 +11,15 @@ namespace ProjectTemplateWizard
 {
     internal static class SolutionExtensions
     {
-        //public static IList<SolutionFolder> GetSolutionFolders(this DTE2 dte)
-        //{
-        //    List<SolutionFolder> folders = new List<SolutionFolder>();
-        //    foreach (Project project in dte.Solution.Projects)
-        //    {
-        //        if (project.Kind.Equals(EnvDTE80ProjectKinds.vsProjectKindSolutionFolder, StringComparison.OrdinalIgnoreCase))
-        //        //if (project.Object is SolutionFolder)
-        //        {
-        //            folders.Add(project as SolutionFolder);
-        //        }
-        //    }
-        //    return folders;
-        //}
-
         public static IList<Project> GetProjects(this DTE2 dte)
         {
             List<Project> projects = new List<Project>();
             foreach (Project project in dte.Solution.Projects)
             {
                 if (project.Kind.Equals(EnvDTE80ProjectKinds.vsProjectKindSolutionFolder, StringComparison.OrdinalIgnoreCase))
-                //if (project.Object is SolutionFolder)
                 {
                     projects.AddRange(GetProjects(project.ProjectItems));
                 }
-                //else if (project.Kind.Equals(Constants.vspConstants.PrjKindMyProject, StringComparison.OrdinalIgnoreCase))
                 else
                 {
                     projects.Add(project);
@@ -58,7 +42,6 @@ namespace ProjectTemplateWizard
                 {
                     projects.AddRange(GetProjects(project.ProjectItems));
                 }
-                //else if (project.Kind.Equals(Constants.Constants.PrjKindMyProject, StringComparison.OrdinalIgnoreCase))
                 else
                 {
                     projects.Add(project);
