@@ -5,7 +5,7 @@
     <DisplayName>N-Tier Entity Framework VS2017</DisplayName>
     <Description xml:space="preserve">The N-Tier Entity Framework extends Microsoft's Entity Framework (EF) to provide support for n-tier solutions. The framework aims to provide the richness of EF in a distributed architecture while keeping its simplicity.</Description>
     <MoreInfo>https://github.com/6bee/ntieref</MoreInfo>
-    <License>license.txt</License>
+    <License>https://raw.githubusercontent.com/6bee/ntieref/master/license.txt</License>
     <GettingStartedGuide>https://github.com/6bee/ntieref</GettingStartedGuide>
     <Icon>favicon.ico</Icon>
     <PreviewImage>preview.png</PreviewImage>
