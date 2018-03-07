@@ -28,8 +28,8 @@
   </WizardExtension>
   <WizardData>
     <packages repository="extension" repositoryId="NTierEntityFramework.Trivadis.x">
-      <package id="NTierEntityFramework.T4" version="1.9.1" />
-      <package id="NTierEntityFramework.T4.EntityFrameworkX_Y" version="1.9.1" />
+      <package id="NTierEntityFramework.T4" version="1.9.0" />
+      <package id="NTierEntityFramework.T4.EntityFrameworkX_Y" version="1.9.0" />
       <package id="EntityFramework" version="x.y.z" />
     </packages>
   </WizardData>
