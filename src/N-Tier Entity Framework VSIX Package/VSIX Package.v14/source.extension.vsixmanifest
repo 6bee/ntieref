@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="NTierEntityFramework.Trivadis.VS2015" Version="1.9.1" Language="en-US" Publisher="Trivadis" />
+    <Identity Id="NTierEntityFramework.Trivadis.VS2015" Version="1.9" Language="en-US" Publisher="Trivadis" />
     <DisplayName>N-Tier Entity Framework VS2015</DisplayName>
     <Description xml:space="preserve">The N-Tier Entity Framework extends Microsoft's Entity Framework (EF) to provide support for n-tier solutions. The framework aims to provide the richness of EF in a distributed architecture while keeping its simplicity.</Description>
     <MoreInfo>http://ntieref.codeplex.com/</MoreInfo>
@@ -35,4 +35,7 @@
     <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\Code Generation\NTierEntityGenerator.zip" />
     <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\Silverlight\SilverlightGenerator.zip" />
   </Assets>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[14.0,15.0)" />
+  </Prerequisites>
 </PackageManifest>
